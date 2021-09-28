@@ -1,5 +1,6 @@
 class API {
-    static HOST = 'https://localhost:5500/api';
+    static HOST_MILLIX_API = 'https://localhost:5500/api';
+    static HOST_TANGLED_API = 'https://localhost:15555/api';
 
     constructor() {
         this.nodeID        = undefined;
@@ -14,16 +15,20 @@ class API {
         this.nodeSignature = nodeSignature;
     }
 
-    getAuthenticatedURL() {
+    getAuthenticatedMillixApiURL() {
         if (!this.nodeID || !this.nodeSignature) {
             throw Error('api is not ready');
         }
-        return `${API.HOST}/${this.nodeID}/${this.nodeSignature}`;
+        return `${API.HOST_MILLIX_API}/${this.nodeID}/${this.nodeSignature}`;
+    }
+
+    getTangledApiURL() {
+        return API.HOST_TANGLED_API;
     }
 
     sendTransaction(transactionOutputPayload) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/XPzc85T3reYmGro1?p0=${JSON.stringify(transactionOutputPayload)}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/XPzc85T3reYmGro1?p0=${JSON.stringify(transactionOutputPayload)}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -33,7 +38,7 @@ class API {
 
     getTransactionHistory(addressKeyIdentifier) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/w9UTTA7NXnEDUXhe?p0=${addressKeyIdentifier}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/w9UTTA7NXnEDUXhe?p0=${addressKeyIdentifier}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -43,7 +48,7 @@ class API {
 
     getTransaction(transactionID, shardID) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/IBHgAmydZbmTUAe8?p0=${transactionID}&p1=${shardID}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/IBHgAmydZbmTUAe8?p0=${transactionID}&p1=${shardID}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -53,7 +58,7 @@ class API {
 
     getNodeStat() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/rKclyiLtHx0dx55M')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/rKclyiLtHx0dx55M')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -63,7 +68,7 @@ class API {
 
     getRandomMnemonic() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/Gox4NzTLDnpEr10v')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/Gox4NzTLDnpEr10v')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -73,7 +78,7 @@ class API {
 
     getFreeOutputs(addressKeyIdentifier) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/FDLyQ5uo5t7jltiQ?p3=${addressKeyIdentifier}&p4=0&p7=1&p10=0`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/FDLyQ5uo5t7jltiQ?p3=${addressKeyIdentifier}&p4=0&p7=1&p10=0`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -83,7 +88,7 @@ class API {
 
     verifyAddress(address) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/Xim7SaikcsHICvfQ?p0=${address}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/Xim7SaikcsHICvfQ?p0=${address}`)
                 .then(response => response.json());
         }
         catch (e) {
@@ -93,7 +98,7 @@ class API {
 
     newSessionWithPhrase(password, mnemonicPhrase) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/GktuwZlVP39gty6v?p0=${password}&p1=${mnemonicPhrase}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/GktuwZlVP39gty6v?p0=${password}&p1=${mnemonicPhrase}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -103,7 +108,7 @@ class API {
 
     newSession(password) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/PMW9LXqUv7vXLpbA?p0=${password}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/PMW9LXqUv7vXLpbA?p0=${password}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -113,7 +118,7 @@ class API {
 
     endSession() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/pIQZEKY4T9vttBUk')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/pIQZEKY4T9vttBUk')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -123,7 +128,7 @@ class API {
 
     getSession() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/OBexeX0f0MsnL1S3')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/OBexeX0f0MsnL1S3')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -133,7 +138,7 @@ class API {
 
     getNodeConfig() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/CZOTAF5LfusB1Ht5')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/CZOTAF5LfusB1Ht5')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -143,7 +148,7 @@ class API {
 
     getNodeAboutAttribute() {
         try {
-            return fetch(this.getAuthenticatedURL() + `/AgsSNTSA0RHmWUkp?p0=${this.nodeID}&p1=ijDj2VlTyJBl5R4iTCmG`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/AgsSNTSA0RHmWUkp?p0=${this.nodeID}&p1=ijDj2VlTyJBl5R4iTCmG`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -153,7 +158,7 @@ class API {
 
     listAddresses() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/quIoaHsl8h6IwyEI')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/quIoaHsl8h6IwyEI')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -163,7 +168,7 @@ class API {
 
     getNextAddress() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/Lb2fuhVMDQm1DrLL')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/Lb2fuhVMDQm1DrLL')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -173,7 +178,7 @@ class API {
 
     interruptTransaction() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/RIlwZyfnizp2i8wh')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/RIlwZyfnizp2i8wh')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -183,7 +188,7 @@ class API {
 
     listActivePeers() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/0eoUqXNE715mBVqV?p0=2&p1=update_date%20desc')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/0eoUqXNE715mBVqV?p0=2&p1=update_date%20desc')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
@@ -193,7 +198,7 @@ class API {
 
     getNodeAttributes(nodeID) {
         try {
-            return fetch(this.getAuthenticatedURL() + `/AgsSNTSA0RHmWUkp?p0=${nodeID}`)
+            return fetch(this.getAuthenticatedMillixApiURL() + `/AgsSNTSA0RHmWUkp?p0=${nodeID}`)
                 .then(response => {
                     return response.ok ? response.json() : Promise.reject()
                 });
@@ -205,7 +210,7 @@ class API {
 
     resetTransactionValidation() {
         try {
-            return fetch(this.getAuthenticatedURL() + '/QISzUVake29059bi')
+            return fetch(this.getAuthenticatedMillixApiURL() + '/QISzUVake29059bi')
                 .then(response => {
                     return response.ok ? response.json() : Promise.reject()
                 });
