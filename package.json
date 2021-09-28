@@ -1,0 +1,76 @@
+{
+  "name": "wallet-light",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-regular-svg-icons": "^5.15.3",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@trendmicro/react-sidenav": "^0.5.0",
+    "jquery": "2.2.0",
+    "localforage": "^1.9.0",
+    "lodash": "^4.17.21",
+    "mdbreact": "^5.0.1",
+    "moment": "^2.29.1",
+    "react": "^17.0.2",
+    "react-bootstrap": "^1.5.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-stepz": "^0.1.0",
+    "react-switchery": "^1.2.3",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "sass": "^1.32.8",
+    "web-vitals": "^1.0.1",
+    "webpack": "4.44.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && npm run build-rename",
+    "build-rename": "npm run build-rename-js && npm run build-rename-css && npm run build-rename-media && npm run build-fix-references",
+    "build-rename-js": "renamer --find \"/([^\\.]+)\\.[^\\.]+\\./i\" --replace \"$1.\" build\\static\\js\\*",
+    "build-rename-css": "renamer --find \"/([^\\.]+)\\.[^\\.]+\\./i\" --replace \"$1.\" build\\static\\css\\*",
+    "build-rename-media": "renamer --find \"/([^\\.]+)\\.[^\\.]+\\./i\" --replace \"$1.\" build\\static\\media\\*",
+    "build-fix-references": "npm run build-fix-sourcemap && npm run build-fix-font && npm run build-fix-index && npm run build-fix-assetmanifest",
+    "build-fix-sourcemap": "npm run build-fix-sourcemap-js && npm run build-fix-sourcemap-css && npm run build-fix-sourcemap-js-map && npm run build-fix-sourcemap-css-map",
+    "build-fix-sourcemap-js": "replace-in-file \"/sourceMappingURL=([^\\.]+)\\.[^\\.]+\\.(.*)\\.map/i\" \"sourceMappingURL=$1.$2.map\" build/static/js/**.js --isRegex",
+    "build-fix-sourcemap-css": "replace-in-file \"/sourceMappingURL=([^\\.]+)\\.[^\\.]+\\.(.*)\\.map/i\" \"sourceMappingURL=$1.$2.map\" build/static/css/**.css --isRegex",
+    "build-fix-sourcemap-js-map": "replace-in-file \"/static\\/js\\/([^\\.]+\\.)[^\\.]+\\.(.*\\.)?js/i\" \"static/js/$1$2js\" build/static/js/**.map --isRegex",
+    "build-fix-sourcemap-css-map": "replace-in-file \"/([^\\.]+)\\.[^\\.]+\\.chunk\\.css/i\" \"$1.chunk.css\" build/static/css/**.map --isRegex",
+    "build-fix-font": "replace-in-file \"/\\w+\\.(ttf|svg|woff2|woff|eot)/gi\" \"$1\" build/static/css/**.css --isRegex",
+    "build-fix-index": "npm run build-fix-index-js-css && npm run build-fix-index-script",
+    "build-fix-index-js-css": "replace-in-file \"/([\\w]+\\.)[\\w]+\\.(\\w+\\.)?(js|css)/g\" \"$1$2$3\" build/index.html --isRegex",
+    "build-fix-index-script": "replace-in-file \"/\\.[^\\.]+\\+[^\\.]+\\+[^\\.]+\\.chunk.js/i\" \".chunk.js\" build/index.html --isRegex",
+    "build-fix-assetmanifest": "replace-in-file \"/\\.[\\w]+(\\.chunk)?(\\.(css\\.map|css|js\\.map|js\\.LICENSE\\.txt|js|ttf|svg|woff2|woff|eot))/gi\" \"$1$2\" build/asset-manifest.json --isRegex",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "renamer": "^2.0.1",
+    "replace-in-file": "^6.2.0"
+  }
+}
