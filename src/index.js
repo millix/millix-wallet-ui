@@ -28,7 +28,8 @@ import {
     faUserClock,
     faWallet,
     faLock,
-    faLockOpen
+    faLockOpen,
+    faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
 import './vendor/bootstrap/css/bootstrap.css';
@@ -56,7 +57,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faStream, faExchangeAlt, faCloudDownloadAlt, faSlidersH,
     faSignOutAlt, faPlus, faHeartbeat, faUndoAlt, faTrash, faUndo,
     faBook, faMicrochip, faPowerOff, faUserClock, faClock, faCompressArrowsAlt,
-    faLock, faLockOpen);
+    faLock, faLockOpen, faTimes);
 
 
 let apiInfo = {
