@@ -1,5 +1,5 @@
 class API {
-    static HOST_MILLIX_API = 'https://localhost:5500/api';
+    static HOST_MILLIX_API  = 'https://localhost:5500/api';
     static HOST_TANGLED_API = 'https://localhost:15555/api';
 
     constructor() {
@@ -24,6 +24,36 @@ class API {
 
     getTangledApiURL() {
         return API.HOST_TANGLED_API;
+    }
+
+    listCategories() {
+        try {
+            return fetch(this.getTangledApiURL() + '/dAjjWCtPW1JbYwf6')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    listLanguages() {
+        try {
+            return fetch(this.getTangledApiURL() + '/wDqnBLvXY6FGUSfc')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    submitAdForm(formData) {
+        try {
+            return fetch(this.getTangledApiURL() + `/scWZ0yhuk5hHLd8s?p0=${JSON.stringify(formData)}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
     }
 
     sendTransaction(transactionOutputPayload) {
@@ -200,7 +230,7 @@ class API {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + `/AgsSNTSA0RHmWUkp?p0=${nodeID}`)
                 .then(response => {
-                    return response.ok ? response.json() : Promise.reject()
+                    return response.ok ? response.json() : Promise.reject();
                 });
         }
         catch (e) {
@@ -212,7 +242,7 @@ class API {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + '/QISzUVake29059bi')
                 .then(response => {
-                    return response.ok ? response.json() : Promise.reject()
+                    return response.ok ? response.json() : Promise.reject();
                 });
         }
         catch (e) {

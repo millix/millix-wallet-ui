@@ -10,6 +10,7 @@ import TransactionHistoryView from './transaction-history-view';
 import TransactionDetails from './transaction-details-view';
 import PeerListView from './peer-list-view';
 import PeerInfoView from './peer-info-view';
+import CreateAdView from './create-ad-view';
 /*
 import EventLogView from './event-log-view';
 import ConfigView from './config-view';*/
@@ -42,6 +43,7 @@ class AppContainer extends Component {
                     <Route path='/manage-wallet/' component={ManageWalletView}/>
                     <Route path='/new-wallet/' component={NewWalletView}/>
                     <Route path='/import-wallet/' component={ImportWalletView}/>
+                    <Route path='/create-ad/' component={CreateAdView}/>
                     <UnlockedWalletRequiredRoute path='/peers'
                                                  component={PeerListView}/>
                     <UnlockedWalletRequiredRoute path='/peer/:peer'
