@@ -48,7 +48,7 @@ class API {
 
     submitAdForm(formData) {
         try {
-            return fetch(this.getTangledApiURL() + `/scWZ0yhuk5hHLd8s?p0=${JSON.stringify(formData)}`)
+            return fetch(this.getTangledApiURL() + `/scWZ0yhuk5hHLd8s?p0=${encodeURIComponent(JSON.stringify(formData))}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {
