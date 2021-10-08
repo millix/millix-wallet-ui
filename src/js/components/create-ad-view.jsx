@@ -18,7 +18,9 @@ class CreateAdView extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.inputRef     = React.createRef();
         this.state        = {
+
             submitData   : {},
             errors       : {},
             fields       : {
@@ -193,8 +195,25 @@ class CreateAdView extends Component {
         if (this.handleValidation()) {
             API.submitAdForm(this.state.fields).then(data => {
                 this.setState({submitData: data});
+                this.flushForm();
             });
         }
+    }
+
+    flushForm() {
+        let fields = {
+            creative_name          : '',
+            category               : this.state.categories[0].value,
+            headline               : '',
+            deck                   : '',
+            url                    : '',
+            target_language        : this.state.languages[0].value,
+            search_phrase          : [],
+            daily_budget_mlx       : '',
+            bid_per_impressions_mlx: ''
+        };
+        this.inputRef.current.clear();
+        this.setState({fields: fields});
     }
 
     extractDomain(url) {
@@ -281,7 +300,9 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="10">
                                         <Form.Control
-                                            ref="creative_name"
+                                            // ref={input =>
+                                            // this.state.fields.creative_name
+                                            // = input.target.value}
                                             type="text"
                                             className="col-sm-12"
                                             value={this.state.fields['creative_name']}
@@ -323,7 +344,7 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="10">
                                         <Form.Control
-                                            ref="headline"
+                                            // ref="headline"
                                             type="text"
                                             className="col-sm-12"
                                             value={this.state.fields['headline']}
@@ -509,11 +530,13 @@ class CreateAdView extends Component {
                                     <Col sm="10">
                                         <Typehead
                                             as="select"
+                                            ref={this.inputRef}
                                             id="search_phrase"
                                             placeholder="type search phrase"
                                             options={this.state.searchphrases}
                                             multiple
                                             allowNew
+                                            selected={this.state.fields.selected}
                                             onChange={this.handleInputChange.bind(this, 'search_phrase')}
                                         />
                                     </Col>
