@@ -300,9 +300,6 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="10">
                                         <Form.Control
-                                            // ref={input =>
-                                            // this.state.fields.creative_name
-                                            // = input.target.value}
                                             type="text"
                                             className="col-sm-12"
                                             value={this.state.fields['creative_name']}
@@ -344,7 +341,6 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="10">
                                         <Form.Control
-                                            // ref="headline"
                                             type="text"
                                             className="col-sm-12"
                                             value={this.state.fields['headline']}
