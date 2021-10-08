@@ -19,6 +19,7 @@ class CreateAdView extends Component {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state        = {
+            submitData   : {},
             errors       : {},
             fields       : {},
             categories   : [],
@@ -91,12 +92,17 @@ class CreateAdView extends Component {
     async getCategories() {
         API.listCategories().then(data => {
 
-            const options = data.map(d => ({
+            const options   = data.map(d => ({
                 'value': d.advertisement_category_type_guid,
                 'label': d.advertisement_category_type
             }));
+            let fields      = this.state.fields;
+            fields.category = options[0].value;
 
-            this.setState({categories: options});
+            this.setState({
+                categories: options,
+                fields    : fields
+            });
         });
     }
 
@@ -107,8 +113,13 @@ class CreateAdView extends Component {
                 'value': d.language_guid,
                 'label': d.language_name + ' - ' + d.language_name_native
             }));
+            let fields = this.state.fields;
+            fields.target_language = options[0].value;
 
-            this.setState({languages: options});
+            this.setState({
+                languages: options,
+                fields   : fields
+            });
         });
     }
 
@@ -171,9 +182,7 @@ class CreateAdView extends Component {
         event.preventDefault();
         if (this.handleValidation()) {
             API.submitAdForm(this.state.fields).then(data => {
-                if (data.success) {
-                    console.log('form has been submitted successfully');
-                }
+                this.setState({submitData: data})
             });
         }
     }
@@ -196,7 +205,7 @@ class CreateAdView extends Component {
     }
 
     render() {
-        const renderDummyGeo  = () => {
+        const renderDummyGeo      = () => {
             return <div className="row">
                 <Col sm="10">
                     <Col sm="4">
@@ -231,10 +240,18 @@ class CreateAdView extends Component {
             </div>;
 
         };
-        const renderErrorDock = (name) => {
+        const renderErrorDock     = (name) => {
             return <span
                 style={{color: 'red'}}>{this.state.errors[name]}</span>;
         };
+        const renderSubmitMessage = () => {
+            const data = this.state.submitData;
+            if (typeof data.api_status != 'undefined') {
+                return <div
+                    className={data.api_status==='ok' ? 'success' : 'error'}>{data.api_message}</div>;
+            }
+        };
+
         return (
             <Container style={{
                 marginTop  : 50,
@@ -243,6 +260,7 @@ class CreateAdView extends Component {
                 <div className="container lg">
                     <div className="panel panel-filled">
                         <div className="panel-body">
+                            {renderSubmitMessage()}
                             <Form onSubmit={this.handleSubmit.bind(this)}>
                                 <FormGroup as={Row} controlId="creative_name">
                                     <Col sm="2">

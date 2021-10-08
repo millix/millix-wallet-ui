@@ -508,3 +508,31 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
 .hint{
     font-style: italic;
 }
+
+.panel-body .error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 .2rem rgba(220, 53, 69, .25);
+    border-radius: .25rem;
+    display: inline-block;
+    padding: 4px 7px;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin: 1px 3px 15px 0;
+    background-color: rgba(220, 53, 69, .15);
+    color: #949ba2;
+}
+
+.panel-body .success {
+    border-color: #28a745;
+    box-shadow: 0 0 0 .2rem rgba(40, 167, 69, .25);
+    border-radius: .25rem;
+    display: inline-block;
+    padding: 4px 7px;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin: 1px 3px 15px 0;
+    background-color: rgba(40, 167, 69, .15);
+    color: #949ba2;
+}
