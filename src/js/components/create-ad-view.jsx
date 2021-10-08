@@ -21,7 +21,17 @@ class CreateAdView extends Component {
         this.state        = {
             submitData   : {},
             errors       : {},
-            fields       : {},
+            fields       : {
+                creative_name          : '',
+                category               : '',
+                headline               : '',
+                deck                   : '',
+                url                    : '',
+                target_language        : '',
+                search_phrase          : '',
+                daily_budget_mlx       : '',
+                bid_per_impressions_mlx: ''
+            },
             categories   : [],
             languages    : [],
             countries    : [
@@ -109,11 +119,11 @@ class CreateAdView extends Component {
     async getLanguages() {
         API.listLanguages().then(data => {
 
-            const options = data.map(d => ({
+            const options          = data.map(d => ({
                 'value': d.language_guid,
                 'label': d.language_name + ' - ' + d.language_name_native
             }));
-            let fields = this.state.fields;
+            let fields             = this.state.fields;
             fields.target_language = options[0].value;
 
             this.setState({
@@ -182,7 +192,7 @@ class CreateAdView extends Component {
         event.preventDefault();
         if (this.handleValidation()) {
             API.submitAdForm(this.state.fields).then(data => {
-                this.setState({submitData: data})
+                this.setState({submitData: data});
             });
         }
     }
@@ -248,7 +258,7 @@ class CreateAdView extends Component {
             const data = this.state.submitData;
             if (typeof data.api_status != 'undefined') {
                 return <div
-                    className={data.api_status==='ok' ? 'success' : 'error'}>{data.api_message}</div>;
+                    className={data.api_status === 'ok' ? 'success' : 'error'}>{data.api_message}</div>;
             }
         };
 
