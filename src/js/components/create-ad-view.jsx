@@ -18,9 +18,22 @@ class CreateAdView extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.inputRef     = React.createRef();
         this.state        = {
+
+            submitData   : {},
             errors       : {},
-            fields       : {},
+            fields       : {
+                creative_name          : '',
+                category               : '',
+                headline               : '',
+                deck                   : '',
+                url                    : '',
+                target_language        : '',
+                search_phrase          : '',
+                daily_budget_mlx       : '',
+                bid_per_impressions_mlx: ''
+            },
             categories   : [],
             languages    : [],
             countries    : [
@@ -91,24 +104,34 @@ class CreateAdView extends Component {
     async getCategories() {
         API.listCategories().then(data => {
 
-            const options = data.map(d => ({
+            const options   = data.map(d => ({
                 'value': d.advertisement_category_type_guid,
                 'label': d.advertisement_category_type
             }));
+            let fields      = this.state.fields;
+            fields.category = options[0].value;
 
-            this.setState({categories: options});
+            this.setState({
+                categories: options,
+                fields    : fields
+            });
         });
     }
 
     async getLanguages() {
         API.listLanguages().then(data => {
 
-            const options = data.map(d => ({
+            const options          = data.map(d => ({
                 'value': d.language_guid,
                 'label': d.language_name + ' - ' + d.language_name_native
             }));
+            let fields             = this.state.fields;
+            fields.target_language = options[0].value;
 
-            this.setState({languages: options});
+            this.setState({
+                languages: options,
+                fields   : fields
+            });
         });
     }
 
@@ -171,11 +194,26 @@ class CreateAdView extends Component {
         event.preventDefault();
         if (this.handleValidation()) {
             API.submitAdForm(this.state.fields).then(data => {
-                if (data.success) {
-                    console.log('form has been submitted successfully');
-                }
+                this.setState({submitData: data});
+                this.flushForm();
             });
         }
+    }
+
+    flushForm() {
+        let fields = {
+            creative_name          : '',
+            category               : this.state.categories[0].value,
+            headline               : '',
+            deck                   : '',
+            url                    : '',
+            target_language        : this.state.languages[0].value,
+            search_phrase          : [],
+            daily_budget_mlx       : '',
+            bid_per_impressions_mlx: ''
+        };
+        this.inputRef.current.clear();
+        this.setState({fields: fields});
     }
 
     extractDomain(url) {
@@ -196,7 +234,7 @@ class CreateAdView extends Component {
     }
 
     render() {
-        const renderDummyGeo  = () => {
+        const renderDummyGeo      = () => {
             return <div className="row">
                 <Col sm="10">
                     <Col sm="4">
@@ -231,10 +269,18 @@ class CreateAdView extends Component {
             </div>;
 
         };
-        const renderErrorDock = (name) => {
+        const renderErrorDock     = (name) => {
             return <span
                 style={{color: 'red'}}>{this.state.errors[name]}</span>;
         };
+        const renderSubmitMessage = () => {
+            const data = this.state.submitData;
+            if (typeof data.api_status != 'undefined') {
+                return <div
+                    className={data.api_status === 'ok' ? 'success' : 'error'}>{data.api_message}</div>;
+            }
+        };
+
         return (
             <Container style={{
                 marginTop  : 50,
@@ -243,6 +289,7 @@ class CreateAdView extends Component {
                 <div className="container lg">
                     <div className="panel panel-filled">
                         <div className="panel-body">
+                            {renderSubmitMessage()}
                             <Form onSubmit={this.handleSubmit.bind(this)}>
                                 <FormGroup as={Row} controlId="creative_name">
                                     <Col sm="2">
@@ -253,7 +300,6 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="10">
                                         <Form.Control
-                                            ref="creative_name"
                                             type="text"
                                             className="col-sm-12"
                                             value={this.state.fields['creative_name']}
@@ -295,7 +341,6 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="10">
                                         <Form.Control
-                                            ref="headline"
                                             type="text"
                                             className="col-sm-12"
                                             value={this.state.fields['headline']}
@@ -481,11 +526,13 @@ class CreateAdView extends Component {
                                     <Col sm="10">
                                         <Typehead
                                             as="select"
+                                            ref={this.inputRef}
                                             id="search_phrase"
                                             placeholder="type search phrase"
                                             options={this.state.searchphrases}
                                             multiple
                                             allowNew
+                                            selected={this.state.fields.selected}
                                             onChange={this.handleInputChange.bind(this, 'search_phrase')}
                                         />
                                     </Col>
