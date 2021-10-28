@@ -105,8 +105,8 @@ class CreateAdView extends Component {
         API.listCategories().then(data => {
 
             const options   = data.map(d => ({
-                'value': d.advertisement_category_type_guid,
-                'label': d.advertisement_category_type
+                'value': d.advertisement_category_guid,
+                'label': d.advertisement_category
             }));
             let fields      = this.state.fields;
             fields.category = options[0].value;

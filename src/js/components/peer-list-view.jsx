@@ -56,7 +56,7 @@ class PeerListView extends Component {
                    peerList.push({
                        clickEvent : () => this.props.history.push('/peer/' + item.node_id, {peer: item.node_id}),
                        node_idx   : idx + 1,
-                       node_url   : `${item.node_prefix}${item.node_address}${item.node_port}`,
+                       node_url   : `${item.node_prefix}${item.node_address}:${item.node_port}`,
                        node_status: 'up'
                    });
                });
