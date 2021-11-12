@@ -21,9 +21,9 @@ class CreateAdView extends Component {
         this.inputRef     = React.createRef();
         this.state        = {
 
-            submitData   : {},
-            errors       : {},
-            fields       : {
+            submitData: {},
+            errors    : {},
+            fields    : {
                 creative_name          : '',
                 category               : '',
                 headline               : '',
@@ -34,16 +34,16 @@ class CreateAdView extends Component {
                 daily_budget_mlx       : '',
                 bid_per_impressions_mlx: ''
             },
-            categories   : [],
-            languages    : [],
-            countries    : [
+            categories: [],
+            languages : [],
+            countries : [
                 //todo: replace me
                 'united states',
                 'antigua and barbuda',
                 'barbados',
                 'czech republic'
             ],
-            regions      : [
+            regions   : [
                 //todo: replace me
                 'alaska',
                 'california',
@@ -385,7 +385,8 @@ class CreateAdView extends Component {
                                     </Col>
                                 </FormGroup>
 
-                                <FormGroup as={Row} controlId="preview">
+                                <FormGroup as={Row} className="ad-preview"
+                                           controlId="preview">
                                     <Col sm="2">
                                         <Form.Label
                                             className="control-label text-right col-sm-12">
@@ -393,17 +394,22 @@ class CreateAdView extends Component {
                                         </Form.Label>
                                     </Col>
                                     <Col sm="10">
-                                        <div style={{
-                                            padding   : '10px',
-                                            background: '#494b54',
-                                            color     : '#949ba2'
-                                        }} aria-readonly="true">
-                                            <b>{this.state.fields['headline'] ? this.state.fields['headline'] : 'Florida drivers are saving up to\n' +
-                                                                                                                '                                                40% on their car\n' +
-                                                                                                                '                                                insurance'}</b><br/>
-                                            {this.state.fields['deck'] ? this.state.fields['deck'] : 'Click for a free quote before your\n' +
-                                                                                                     '                                            next payment'} - <a
-                                            href="#">{this.state.fields['url'] ? this.state.fields['url'] : 'insurance21.com'}</a>
+                                        <div className="preview-holder"
+                                             aria-readonly="true">
+                                            <div className="row h-50">
+                                                <div id="ads_holder h-50 pt-7"
+                                                     className="col-8 m-0 ads-slider">
+                                                    <span>
+                                                        <a id="advertisement_headline"
+                                                           href={this.state.fields['url'] ? this.state.fields['url'] : 'google.com'}
+                                                           title={this.state.fields['deck'] ? this.state.fields['deck'] : 'Click for a free quote before your next payment'}>{this.state.fields['headline'] ? this.state.fields['headline'] : 'Florida drivers are saving up to 40% on their car insurance'}</a>
+                                                    </span>
+                                                    <span>
+                                                        <a id="advertisement_target_phrase"
+                                                           href={this.state.fields['url'] ? this.state.fields['url'] : 'google.com'}
+                                                           title={this.state.fields['deck'] ? this.state.fields['deck'] : 'Click for a free quote before your next payment'}>Click for free quote before your next payment - google.com</a></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </Col>
                                 </FormGroup>
