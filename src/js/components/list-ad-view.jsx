@@ -22,10 +22,6 @@ class ListAdView extends Component {
                         field: 'idx'
                     },
                     {
-                        label: 'id',
-                        field: 'advertisement_id'
-                    },
-                    {
                         label: 'advertisement guid',
                         field: 'advertisement_guid'
                     },
@@ -82,7 +78,7 @@ class ListAdView extends Component {
                             <FontAwesomeIcon icon="power-off" size="1x"/>,
                             ' ad status '
                         ],
-                        field: 'status'
+                        field: 'status_button'
                     },
                     {
                         label: 'create_date',
@@ -104,17 +100,40 @@ class ListAdView extends Component {
 
     async toggleAdStatus(advertisement_guid) {
         API.toggleAdStatus(advertisement_guid).then(data => {
-            if (typeof data.api_status != 'undefined' && data.api_status == 'ok') {
+            if (typeof data.api_status != 'undefined' && data.api_status === 'ok') {
                 let updated = data.advertisement;
-                let ad_list = this.state.ad_list;
-                ad_list.rows.forEach((item, idx) => {
-                    if (item.advertisement_guid == updated.advertisement_guid) {
-                        ad_list.rows[idx] = updated;
+                let rows    = this.state.ad_list.rows;
+                rows.forEach((item, idx) => {
+                    if (item.advertisement_guid === updated.advertisement_guid) {
+                        updated.advertisement_type     = this.getAdType(updated);
+                        updated.advertisement_category = this.getAdCategory(updated);
+                        updated.status_button          = this.getStatusButton(updated);
+                        updated.create_date            = this.getFormattedDate(updated);
+                        rows[idx]                      = updated;
                     }
                 });
-                this.setState({ad_list: ad_list});
+                this.setState({
+                    ad_list: {
+                        columns: [...this.state.ad_list.columns],
+                        rows
+                    }
+                });
             }
         });
+    }
+
+    getFormattedDate(item) {
+        let date = new Date(item.create_date * 1000);
+        return date.toLocaleString();
+    }
+
+    getStatusButton(item) {
+        let active = item.status === 1 ? 'active' : '';
+        return <button
+            className={'btn btn-w-md btn-accent ' + active}
+            id={item.advertisement_guid}
+            onClick={() => this.toggleAdStatus(item.advertisement_guid)}>{this.getStatusLabel(item.status)}</button>;
+
     }
 
     async getTypes() {
@@ -133,39 +152,47 @@ class ListAdView extends Component {
         });
     }
 
+    getAdType(item) {
+        let type = '';
+        this.state.types.forEach((ad_type) => {
+            if (ad_type.advertisement_type_guid === item.advertisement_type_guid) {
+                type = ad_type.advertisement_type;
+            }
+        });
+        return type;
+    }
+
+    getAdCategory(item) {
+        let category = '';
+        this.state.categories.forEach((cat) => {
+            if (cat.advertisement_category_guid === item.advertisement_category_guid) {
+                category = cat.advertisement_category;
+            }
+        });
+        return category;
+    }
+
     async getAdsList() {
         API.listAds().then(data => {
-            let shouldUpdate = true;
-            if (typeof data.api_status != 'undefined' && data.api_status == 'ok') {
+            let shouldUpdate = false;
+            if (typeof data.api_status != 'undefined' && data.api_status === 'ok') {
 
-                let ad_list = [];
+                let ad_list    = [];
+                let table_list = this.state.ad_list.rows;
 
                 if (typeof data.advertisement_list != 'undefined') {
+                    if (table_list.length == !data.advertisement_list.length) {
+                        shouldUpdate = true;
+                    }
                     data.advertisement_list.forEach((item, idx) => {
-                        //todo: should update processor
 
-
-                        let category = '';
-                        let type     = '';
-                        this.state.categories.forEach((cat) => {
-                            if (cat.advertisement_category_guid == item.advertisement_category_guid) {
-                                category = cat.advertisement_category;
-                            }
-                        });
-                        this.state.types.forEach((ad_type) => {
-                            if (ad_type.advertisement_type_guid == item.advertisement_type_guid) {
-                                type = ad_type.advertisement_type;
-                            }
-                        });
-                        let date = new Date(item.create_date * 1000);
                         ad_list.push({
                             idx                        : item.advertisement_id,
-                            advertisement_id           : item.advertisement_id,
                             advertisement_guid         : item.advertisement_guid,
                             advertisement_type_guid    : item.advertisement_type_guid,
-                            advertisement_type         : type,
+                            advertisement_type         : this.getAdType(item),
                             advertisement_category_guid: item.advertisement_category_guid,
-                            advertisement_category     : category,
+                            advertisement_category     : this.getAdCategory(item),
                             advertisement_name         : item.advertisement_name,
                             advertisement_url          : item.advertisement_url,
                             protocol_address_funding   : item.protocol_address_funding,
@@ -174,10 +201,9 @@ class ListAdView extends Component {
                             bid_impression_usd         : item.bid_impression_usd,
                             bid_impression_mlx         : item.bid_impression_mlx,
                             expiration                 : item.expiration,
-                            status                     : <button
-                                class="btn btn-w-md btn-accent"
-                                onClick={() => this.toggleAdStatus(item.advertisement_guid)}>{this.getStatusLabel(item.status)}</button>,
-                            create_date                : date.toLocaleString()
+                            status                     : item.status,
+                            status_button              : this.getStatusButton(item),
+                            create_date                : this.getFormattedDate(item)
                         });
                     });
                 }
@@ -185,8 +211,7 @@ class ListAdView extends Component {
                     this.setState({
                         ad_list: {
                             columns: [...this.state.ad_list.columns],
-
-                            rows: ad_list
+                            rows   : ad_list
                         }
                     });
                 }
@@ -220,10 +245,10 @@ class ListAdView extends Component {
                                 pagesAmount={4}
                                 striped
                                 bordered
-                                hover
                                 responsive
                                 autoWidth
                                 info
+                                noBottomColumns
                                 entries={10}
                                 entriesOptions={[
                                     10,
