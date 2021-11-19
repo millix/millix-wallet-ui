@@ -217,9 +217,9 @@ class API {
         }
     }
 
-    listAddresses() {
+    listAddresses(addressKeyIdentifier) {
         try {
-            return fetch(this.getAuthenticatedMillixApiURL() + '/quIoaHsl8h6IwyEI')
+            return fetch(this.getAuthenticatedMillixApiURL() + `/quIoaHsl8h6IwyEI?&p0=${addressKeyIdentifier}`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {

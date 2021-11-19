@@ -91,6 +91,12 @@ const UnlockedWalletRequiredRoute = ({
                                     <Row>
                                         <Col className="pr-0"
                                              style={{textAlign: 'left'}}>
+                                            <span>pending validation: {rest.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className="pr-0"
+                                             style={{textAlign: 'left'}}>
                                             <Button variant="link"
                                                     onClick={() => props.history.push('/peers')}
                                                     style={{
