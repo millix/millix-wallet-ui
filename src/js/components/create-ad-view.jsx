@@ -407,7 +407,7 @@ class CreateAdView extends Component {
                                                     <span>
                                                         <a id="advertisement_target_phrase"
                                                            href={this.state.fields['url'] ? this.state.fields['url'] : 'google.com'}
-                                                           title={this.state.fields['deck'] ? this.state.fields['deck'] : 'Click for a free quote before your next payment'}>Click for free quote before your next payment - google.com</a></span>
+                                                           title={this.state.fields['deck'] ? this.state.fields['deck'] : 'Click for a free quote before your next payment'}>{this.state.fields['deck'] ? this.state.fields['deck'] : 'Click for a free quote before your next payment'} - {this.state.fields['url'] ? this.state.fields['url'] : 'google.com'}</a></span>
                                                 </div>
                                             </div>
                                         </div>

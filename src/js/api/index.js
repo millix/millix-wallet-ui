@@ -46,6 +46,37 @@ class API {
         }
     }
 
+    listAds() {
+        try {
+            return fetch(this.getTangledApiURL() + '/aerijOtODMtkHo6i')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    listAdTypes() {
+        try {
+            return fetch(this.getTangledApiURL() + '/jbUwv8IG6XeYMqCq')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    toggleAdStatus(advertisement_guid) {
+        try {
+            return fetch(this.getTangledApiURL() + `/C7neErVANMWXWuse?p0=${encodeURIComponent(JSON.stringify({advertisement_guid: advertisement_guid}))}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+
+    }
+
     submitAdForm(formData) {
         try {
             return fetch(this.getTangledApiURL() + `/scWZ0yhuk5hHLd8s?p0=${encodeURIComponent(JSON.stringify(formData))}`)
