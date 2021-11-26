@@ -91,6 +91,11 @@ class Sidebar extends Component {
                             actions
                         </NavText>
                     </NavItem>
+                    <NavItem key={'stats'} eventKey="/stats">
+                        <NavText>
+                            stats
+                        </NavText>
+                    </NavItem>
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
                             logout

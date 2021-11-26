@@ -22,8 +22,8 @@ class PeerInfoView extends Component {
         API.getNodeAttributes(nodeID)
            .then(attributes => {
                this.setState({attributes});
-           }).catch((e)=> {
-               console.error(e)
+           }).catch((e) => {
+            console.error(e);
         });
     }
 
@@ -44,30 +44,18 @@ class PeerInfoView extends Component {
                     let attributeType = key.replace(/_/g, ' ');
                     simpleAttributes.push(
                         <Row className="mb-3">
-                            <span>{attributeType}: {value}</span>
+                            <span>{attributeType}: {value?.toString()}</span>
                         </Row>
                     );
                 }
             }
             else {
-                if (ele.value instanceof Object) {
-                    Object.entries(ele.value).forEach(([key, value]) => {
-                        let attributeType = key.replace(/_/g, ' ');
-                        simpleAttributes.push(
-                            <Row className="mb-3">
-                                <span>{attributeType}: {value}</span>
-                            </Row>
-                        );
-                    });
-                }
-                else {
-                    let attributeType = ele.attribute_type.replace(/_/g, ' ');
-                    simpleAttributes.push(
-                        <Row className="mb-3">
-                            <span>{attributeType}: {ele.value}</span>
-                        </Row>
-                    );
-                }
+                let attributeType = ele.attribute_type.replace(/_/g, ' ');
+                simpleAttributes.push(
+                    <Row className="mb-3">
+                        <span>{attributeType}: {ele.value?.toString()}</span>
+                    </Row>
+                );
             }
         });
 

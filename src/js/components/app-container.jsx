@@ -17,6 +17,7 @@ import ConfigView from './config-view';*/
 import ActionView from './action-view';
 import NewWalletView from './new-wallet-view';
 import ManageWalletView from './manage-wallet-view';
+import StatsView from './stats-view';
 
 
 class AppContainer extends Component {
@@ -55,6 +56,8 @@ class AppContainer extends Component {
                     */}
                     <UnlockedWalletRequiredRoute path='/actions'
                                                  component={ActionView}/>
+                    <UnlockedWalletRequiredRoute path='/stats'
+                                                 component={StatsView}/>
                     <UnlockedWalletRequiredRoute
                         path='/transaction/:transaction_id'
                         component={TransactionDetails}/>

@@ -1,10 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-import {Link, Redirect, Route} from 'react-router-dom';
-import {updateNetworkState} from '../../redux/actions';
+import {Redirect, Route} from 'react-router-dom';
 import Sidebar from '../sidebar';
-import {Button, Col, Container, Form, Row} from 'react-bootstrap';
-import API from '../../api/index';
+import {Col, Container} from 'react-bootstrap';
 import '../../../../node_modules/mohithg-switchery/switchery.css';
 import $ from 'jquery';
 
@@ -44,70 +42,8 @@ const UnlockedWalletRequiredRoute = ({
             <section className={'content'}>
                 <Container fluid={true}>
                     <div>
-                        <Col md="10">
+                        <Col md="12">
                             <Component {...props} />
-                        </Col>
-                        <Col md="2">
-                            <div className={'panel panel-filled'}>
-                                <div className={'panel-heading'}>status
-                                </div>
-                                <hr className={'hrPanel'}/>
-                                <div className={'panel-body'}>
-                                    {rest.config.MODE_TEST_NETWORK && (<Row>
-                                        <Col className="pr-0"
-                                             style={{textAlign: 'left'}}>
-                                            <span>millix testnet</span>
-                                            <hr/>
-                                        </Col>
-                                    </Row>)}
-                                    {!!rest.wallet.version_available && !(rest.config.NODE_MILLIX_VERSION === rest.wallet.version_available || rest.config.NODE_MILLIX_VERSION !== (rest.wallet.version_available + '-tangled')) &&
-                                     (<Row>
-                                         <Col className="pr-0"
-                                              style={{textAlign: 'right'}}>
-                                             <Button variant="link"
-                                                     onClick={() => {
-                                                     }}
-                                                     style={{
-                                                         fontSize: '75%',
-                                                         padding : 0,
-                                                         color   : '#ffadad'
-                                                     }}>new version
-                                                 available
-                                                 v.{rest.wallet.version_available} !</Button>
-                                         </Col>
-                                     </Row>)}
-                                    <Row>
-                                        <Col className="pr-0"
-                                             style={{textAlign: 'left'}}>
-                                            <span>event log size: {rest.log.size.toLocaleString('en-US')}</span>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col className="pr-0"
-                                             style={{textAlign: 'left'}}>
-                                            <span>backlog size: {rest.backlog.size.toLocaleString('en-US')}</span>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col className="pr-0"
-                                             style={{textAlign: 'left'}}>
-                                            <span>pending validation: {rest.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</span>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col className="pr-0"
-                                             style={{textAlign: 'left'}}>
-                                            <Button variant="link"
-                                                    onClick={() => props.history.push('/peers')}
-                                                    style={{
-                                                        padding    : 0,
-                                                        borderWidth: '0rem'
-                                                    }}>
-                                                connections: {rest.network.connections}</Button>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </div>
                         </Col>
                     </div>
                 </Container>
@@ -124,12 +60,6 @@ const UnlockedWalletRequiredRoute = ({
 export default connect(
     state => ({
         clock  : state.clock,
-        config : state.config,
-        log    : state.log,
-        network: state.network,
         wallet : state.wallet,
-        backlog: state.backlog,
         node   : state.node
-    }), {
-        updateNetworkState
-    })(UnlockedWalletRequiredRoute);
+    }))(UnlockedWalletRequiredRoute);

@@ -52,9 +52,10 @@ class WalletView extends Component {
         this.getNodeStatHandler = setTimeout(() => API.getNodeStat()
                                                       .then(data => {
                                                           this.props.walletUpdateBalance({
-                                                              balance_stable    : data.balance.stable,
-                                                              balance_pending   : data.balance.unstable,
-                                                              transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count||0
+                                                              balance_stable                   : data.balance.stable,
+                                                              balance_pending                  : data.balance.unstable,
+                                                              transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
+                                                              transaction_count                : data.transaction.transaction_count || 0
                                                           });
                                                           this.props.setBackLogSize(data.log.backlog_count);
                                                           this.props.setLogSize(data.log.log_count);
