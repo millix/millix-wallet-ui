@@ -98,10 +98,15 @@ class TransactionHistoryView extends Component {
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
-                            <DataTable striped bordered small hover
+                            <DataTable striped
+                                       bordered
+                                       small
+                                       hover
                                        autoWidth={false}
                                        info={false}
                                        entries={10}
+                                       disableRetreatAfterSorting
+                                       onPageChange={page => this.setState({page})}
                                        entriesOptions={[
                                            10,
                                            30,

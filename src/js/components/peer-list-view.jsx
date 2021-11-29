@@ -91,9 +91,14 @@ class PeerListView extends Component {
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row>
-                            <DataTable striped bordered small hover
+                            <DataTable striped
+                                       bordered
+                                       small
+                                       hover
                                        info={false}
-                                       entries={10}
+                                       entries={5}
+                                       disableRetreatAfterSorting
+                                       onPageChange={page => this.setState({page})}
                                        entriesOptions={[
                                            10,
                                            30,
