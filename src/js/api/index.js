@@ -87,6 +87,16 @@ class API {
         }
     }
 
+    requestAdvertisementPayment(advertisementGUID) {
+        try {
+            return fetch(this.getTangledApiURL() + `/QYEgbWuFZs5s7Kud?p0=${advertisementGUID}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
     sendTransaction(transactionOutputPayload) {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + `/XPzc85T3reYmGro1?p0=${JSON.stringify(transactionOutputPayload)}`)
