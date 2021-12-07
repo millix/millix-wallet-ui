@@ -66,7 +66,7 @@ class AppContainer extends Component {
                         component={TransactionDetails}/>
                     <UnlockedWalletRequiredRoute path="/history"
                                                  component={TransactionHistoryView}/>
-                    <UnlockedWalletRequiredRoute path="/utxo"
+                    <UnlockedWalletRequiredRoute path="/utxo/:state"
                                                  component={UnspentTransactionOutputView}/>
                     <UnlockedWalletRequiredRoute component={WalletView}/>
                 </Switch>

@@ -71,8 +71,9 @@ class UnspentTransactionOutputView extends Component {
     }
 
     componentDidMount() {
-        this.updaterHandler = setInterval(() => API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier).then(data => {
-            let rows = data.map((output, idx) => ({
+        this.updaterHandler = setInterval(() => API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.props.location.state.stable).then(data => {
+
+            let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
                 clickEvent      : () => this.props.history.push('/transaction/' + encodeURIComponent(output.transaction_id), [output]),
                 idx             : data.length - idx,
                 transaction_id  : output.transaction_id,
