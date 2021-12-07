@@ -1,20 +1,20 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import {Row} from 'react-bootstrap';
-import {walletUpdateTransactions} from '../redux/actions/index';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {MDBDataTable as DataTable} from 'mdbreact';
+import {walletUpdateTransactions} from '../redux/actions';
+import API from '../api/index';
 
 
-class TransactionHistoryView extends Component {
+class UnspentTransactionOutputView extends Component {
     constructor(props) {
         super(props);
-        this.transactionHistoryUpdateHandler = undefined;
-        this.state                 = {
-            fileKey         : new Date().getTime(),
-            transaction_list: {
+        this.updaterHandler = undefined;
+        this.state          = {
+            transaction_output_list: {
                 columns: [
                     {
                         label: '#',
@@ -25,14 +25,21 @@ class TransactionHistoryView extends Component {
                             <FontAwesomeIcon icon="user-clock" size="1x"/>,
                             ' date'
                         ],
-                        field: 'date'
+                        field: 'transaction_date'
                     },
                     {
                         label: [
                             <FontAwesomeIcon icon="book" size="1x"/>,
                             ' txid'
                         ],
-                        field: 'txid'
+                        field: 'transaction_id'
+                    },
+                    {
+                        label: [
+                            <FontAwesomeIcon icon="book" size="1x"/>,
+                            ' output position'
+                        ],
+                        field: 'output_position'
                     },
                     {
                         label: [
@@ -44,17 +51,18 @@ class TransactionHistoryView extends Component {
                     },
                     {
                         label: [
-                            <FontAwesomeIcon icon="clock" size="1x"/>,
-                            ' stable date'
+                            <FontAwesomeIcon icon="box"
+                                             size="1x"/>,
+                            ' address'
                         ],
-                        field: 'stable_date'
+                        field: 'address'
                     },
                     {
                         label: [
                             <FontAwesomeIcon icon="clock" size="1x"/>,
-                            ' parent date'
+                            ' stable date'
                         ],
-                        field: 'parent_date'
+                        field: 'stable_date'
                     }
                 ],
                 rows   : []
@@ -63,38 +71,37 @@ class TransactionHistoryView extends Component {
     }
 
     componentDidMount() {
-        this.transactionHistoryUpdateHandler = setInterval(() => this.props.walletUpdateTransactions(this.props.wallet.address_key_identifier), 2000);
+        this.updaterHandler = setInterval(() => API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier).then(data => {
+            let rows = data.map((output, idx) => ({
+                clickEvent      : () => this.props.history.push('/transaction/' + encodeURIComponent(output.transaction_id), [output]),
+                idx             : data.length - idx,
+                transaction_id  : output.transaction_id,
+                address         : output.address,
+                output_position : output.output_position,
+                amount          : output.amount.toLocaleString('en-US'),
+                transaction_date: moment.utc(output.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss')
+            }));
+            this.setState({
+                transaction_output_list: {
+                    columns: [...this.state.transaction_output_list.columns],
+                    rows   : rows
+                }
+            });
+        }), 5000);
     }
 
     componentWillUnmount() {
-        clearTimeout(this.transactionHistoryUpdateHandler);
-    }
-
-    componentWillReceiveProps(nextProps, nextContext) {
-        if (this.state.transaction_list.rows.length !== this.props.wallet.transactions.length) {
-            const rows = this.props.wallet.transactions.map((transaction, idx) => ({
-                clickEvent : () => this.props.history.push('/transaction/' + encodeURIComponent(transaction.transaction_id), [transaction]),
-                idx        : this.props.wallet.transactions.length - idx,
-                date       : moment.utc(transaction.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                amount     : transaction.amount.toLocaleString('en-US'),
-                txid       : transaction.transaction_id,
-                stable_date: transaction.stable_date && moment.utc(transaction.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                parent_date: transaction.parent_date && moment.utc(transaction.parent_date * 1000).format('YYYY-MM-DD HH:mm:ss')
-            }));
-            this.setState({
-                transaction_list: {
-                    columns: [...this.state.transaction_list.columns],
-                    rows
-                }
-            });
-        }
+        clearTimeout(this.updaterHandler);
     }
 
     render() {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>transactions</div>
+                    <div className={'panel-heading'}>unspent transaction
+                        outputs
+                    </div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
@@ -107,7 +114,7 @@ class TransactionHistoryView extends Component {
                                            30,
                                            50
                                        ]}
-                                       data={this.state.transaction_list}/>
+                                       data={this.state.transaction_output_list}/>
                         </Row>
                     </div>
                 </div>
@@ -124,4 +131,4 @@ export default connect(
     {
         walletUpdateTransactions
     }
-)(withRouter(TransactionHistoryView));
+)(withRouter(UnspentTransactionOutputView));

@@ -97,6 +97,16 @@ class API {
         }
     }
 
+    getWalletUnspentTransactionOutputList(addressKeyIdentifier) {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/FDLyQ5uo5t7jltiQ?p3=${addressKeyIdentifier}&p4=0&p7=1&p10=0&p13=transaction_date desc`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
     getTransactionHistory(addressKeyIdentifier) {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + `/w9UTTA7NXnEDUXhe?p0=${addressKeyIdentifier}`)

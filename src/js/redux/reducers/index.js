@@ -12,11 +12,19 @@ import _ from 'lodash';
 
 const initialState = {
     network           : {
-        node_list        : [],
-        node_online_list : [],
-        node_offline_list: [],
-        connections      : 0,
-        enabled          : true
+        node_list             : [],
+        node_online_list      : [],
+        node_offline_list     : [],
+        connections           : 0,
+        enabled               : true,
+        node_is_public        : 'unknown',
+        node_public_ip        : 'unknown',
+        node_id               : 'unknown',
+        node_port             : 'unknown',
+        online                : true,
+        peer_count            : 'unknown',
+        node_bind_ip          : 'unknown',
+        node_network_addresses: []
     },
     wallet            : {
         id                               : undefined,

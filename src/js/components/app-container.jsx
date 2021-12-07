@@ -7,6 +7,7 @@ import ImportWalletView from './import-wallet-view';
 import UnlockWalletView from './unlock-wallet-view';
 import UnlockedWalletRequiredRoute from './utils/unlocked-wallet-required-route';
 import TransactionHistoryView from './transaction-history-view';
+import UnspentTransactionOutputView from './unspent-transaction-output-view';
 import TransactionDetails from './transaction-details-view';
 import PeerListView from './peer-list-view';
 import PeerInfoView from './peer-info-view';
@@ -58,13 +59,15 @@ class AppContainer extends Component {
                      */}
                     <UnlockedWalletRequiredRoute path="/actions"
                                                  component={ActionView}/>
-                    <UnlockedWalletRequiredRoute path='/stats'
+                    <UnlockedWalletRequiredRoute path='/status'
                                                  component={StatsView}/>
                     <UnlockedWalletRequiredRoute
                         path="/transaction/:transaction_id"
                         component={TransactionDetails}/>
                     <UnlockedWalletRequiredRoute path="/history"
                                                  component={TransactionHistoryView}/>
+                    <UnlockedWalletRequiredRoute path="/utxo"
+                                                 component={UnspentTransactionOutputView}/>
                     <UnlockedWalletRequiredRoute component={WalletView}/>
                 </Switch>
             </Router>

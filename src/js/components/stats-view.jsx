@@ -8,8 +8,7 @@ import {updateNetworkState} from '../redux/actions';
 class StatsView extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+        this.state = {};
     }
 
     componentDidMount() {
@@ -49,25 +48,71 @@ class StatsView extends Component {
                     <Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>event log size: {props.log.size.toLocaleString('en-US')}</small>
+                            <small>{props.network.node_is_public ? 'your node is public and is eligible to receive transaction fees' : 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.'}</small>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col className="pr-0"
+                             style={{textAlign: 'left'}}>
+                            <small>event log
+                                size: {props.log.size.toLocaleString('en-US')}</small>
                         </Col>
                     </Row>
                     <Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>backlog size: {props.backlog.size.toLocaleString('en-US')}</small>
+                            <small>backlog
+                                size: {props.backlog.size.toLocaleString('en-US')}</small>
                         </Col>
                     </Row>
                     <Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>pending validation: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</small>
+                            <small>pending
+                                transaction count: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</small>
                         </Col>
                     </Row>
                     <Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>transaction count: {props.wallet.transaction_count.toLocaleString('en-US')}</small>
+                            <small>transaction
+                                count: {props.wallet.transaction_count.toLocaleString('en-US')}</small>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col className="pr-0"
+                             style={{textAlign: 'left'}}>
+                            <small>node id: {props.network.node_id}</small>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="pr-0"
+                             style={{textAlign: 'left'}}>
+                            <small>node public
+                                address: {props.network.node_public_ip.toLocaleString('en-US')}</small>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="pr-0"
+                             style={{textAlign: 'left'}}>
+                            <small>node
+                                port: {props.network.node_port.toLocaleString('en-US')}</small>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="pr-0"
+                             style={{textAlign: 'left'}}>
+                            <small>node bind
+                                ip: {props.network.node_bind_ip.toLocaleString('en-US')}</small>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="pr-0"
+                             style={{textAlign: 'left'}}>
+                            <small>local network
+                                addresses: {props.network.node_network_addresses.join(', ')}</small>
                         </Col>
                     </Row>
                     <Row>
@@ -79,12 +124,12 @@ class StatsView extends Component {
                                         padding    : 0,
                                         borderWidth: '0rem'
                                     }}>
-                                <small>connections: {props.network.connections}</small></Button>
+                                <small>peers: {props.network.connections}</small></Button>
                         </Col>
                     </Row>
                 </div>
             </div>
-        </Col>)
+        </Col>);
     }
 }
 

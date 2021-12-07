@@ -69,9 +69,9 @@ class Sidebar extends Component {
                             transactions
                         </NavText>
                     </NavItem>
-                    <NavItem key={'connections'} eventKey="/peers">
+                    <NavItem key={'peers'} eventKey="/peers">
                         <NavText>
-                            connections
+                            peers
                         </NavText>
                     </NavItem>
                     {/*
@@ -91,9 +91,9 @@ class Sidebar extends Component {
                             actions
                         </NavText>
                     </NavItem>
-                    <NavItem key={'stats'} eventKey="/stats">
+                    <NavItem key={'status'} eventKey="/status">
                         <NavText>
-                            stats
+                            status
                         </NavText>
                     </NavItem>
                     <NavItem key={'lock'} eventKey="lock">

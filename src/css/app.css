@@ -49,6 +49,10 @@
     background: #2f323b;
 }
 
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
+    font-size: 18px;
+}
+
 .nav-category {
     color: #FFFFFF;
     margin-top: 10px !important;
@@ -599,4 +603,21 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
 #advertisement_target_phrase {
     text-decoration: none;
     font-size: 14px;
+}
+
+a {
+    color: #C741FC;
+}
+
+a:hover, a:focus {
+    color: #C741FC;
+    text-decoration: underline;
+}
+
+.btn-xs {
+    font-size: 1rem!important
+}
+
+td {
+    font-size: 18px;
 }
