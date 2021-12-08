@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './js/components/app-container';
 import store from './js/redux/store';
-import {unlockWallet, updateClock, addWalletConfig, updateNodeAttribute} from './js/redux/actions';
+import {unlockWallet, updateClock, addWalletConfig, updateNodeAttribute, updateWalletAddressVersion} from './js/redux/actions';
 import reportWebVitals from './reportWebVitals';
 import {config as faConfig, library} from '@fortawesome/fontawesome-svg-core';
 import {
@@ -131,6 +131,7 @@ const getNodeAboutAttribute = () => {
 };
 
 const getNodeConfig = () => {
+    console.log('get node config', store.getState().config);
     if (Object.keys(store.getState().config).length === 0) {
         API.getNodeConfig()
            .then(configList => {
@@ -147,9 +148,18 @@ const getNodeConfig = () => {
     }
 };
 
+const getWalletAddressVersion = () => {
+    if (Object.keys(store.getState().wallet.addresses).length === 0) {
+        API.listWalletAddressVersion()
+           .then(addressVersion => {
+               store.dispatch(updateWalletAddressVersion(addressVersion));
+           }).catch(() => setTimeout(getWalletAddressVersion, 2000));
+    }
+};
+
 getNodeAboutAttribute();
 getNodeConfig();
-
+getWalletAddressVersion();
 ReactDOM.render(
     <React.StrictMode>
         <AppContainer store={store}/>
