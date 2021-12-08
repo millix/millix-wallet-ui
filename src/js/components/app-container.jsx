@@ -14,7 +14,8 @@ import CreateAdView from './create-ad-view';
 import ListAdView from './list-ad-view';
 /*
  import EventLogView from './event-log-view';
- import ConfigView from './config-view';*/
+ */
+import ConfigView from './config-view';
 import ActionView from './action-view';
 import NewWalletView from './new-wallet-view';
 import ManageWalletView from './manage-wallet-view';
@@ -51,14 +52,15 @@ class AppContainer extends Component {
                                                  component={PeerListView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"
                                                  component={PeerInfoView}/>
-                    {/*<UnlockedWalletRequiredRoute path='/config'
-                     component={ConfigView}/>
-                     <UnlockedWalletRequiredRoute path='/log'
-                     component={EventLogView}/>
-                     */}
+                    <UnlockedWalletRequiredRoute path="/config"
+                                                 component={ConfigView}/>
+
+                    {/*<UnlockedWalletRequiredRoute path='/log'*/}
+                    {/*                             component={EventLogView}/>*/}
+
                     <UnlockedWalletRequiredRoute path="/actions"
                                                  component={ActionView}/>
-                    <UnlockedWalletRequiredRoute path='/stats'
+                    <UnlockedWalletRequiredRoute path="/stats"
                                                  component={StatsView}/>
                     <UnlockedWalletRequiredRoute
                         path="/transaction/:transaction_id"

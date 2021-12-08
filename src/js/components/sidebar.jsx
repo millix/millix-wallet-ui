@@ -75,17 +75,17 @@ class Sidebar extends Component {
                         </NavText>
                     </NavItem>
                     {/*
-                    <NavItem key={'log'} eventKey="/log">
-                        <NavText>
-                            logs
-                        </NavText>
-                    </NavItem>
+                     <NavItem key={'log'} eventKey="/log">
+                     <NavText>
+                     logs
+                     </NavText>
+                     </NavItem>
+                     */}
                     <NavItem key={'config'} eventKey="/config">
                         <NavText>
                             settings
                         </NavText>
                     </NavItem>
-                    */}
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
                             actions

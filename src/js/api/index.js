@@ -207,6 +207,94 @@ class API {
         }
     }
 
+    getNodeConfigValueByName(name) {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/2wYLWQfWBa6GLPYs?p0=${name}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    updateNodeConfigValue(key = null, value = null) {
+        try {
+            return this.getNodeConfigValueByName(key)
+                       .then((config) => {
+                           try {
+                               return fetch(
+                                   this.getAuthenticatedMillixApiURL() + `/LLpSTquu4tZL8Nu5`,
+                                   {
+                                       method : 'POST',
+                                       headers: {'Content-Type': 'application/json'},
+                                       body   : JSON.stringify({
+                                           'p0': config.config_id,
+                                           'p1': value
+                                       })
+                                   }
+                               )
+                                   .then(response => response.ok ? response.json() : Promise.reject());
+                           }
+                           catch (e) {
+                               return Promise.reject(e);
+                           }
+                       });
+        }
+        catch (e) {
+            return Promise.reject();
+        }
+    }
+
+    getNodePublicIP() {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/qRHogKQ1Bb7OT4N9`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    listWalletAddressVersion() {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/3XqkzNFzaTk1JPRf`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    addWalletAddressVersion(data) {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/hMrav9QMiMyLQosB?p0=${data.version}&p1=${data.is_main_network}&p2=${data.regex_pattern}&p3=${data.is_default}`)
+                .then((response) => {
+                    if (response.ok) {
+                        try {
+                            let response = this.listWalletAddressVersion();
+                            return response;
+                        }
+                        catch (e) {
+                            return Promise.reject(e);
+                        }
+                    }
+                });
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    removeWalletAddressVersion(data) {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/XgxHmjINTEqANwtS?p0=${data.version}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
     getNodeAboutAttribute() {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + `/AgsSNTSA0RHmWUkp?p0=${this.nodeID}&p1=ijDj2VlTyJBl5R4iTCmG`)
