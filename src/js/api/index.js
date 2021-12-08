@@ -87,9 +87,29 @@ class API {
         }
     }
 
+    requestAdvertisementPayment(advertisementGUID) {
+        try {
+            return fetch(this.getTangledApiURL() + `/QYEgbWuFZs5s7Kud?p0=${advertisementGUID}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
     sendTransaction(transactionOutputPayload) {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + `/XPzc85T3reYmGro1?p0=${JSON.stringify(transactionOutputPayload)}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    getWalletUnspentTransactionOutputList(addressKeyIdentifier, stable) {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + `/FDLyQ5uo5t7jltiQ?p3=${addressKeyIdentifier}&p4=0&p7=${stable}&p10=0&p13=transaction_date desc`)
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {

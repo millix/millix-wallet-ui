@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Col, Row, Form, Table, Button} from 'react-bootstrap';
+import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {MDBDataTable as DataTable} from 'mdbreact';
-import {walletUpdateBalance, updateNetworkState, setBackLogSize, setLogSize} from '../redux/actions/index';
 import API from '../api/index';
 import _ from 'lodash';
 
@@ -27,7 +26,6 @@ class WalletView extends Component {
             feesLocked : true,
             addressList: []
         };
-        this.getNodeStatHandler = null;
         this.addressListColumns = [
             {
                 label: '#',
@@ -45,36 +43,7 @@ class WalletView extends Component {
         ];
     }
 
-    getNodeStat(timeout) {
-        if (this.getNodeStatHandler) {
-            clearTimeout(this.getNodeStatHandler);
-        }
-        this.getNodeStatHandler = setTimeout(() => API.getNodeStat()
-                                                      .then(data => {
-                                                          this.props.walletUpdateBalance({
-                                                              balance_stable                   : data.balance.stable,
-                                                              balance_pending                  : data.balance.unstable,
-                                                              transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
-                                                              transaction_count                : data.transaction.transaction_count || 0
-                                                          });
-                                                          this.props.setBackLogSize(data.log.backlog_count);
-                                                          this.props.setLogSize(data.log.log_count);
-                                                          this.props.updateNetworkState({
-                                                              online     : data.network.online,
-                                                              connections: data.network.peer_count
-                                                          });
-                                                          this.getNodeStatHandler = null;
-                                                          this.getNodeStat();
-                                                      })
-                                                      .catch(() => {
-                                                          this.getNodeStatHandler = null;
-                                                          this.getNodeStat();
-                                                      })
-            , timeout || 1000);
-    }
-
     componentDidMount() {
-        this.getNodeStat();
         this.updateAddresses();
     }
 
@@ -82,7 +51,6 @@ class WalletView extends Component {
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
         }
-        clearTimeout(this.getNodeStatHandler);
     }
 
     updateAddresses() {
@@ -193,7 +161,6 @@ class WalletView extends Component {
                    }
                });
            })
-           .then(() => this.getNodeStat(1))
            .then(() => {
                this.destinationAddress.value = '';
                this.amount.value             = '';
@@ -209,16 +176,16 @@ class WalletView extends Component {
                let sendTransactionErrorMessage;
                if (e.api_message) {
                    const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                   sendTransactionErrorMessage = `could not send the transaction(${match.groups.message})`;
+                   sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
                }
                else if (e === 'insufficient_balance') {
                    sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
                }
                else if (e === 'transaction_send_interrupt') {
-                   sendTransactionErrorMessage = 'the transaction was canceled';
+                   sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
                }
                else {
-                   sendTransactionErrorMessage = `could not send the transaction(${e.message || e.api_message || e})`;
+                   sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
                }
 
                console.log(e);
@@ -263,14 +230,43 @@ class WalletView extends Component {
                                 <Table striped bordered hover variant="dark">
                                     <thead>
                                     <tr>
-                                        <th>available</th>
-                                        <th>pending</th>
+                                        <th width="50%">available</th>
+                                        <th width="50%">pending</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr key="1" className="wallet-address">
-                                        <td>{this.props.wallet.balance_stable.toLocaleString('en-US')}</td>
-                                        <td>{this.props.wallet.balance_pending.toLocaleString('en-US')}</td>
+                                        <td>
+                                            {this.props.wallet.balance_stable.toLocaleString('en-US')}
+                                            <span
+                                                style={{
+                                                    float : 'right',
+                                                    cursor: 'pointer'
+                                                }}>
+                                                <Button
+                                                    className={'btn-xs icon_only'}
+                                                    onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
+                                                        <FontAwesomeIcon
+                                                            icon={'list'}
+                                                            size="1x"/>
+                                                    </Button>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {this.props.wallet.balance_pending.toLocaleString('en-US')}
+                                            <span
+                                                style={{
+                                                    float : 'right',
+                                                    cursor: 'pointer'
+                                                }}>
+                                                <Button
+                                                    className={'btn-xs icon_only'}
+                                                    onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
+                                                        <FontAwesomeIcon
+                                                            icon={'list'}
+                                                            size="1x"/>
+                                                    </Button>
+                                            </span></td>
                                     </tr>
                                     </tbody>
                                 </Table>
@@ -351,25 +347,26 @@ class WalletView extends Component {
                                             </Form.Group>
                                         </Col>
                                         <Col style={styles.centered}>
-                                            <Button variant="light"
-                                                    className={'btn btn-w-md btn-accent'}
-                                                    onClick={this.send.bind(this)}
-                                                    disabled={this.state.canceling}>
-                                                {this.state.sending ?
-                                                 <>
-                                                     <div style={{
-                                                         fontSize: '6px',
-                                                         float   : 'left'
-                                                     }}
-                                                          className="loader-spin"/>
-                                                     {this.state.canceling ? 'canceling' : 'cancel transaction'}
-                                                 </> : <>send millix</>}
-                                            </Button>
+                                            <Form.Group as={Row}>
+                                                <Button variant="light"
+                                                        className={'btn btn-w-md btn-accent'}
+                                                        onClick={this.send.bind(this)}
+                                                        disabled={this.state.canceling}>
+                                                    {this.state.sending ?
+                                                     <>
+                                                         <div style={{
+                                                             fontSize: '6px',
+                                                             float   : 'left'
+                                                         }}
+                                                              className="loader-spin"/>
+                                                         {this.state.canceling ? 'canceling' : 'cancel transaction'}
+                                                     </> : <>send millix</>}
+                                                </Button>
+                                            </Form.Group>
                                         </Col>
                                         <Col style={styles.centered}>
                                             {this.state.sendTransactionError && (
-                                                <Form.Text
-                                                    className="text-muted"><small> {this.state.sendTransactionErrorMessage}.</small></Form.Text>)}
+                                                <span>{this.state.sendTransactionErrorMessage}</span>)}
                                         </Col>
                                     </Form>
                                 </Row>
@@ -418,9 +415,4 @@ export default connect(
     state => ({
         wallet: state.wallet,
         config: state.config
-    }), {
-        walletUpdateBalance,
-        updateNetworkState,
-        setBackLogSize,
-        setLogSize
-    })(withRouter(WalletView));
+    }))(withRouter(WalletView));

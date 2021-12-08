@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
-import {lockWallet} from '../redux/actions/index'
+import {lockWallet} from '../redux/actions/index';
+
 
 class Sidebar extends Component {
     constructor(props) {
         super(props);
-        let now = Date.now();
+        let now            = Date.now();
         this.walletScreens = [
             '/history',
             '/log',
@@ -14,7 +15,7 @@ class Sidebar extends Component {
             '/transaction',
             '/peer'
         ];
-        this.state = {
+        this.state         = {
             fileKeyExport: 'export_' + now,
             fileKeyImport: 'import_' + now
         };
@@ -35,7 +36,10 @@ class Sidebar extends Component {
 
     render() {
         let props = this.props;
-        return (<aside className={'navigation'} style={{height: '100%', minHeight: '100vh'}}>
+        return (<aside className={'navigation'} style={{
+            height   : '100%',
+            minHeight: '100vh'
+        }}>
             <SideNav
                 expanded={true}
                 onToggle={() => {
@@ -56,9 +60,6 @@ class Sidebar extends Component {
             >
                 <SideNav.Nav
                     defaultSelected={!this.isWalletScreen(props.location.pathname) ? '/wallet' : props.location.pathname}>
-                    <li className="nav-category">
-                        {this.props.clock}
-                    </li>
                     <NavItem key={'wallet'} eventKey="/wallet">
                         <NavText>
                             home
@@ -69,9 +70,9 @@ class Sidebar extends Component {
                             transactions
                         </NavText>
                     </NavItem>
-                    <NavItem key={'connections'} eventKey="/peers">
+                    <NavItem key={'peers'} eventKey="/peers">
                         <NavText>
-                            connections
+                            peers
                         </NavText>
                     </NavItem>
                     {/*
@@ -91,16 +92,44 @@ class Sidebar extends Component {
                             actions
                         </NavText>
                     </NavItem>
-                    <NavItem key={'stats'} eventKey="/stats">
+                    <NavItem key={'status'} eventKey="/status">
                         <NavText>
-                            stats
+                            status
                         </NavText>
+                    </NavItem>
+                    <NavItem eventKey="ads">
+                        <NavText>
+                            ads
+                        </NavText>
+                        <NavItem key={'create-ad'} eventKey="/create-ad">
+                            <NavText>
+                                create
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'list-ad'} eventKey="/list-ad">
+                            <NavText>
+                                list
+                            </NavText>
+                        </NavItem>
                     </NavItem>
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
                             logout
                         </NavText>
                     </NavItem>
+                    {/*<div style={{
+                     paddingLeft  : 25,
+                     display      : 'flex',
+                     flexDirection: 'column'
+                     }}>
+                     <div>
+                     <small style={{fontSize: 12}}>millix network
+                     time</small>
+                     <br/>
+                     <small
+                     style={{fontSize: 12}}>{this.props.clock}</small>
+                     </div>
+                     </div>*/}
                 </SideNav.Nav>
             </SideNav>
         </aside>);

@@ -49,6 +49,30 @@
     background: #2f323b;
 }
 
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
+    font-size: 18px;
+}
+
+.sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 {
+    padding-left: 20px;
+}
+
+.sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47 > .sidenav---navitem---9uL5T:hover, .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47:hover::before {
+    background-color: transparent;
+}
+
+.sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47 > .sidenav---navitem---9uL5T > .sidenav---navtext---1AE_f:hover {
+    color: #C741FC !important;
+}
+
+.sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47.sidenav---selected---1EK3y > .sidenav---navitem---9uL5T::before {
+    content: none;
+}
+
+.sidenav---navtext---1AE_f {
+    font-size: 18px;
+}
+
 .nav-category {
     color: #FFFFFF;
     margin-top: 10px !important;
@@ -82,6 +106,11 @@
 .switch-class.network-switch label {
     font-size: 75% !important;
     color: #949ba2 !important;
+}
+
+th {
+    font-weight: normal !important;
+    font-size: 18px;
 }
 
 .mb-1 {
@@ -230,6 +259,11 @@ pre {
     text-align: center;
 }
 
+.align-right {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 ._y9pkY._1-LPA ._3CEPH {
     background-color: #9400CE;
 }
@@ -358,6 +392,10 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
     box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
     color: #495057;
     outline: 0
+}
+
+.control-label {
+    font-size: 18px;
 }
 
 .rbt-input-multi.form-control {
@@ -507,6 +545,11 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
     border-bottom-right-radius: 0
 }
 
+.form-control {
+    padding: 0em 1em;
+    font-size: 18px;
+}
+
 .hint {
     font-style: italic;
 }
@@ -596,7 +639,24 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
     font-size: 14px;
 }
 
-#advertisement_target_phrase {
+#advertisement_deck {
     text-decoration: none;
     font-size: 14px;
+}
+
+a {
+    color: #C741FC;
+}
+
+a:hover, a:focus {
+    color: #C741FC;
+    text-decoration: underline;
+}
+
+.btn-xs {
+    font-size: 1rem !important
+}
+
+td {
+    font-size: 18px;
 }

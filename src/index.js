@@ -30,6 +30,8 @@ import {
     faLock,
     faLockOpen,
     faTimes,
+    faEye,
+    faList
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
 import './vendor/bootstrap/css/bootstrap.css';
@@ -57,7 +59,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faStream, faExchangeAlt, faCloudDownloadAlt, faSlidersH,
     faSignOutAlt, faPlus, faHeartbeat, faUndoAlt, faTrash, faUndo,
     faBook, faMicrochip, faPowerOff, faUserClock, faClock, faCompressArrowsAlt,
-    faLock, faLockOpen, faTimes);
+    faLock, faLockOpen, faTimes, faEye, faList);
 
 
 let apiInfo = {
@@ -118,7 +120,7 @@ setInterval(() => {
 
     let clock = new Date();
     clock.setUTCMilliseconds(clock.getUTCMilliseconds() + ntp.offset);
-    store.dispatch(updateClock(moment.utc(clock).format('YYYY-MM-DD HH:mm:ss')));
+    store.dispatch(updateClock(moment.utc(clock).format('HH:mm:ss')));
 }, 900);
 
 const getNodeAboutAttribute = () => {

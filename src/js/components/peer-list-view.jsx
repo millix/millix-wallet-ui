@@ -57,7 +57,7 @@ class PeerListView extends Component {
                        clickEvent : () => this.props.history.push('/peer/' + item.node_id, {peer: item.node_id}),
                        node_idx   : idx + 1,
                        node_url   : `${item.node_prefix}${item.node_address}:${item.node_port}`,
-                       node_status: 'up'
+                       node_status: 'connected'
                    });
                });
                if (shouldUpdate) {
@@ -87,7 +87,7 @@ class PeerListView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>connections</div>
+                    <div className={'panel-heading'}>peers</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row>

@@ -231,10 +231,7 @@ class ListAdView extends Component {
 
     render() {
         return (
-            <Container style={{
-                marginTop  : 50,
-                paddingLeft: 25
-            }}>
+            <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading'}>advertisements</div>
                     <hr className={'hrPal'}/>
@@ -260,7 +257,7 @@ class ListAdView extends Component {
                     </div>
                 </div>
 
-            </Container>
+            </div>
         );
     }
 }
