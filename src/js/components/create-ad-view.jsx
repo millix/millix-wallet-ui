@@ -18,7 +18,7 @@ class CreateAdView extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.inputRef     = React.createRef();
+        // this.inputRef     = React.createRef();
         this.state        = {
 
             submitData: {},
@@ -212,7 +212,7 @@ class CreateAdView extends Component {
             daily_budget_mlx       : '',
             bid_per_impressions_mlx: ''
         };
-        this.inputRef.current.clear();
+        // this.inputRef.current.clear();
         this.setState({fields: fields});
     }
 
