@@ -70,7 +70,8 @@ class StatsView extends Component {
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
                             <small>pending
-                                transaction count: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</small>
+                                transaction
+                                count: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</small>
                         </Col>
                     </Row>
                     <Row>
@@ -91,14 +92,7 @@ class StatsView extends Component {
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
                             <small>node public
-                                address: {props.network.node_public_ip.toLocaleString('en-US')}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node
-                                port: {props.network.node_port.toLocaleString('en-US')}</small>
+                                address: {props.network.node_public_ip.toLocaleString('en-US') + ':' + props.network.node_port}</small>
                         </Col>
                     </Row>
                     <Row>

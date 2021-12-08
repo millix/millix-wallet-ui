@@ -46,8 +46,8 @@ class AppContainer extends Component {
                     <Route path="/manage-wallet/" component={ManageWalletView}/>
                     <Route path="/new-wallet/" component={NewWalletView}/>
                     <Route path="/import-wallet/" component={ImportWalletView}/>
-                    <Route path="/create-ad/" component={CreateAdView}/>
-                    <Route path="/list-ad/" component={ListAdView}/>
+                    <UnlockedWalletRequiredRoute path="/create-ad/" component={CreateAdView}/>
+                    <UnlockedWalletRequiredRoute path="/list-ad/" component={ListAdView}/>
                     <UnlockedWalletRequiredRoute path="/peers"
                                                  component={PeerListView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"

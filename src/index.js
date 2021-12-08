@@ -120,7 +120,7 @@ setInterval(() => {
 
     let clock = new Date();
     clock.setUTCMilliseconds(clock.getUTCMilliseconds() + ntp.offset);
-    store.dispatch(updateClock(moment.utc(clock).format('YYYY-MM-DD HH:mm:ss')));
+    store.dispatch(updateClock(moment.utc(clock).format('HH:mm:ss')));
 }, 900);
 
 const getNodeAboutAttribute = () => {

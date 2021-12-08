@@ -122,7 +122,7 @@ class ActionView extends Component {
             <div>
                 <Row>
                     <Col md={12}>
-                        <div className={'panel panel-filled'}>
+                        {/*<div className={'panel panel-filled'}>
                             <div className={'panel-heading'}>optimize</div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
@@ -145,7 +145,7 @@ class ActionView extends Component {
                                     </Col>
                                 </Row>
                             </div>
-                        </div>
+                        </div>*/}
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading'}>reset validation
                             </div>
@@ -168,7 +168,7 @@ class ActionView extends Component {
                                 </Row>
                             </div>
                         </div>
-                        <div className={'panel panel-filled'}>
+                        {/*<div className={'panel panel-filled'}>
                             <div className={'panel-heading'}>load wallet</div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
@@ -222,7 +222,7 @@ class ActionView extends Component {
                                     </Col>
                                 </Row>
                             </div>
-                        </div>
+                        </div>*/}
                     </Col>
                 </Row>
                 <div>

@@ -30,7 +30,7 @@ class UnspentTransactionOutputView extends Component {
                     {
                         label: [
                             <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' txid'
+                            ' transaction id'
                         ],
                         field: 'transaction_id'
                     },
@@ -100,7 +100,7 @@ class UnspentTransactionOutputView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>unspent transaction
+                    <div className={'panel-heading'}>{this.props.location.state.stable ? '' : 'pending'} unspent transaction
                         outputs
                     </div>
                     <hr className={'hrPanel'}/>

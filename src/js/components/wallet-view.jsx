@@ -230,8 +230,8 @@ class WalletView extends Component {
                                 <Table striped bordered hover variant="dark">
                                     <thead>
                                     <tr>
-                                        <th>available</th>
-                                        <th>pending</th>
+                                        <th width="50%">available</th>
+                                        <th width="50%">pending</th>
                                     </tr>
                                     </thead>
                                     <tbody>

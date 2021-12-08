@@ -30,7 +30,7 @@ class TransactionHistoryView extends Component {
                     {
                         label: [
                             <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' txid'
+                            ' transaction id'
                         ],
                         field: 'txid'
                     },
