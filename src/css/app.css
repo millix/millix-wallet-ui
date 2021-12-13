@@ -653,9 +653,31 @@ a:hover, a:focus {
 }
 
 .btn-xs {
-    font-size: 1rem!important
+    font-size: 1rem !important
 }
 
 td {
     font-size: 18px;
 }
+
+.modal-open .addFundsModal {
+    opacity: 1 !important;
+}
+
+.modal-open .addFundsModal .modal-dialog {
+    margin: 11rem auto;
+}
+
+.addFundsModal .modal-dialog .modal-header {
+    padding: 0px 30px;
+}
+
+.addFundsModal .modal-dialog .modal-header button {
+    padding: 20px 0;
+}
+
+.modal-open .addFundsModal .center-text {
+    text-align: center;
+}
+
+
