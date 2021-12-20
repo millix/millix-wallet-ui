@@ -75,8 +75,9 @@ const UnlockWalletView = (props) => {
                                 }}
                             />
                             {props.wallet.authenticationError ? (
-                                <span className="help-block small">there was a problem authenticating your key file. retry your passphrase or <a style={{cursor: 'pointer'}}
-                                                                                                                                                 onClick={() => props.history.push('/import-wallet/')}> click here to load your key.</a></span>) : (
+                                <span className="help-block small">there was a problem authenticating your key file. retry your passphrase or <a
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => props.history.push('/import-wallet/')}> click here to load your key.</a></span>) : (
                                  <span className="help-block small">Your strong password</span>)}
                         </div>
                         <Row>

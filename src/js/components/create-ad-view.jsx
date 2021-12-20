@@ -283,30 +283,35 @@ class CreateAdView extends Component {
 
         return (
             <div>
-                    <div className="panel panel-filled">
-                        <div className={'panel-heading'}>create advertisement</div>
-                        <hr className={'hrPal'}/>
-                        <div className="panel-body">
-                            {renderSubmitMessage()}
-                            <div>
-                                the tangled ad platform allows anyone to create an advertisement without approvals or permission.  when your ad is created it will appear to other tangled browser users.  the amount that you choose to pay for the ad to appear is paid directly to the consumer that views the ad.
-                            </div>
-                            <br/>
-                            <Form onSubmit={this.handleSubmit.bind(this)}>
-                                <FormGroup as={Row} controlId="creative_name">
-                                    <Col sm="2" className={'align-right'}>
-                                        <Form.Label
-                                            className="control-label text-right col-sm-14 ">
-                                            creative name:
-                                        </Form.Label>
-                                    </Col>
-                                    <Col sm="10">
-                                        <Form.Control
-                                            type="text"
-                                            className="col-sm-12"
-                                            value={this.state.fields['creative_name']}
-                                            onChange={this.handleInputChange.bind(this, 'creative_name')}
-                                            placeholder=""/>
+                <div className="panel panel-filled">
+                    <div className={'panel-heading'}>create advertisement</div>
+                    <hr className={'hrPal'}/>
+                    <div className="panel-body">
+                        {renderSubmitMessage()}
+                        <div>
+                            the tangled ad platform allows anyone to create an
+                            advertisement without approvals or permission. when
+                            your ad is created it will appear to other tangled
+                            browser users. the amount that you choose to pay for
+                            the ad to appear is paid directly to the consumer
+                            that views the ad.
+                        </div>
+                        <br/>
+                        <Form onSubmit={this.handleSubmit.bind(this)}>
+                            <FormGroup as={Row} controlId="creative_name">
+                                <Col sm="2" className={'align-right'}>
+                                    <Form.Label
+                                        className="control-label text-right col-sm-14 ">
+                                        creative name:
+                                    </Form.Label>
+                                </Col>
+                                <Col sm="10">
+                                    <Form.Control
+                                        type="text"
+                                        className="col-sm-12"
+                                        value={this.state.fields['creative_name']}
+                                        onChange={this.handleInputChange.bind(this, 'creative_name')}
+                                        placeholder=""/>
                                         {renderErrorDock('creative_name')}
                                     </Col>
                                 </FormGroup>
@@ -347,7 +352,7 @@ class CreateAdView extends Component {
                                             className="col-sm-12"
                                             value={this.state.fields['headline']}
                                             onChange={this.handleInputChange.bind(this, 'headline')}
-                                            placeholder=''/>
+                                            placeholder=""/>
                                         {renderErrorDock('headline')}
                                     </Col>
                                 </FormGroup>
@@ -396,23 +401,26 @@ class CreateAdView extends Component {
                                         </Form.Label>
                                     </Col>
                                     <Col sm="10">
-                                        {(this.state.fields['url'] || this.state.fields['deck']  || this.state.fields['headline'])  && (<div className="preview-holder"
-                                             aria-readonly="true">
-                                            <div className="row h-50">
-                                                <div id="ads_holder h-50 pt-7"
-                                                     className="col-8 m-0 ads-slider">
+                                        {(this.state.fields['url'] || this.state.fields['deck'] || this.state.fields['headline']) && (
+                                            <div className="preview-holder"
+                                                 aria-readonly="true">
+                                                <div className="row h-50">
+                                                    <div
+                                                        id="ads_holder h-50 pt-7"
+                                                        className="col-8 m-0 ads-slider">
                                                     <span>
                                                         <a id="advertisement_headline"
                                                            href={this.state.fields['url'] ? this.state.fields['url'] : ''}
                                                            title={this.state.fields['deck'] ? this.state.fields['deck'] : ''}>{this.state.fields['headline'] ? this.state.fields['headline'] : ''}</a>
                                                     </span>
-                                                    <span>
-                                                        {(this.state.fields['url'] || this.state.fields['deck']) && (<a id="advertisement_deck"
-                                                           href={this.state.fields['url'] ? this.state.fields['url'] : ''}
-                                                           title={this.state.fields['deck'] ? this.state.fields['deck'] : ''}>{this.state.fields['deck'] ? this.state.fields['deck'] : ''} - {this.state.fields['url'] ? this.state.fields['url'] : ''}</a>)}</span>
+                                                        <span>
+                                                        {(this.state.fields['url'] || this.state.fields['deck']) && (
+                                                            <a id="advertisement_deck"
+                                                               href={this.state.fields['url'] ? this.state.fields['url'] : ''}
+                                                               title={this.state.fields['deck'] ? this.state.fields['deck'] : ''}>{this.state.fields['deck'] ? this.state.fields['deck'] : ''} - {this.state.fields['url'] ? this.state.fields['url'] : ''}</a>)}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>)}
+                                            </div>)}
                                     </Col>
                                 </FormGroup>
 
@@ -421,29 +429,29 @@ class CreateAdView extends Component {
                                     <hr/>
                                 </Col>
 
-                                {/*<Form.Group as={Row}
-                                            controlId="target_language">
-                                    <Col sm="2" className={'align-right'}>
-                                        <Form.Label
-                                            className="control-label text-right col-sm-12">
-                                            target language:
-                                        </Form.Label>
-                                    </Col>
-                                    <Col sm="10">
-                                        <FormControl
-                                            as="select"
-                                            value={this.state.fields['target_language']}
-                                            onChange={this.handleInputChange.bind(this, 'target_language')}>
-                                            {
-                                                this.state.languages ? this.state.languages.map((res, i) => (
-                                                    <option key={i}
-                                                            value={res.value}>{res.label}</option>
-                                                )) : ''
-                                            }
+                            {/*<Form.Group as={Row}
+                             controlId="target_language">
+                             <Col sm="2" className={'align-right'}>
+                             <Form.Label
+                             className="control-label text-right col-sm-12">
+                             target language:
+                             </Form.Label>
+                             </Col>
+                             <Col sm="10">
+                             <FormControl
+                             as="select"
+                             value={this.state.fields['target_language']}
+                             onChange={this.handleInputChange.bind(this, 'target_language')}>
+                             {
+                             this.state.languages ? this.state.languages.map((res, i) => (
+                             <option key={i}
+                             value={res.value}>{res.label}</option>
+                             )) : ''
+                             }
 
-                                        </FormControl>
-                                    </Col>
-                                </Form.Group>*/}
+                             </FormControl>
+                             </Col>
+                             </Form.Group>*/}
 
                                 {/*temporarily omitted according to requirements from MILLIX-15*/}
                                 {/*<Form.Group as={Row}*/}
@@ -523,49 +531,49 @@ class CreateAdView extends Component {
                                 {/*    </Col>*/}
                                 {/*</Form.Group>*/}
 
-                                {/*<Form.Group as={Row}
-                                            controlId="target_search_phrase">
-                                    <Col sm="2">
-                                        <Form.Label
-                                            className="control-label text-right col-sm-12">
-                                            target search phrases:
-                                        </Form.Label>
-                                    </Col>
-                                    <Col sm="10">
-                                        <Typehead
-                                            as="select"
-                                            ref={this.inputRef}
-                                            id="search_phrase"
-                                            placeholder=""
-                                            options={this.state.searchphrases}
-                                            multiple
-                                            allowNew
-                                            selected={this.state.fields.selected}
-                                            onChange={this.handleInputChange.bind(this, 'search_phrase')}
-                                        />
-                                    </Col>
-                                </Form.Group>*/}
-                                {/*<Form.Group as={Row} controlId="funding">
-                                    <Col sm="2">
-                                        <Form.Label
-                                            className="control-label text-right col-sm-12">
-                                            funding:
-                                        </Form.Label>
-                                    </Col>
-                                    <Col sm="10">
-                                        <Col sm="9">
-                                            balance: 200,000,000 millix
-                                        </Col>
-                                        <Col sm="3">
-                                            <Button
-                                                className="{btn btn-w-md btn-accent}"
-                                                style={{
-                                                    width: '100%'
-                                                }}
-                                            >add funds</Button>
-                                        </Col>
-                                    </Col>
-                                </Form.Group>*/}
+                            {/*<Form.Group as={Row}
+                             controlId="target_search_phrase">
+                             <Col sm="2">
+                             <Form.Label
+                             className="control-label text-right col-sm-12">
+                             target search phrases:
+                             </Form.Label>
+                             </Col>
+                             <Col sm="10">
+                             <Typehead
+                             as="select"
+                             ref={this.inputRef}
+                             id="search_phrase"
+                             placeholder=""
+                             options={this.state.searchphrases}
+                             multiple
+                             allowNew
+                             selected={this.state.fields.selected}
+                             onChange={this.handleInputChange.bind(this, 'search_phrase')}
+                             />
+                             </Col>
+                             </Form.Group>*/}
+                            {/*<Form.Group as={Row} controlId="funding">
+                             <Col sm="2">
+                             <Form.Label
+                             className="control-label text-right col-sm-12">
+                             funding:
+                             </Form.Label>
+                             </Col>
+                             <Col sm="10">
+                             <Col sm="9">
+                             balance: 200,000,000 millix
+                             </Col>
+                             <Col sm="3">
+                             <Button
+                             className="{btn btn-w-md btn-accent}"
+                             style={{
+                             width: '100%'
+                             }}
+                             >add funds</Button>
+                             </Col>
+                             </Col>
+                             </Form.Group>*/}
 
                                 <Form.Group as={Row} controlId="daliy-budget">
                                     <Col sm="2" className={'align-right'}>
@@ -642,22 +650,22 @@ class CreateAdView extends Component {
                                                 </Col>
                                             </Col>
                                             {/*<Col sm="3">
-                                                <Button
-                                                    className="{btn btn-w-md btn-accent}"
-                                                    style={{
-                                                        width: '100%'
-                                                    }}
-                                                >market analysis</Button>
-                                            </Col>*/}
+                                             <Button
+                                             className="{btn btn-w-md btn-accent}"
+                                             style={{
+                                             width: '100%'
+                                             }}
+                                             >market analysis</Button>
+                                             </Col>*/}
                                         </div>
                                         {/*<div>
-                                            <div className="hint">
-                                                other advertisers with similar
-                                                targeting are currently bidding
-                                                between $8 and $14 per thousand
-                                                impressions.
-                                            </div>
-                                        </div>*/}
+                                         <div className="hint">
+                                         other advertisers with similar
+                                         targeting are currently bidding
+                                         between $8 and $14 per thousand
+                                         impressions.
+                                         </div>
+                                         </div>*/}
                                     </Col>
                                 </Form.Group>
                                 <div style={{
@@ -668,9 +676,9 @@ class CreateAdView extends Component {
                                             className="btn btn-w-md btn-accent center">submit</Button>
                                 </div>
 
-                            </Form>
-                        </div>
+                        </Form>
                     </div>
+                </div>
             </div>
         );
     }

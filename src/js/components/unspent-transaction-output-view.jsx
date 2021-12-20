@@ -100,7 +100,9 @@ class UnspentTransactionOutputView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>{this.props.location.state.stable ? '' : 'pending'} unspent transaction
+                    <div
+                        className={'panel-heading'}>{this.props.location.state.stable ? '' : 'pending'} unspent
+                        transaction
                         outputs
                     </div>
                     <hr className={'hrPanel'}/>

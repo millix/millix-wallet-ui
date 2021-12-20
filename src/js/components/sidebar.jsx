@@ -81,12 +81,12 @@ class Sidebar extends Component {
                      logs
                      </NavText>
                      </NavItem>
-                     <NavItem key={'config'} eventKey="/config">
-                     <NavText>
-                     settings
-                     </NavText>
-                     </NavItem>
                      */}
+                    <NavItem key={'config'} eventKey="/config">
+                        <NavText>
+                            settings
+                        </NavText>
+                    </NavItem>
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
                             actions
@@ -118,18 +118,18 @@ class Sidebar extends Component {
                         </NavText>
                     </NavItem>
                     {/*<div style={{
-                        paddingLeft  : 25,
-                        display      : 'flex',
-                        flexDirection: 'column'
-                    }}>
-                        <div>
-                            <small style={{fontSize: 12}}>millix network
-                                time</small>
-                            <br/>
-                            <small
-                                style={{fontSize: 12}}>{this.props.clock}</small>
-                        </div>
-                    </div>*/}
+                     paddingLeft  : 25,
+                     display      : 'flex',
+                     flexDirection: 'column'
+                     }}>
+                     <div>
+                     <small style={{fontSize: 12}}>millix network
+                     time</small>
+                     <br/>
+                     <small
+                     style={{fontSize: 12}}>{this.props.clock}</small>
+                     </div>
+                     </div>*/}
                 </SideNav.Nav>
             </SideNav>
         </aside>);

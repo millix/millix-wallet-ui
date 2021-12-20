@@ -240,11 +240,11 @@ class WalletView extends Component {
                                             {this.props.wallet.balance_stable.toLocaleString('en-US')}
                                             <span
                                                 style={{
-                                                    float: "right",
-                                                    cursor    : 'pointer'
+                                                    float : 'right',
+                                                    cursor: 'pointer'
                                                 }}>
                                                 <Button
-                                                    className={"btn-xs icon_only"}
+                                                    className={'btn-xs icon_only'}
                                                     onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
@@ -256,11 +256,11 @@ class WalletView extends Component {
                                             {this.props.wallet.balance_pending.toLocaleString('en-US')}
                                             <span
                                                 style={{
-                                                    float: "right",
-                                                    cursor    : 'pointer'
+                                                    float : 'right',
+                                                    cursor: 'pointer'
                                                 }}>
                                                 <Button
-                                                    className={"btn-xs icon_only"}
+                                                    className={'btn-xs icon_only'}
                                                     onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}

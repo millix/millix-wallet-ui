@@ -56,6 +56,7 @@
 .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 {
     padding-left: 20px;
 }
+
 .sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47 > .sidenav---navitem---9uL5T:hover, .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47:hover::before {
     background-color: transparent;
 }
@@ -108,7 +109,7 @@
 }
 
 th {
-    font-weight: normal!important;
+    font-weight: normal !important;
     font-size: 18px;
 }
 
@@ -653,7 +654,7 @@ a:hover, a:focus {
 }
 
 .btn-xs {
-    font-size: 1rem!important
+    font-size: 1rem !important
 }
 
 td {

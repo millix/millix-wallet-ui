@@ -224,10 +224,7 @@ function rootReducer(state = initialState, action) {
         return Object.assign({}, state, {
             wallet: {
                 ...state.wallet,
-                address_version_list: [
-                    ...state.wallet.address_version_list,
-                    action.payload
-                ]
+                address_version_list: [...action.payload]
             }
         });
     }

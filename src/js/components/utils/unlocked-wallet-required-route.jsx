@@ -30,7 +30,7 @@ const UnlockedWalletRequiredRoute = ({
                                                 rest.setLogSize(data.log.log_count);
                                                 rest.updateNetworkState({
                                                     ...data.network,
-                                                    connections   : data.network.peer_count
+                                                    connections: data.network.peer_count
                                                 });
                                                 getNodeStat();
                                             })

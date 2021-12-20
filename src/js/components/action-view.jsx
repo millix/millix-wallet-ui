@@ -123,29 +123,29 @@ class ActionView extends Component {
                 <Row>
                     <Col md={12}>
                         {/*<div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>optimize</div>
-                            <hr className={'hrPanel'}/>
-                            <div className={'panel-body'}>
-                                <Row className="mb-1">
-                                    <Col style={styles.left}>
-                                        <p>the optimize action compacts the
-                                            local database and optimize the
-                                            storage.</p>
-                                    </Col>
-                                </Row>
+                         <div className={'panel-heading'}>optimize</div>
+                         <hr className={'hrPanel'}/>
+                         <div className={'panel-body'}>
+                         <Row className="mb-1">
+                         <Col style={styles.left}>
+                         <p>the optimize action compacts the
+                         local database and optimize the
+                         storage.</p>
+                         </Col>
+                         </Row>
                                 <Row className="mb-3">
                                     <Col style={styles.centered}>
-                                        <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={() => {
-                                                    this.optimizeWallet();
-                                                }} disabled={true}>
-                                            optimize
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>*/}
+                         <Button variant="light"
+                         className={'btn btn-w-md btn-accent'}
+                         onClick={() => {
+                         this.optimizeWallet();
+                         }} disabled={true}>
+                         optimize
+                         </Button>
+                         </Col>
+                         </Row>
+                         </div>
+                         </div>*/}
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading'}>reset validation
                             </div>
@@ -169,16 +169,16 @@ class ActionView extends Component {
                             </div>
                         </div>
                         {/*<div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>load wallet</div>
-                            <hr className={'hrPanel'}/>
-                            <div className={'panel-body'}>
-                                <Row className="mb-1">
-                                    <Col style={styles.left}>
-                                        <p>the load wallet action allows the
-                                            user to
-                                            load a previously exported wallet
-                                            private key in this millix
-                                            node.</p>
+                         <div className={'panel-heading'}>load wallet</div>
+                         <hr className={'hrPanel'}/>
+                         <div className={'panel-body'}>
+                         <Row className="mb-1">
+                         <Col style={styles.left}>
+                         <p>the load wallet action allows the
+                         user to
+                         load a previously exported wallet
+                         private key in this millix
+                         node.</p>
                                     </Col>
                                 </Row>
                                 <Row className="mb-3">
@@ -212,17 +212,17 @@ class ActionView extends Component {
                                 <Row className="mb-3">
                                     <Col style={styles.centered}>
                                         <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={() => {
-                                                    this.inputExport.click();
-                                                    this.setState({exportingWallet: true});
-                                                }} disabled={true}>
-                                            save wallet
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>*/}
+                         className={'btn btn-w-md btn-accent'}
+                         onClick={() => {
+                         this.inputExport.click();
+                         this.setState({exportingWallet: true});
+                         }} disabled={true}>
+                         save wallet
+                         </Button>
+                         </Col>
+                         </Row>
+                         </div>
+                         </div>*/}
                     </Col>
                 </Row>
                 <div>

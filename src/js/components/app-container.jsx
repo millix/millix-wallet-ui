@@ -15,7 +15,8 @@ import CreateAdView from './create-ad-view';
 import ListAdView from './list-ad-view';
 /*
  import EventLogView from './event-log-view';
- import ConfigView from './config-view';*/
+ */
+import ConfigView from './config-view';
 import ActionView from './action-view';
 import NewWalletView from './new-wallet-view';
 import ManageWalletView from './manage-wallet-view';
@@ -46,20 +47,23 @@ class AppContainer extends Component {
                     <Route path="/manage-wallet/" component={ManageWalletView}/>
                     <Route path="/new-wallet/" component={NewWalletView}/>
                     <Route path="/import-wallet/" component={ImportWalletView}/>
-                    <UnlockedWalletRequiredRoute path="/create-ad/" component={CreateAdView}/>
-                    <UnlockedWalletRequiredRoute path="/list-ad/" component={ListAdView}/>
+                    <UnlockedWalletRequiredRoute path="/create-ad/"
+                                                 component={CreateAdView}/>
+                    <UnlockedWalletRequiredRoute path="/list-ad/"
+                                                 component={ListAdView}/>
                     <UnlockedWalletRequiredRoute path="/peers"
                                                  component={PeerListView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"
                                                  component={PeerInfoView}/>
-                    {/*<UnlockedWalletRequiredRoute path='/config'
-                     component={ConfigView}/>
-                     <UnlockedWalletRequiredRoute path='/log'
-                     component={EventLogView}/>
-                     */}
+                    <UnlockedWalletRequiredRoute path="/config"
+                                                 component={ConfigView}/>
+
+                    {/*<UnlockedWalletRequiredRoute path='/log'*/}
+                    {/*                             component={EventLogView}/>*/}
+
                     <UnlockedWalletRequiredRoute path="/actions"
                                                  component={ActionView}/>
-                    <UnlockedWalletRequiredRoute path='/status'
+                    <UnlockedWalletRequiredRoute path="/status"
                                                  component={StatsView}/>
                     <UnlockedWalletRequiredRoute
                         path="/transaction/:transaction_id"
