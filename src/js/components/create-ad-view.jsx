@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Col, Container, Form, FormControl, FormGroup, Row} from 'react-bootstrap';
+import {Button, Col, Container, Form, FormControl, FormGroup, Row, Modal} from 'react-bootstrap';
 import API from '../api/index';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {walletUpdateAddresses, walletUpdateBalance} from '../redux/actions/index';
+import {withRouter} from 'react-router-dom';
 
 var Typehead = require('react-bootstrap-typeahead').Typeahead;
 
@@ -18,7 +20,6 @@ class CreateAdView extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        // this.inputRef     = React.createRef();
         this.state        = {
 
             submitData: {},
@@ -92,7 +93,8 @@ class CreateAdView extends Component {
                 'car insurance',
                 'auto insurance',
                 'honda insurance'
-            ]
+            ],
+            addFundsModalShow: false
         };
     }
 
@@ -185,6 +187,16 @@ class CreateAdView extends Component {
             }
         }
 
+        if (fields['bid_per_impressions_mlx'] > fields['daily_budget_mlx']) {
+            formIsValid                       = false;
+            errors['bid_per_impressions_mlx'] = 'can not be bigger than budget';
+        }
+
+        if (fields['daily_budget_mlx'] > this.props.wallet.balance_stable) {
+            formIsValid                = false;
+            errors['daily_budget_mlx'] = 'insufficient funds';
+        }
+
 
         this.setState({errors: errors});
         return formIsValid;
@@ -233,8 +245,15 @@ class CreateAdView extends Component {
         this.setState({fields});
     }
 
+    setAddFundsModalShow(show) {
+        this.setState({addFundsModalShow: show});
+    }
+
+    handleAddFundsModalClose = () => this.setAddFundsModalShow(false);
+    handleAddFundsModalShow  = () => this.setAddFundsModalShow(true);
+
     render() {
-        const renderDummyGeo      = () => {
+        const renderDummyGeo = () => {
             return <div className="row">
                 <Col sm="10">
                     <Col sm="4">
@@ -283,6 +302,30 @@ class CreateAdView extends Component {
 
         return (
             <div>
+                <div>
+                    <Modal show={this.state.addFundsModalShow}
+                           onHide={this.handleAddFundsModalClose}
+                           className="addFundsModal">
+                        <Modal.Header closeButton>
+                            <Modal.Title className="col-lg-10">add
+                                funds</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="col-lg-12">
+                                <span className="col-lg-12 center-text">to add funds for your ad campaign, please make transfer on your millix wallet</span>
+                                <span
+                                    className="col-lg-12 center-text">{this.props.wallet.address}</span>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary"
+                                    onClick={this.handleAddFundsModalClose}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
+
                 <div className="panel panel-filled">
                     <div className={'panel-heading'}>create advertisement</div>
                     <hr className={'hrPal'}/>
@@ -297,21 +340,21 @@ class CreateAdView extends Component {
                             that views the ad.
                         </div>
                         <br/>
-                        <Form onSubmit={this.handleSubmit.bind(this)}>
-                            <FormGroup as={Row} controlId="creative_name">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="control-label text-right col-sm-14 ">
-                                        creative name:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Form.Control
-                                        type="text"
-                                        className="col-sm-12"
-                                        value={this.state.fields['creative_name']}
-                                        onChange={this.handleInputChange.bind(this, 'creative_name')}
-                                        placeholder=""/>
+                            <Form onSubmit={this.handleSubmit.bind(this)}>
+                                <FormGroup as={Row} controlId="creative_name">
+                                    <Col sm="2" className={'align-right'}>
+                                        <Form.Label
+                                            className="control-label text-right col-sm-14 ">
+                                            creative name:
+                                        </Form.Label>
+                                    </Col>
+                                    <Col sm="10">
+                                        <Form.Control
+                                            type="text"
+                                            className="col-sm-12"
+                                            value={this.state.fields['creative_name']}
+                                            onChange={this.handleInputChange.bind(this, 'creative_name')}
+                                            placeholder=""/>
                                         {renderErrorDock('creative_name')}
                                     </Col>
                                 </FormGroup>
@@ -531,49 +574,50 @@ class CreateAdView extends Component {
                                 {/*    </Col>*/}
                                 {/*</Form.Group>*/}
 
-                            {/*<Form.Group as={Row}
-                             controlId="target_search_phrase">
-                             <Col sm="2">
-                             <Form.Label
-                             className="control-label text-right col-sm-12">
-                             target search phrases:
-                             </Form.Label>
-                             </Col>
-                             <Col sm="10">
-                             <Typehead
-                             as="select"
-                             ref={this.inputRef}
-                             id="search_phrase"
-                             placeholder=""
-                             options={this.state.searchphrases}
-                             multiple
-                             allowNew
-                             selected={this.state.fields.selected}
-                             onChange={this.handleInputChange.bind(this, 'search_phrase')}
-                             />
-                             </Col>
-                             </Form.Group>*/}
-                            {/*<Form.Group as={Row} controlId="funding">
-                             <Col sm="2">
-                             <Form.Label
-                             className="control-label text-right col-sm-12">
-                             funding:
-                             </Form.Label>
-                             </Col>
-                             <Col sm="10">
-                             <Col sm="9">
-                             balance: 200,000,000 millix
-                             </Col>
-                             <Col sm="3">
-                             <Button
-                             className="{btn btn-w-md btn-accent}"
-                             style={{
-                             width: '100%'
-                             }}
-                             >add funds</Button>
-                             </Col>
-                             </Col>
-                             </Form.Group>*/}
+                                {/*<Form.Group as={Row}
+                                            controlId="target_search_phrase">
+                                    <Col sm="2">
+                                        <Form.Label
+                                            className="control-label text-right col-sm-12">
+                                            target search phrases:
+                                        </Form.Label>
+                                    </Col>
+                                    <Col sm="10">
+                                        <Typehead
+                                            as="select"
+                                            ref={this.inputRef}
+                                            id="search_phrase"
+                                            placeholder=""
+                                            options={this.state.searchphrases}
+                                            multiple
+                                            allowNew
+                                            selected={this.state.fields.selected}
+                                            onChange={this.handleInputChange.bind(this, 'search_phrase')}
+                                        />
+                                    </Col>
+                                </Form.Group>*/}
+                                <Form.Group as={Row} controlId="funding">
+                                    <Col sm="2">
+                                        <Form.Label
+                                            className="control-label text-right col-sm-12">
+                                            funding:
+                                        </Form.Label>
+                                    </Col>
+                                    <Col sm="10">
+                                        <Col sm="9">
+                                            balance: {this.props.wallet.balance_stable.toLocaleString('en-US')} millix
+                                        </Col>
+                                        <Col sm="3">
+                                            <Button
+                                                className="{btn btn-w-md btn-accent}"
+                                                style={{
+                                                    width: '100%'
+                                                }}
+                                                onClick={this.handleAddFundsModalShow}
+                                            >add funds</Button>
+                                        </Col>
+                                    </Col>
+                                </Form.Group>
 
                                 <Form.Group as={Row} controlId="daliy-budget">
                                     <Col sm="2" className={'align-right'}>
@@ -683,4 +727,13 @@ class CreateAdView extends Component {
         );
     }
 };
-export default connect()(CreateAdView);
+
+export default connect(
+    state => ({
+        wallet: state.wallet
+    }),
+    {
+        walletUpdateAddresses,
+        walletUpdateBalance
+    }
+)(withRouter(CreateAdView));

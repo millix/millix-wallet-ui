@@ -26,18 +26,6 @@ class ListAdView extends Component {
                         field: 'advertisement_guid'
                     },
                     {
-                        label: 'type guid',
-                        field: 'advertisement_type_guid'
-                    },
-                    {
-                        label: 'advertisement type',
-                        field: 'advertisement_type'
-                    },
-                    {
-                        label: 'category guid',
-                        field: 'advertisement_category_guid'
-                    },
-                    {
                         label: 'category',
                         field: 'advertisement_category'
                     },
@@ -50,10 +38,6 @@ class ListAdView extends Component {
                         field: 'advertisement_url'
                     },
                     {
-                        label: 'protocol address funding',
-                        field: 'protocol_address_funding'
-                    },
-                    {
                         label: 'budget daily usd',
                         field: 'budget_daily_usd'
                     },
@@ -62,16 +46,8 @@ class ListAdView extends Component {
                         field: 'budget_daily_mlx'
                     },
                     {
-                        label: 'bid impression usd',
-                        field: 'bid_impression_usd'
-                    },
-                    {
                         label: 'bid impression mlx',
                         field: 'bid_impression_mlx'
-                    },
-                    {
-                        label: 'expiration',
-                        field: 'expiration'
                     },
                     {
                         label: [
@@ -80,10 +56,6 @@ class ListAdView extends Component {
                         ],
                         field: 'status_button'
                     },
-                    {
-                        label: 'create_date',
-                        field: 'create_date'
-                    }
                 ],
                 rows   : []
             }
