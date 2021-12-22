@@ -187,7 +187,7 @@ class CreateAdView extends Component {
             }
         }
 
-        if (fields['bid_per_impressions_mlx'] > fields['daily_budget_mlx']) {
+        if (parseFloat(fields['bid_per_impressions_mlx']) > parseFloat(fields['daily_budget_mlx'])) {
             formIsValid                       = false;
             errors['bid_per_impressions_mlx'] = 'can not be bigger than budget';
         }
