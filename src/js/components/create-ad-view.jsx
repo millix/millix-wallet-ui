@@ -192,7 +192,7 @@ class CreateAdView extends Component {
             errors['bid_per_impressions_mlx'] = 'can not be bigger than budget';
         }
 
-        if (fields['daily_budget_mlx'] > this.props.wallet.balance_stable) {
+        if (parseFloat(fields['daily_budget_mlx']) > parseFloat(this.props.wallet.balance_stable)) {
             formIsValid                = false;
             errors['daily_budget_mlx'] = 'insufficient funds';
         }
