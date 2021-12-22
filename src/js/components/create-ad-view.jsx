@@ -144,57 +144,57 @@ class CreateAdView extends Component {
 
         if (!fields['creative_name']) {
             formIsValid             = false;
-            errors['creative_name'] = 'cannot be empty';
+            errors['creative_name'] = 'this field is required, please provide a value';
         }
 
         if (!fields['headline']) {
             formIsValid        = false;
-            errors['headline'] = 'cannot be empty';
+            errors['headline'] = 'this field is required, please provide a value';
         }
 
         if (!fields['deck']) {
             formIsValid    = false;
-            errors['deck'] = 'cannot be empty';
+            errors['deck'] = 'this field is required, please provide a value';
         }
 
         if (!fields['url']) {
             formIsValid   = false;
-            errors['url'] = 'cannot be empty';
+            errors['url'] = 'this field is required, please provide a value';
         }
 
 
         if (!fields['daily_budget_mlx']) {
             formIsValid                = false;
-            errors['daily_budget_mlx'] = 'cannot be empty';
+            errors['daily_budget_mlx'] = 'this field is required, please provide a value';
         }
 
         if (typeof fields['daily_budget_mlx'] !== 'undefined') {
             if (!fields['daily_budget_mlx'].match(/^[0-9]+$/)) {
                 formIsValid                = false;
-                errors['daily_budget_mlx'] = 'only numbers';
+                errors['daily_budget_mlx'] = 'this field only accepts numbers';
             }
         }
 
         if (!fields['bid_per_impressions_mlx']) {
             formIsValid                       = false;
-            errors['bid_per_impressions_mlx'] = 'cannot be empty';
+            errors['bid_per_impressions_mlx'] = 'this field is required, please provide a value';
         }
 
         if (typeof fields['bid_per_impressions_mlx'] !== 'undefined') {
             if (!fields['bid_per_impressions_mlx'].match(/^[0-9]+$/)) {
                 formIsValid                       = false;
-                errors['bid_per_impressions_mlx'] = 'only numbers';
+                errors['bid_per_impressions_mlx'] = 'this field only accepts numbers';
             }
         }
 
-        if (fields['bid_per_impressions_mlx'] > fields['daily_budget_mlx']) {
+        if (parseFloat(fields['bid_per_impressions_mlx']) > parseFloat(fields['daily_budget_mlx'])) {
             formIsValid                       = false;
-            errors['bid_per_impressions_mlx'] = 'can not be bigger than budget';
+            errors['bid_per_impressions_mlx'] = 'the bid per impression cannot exceed the daily budget';
         }
 
-        if (fields['daily_budget_mlx'] > this.props.wallet.balance_stable) {
+        if (parseFloat(fields['daily_budget_mlx']) > parseFloat(this.props.wallet.balance_stable)) {
             formIsValid                = false;
-            errors['daily_budget_mlx'] = 'insufficient funds';
+            errors['daily_budget_mlx'] = 'please add funds to enable this ad campaign';
         }
 
 
