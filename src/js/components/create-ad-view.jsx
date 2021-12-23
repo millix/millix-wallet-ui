@@ -312,7 +312,7 @@ class CreateAdView extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div className="col-lg-12">
-                                <span className="col-lg-12 center-text">to add funds for your ad campaign, please make transfer on your millix wallet</span>
+                                <span className="col-lg-12 center-text">fund your campaign by sending millix to the address below</span>
                                 <span
                                     className="col-lg-12 center-text">{this.props.wallet.address}</span>
                             </div>
@@ -660,7 +660,7 @@ class CreateAdView extends Component {
                                     <Col sm="2" className={'align-right'}>
                                         <Form.Label
                                             className="control-label text-right col-sm-12">
-                                            bid per 1k impressions:
+                                            bid per impression:
                                         </Form.Label>
                                     </Col>
                                     <Col sm="10">

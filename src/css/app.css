@@ -661,6 +661,10 @@ td {
     font-size: 18px;
 }
 
+div {
+    font-size: 18px;
+}
+
 .modal-open .addFundsModal {
     opacity: 1 !important;
 }
