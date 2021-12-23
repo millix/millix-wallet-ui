@@ -48,7 +48,7 @@ class StatsView extends Component {
                     <Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>{props.network.node_is_public ? 'your node is public and is eligible to receive transaction fees' : 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.'}</small>
+                            <small>{props.network.node_is_public === 'unknown' ? 'analyzing your network connection' : props.network.node_is_public === true ? 'your node is public and is eligible to receive transaction fees' : 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.'}</small>
                         </Col>
                     </Row>
                     <br/>
