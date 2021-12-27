@@ -58,7 +58,6 @@ const UnlockedWalletRequiredRoute = ({
                             </div>
                             <a className={'navbar-brand'}>
                                 millix
-                                <span>{rest.node.node_version && `v.${rest.node.node_version}`}</span>
                             </a>
                         </div>
                         <div id="navbar" className={'navbar-collapse collapse'}>

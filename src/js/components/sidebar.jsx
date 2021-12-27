@@ -117,20 +117,10 @@ class Sidebar extends Component {
                             logout
                         </NavText>
                     </NavItem>
-                    {/*<div style={{
-                     paddingLeft  : 25,
-                     display      : 'flex',
-                     flexDirection: 'column'
-                     }}>
-                     <div>
-                     <small style={{fontSize: 12}}>millix network
-                     time</small>
-                     <br/>
-                     <small
-                     style={{fontSize: 12}}>{this.props.clock}</small>
-                     </div>
-                     </div>*/}
                 </SideNav.Nav>
+                <div className='nav-info'>
+                     <span>v. {props.node.node_version}</span>
+                     </div>
             </SideNav>
         </aside>);
     }

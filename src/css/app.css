@@ -1,12 +1,3 @@
-.navigation div {
-    color: #848c94 !important;
-    font-size: 12px;
-}
-
-.navigation .sidenav---selected---1EK3y div {
-    color: #c0c4c8 !important;
-}
-
 .luna-nav.nav li a:hover, .luna-nav.nav li a:focus {
     color: #C741FC !important;
     background: inherit;
@@ -20,14 +11,7 @@
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
     padding: 8px 15px 8px 25px;
     margin: 0 0;
-    height: 36px;
     line-height: 20px;
-}
-
-.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
-    border-left: 6px solid #9400CE;
-    padding-left: 19px;
-    color: #C741FC;
 }
 
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
@@ -50,10 +34,6 @@
     background: #2f323b;
 }
 
-.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
-    font-size: 18px;
-}
-
 .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 {
     padding-left: 20px;
 }
@@ -70,10 +50,6 @@
     content: none;
 }
 
-.sidenav---navtext---1AE_f {
-    font-size: 18px;
-}
-
 .nav-category {
     color: #FFFFFF;
     margin-top: 10px !important;
@@ -88,10 +64,6 @@
 .panel-body > .row {
     margin-left: 0;
     margin-right: 0;
-}
-
-.sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL {
-    padding-top: 15px;
 }
 
 .switchery-small {
@@ -656,14 +628,6 @@ a:hover, a:focus {
 
 .btn-xs {
     font-size: 1rem !important
-}
-
-td {
-    font-size: 18px;
-}
-
-div {
-    font-size: 18px;
 }
 
 .modal-open .addFundsModal {

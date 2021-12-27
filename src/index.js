@@ -48,6 +48,7 @@ import './vendor/luna/universal_admin.css';
 import '../node_modules/@trendmicro/react-sidenav/dist/react-sidenav.css';
 import '../node_modules/@fortawesome/fontawesome-svg-core/styles.css';
 import './css/app.scss';
+import './css/sidenav.css';
 import './vendor/luna/luna';
 import API from './js/api';
 import ntp from './js/core/ntp';
