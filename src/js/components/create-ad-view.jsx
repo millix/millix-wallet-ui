@@ -168,7 +168,7 @@ class CreateAdView extends Component {
             errors['daily_budget_mlx'] = 'this field is required, please provide a value';
         }
 
-        if (typeof fields['daily_budget_mlx'] !== 'undefined') {
+        if (typeof fields['daily_budget_mlx'] !== 'undefined' && (typeof fields['daily_budget_mlx']) == 'string') {
             if (!fields['daily_budget_mlx'].match(/^[0-9]+$/)) {
                 formIsValid                = false;
                 errors['daily_budget_mlx'] = 'this field only accepts numbers';
@@ -180,7 +180,7 @@ class CreateAdView extends Component {
             errors['bid_per_impressions_mlx'] = 'this field is required, please provide a value';
         }
 
-        if (typeof fields['bid_per_impressions_mlx'] !== 'undefined') {
+        if (typeof fields['bid_per_impressions_mlx'] !== 'undefined' && (typeof fields['daily_budget_mlx']) == 'string') {
             if (!fields['bid_per_impressions_mlx'].match(/^[0-9]+$/)) {
                 formIsValid                       = false;
                 errors['bid_per_impressions_mlx'] = 'this field only accepts numbers';
@@ -238,6 +238,22 @@ class CreateAdView extends Component {
         let fields = this.state.fields;
         if (field === 'search_phrase') {
             fields[field] = e;
+        }
+        else if (field === 'daily_budget_mlx' || field === 'bid_per_impressions_mlx') {
+            console.log('daily processor');
+
+            let cursorStart = e.target.selectionStart,
+                cursorEnd   = e.target.selectionEnd;
+            let amount      = e.target.value.replace(/[,.]/g, '');
+            let offset      = 0;
+            if ((amount.length - 1) % 3 === 0) {
+                offset = 1;
+            }
+
+            amount        = parseInt(amount);
+            fields[field] = !isNaN(amount) ? amount : 0;
+
+            e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
         }
         else {
             fields[field] = e.target.value;
@@ -615,8 +631,13 @@ class CreateAdView extends Component {
                                             <Form.Control
                                                 type="text"
                                                 className="col-sm-12"
-                                                value={this.state.fields['daily_budget_mlx']}
                                                 onChange={this.handleInputChange.bind(this, 'daily_budget_mlx')}
+                                                ref={c => {
+                                                    this.budget = c;
+                                                    if (this.budget && this.state.fields['daily_budget_mlx'] !== undefined) {
+                                                        this.budget.value = this.state.fields['daily_budget_mlx'].toLocaleString('en-US');
+                                                    }
+                                                }}
                                                 placeholder=""
                                             />
                                             {renderErrorDock('daily_budget_mlx')}
@@ -655,8 +676,13 @@ class CreateAdView extends Component {
                                                 <Form.Control
                                                     type="text"
                                                     className="col-sm-12"
-                                                    value={this.state.fields['bid_per_impressions_mlx']}
                                                     onChange={this.handleInputChange.bind(this, 'bid_per_impressions_mlx')}
+                                                    ref={c => {
+                                                        this.impression = c;
+                                                        if (this.impression && this.state.fields['bid_per_impressions_mlx'] !== undefined) {
+                                                            this.impression.value = this.state.fields['bid_per_impressions_mlx'].toLocaleString('en-US');
+                                                        }
+                                                    }}
                                                     placeholder=""
                                                 />
                                                 {renderErrorDock('bid_per_impressions_mlx')}
