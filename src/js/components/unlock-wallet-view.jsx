@@ -65,8 +65,8 @@ const UnlockWalletView = (props) => {
                             <FormControl
                                 ref={c => passphraseRef = c}
                                 type="password"
-                                placeholder="wallet passphrase"
-                                aria-label="wallet passphrase"
+                                placeholder="wallet password"
+                                aria-label="wallet password"
                                 aria-describedby="basic-addon"
                                 onKeyPress={(e) => {
                                     if (e.charCode === 13) {
@@ -75,7 +75,7 @@ const UnlockWalletView = (props) => {
                                 }}
                             />
                             {props.wallet.authenticationError ? (
-                                <span className="help-block small">there was a problem authenticating your key file. retry your passphrase or <a
+                                <span className="help-block small">there was a problem authenticating your key file. retry your password or <a
                                     style={{cursor: 'pointer'}}
                                     onClick={() => props.history.push('/import-wallet/')}> click here to load your key.</a></span>) : (
                                  <span className="help-block small">Your strong password</span>)}

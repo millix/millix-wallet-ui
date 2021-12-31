@@ -19,8 +19,8 @@ const PasswordInputView = (props) => {
                         <FormControl
                             ref={c => passphraseRef = c}
                             type="password"
-                            placeholder="wallet passphrase"
-                            aria-label="wallet passphrase"
+                            placeholder="wallet password"
+                            aria-label="wallet password"
                             aria-describedby="basic-addon"
                             onKeyPress={(e) => {
                                 if (e.charCode === 13) {

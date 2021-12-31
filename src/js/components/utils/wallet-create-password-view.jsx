@@ -15,8 +15,8 @@ const WalletCreatePasswordView = (props) => {
                     <FormControl
                         type="password"
                         ref={c => passphraseRef = c}
-                        placeholder="wallet passphrase"
-                        aria-label="wallet passphrase"
+                        placeholder="wallet password"
+                        aria-label="wallet password"
                         aria-describedby="basic-addon"
                         onChange={(e) => {
                             props.onPassword(passphraseRef.value);
