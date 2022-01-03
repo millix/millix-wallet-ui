@@ -268,6 +268,22 @@ class CreateAdView extends Component {
     handleAddFundsModalClose = () => this.setAddFundsModalShow(false);
     handleAddFundsModalShow  = () => this.setAddFundsModalShow(true);
 
+    getDomain(url) {
+        let domain;
+        try {
+            domain = new URL(url).host;
+        }
+        catch (e) {
+            return '';
+        }
+
+        if (domain.startsWith('www.')) {
+            return domain.substring(4);
+        }
+
+        return domain;
+    }
+
     render() {
         const renderErrorDock     = (name) => {
             return <span
@@ -444,7 +460,7 @@ class CreateAdView extends Component {
                                                     <span>
                                                         {(this.state.fields['url'] || this.state.fields['deck']) && (
                                                             <a id="advertisement_deck"
-                                                               href={this.state.fields['url'] ? this.state.fields['url'] : ''}
+                                                               href={this.state.fields['url'] ? this.getDomain(this.state.fields['url']) : ''}
                                                                title={this.state.fields['deck'] ? this.state.fields['deck'] : ''}>{this.state.fields['deck'] ? this.state.fields['deck'] : ''} - {this.state.fields['url'] ? this.state.fields['url'] : ''}</a>)}</span>
                                                 </div>
                                             </div>

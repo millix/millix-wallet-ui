@@ -38,10 +38,6 @@ class ListAdView extends Component {
                         field: 'advertisement_url'
                     },
                     {
-                        label: 'budget daily usd',
-                        field: 'budget_daily_usd'
-                    },
-                    {
                         label: 'budget daily mlx',
                         field: 'budget_daily_mlx'
                     },
@@ -146,47 +142,44 @@ class ListAdView extends Component {
 
     async getAdsList() {
         API.listAds().then(data => {
-            let shouldUpdate = false;
             if (typeof data.api_status != 'undefined' && data.api_status === 'ok') {
 
                 let ad_list    = [];
                 let table_list = this.state.ad_list.rows;
 
                 if (typeof data.advertisement_list != 'undefined') {
-                    if (table_list.length == !data.advertisement_list.length) {
-                        shouldUpdate = true;
-                    }
-                    data.advertisement_list.forEach((item, idx) => {
+                    if (table_list.length !== data.advertisement_list.length) {
+                        data.advertisement_list.forEach((item, idx) => {
 
-                        ad_list.push({
-                            idx                        : item.advertisement_id,
-                            advertisement_guid         : item.advertisement_guid,
-                            advertisement_type_guid    : item.advertisement_type_guid,
-                            advertisement_type         : this.getAdType(item),
-                            advertisement_category_guid: item.advertisement_category_guid,
-                            advertisement_category     : this.getAdCategory(item),
-                            advertisement_name         : item.advertisement_name,
-                            advertisement_url          : item.advertisement_url,
-                            protocol_address_funding   : item.protocol_address_funding,
-                            budget_daily_usd           : item.budget_daily_usd,
-                            budget_daily_mlx           : item.budget_daily_mlx,
-                            bid_impression_usd         : item.bid_impression_usd,
-                            bid_impression_mlx         : item.bid_impression_mlx,
-                            expiration                 : item.expiration,
-                            status                     : item.status,
-                            status_button              : this.getStatusButton(item),
-                            create_date                : this.getFormattedDate(item)
+                            ad_list.push({
+                                idx                        : item.advertisement_id,
+                                advertisement_guid         : item.advertisement_guid,
+                                advertisement_type_guid    : item.advertisement_type_guid,
+                                advertisement_type         : this.getAdType(item),
+                                advertisement_category_guid: item.advertisement_category_guid,
+                                advertisement_category     : this.getAdCategory(item),
+                                advertisement_name         : item.advertisement_name,
+                                advertisement_url          : item.advertisement_url,
+                                protocol_address_funding   : item.protocol_address_funding,
+                                budget_daily_usd           : item.budget_daily_usd.toLocaleString('en-US'),
+                                budget_daily_mlx           : item.budget_daily_mlx.toLocaleString('en-US'),
+                                bid_impression_usd         : item.bid_impression_usd.toLocaleString('en-US'),
+                                bid_impression_mlx         : item.bid_impression_mlx.toLocaleString('en-US'),
+                                expiration                 : item.expiration,
+                                status                     : item.status,
+                                status_button              : this.getStatusButton(item),
+                                create_date                : this.getFormattedDate(item)
+                            });
                         });
-                    });
-                }
-                if (shouldUpdate) {
-                    this.setState({
-                        ad_list: {
-                            columns: [...this.state.ad_list.columns],
-                            rows   : ad_list
-                        }
-                    });
-                }
+
+                        this.setState({
+                            ad_list: {
+                                columns: [...this.state.ad_list.columns],
+                                rows   : ad_list
+                            }
+                        });
+                    }
+                }   
             }
         });
     }
