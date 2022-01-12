@@ -1,0 +1,65 @@
+@import './variable';
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
+  font-size: 1rem;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
+  color: $color-font-left-nav-base;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
+  color: $color-font-left-nav-hover;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
+  height: auto;
+  line-height: normal;
+}
+
+.nav-utc_clock,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
+  padding: 0.57rem 1rem 0.57rem 1.78rem;
+  margin: 0 0;
+  line-height: 1.42rem;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
+  border-left: 0.42rem solid $color-primary;
+  padding-left: 1.36rem;
+  color: $color-font-left-nav-hover;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover > .sidenav---navitem---9uL5T::after {
+  background: #2f323b;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T::after,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T::after {
+  background: transparent;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:focus {
+  letter-spacing: 0.14rem;
+}
+
+.sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL {
+  padding-top: 1rem;
+  bottom: auto;
+}
+
+.nav-info {
+  margin-top: 3.5rem;
+  padding: 1.42rem 1.78rem 1.78rem 1.78rem;
+  font-size: 0.9rem;
+  background-color: #24262d;
+  float: left;
+  width: 100%;
+}
+
+.nav-utc_clock {
+  color: $color-white;
+  font-size: 1rem;
+}

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
+import moment from 'moment';
 
 
 class Sidebar extends Component {
@@ -17,10 +18,28 @@ class Sidebar extends Component {
         ];
         this.state         = {
             fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now
+            fileKeyImport: 'import_' + now,
+            date: new Date()
         };
     }
 
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.tick(),
+            1000
+        );
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+    
+    tick() {
+        this.setState({
+            date: new Date()
+        });
+    }
+     
     isWalletScreen(pathName) {
         if (!pathName) {
             return false;
@@ -58,6 +77,9 @@ class Sidebar extends Component {
                     }
                 }}
             >
+                <div className='nav-utc_clock'>
+                    <span>{moment.utc(this.state.date).format('YYYY-MM-DD HH:mm:ss')} utc</span>
+                </div>
                 <SideNav.Nav
                     defaultSelected={!this.isWalletScreen(props.location.pathname) ? '/wallet' : props.location.pathname}>
                     <NavItem key={'wallet'} eventKey="/wallet">
@@ -117,20 +139,10 @@ class Sidebar extends Component {
                             logout
                         </NavText>
                     </NavItem>
-                    {/*<div style={{
-                     paddingLeft  : 25,
-                     display      : 'flex',
-                     flexDirection: 'column'
-                     }}>
-                     <div>
-                     <small style={{fontSize: 12}}>millix network
-                     time</small>
-                     <br/>
-                     <small
-                     style={{fontSize: 12}}>{this.props.clock}</small>
-                     </div>
-                     </div>*/}
                 </SideNav.Nav>
+                <div className='nav-info'>
+                     <span>version {props.node.node_version}</span>
+                     </div>
             </SideNav>
         </aside>);
     }
