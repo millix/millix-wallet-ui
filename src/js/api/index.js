@@ -3,8 +3,17 @@ class API {
     static HOST_TANGLED_API = 'https://localhost:15555/api';
 
     constructor() {
-        this.nodeID        = '1D6B4p5wwuVgnNYFBTd9oZaEWftmc2bE97';
-        this.nodeSignature = '21LUyQk9CRA5XPTD4SaCXFBbdBQXHCytcvQ52ohRMWz9Jp57mganQcswP49Hry6GAzcFzid2PW9hqjQ7BZ8QXjHB';
+        this.nodeID        = undefined;
+        this.nodeSignature = undefined;
+
+        try {
+            const environment = require('../../environment');
+
+            this.nodeID        = environment.NODE_ID;
+            this.nodeSignature = environment.NODE_SIGNATURE;
+        }
+        catch (ex) {
+        }
     }
 
     setNodeID(nodeID) {
