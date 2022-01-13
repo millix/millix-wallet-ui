@@ -1,5 +1,13 @@
 @import './variable';
 
+.sidenav---sidenav---_2tBP {
+  background: $sidebar-nav-background-color;
+}
+
+.sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL {
+  min-width: 0;
+}
+
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T {
   font-size: 1rem;
 }
@@ -20,7 +28,7 @@
 
 .nav-utc_clock,
 .sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f {
-  padding: 0.57rem 1rem 0.57rem 1.78rem;
+  padding: $sidebar-nav-item-padding-y $sidebar-nav-item-padding-right $sidebar-nav-item-padding-y $sidebar-nav-item-padding-left;
   margin: 0 0;
   line-height: 1.42rem;
 }
@@ -40,10 +48,6 @@
   background: transparent;
 }
 
-.navbar-default .navbar-brand,
-.navbar-default .navbar-brand:focus {
-  letter-spacing: 0.14rem;
-}
 
 .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL {
   padding-top: 1rem;
@@ -54,7 +58,7 @@
   margin-top: 3.5rem;
   padding: 1.42rem 1.78rem 1.78rem 1.78rem;
   font-size: 0.9rem;
-  background-color: #24262d;
+  background-color: $color-sidenav;
   float: left;
   width: 100%;
 }

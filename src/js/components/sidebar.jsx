@@ -63,7 +63,6 @@ class Sidebar extends Component {
                 expanded={true}
                 onToggle={() => {
                 }}
-                style={{minWidth: 200}}
                 onSelect={(selected) => {
                     switch (selected) {
                         case 'lock':

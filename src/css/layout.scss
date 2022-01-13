@@ -1,0 +1,22 @@
+@import './variable';
+@import 'navbar';
+
+.navigation {
+  background-color: $color-sidenav;
+  width: $sidebar-width;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  transition: left 0.3s ease-out;
+  -webkit-transition: left 0.3s ease-out;
+}
+
+.content {
+  margin-top: $navbar-height;
+  margin-left: $sidebar-width;
+  position: relative;
+  padding: 2rem;
+  transition: margin-left 0.3s ease-out;
+  -webkit-transition: margin-left 0.3s ease-out;
+}

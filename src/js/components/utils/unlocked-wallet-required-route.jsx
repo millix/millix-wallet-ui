@@ -46,27 +46,26 @@ const UnlockedWalletRequiredRoute = ({
         rest.wallet.unlocked ? (
             <>
                 <nav className={'navbar navbar-default navbar-fixed-top'}>
-                    <div className={'container-fluid'}>
-                        <div className={'navbar-header'}>
-                            <div id="mobile-menu">
-                                <div className={'left-nav-toggle'}>
-                                    <a
-                                        onClick={() => $('body').toggleClass('nav-toggle')}>
-                                        <i className={'stroke-hamburgermenu'}/>
-                                    </a>
-                                </div>
-                            </div>
-                            <a className={'navbar-brand'}>
-                                millix
-                            </a>
-                        </div>
-                        <div id="navbar" className={'navbar-collapse collapse'}>
+                    <div className={'navbar-header'}>
+                        <div id="mobile-menu">
                             <div className={'left-nav-toggle'}>
                                 <a
                                     onClick={() => $('body').toggleClass('nav-toggle')}>
                                     <i className={'stroke-hamburgermenu'}/>
                                 </a>
                             </div>
+                        </div>
+                        <a className={'navbar-brand'}
+                           onClick={() => props.history.push('/')}>
+                            millix
+                        </a>
+                    </div>
+                    <div id="navbar" className={'navbar-collapse collapse'}>
+                        <div className={'left-nav-toggle'}>
+                            <a
+                                onClick={() => $('body').toggleClass('nav-toggle')}>
+                                <i className={'stroke-hamburgermenu'}/>
+                            </a>
                         </div>
                     </div>
                 </nav>

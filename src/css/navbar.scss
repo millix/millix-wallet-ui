@@ -1,0 +1,41 @@
+@import './variable';
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+
+.navbar-fixed-top {
+  top: 0;
+  border-width: 0 0 1px;
+}
+
+.navbar {
+  min-height: $navbar-height;
+  padding: 0;
+}
+
+.navbar .navbar-header {
+  display: flex;
+}
+
+.navbar-default {
+  border-bottom: none;
+  background-color: $color-white;
+  box-shadow: 0 0 1.5rem $navbar-shadow-color;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover {
+  width: $sidebar-width;
+  background-color: $color-primary;
+  line-height: $navbar-height;
+  padding: 0 $sidebar-nav-item-padding-right 0 $sidebar-nav-item-padding-left;
+  letter-spacing: 0.14rem;
+  color: $color-white;
+  text-decoration: none;
+
+}
