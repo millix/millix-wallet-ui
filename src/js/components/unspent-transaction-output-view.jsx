@@ -101,7 +101,7 @@ class UnspentTransactionOutputView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div
-                        className={'panel-heading'}>{this.props.location.state.stable ? '' : 'pending'} unspent
+                        className={'panel-heading bordered'}>{this.props.location.state.stable ? '' : 'pending'} unspent
                         transaction
                         outputs
                     </div>

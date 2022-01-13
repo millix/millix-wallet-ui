@@ -81,7 +81,7 @@ class PeerInfoView extends Component {
                     </Col>
                 </Row>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>peer attributes</div>
+                    <div className={'panel-heading bordered'}>peer attributes</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
 
@@ -89,7 +89,7 @@ class PeerInfoView extends Component {
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>shard attributes</div>
+                    <div className={'panel-heading bordered'}>shard attributes</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Table striped bordered hover variant="dark">

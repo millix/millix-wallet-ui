@@ -223,27 +223,29 @@ class WalletView extends Component {
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>balance</div>
+                            <div className={'panel-heading bordered'}>balance
+                            </div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
-
-                                <Table striped bordered hover variant="dark">
-                                    <thead>
-                                    <tr>
-                                        <th width="50%">available</th>
-                                        <th width="50%">pending</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr key="1" className="wallet-address">
-                                        <td>
-                                            {this.props.wallet.balance_stable.toLocaleString('en-US')}
-                                            <span
-                                                style={{
-                                                    float : 'right',
-                                                    cursor: 'pointer'
-                                                }}>
-                                                <Button variant='outline-primary'
+                                <div className={'d-flex'}>
+                                    <Table striped bordered hover>
+                                        <thead>
+                                        <tr>
+                                            <th width="50%">available</th>
+                                            <th width="50%">pending</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr key="1" className="wallet-address">
+                                            <td>
+                                                {this.props.wallet.balance_stable.toLocaleString('en-US')}
+                                                <span
+                                                    style={{
+                                                        float : 'right',
+                                                        cursor: 'pointer'
+                                                    }}>
+                                                <Button
+                                                    variant="outline-primary"
                                                     className={'btn-xs icon_only'}
                                                     onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
                                                         <FontAwesomeIcon
@@ -251,15 +253,16 @@ class WalletView extends Component {
                                                             size="1x"/>
                                                     </Button>
                                             </span>
-                                        </td>
-                                        <td>
-                                            {this.props.wallet.balance_pending.toLocaleString('en-US')}
-                                            <span
-                                                style={{
-                                                    float : 'right',
-                                                    cursor: 'pointer'
-                                                }}>
-                                                <Button variant='outline-primary'
+                                            </td>
+                                            <td>
+                                                {this.props.wallet.balance_pending.toLocaleString('en-US')}
+                                                <span
+                                                    style={{
+                                                        float : 'right',
+                                                        cursor: 'pointer'
+                                                    }}>
+                                                <Button
+                                                    variant="outline-primary"
                                                     className={'btn-xs icon_only'}
                                                     onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
                                                         <FontAwesomeIcon
@@ -267,21 +270,21 @@ class WalletView extends Component {
                                                             size="1x"/>
                                                     </Button>
                                             </span></td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </div>
                             </div>
                         </div>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>send</div>
+                            <div className={'panel-heading bordered'}>send</div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
                                 <Row className="mb-3">
                                     <Form>
                                         <Col>
-                                            <Form.Group>
-                                                <label
-                                                    className="control-label">address</label>
+                                            <Form.Group className="form-group">
+                                                <label>address</label>
                                                 <Form.Control type="text"
                                                               placeholder="address"
                                                               ref={c => this.destinationAddress = c}/>
@@ -294,9 +297,8 @@ class WalletView extends Component {
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <label
-                                                className="control-label">amount</label>
-                                            <Form.Group>
+                                            <Form.Group className="form-group">
+                                                <label>amount</label>
                                                 <Form.Control type="text"
                                                               placeholder="amount"
                                                               pattern="[0-9]+([,][0-9]{1,2})?"
@@ -311,9 +313,9 @@ class WalletView extends Component {
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <label
-                                                className="control-label">fee</label>
-                                            <Form.Group as={Row}>
+                                            <Form.Group className="form-group"
+                                                        as={Row}>
+                                                <label>fee</label>
                                                 <Col md={11} ms={11}>
                                                     <Form.Control type="text"
                                                                   placeholder="fee"
@@ -330,7 +332,8 @@ class WalletView extends Component {
                                                 </Col>
                                                 <Col style={styles.centered}
                                                      md={1} ms={1}>
-                                                    <Button variant='outline-primary'
+                                                    <Button
+                                                        variant="outline-primary"
                                                         onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
                                                         <FontAwesomeIcon
                                                             icon={this.state.feesLocked ? 'lock' : 'lock-open'}
@@ -347,10 +350,12 @@ class WalletView extends Component {
                                             </Form.Group>
                                         </Col>
                                         <Col style={styles.centered}>
-                                            <Form.Group as={Row}>
-                                                <Button variant='outline-primary'
-                                                        onClick={this.send.bind(this)}
-                                                        disabled={this.state.canceling}>
+                                            <Form.Group as={Row}
+                                                        className={'submit-row'}>
+                                                <Button
+                                                    variant="outline-primary"
+                                                    onClick={this.send.bind(this)}
+                                                    disabled={this.state.canceling}>
                                                     {this.state.sending ?
                                                      <>
                                                          <div style={{
@@ -372,7 +377,7 @@ class WalletView extends Component {
                             </div>
                         </div>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>addresses
+                            <div className={'panel-heading bordered'}>addresses
                             </div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
@@ -381,7 +386,7 @@ class WalletView extends Component {
                                         display       : 'flex',
                                         justifyContent: 'flex-end'
                                     }}>
-                                        <Button variant='outline-primary'
+                                        <Button variant="outline-primary"
                                                 onClick={() => this.getNextAddress()}>
                                             generate address
                                         </Button>

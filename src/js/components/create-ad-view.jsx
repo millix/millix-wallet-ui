@@ -319,7 +319,7 @@ class CreateAdView extends Component {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant='outline-primary'
+                            <Button variant="outline-primary"
                                     onClick={this.handleAddFundsModalClose}>
                                 Close
                             </Button>
@@ -328,7 +328,9 @@ class CreateAdView extends Component {
                 </div>
 
                 <div className="panel panel-filled">
-                    <div className={'panel-heading'}>create advertisement</div>
+                    <div className={'panel-heading bordered'}>create
+                        advertisement
+                    </div>
                     <hr className={'hrPal'}/>
                     <div className="panel-body">
                         {renderSubmitMessage()}
@@ -345,7 +347,7 @@ class CreateAdView extends Component {
                             <FormGroup as={Row} controlId="creative_name">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-14 ">
+                                        className="text-right col-sm-14 ">
                                         creative name:
                                     </Form.Label>
                                 </Col>
@@ -363,7 +365,7 @@ class CreateAdView extends Component {
                             <FormGroup as={Row} controlId="category">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         category:
                                     </Form.Label>
                                 </Col>
@@ -386,7 +388,7 @@ class CreateAdView extends Component {
                             <FormGroup as={Row} controlId="headline">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         headline:
                                     </Form.Label>
                                 </Col>
@@ -404,7 +406,7 @@ class CreateAdView extends Component {
                             <FormGroup as={Row} controlId="deck">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         deck:
                                     </Form.Label>
                                 </Col>
@@ -422,7 +424,7 @@ class CreateAdView extends Component {
                             <FormGroup as={Row} controlId="url">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         url:
                                     </Form.Label>
                                 </Col>
@@ -440,7 +442,7 @@ class CreateAdView extends Component {
                                        controlId="preview">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         preview:
                                     </Form.Label>
                                 </Col>
@@ -477,7 +479,7 @@ class CreateAdView extends Component {
                              controlId="target_language">
                              <Col sm="2" className={'align-right'}>
                              <Form.Label
-                             className="control-label text-right col-sm-12">
+                             className="text-right col-sm-12">
                              target language:
                              </Form.Label>
                              </Col>
@@ -502,7 +504,7 @@ class CreateAdView extends Component {
                             {/*            controlId="target-geography">*/}
                             {/*    <Col sm="2">*/}
                             {/*        <Form.Label*/}
-                            {/*            className="control-label text-right col-sm-12">*/}
+                            {/*            className="text-right col-sm-12">*/}
                             {/*            target geography:*/}
                             {/*        </Form.Label>*/}
                             {/*    </Col>*/}
@@ -579,7 +581,7 @@ class CreateAdView extends Component {
                              controlId="target_search_phrase">
                              <Col sm="2">
                              <Form.Label
-                             className="control-label text-right col-sm-12">
+                             className="text-right col-sm-12">
                              target search phrases:
                              </Form.Label>
                              </Col>
@@ -600,7 +602,7 @@ class CreateAdView extends Component {
                             <Form.Group as={Row} controlId="funding">
                                 <Col sm="2">
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         funding:
                                     </Form.Label>
                                 </Col>
@@ -610,7 +612,7 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="3">
                                         <Button
-                                            variant='outline-primary'
+                                            variant="outline-primary"
                                             onClick={this.handleAddFundsModalShow}
                                         >add funds</Button>
                                     </Col>
@@ -620,7 +622,7 @@ class CreateAdView extends Component {
                             <Form.Group as={Row} controlId="daliy-budget">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         daily budget:
                                     </Form.Label>
                                 </Col>
@@ -662,7 +664,7 @@ class CreateAdView extends Component {
                             <Form.Group as={Row} controlId="daliy-budget">
                                 <Col sm="2" className={'align-right'}>
                                     <Form.Label
-                                        className="control-label text-right col-sm-12">
+                                        className="text-right col-sm-12">
                                         bid per impression:
                                     </Form.Label>
                                 </Col>
@@ -720,11 +722,14 @@ class CreateAdView extends Component {
                                      </div>*/}
                                 </Col>
                             </Form.Group>
-                            <div style={{
-                                display       : 'flex',
-                                justifyContent: 'center'
-                            }}>
-                                <Button variant='outline-primary' type="submit">submit</Button>
+                            <div className={'submit-row'}
+                                 style={{
+                                     display       : 'flex',
+                                     justifyContent: 'center'
+                                 }}>
+                                <Button
+                                    variant="outline-primary"
+                                    type="submit">submit</Button>
                             </div>
 
                         </Form>

@@ -123,7 +123,7 @@ class ActionView extends Component {
                 <Row>
                     <Col md={12}>
                         {/*<div className={'panel panel-filled'}>
-                         <div className={'panel-heading'}>optimize</div>
+                         <div className={'panel-heading bordered'}>optimize</div>
                          <hr className={'hrPanel'}/>
                          <div className={'panel-body'}>
                          <Row className="mb-1">
@@ -147,7 +147,7 @@ class ActionView extends Component {
                          </div>
                          </div>*/}
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>reset validation
+                            <div className={'panel-heading bordered'}>reset validation
                             </div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
@@ -158,8 +158,9 @@ class ActionView extends Component {
                                     </Col>
                                 </Row>
                                 <Row className="mb-3">
-                                    <Col style={styles.centered}>
-                                        <Button variant="outline-primary"
+                                    <Col style={styles.centered} className={'submit-row'}>
+                                        <Button
+                                                variant="outline-primary"
                                                 onClick={() => this.resetTransactionValidation()}>
                                             reset validation
                                         </Button>
@@ -168,7 +169,7 @@ class ActionView extends Component {
                             </div>
                         </div>
                         {/*<div className={'panel panel-filled'}>
-                         <div className={'panel-heading'}>load wallet</div>
+                         <div className={'panel-heading bordered'}>load wallet</div>
                          <hr className={'hrPanel'}/>
                          <div className={'panel-body'}>
                          <Row className="mb-1">
@@ -195,7 +196,7 @@ class ActionView extends Component {
                             </div>
                         </div>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>save wallet</div>
+                            <div className={'panel-heading bordered'}>save wallet</div>
                             <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
                                 <Row className="mb-1">

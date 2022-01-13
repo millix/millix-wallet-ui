@@ -94,7 +94,7 @@ class TransactionHistoryView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>transactions</div>
+                    <div className={'panel-heading bordered'}>transactions</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>

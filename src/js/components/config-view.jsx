@@ -82,7 +82,7 @@ class ConfigView extends Component {
         return <div>
             <Form>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>network</div>
+                    <div className={'panel-heading bordered'}>network</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Form.Group>
@@ -155,8 +155,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">network
+                                <label>network
                                     port</label>
 
                                 <Form.Control
@@ -172,8 +171,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">rpc
+                                <label>rpc
                                     port</label>
                                 <Form.Control
                                     type="text"
@@ -189,9 +187,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">server
-                                    bind</label>
+                                <label>server bind</label>
                                 <Form.Control
                                     type="text"
                                     placeholder=""
@@ -206,8 +202,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">node
+                                <label>node
                                     public ip</label>
                                 <Form.Control
                                     type="text"
@@ -219,8 +214,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">nodes</label>
+                                <label>nodes</label>
                                 <Form.Control as="textarea" rows={10}
                                               placeholder=""
                                               ref={(c) => this._nodes = c}
@@ -235,8 +229,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">max
+                                <label>max
                                     connections
                                     in</label>
                                 <Form.Control
@@ -252,8 +245,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">max
+                                <label>max
                                     connections
                                     out</label>
                                 <Form.Control
@@ -271,15 +263,14 @@ class ConfigView extends Component {
                 </div>
 
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>inbound connection
+                    <div className={'panel-heading bordered'}>inbound connection
                         whitelist
                     </div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">add
+                                <label>add
                                     inbound
                                     connection
                                 </label>
@@ -298,7 +289,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant='outline-primary'
+                                            variant="outline-primary"
                                             size={'sm'}
                                             onClick={() => this.addToConfigList('NODE_CONNECTION_INBOUND_WHITELIST', 'connection_whitelist_inbound_node')}>
                                             <FontAwesomeIcon
@@ -330,7 +321,7 @@ class ConfigView extends Component {
                                                 <td>{nodeID}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant='outline-primary'
+                                                        variant="outline-primary"
                                                         size={'lg'}
                                                         onClick={() => this.removeFromConfigList('NODE_CONNECTION_INBOUND_WHITELIST', nodeID)}>
                                                         <FontAwesomeIcon
@@ -348,15 +339,15 @@ class ConfigView extends Component {
                 </div>
 
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>outbound connection
+                    <div className={'panel-heading bordered'}>outbound
+                        connection
                         whitelist
                     </div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">add
+                                <label>add
                                     outbound
                                     connection
                                 </label>
@@ -375,7 +366,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant='outline-primary'
+                                            variant="outline-primary"
                                             size={'sm'}
                                             onClick={() => this.addToConfigList('NODE_CONNECTION_OUTBOUND_WHITELIST', 'connection_whitelist_outbound_node')}>
                                             <FontAwesomeIcon
@@ -406,7 +397,7 @@ class ConfigView extends Component {
                                                 <td>{nodeID}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant='outline-primary'
+                                                        variant="outline-primary"
                                                         size={'lg'}
                                                         onClick={() => this.removeFromConfigList('NODE_CONNECTION_OUTBOUND_WHITELIST', nodeID)}>
                                                         <FontAwesomeIcon
@@ -424,13 +415,14 @@ class ConfigView extends Component {
                 </div>
 
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>static connection</div>
+                    <div className={'panel-heading bordered'}>static
+                        connection
+                    </div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">add
+                                <label>add
                                     static
                                     connection
                                 </label>
@@ -449,7 +441,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant='outline-primary'
+                                            variant="outline-primary"
                                             size={'sm'}
                                             onClick={() => this.addToConfigList('NODE_CONNECTION_STATIC', 'connection_static_node')}>
                                             <FontAwesomeIcon
@@ -480,7 +472,7 @@ class ConfigView extends Component {
                                                 <td>{nodeID}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant='outline-primary'
+                                                        variant="outline-primary"
                                                         size={'lg'}
                                                         onClick={() => this.removeFromConfigList('NODE_CONNECTION_STATIC', nodeID)}>
                                                         <FontAwesomeIcon
@@ -498,13 +490,12 @@ class ConfigView extends Component {
                 </div>
 
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>fees</div>
+                    <div className={'panel-heading bordered'}>fees</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">transaction proxy
+                                <label>transaction proxy
                                     fees</label>
                                 <Form.Control
                                     type="text"
@@ -519,8 +510,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">transaction
+                                <label>transaction
                                     fees</label>
                                 <Form.Control
                                     type="text"
@@ -535,8 +525,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">network fee
+                                <label>network fee
                                     (%)</label>
                                 <Form.Control
                                     type="text"
@@ -552,13 +541,12 @@ class ConfigView extends Component {
                 </div>
 
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>consensus</div>
+                    <div className={'panel-heading bordered'}>consensus</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">number
+                                <label>number
                                     of nodes</label>
                                 <Form.Control
                                     type="text"
@@ -573,8 +561,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">min
+                                <label>min
                                     include
                                     path</label>
                                 <Form.Control
@@ -590,8 +577,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">number
+                                <label>number
                                     of validation
                                     rounds</label>
                                 <Form.Control
@@ -607,8 +593,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">max
+                                <label>max
                                     double spend
                                     bound</label>
                                 <Form.Control
@@ -624,8 +609,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">number
+                                <label>number
                                     of validation
                                     required</label>
                                 <Form.Control
@@ -641,8 +625,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">max
+                                <label>max
                                     wait
                                     (sec)</label>
                                 <Form.Control
@@ -658,8 +641,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">retry
+                                <label>retry
                                     wait
                                     (sec)</label>
                                 <Form.Control
@@ -676,13 +658,14 @@ class ConfigView extends Component {
                 </div>
 
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>address version</div>
+                    <div className={'panel-heading bordered'}>address version
+                    </div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
                                 <label
-                                    className="control-label label-btn">default
+                                    className="label-btn">default
                                     address</label>
                                 <div
                                     className="btn-group btn-full-width">
@@ -720,8 +703,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">version</label>
+                                <label>version</label>
                                 <Form.Control
                                     type="text"
                                     placeholder=""
@@ -735,8 +717,7 @@ class ConfigView extends Component {
 
                         <Col>
                             <Form.Group>
-                                <label
-                                    className="control-label">add
+                                <label>add
                                     static
                                     connection
                                 </label>
@@ -755,7 +736,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant='outline-primary'
+                                            variant="outline-primary"
                                             size={'sm'}
                                             onClick={this.addAddressVersion.bind(this)}>
                                             <FontAwesomeIcon
@@ -791,7 +772,7 @@ class ConfigView extends Component {
                                                 <td>{addressVersion.is_default === 1 ? 'yes' : 'no'}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant='outline-primary'
+                                                        variant="outline-primary"
                                                         size={'lg'}
                                                         onClick={() => this.props.removeWalletAddressVersion(addressVersion)}>
                                                         <FontAwesomeIcon

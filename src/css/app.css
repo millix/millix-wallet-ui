@@ -295,10 +295,6 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
     outline: 0
 }
 
-.control-label {
-    font-size: 18px;
-}
-
 .rbt-input-multi.form-control {
     height: auto
 }

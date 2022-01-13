@@ -51,7 +51,7 @@ class TransactionDetailsView extends Component {
                     </Col>
                 </Row>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>transaction details</div>
+                    <div className={'panel-heading bordered'}>transaction details</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row className="mb-3"

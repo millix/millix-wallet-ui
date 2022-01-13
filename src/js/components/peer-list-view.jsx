@@ -87,7 +87,7 @@ class PeerListView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>peers</div>
+                    <div className={'panel-heading bordered'}>peers</div>
                     <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row>

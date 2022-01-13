@@ -1,7 +1,7 @@
 @import './variable';
 @import 'navbar';
 @import 'panel';
-@import 'button';
+@import 'form';
 
 .navigation {
   background-color: $color-sidenav;
@@ -15,6 +15,7 @@
 }
 
 .content {
+  background: #2d3038;
   margin-top: $navbar-height;
   margin-left: $sidebar-width;
   position: relative;

@@ -18,7 +18,7 @@ class StatsView extends Component {
         const props = this.props;
         return (<Col md="12">
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading'}>status
+                <div className={'panel-heading bordered'}>status
                 </div>
                 <hr className={'hrPanel'}/>
                 <div className={'panel-body'}>

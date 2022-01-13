@@ -199,7 +199,7 @@ class ListAdView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>advertisements</div>
+                    <div className={'panel-heading bordered'}>advertisements</div>
                     <hr className={'hrPal'}/>
                     <div className={'panel-body'}>
                         <Row id={'adlist'}>

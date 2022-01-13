@@ -60,8 +60,7 @@ const UnlockWalletView = (props) => {
                     <div className="panel-body">
 
                         <div className="form-group">
-                            <label className="control-label"
-                                   htmlFor="password">password</label>
+                            <label htmlFor="password">password</label>
                             <FormControl
                                 ref={c => passphraseRef = c}
                                 type="password"
