@@ -83,7 +83,7 @@ const UnlockWalletView = (props) => {
                         <Row>
                             <Col style={styles.centered}>
                                 <Button variant="light"
-                                        className={'btn btn-w-md btn-accent'}
+                                        className={'btn btn-primary'}
                                         onClick={() => walletUnlockWithPassword(passphraseRef.value)}> login </Button>
                             </Col>
                         </Row>
@@ -107,7 +107,7 @@ const UnlockWalletView = (props) => {
                 <Row>
                     <Col sm={6} style={{textAlign: 'right'}}>
                         <Button variant="light"
-                                className={'btn btn-w-md btn-accent'}
+                                className={'btn btn-primary'}
                                 style={{
                                     width        : '80%',
                                     paddingTop   : '14.66%',
@@ -123,7 +123,7 @@ const UnlockWalletView = (props) => {
                     </Col>
                     <Col sm={6}>
                         <Button variant="light"
-                                className={'btn btn-w-md btn-accent'}
+                                className={'btn btn-primary'}
                                 style={{
                                     width        : '80%',
                                     paddingTop   : '24.3%',

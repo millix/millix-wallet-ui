@@ -455,11 +455,6 @@ a > i.stroke-hamburgermenu, a.navbar-brand {
     border-bottom-right-radius: 0
 }
 
-.form-control {
-    padding: 0em 1em;
-    font-size: 18px;
-}
-
 .hint {
     font-style: italic;
 }

@@ -34,11 +34,7 @@ import {
     faList
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
-import './vendor/bootstrap/css/bootstrap.css';
-import './vendor/pe-icons/pe-icon-7-stroke.css';
-import './vendor/pe-icons/helper.css';
-import './vendor/stroke-icons/style.css';
-import './vendor/luna/luna.css';
+import './css/bootstrap/bootstrap.scss';
 import './vendor/luna/404_publishing.css';
 import './vendor/luna/custom_form_element.css';
 import './vendor/luna/datatable.css';

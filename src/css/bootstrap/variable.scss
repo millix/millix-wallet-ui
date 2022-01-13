@@ -1,0 +1,16 @@
+@import '../variable';
+
+$body-bg: #2f323b;
+$body-color: #949ba2;
+
+$primary: $color-primary;
+//$secondary: $gray-600 !default;
+$success: $color-green;
+$warning: $color-yellow;
+$danger: $color-red;
+
+$input-bg: #494b54;
+$input-disabled-bg: #2c2e34;
+$input-border-width: 0;
+$input-box-shadow: none;
+$input-focus-box-shadow: none;
