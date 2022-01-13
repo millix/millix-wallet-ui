@@ -8,6 +8,15 @@ a {
   cursor: pointer;
 }
 
+
+body.nav-toggle .navigation {
+  left: -$sidebar-width;
+}
+
+body.nav-toggle .content {
+  margin-left: 0;
+}
+
 .navigation {
   background-color: $color-sidenav;
   width: $sidebar-width;

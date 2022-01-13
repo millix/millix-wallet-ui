@@ -32,13 +32,25 @@
 .navbar-default .navbar-brand:hover {
   width: $sidebar-width;
   background-color: $color-primary;
-  line-height: $navbar-height;
+  height: $navbar-height;
+  display: inline-flex;
+  align-items: center;
   padding: 0 $sidebar-nav-item-padding-right 0 $sidebar-nav-item-padding-left;
   letter-spacing: 0.14rem;
   color: $color-white;
   text-decoration: none;
+  margin-right: 0;
 }
 
-.navbar-brand {
-  margin-right: $content-spacing;
+.left-nav-toggle {
+  height: $navbar-height;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: $content-spacing;
+  flex: 0 1 0;
+
+  &:hover {
+    color: $color-primary;
+  }
 }
