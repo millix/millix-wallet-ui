@@ -243,7 +243,7 @@ class WalletView extends Component {
                                                     float : 'right',
                                                     cursor: 'pointer'
                                                 }}>
-                                                <Button
+                                                <Button variant='outline-primary'
                                                     className={'btn-xs icon_only'}
                                                     onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
                                                         <FontAwesomeIcon
@@ -259,7 +259,7 @@ class WalletView extends Component {
                                                     float : 'right',
                                                     cursor: 'pointer'
                                                 }}>
-                                                <Button
+                                                <Button variant='outline-primary'
                                                     className={'btn-xs icon_only'}
                                                     onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
                                                         <FontAwesomeIcon
@@ -330,7 +330,7 @@ class WalletView extends Component {
                                                 </Col>
                                                 <Col style={styles.centered}
                                                      md={1} ms={1}>
-                                                    <Button
+                                                    <Button variant='outline-primary'
                                                         onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
                                                         <FontAwesomeIcon
                                                             icon={this.state.feesLocked ? 'lock' : 'lock-open'}
@@ -348,7 +348,7 @@ class WalletView extends Component {
                                         </Col>
                                         <Col style={styles.centered}>
                                             <Form.Group as={Row}>
-                                                <Button variant="outline-primary"
+                                                <Button variant='outline-primary'
                                                         onClick={this.send.bind(this)}
                                                         disabled={this.state.canceling}>
                                                     {this.state.sending ?
@@ -381,9 +381,7 @@ class WalletView extends Component {
                                         display       : 'flex',
                                         justifyContent: 'flex-end'
                                     }}>
-                                        <Button variant="light"
-                                                style={{width: 191.2}}
-                                                className={'btn btn-w-md btn-accent'}
+                                        <Button variant='outline-primary'
                                                 onClick={() => this.getNextAddress()}>
                                             generate address
                                         </Button>

@@ -108,11 +108,7 @@ class ImportWalletView extends Component {
                 paddingLeft: 25
             }}>
                 <Row className="mb-3">
-                    <Button variant="light"
-                            className={'btn btn-w-md btn-accent'} style={{
-                        float     : 'left',
-                        marginLeft: '80px'
-                    }} onClick={() => {
+                    <Button variant='outline-primary' onClick={() => {
                         this.props.history.replace('/unlock-wallet/');
                     }}>
                         <FontAwesomeIcon icon="fingerprint"
@@ -146,14 +142,12 @@ class ImportWalletView extends Component {
                             {this.state.status !== STATUS.NEW_WALLET_MNEMONIC &&
                              this.state.status !== STATUS.NEW_WALLET_CREATED && (
                                  <div className={'mr-2'}>
-                                     <Button variant="light"
-                                             className={'btn btn-w-md btn-accent'}
+                                     <Button variant='outline-primary'
                                              onClick={() => this.createWalletPrevStep()}>back</Button>
                                  </div>)}
-                            <Button variant="light"
+                            <Button variant='outline-primary'
                                     disabled={!this.state.mnemonic_is_confirmed ||
                                               (this.state.status === STATUS.NEW_WALLET_PASSWORD && !this.state.password_valid)}
-                                    className={'btn btn-w-md btn-accent'}
                                     onClick={() => this.createWalletNextStep()}>{this.state.status === STATUS.NEW_WALLET_PASSWORD
                                                                                  || this.state.status === STATUS.NEW_WALLET_MNEMONIC ? 'next' : 'continue'}</Button>
                         </Col>

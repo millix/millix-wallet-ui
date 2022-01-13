@@ -37,8 +37,7 @@ class TransactionDetailsView extends Component {
                         justifyContent: 'flex-start',
                         marginLeft    : 10
                     }}>
-                        <Button variant="light"
-                                className={'btn btn-w-md btn-accent'}
+                        <Button variant='outline-primary'
                                 onClick={this.props.history.goBack}>
                             <FontAwesomeIcon icon="arrow-circle-left"
                                              size="2x"/>

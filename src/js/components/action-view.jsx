@@ -159,8 +159,7 @@ class ActionView extends Component {
                                 </Row>
                                 <Row className="mb-3">
                                     <Col style={styles.centered}>
-                                        <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
+                                        <Button variant="outline-primary"
                                                 onClick={() => this.resetTransactionValidation()}>
                                             reset validation
                                         </Button>

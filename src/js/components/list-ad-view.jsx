@@ -5,6 +5,7 @@ import {withRouter} from 'react-router-dom';
 import API from '../api/index';
 import {MDBDataTable as DataTable} from 'mdbreact';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Button} from 'react-bootstrap';
 
 
 class ListAdView extends Component {
@@ -97,10 +98,10 @@ class ListAdView extends Component {
 
     getStatusButton(item) {
         let active = item.status === 1 ? 'active' : '';
-        return <button
-            className={'btn btn-w-md btn-accent ' + active}
+        return <Button variant='outline-primary'
+            className={active}
             id={item.advertisement_guid}
-            onClick={() => this.toggleAdStatus(item.advertisement_guid)}>{this.getStatusLabel(item.status)}</button>;
+            onClick={() => this.toggleAdStatus(item.advertisement_guid)}>{this.getStatusLabel(item.status)}</Button>;
 
     }
 

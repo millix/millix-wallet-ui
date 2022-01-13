@@ -319,7 +319,7 @@ class CreateAdView extends Component {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="primary"
+                            <Button variant='outline-primary'
                                     onClick={this.handleAddFundsModalClose}>
                                 Close
                             </Button>
@@ -610,10 +610,7 @@ class CreateAdView extends Component {
                                     </Col>
                                     <Col sm="3">
                                         <Button
-                                            className="{btn btn-w-md btn-accent}"
-                                            style={{
-                                                width: '100%'
-                                            }}
+                                            variant='outline-primary'
                                             onClick={this.handleAddFundsModalShow}
                                         >add funds</Button>
                                     </Col>
@@ -727,8 +724,7 @@ class CreateAdView extends Component {
                                 display       : 'flex',
                                 justifyContent: 'center'
                             }}>
-                                <Button variant="primary" type="submit"
-                                        className="btn btn-w-md btn-accent center">submit</Button>
+                                <Button variant='outline-primary' type="submit">submit</Button>
                             </div>
 
                         </Form>

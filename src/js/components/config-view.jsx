@@ -298,8 +298,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant="light"
-                                            className={'btn btn-accent btn-full-width'}
+                                            variant='outline-primary'
                                             size={'sm'}
                                             onClick={() => this.addToConfigList('NODE_CONNECTION_INBOUND_WHITELIST', 'connection_whitelist_inbound_node')}>
                                             <FontAwesomeIcon
@@ -331,8 +330,7 @@ class ConfigView extends Component {
                                                 <td>{nodeID}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant="light"
-                                                        className={'btn btn-accent'}
+                                                        variant='outline-primary'
                                                         size={'lg'}
                                                         onClick={() => this.removeFromConfigList('NODE_CONNECTION_INBOUND_WHITELIST', nodeID)}>
                                                         <FontAwesomeIcon
@@ -377,8 +375,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant="light"
-                                            className={'btn btn-accent btn-full-width'}
+                                            variant='outline-primary'
                                             size={'sm'}
                                             onClick={() => this.addToConfigList('NODE_CONNECTION_OUTBOUND_WHITELIST', 'connection_whitelist_outbound_node')}>
                                             <FontAwesomeIcon
@@ -409,8 +406,7 @@ class ConfigView extends Component {
                                                 <td>{nodeID}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant="light"
-                                                        className={'btn btn-accent'}
+                                                        variant='outline-primary'
                                                         size={'lg'}
                                                         onClick={() => this.removeFromConfigList('NODE_CONNECTION_OUTBOUND_WHITELIST', nodeID)}>
                                                         <FontAwesomeIcon
@@ -453,8 +449,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant="light"
-                                            className={'btn btn-accent btn-full-width'}
+                                            variant='outline-primary'
                                             size={'sm'}
                                             onClick={() => this.addToConfigList('NODE_CONNECTION_STATIC', 'connection_static_node')}>
                                             <FontAwesomeIcon
@@ -485,8 +480,7 @@ class ConfigView extends Component {
                                                 <td>{nodeID}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant="light"
-                                                        className={'btn btn-accent'}
+                                                        variant='outline-primary'
                                                         size={'lg'}
                                                         onClick={() => this.removeFromConfigList('NODE_CONNECTION_STATIC', nodeID)}>
                                                         <FontAwesomeIcon
@@ -761,8 +755,7 @@ class ConfigView extends Component {
                                     <Col sm="2"
                                          md="1">
                                         <Button
-                                            variant="light"
-                                            className={'btn btn-accent btn-full-width'}
+                                            variant='outline-primary'
                                             size={'sm'}
                                             onClick={this.addAddressVersion.bind(this)}>
                                             <FontAwesomeIcon
@@ -798,8 +791,7 @@ class ConfigView extends Component {
                                                 <td>{addressVersion.is_default === 1 ? 'yes' : 'no'}</td>
                                                 <td style={{width: '5%'}}>
                                                     <Button
-                                                        variant="light"
-                                                        className={'btn btn-accent'}
+                                                        variant='outline-primary'
                                                         size={'lg'}
                                                         onClick={() => this.props.removeWalletAddressVersion(addressVersion)}>
                                                         <FontAwesomeIcon

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Form, Row} from 'react-bootstrap';
+import {Button, Col, Form, Row, Dropdown} from 'react-bootstrap';
 import {CellMeasurerCache} from 'react-virtualized';
 import {createObjectCsvWriter} from 'csv-writer';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -183,8 +183,7 @@ class EventsLogView extends Component {
                                             type</label>
                                         <div
                                             className="btn-group btn-full-width">
-                                            <button data-toggle="dropdown"
-                                                    className="btn btn-accent dropdown-toggle btn-full-width dropdown-luna"
+                                            <Dropdown variant='primary'
                                                     aria-expanded="false">
                                                 <p style={{
                                                     float       : 'left',
@@ -194,7 +193,7 @@ class EventsLogView extends Component {
                                                     float       : 'right',
                                                     marginBottom: '0px'
                                                 }}><span className="caret"/></p>
-                                            </button>
+                                            </Dropdown>
                                             <ul className="dropdown-menu btn-full-width dropdown-lu">
                                                 {Array.from(this.getTypes()).sort().map(type =>
                                                     <li><a
@@ -254,10 +253,8 @@ class EventsLogView extends Component {
                                         display       : 'flex',
                                         justifyContent: 'flex-end'
                                     }}>
-                                        <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={this.openExportDialog.bind(this)}
-                                                style={{marginTop: "8px"}}>
+                                        <Button variant='outline-primary'
+                                                onClick={this.openExportDialog.bind(this)}>
                                             export log to csv
                                         </Button>
                                         <input style={{display: 'none'}}

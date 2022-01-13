@@ -33,7 +33,7 @@ class StatsView extends Component {
                      (<Row>
                          <Col className="pr-0"
                               style={{textAlign: 'right'}}>
-                             <Button variant="link"
+                             <Button variant='outline-primary'
                                      onClick={() => {
                                      }}
                                      style={{
@@ -112,7 +112,7 @@ class StatsView extends Component {
                     <Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <Button variant="link"
+                            <Button variant='outline-primary'
                                     onClick={() => props.history.push('/peers')}
                                     style={{
                                         padding    : 0,

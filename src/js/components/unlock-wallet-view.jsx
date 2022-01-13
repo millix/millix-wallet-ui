@@ -82,8 +82,7 @@ const UnlockWalletView = (props) => {
                         </div>
                         <Row>
                             <Col style={styles.centered}>
-                                <Button variant="light"
-                                        className={'btn btn-primary'}
+                                <Button variant='outline-primary'
                                         onClick={() => walletUnlockWithPassword(passphraseRef.value)}> login </Button>
                             </Col>
                         </Row>
@@ -106,13 +105,7 @@ const UnlockWalletView = (props) => {
             <div className="container-center lg" style={{marginTop: 0}}>
                 <Row>
                     <Col sm={6} style={{textAlign: 'right'}}>
-                        <Button variant="light"
-                                className={'btn btn-primary'}
-                                style={{
-                                    width        : '80%',
-                                    paddingTop   : '14.66%',
-                                    paddingBottom: '20.66%'
-                                }}
+                        <Button variant='outline-primary'
                                 onClick={() => props.history.push('/new-wallet/')}>
                             <FontAwesomeIcon icon="wallet" size="8x"
                                              style={{
@@ -122,13 +115,7 @@ const UnlockWalletView = (props) => {
                         </Button>
                     </Col>
                     <Col sm={6}>
-                        <Button variant="light"
-                                className={'btn btn-primary'}
-                                style={{
-                                    width        : '80%',
-                                    paddingTop   : '24.3%',
-                                    paddingBottom: '18.66%'
-                                }}
+                        <Button variant='outline-primary'
                                 onClick={() => props.history.push('/import-wallet/')}>
                             <FontAwesomeIcon icon="key" size="6x"
                                              style={{
