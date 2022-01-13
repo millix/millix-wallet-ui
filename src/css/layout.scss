@@ -2,6 +2,11 @@
 @import 'navbar';
 @import 'panel';
 @import 'form';
+@import 'table';
+
+a {
+  cursor: pointer;
+}
 
 .navigation {
   background-color: $color-sidenav;

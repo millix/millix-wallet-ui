@@ -83,7 +83,6 @@ class ConfigView extends Component {
             <Form>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>network</div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Form.Group>
 
@@ -266,7 +265,6 @@ class ConfigView extends Component {
                     <div className={'panel-heading bordered'}>inbound connection
                         whitelist
                     </div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
@@ -343,7 +341,6 @@ class ConfigView extends Component {
                         connection
                         whitelist
                     </div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
@@ -418,7 +415,6 @@ class ConfigView extends Component {
                     <div className={'panel-heading bordered'}>static
                         connection
                     </div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
@@ -491,7 +487,6 @@ class ConfigView extends Component {
 
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>fees</div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
@@ -542,7 +537,6 @@ class ConfigView extends Component {
 
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>consensus</div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>
@@ -660,7 +654,6 @@ class ConfigView extends Component {
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>address version
                     </div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Col>
                             <Form.Group>

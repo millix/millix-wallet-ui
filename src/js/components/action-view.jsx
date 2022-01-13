@@ -149,7 +149,6 @@ class ActionView extends Component {
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>reset validation
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
                                 <Row className="mb-1">
                                     <Col style={styles.left}>

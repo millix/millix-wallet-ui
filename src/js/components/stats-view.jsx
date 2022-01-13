@@ -20,20 +20,18 @@ class StatsView extends Component {
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>status
                 </div>
-                <hr className={'hrPanel'}/>
                 <div className={'panel-body'}>
                     {props.config.MODE_TEST_NETWORK && (<Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>millix testnet</small>
+                            <span>millix testnet</span>
                             <hr/>
                         </Col>
                     </Row>)}
                     {!!props.wallet.version_available && !(props.config.NODE_MILLIX_VERSION === props.wallet.version_available || props.config.NODE_MILLIX_VERSION !== (props.wallet.version_available + '-tangled')) &&
                      (<Row>
-                         <Col className="pr-0"
-                              style={{textAlign: 'right'}}>
-                             <Button variant='outline-primary'
+                         <Col style={{textAlign: 'right'}}>
+                             <Button variant="outline-primary"
                                      onClick={() => {
                                      }}
                                      style={{
@@ -46,79 +44,67 @@ class StatsView extends Component {
                          </Col>
                      </Row>)}
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>{props.network.node_is_public === 'unknown' ? 'analyzing your network connection' : props.network.node_is_public === true ? 'your node is public and is eligible to receive transaction fees' : 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.'}</small>
+                        <Col>
+                            <span>{props.network.node_is_public === 'unknown' ? 'analyzing your network connection' : props.network.node_is_public === true ? 'your node is public and is eligible to receive transaction fees' : 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.'}</span>
                         </Col>
                     </Row>
                     <br/>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>event log
-                                size: {props.log.size.toLocaleString('en-US')}</small>
+                        <Col>
+                            <span>event log
+                                size: {props.log.size.toLocaleString('en-US')}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>backlog
-                                size: {props.backlog.size.toLocaleString('en-US')}</small>
+                        <Col>
+                            <span>backlog
+                                size: {props.backlog.size.toLocaleString('en-US')}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>pending
+                        <Col>
+                            <span>pending
                                 transaction
-                                count: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</small>
+                                count: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>transaction
-                                count: {props.wallet.transaction_count.toLocaleString('en-US')}</small>
+                        <Col>
+                            <span>transaction
+                                count: {props.wallet.transaction_count.toLocaleString('en-US')}</span>
                         </Col>
                     </Row>
                     <br/>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node id: {props.network.node_id}</small>
+                        <Col>
+                            <span>node id: {props.network.node_id}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node public
-                                address: {props.network.node_public_ip.toLocaleString('en-US') + ':' + props.network.node_port}</small>
+                        <Col>
+                            <span>node public
+                                address: {props.network.node_public_ip.toLocaleString('en-US') + ':' + props.network.node_port}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node bind
-                                ip: {props.network.node_bind_ip.toLocaleString('en-US')}</small>
+                        <Col>
+                            <span>node bind
+                                ip: {props.network.node_bind_ip.toLocaleString('en-US')}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>local network
-                                addresses: {props.network.node_network_addresses.join(', ')}</small>
+                        <Col>
+                            <span>local network
+                                addresses: {props.network.node_network_addresses.join(', ')}</span>
                         </Col>
                     </Row>
                     <Row>
-                        <Col className="pr-0"
+                        <Col className="mb-3"
                              style={{textAlign: 'left'}}>
-                            <Button variant='outline-primary'
-                                    onClick={() => props.history.push('/peers')}
-                                    style={{
-                                        padding    : 0,
-                                        borderWidth: '0rem'
-                                    }}>
-                                <small>peers: {props.network.connections}</small></Button>
+                            <a className={''}
+                               onClick={() => props.history.push('/peers')}>
+                                peers: {props.network.connections}
+                            </a>
                         </Col>
                     </Row>
                 </div>

@@ -4,7 +4,11 @@ $body-bg: $color-body-bg;
 $body-color: $color-body-font;
 
 $primary: $color-primary;
-//$secondary: $gray-600 !default;
+$link-color: $color-secondary;
+
+$link-decoration: none;
+$link-hover-decoration: underline;
+
 $success: $color-green;
 $warning: $color-yellow;
 $danger: $color-red;
@@ -17,3 +21,11 @@ $input-focus-box-shadow: none;
 
 $input-btn-focus-box-shadow: none;
 $btn-focus-width: 0;
+
+$border-color: #484c5a;
+$table-group-separator-color: none;
+$table-th-font-weight: 700;
+
+$table-bg: #383b43;
+$table-striped-bg: #44464f;
+$table-hover-bg: #494b54;

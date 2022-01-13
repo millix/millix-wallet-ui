@@ -105,7 +105,6 @@ class UnspentTransactionOutputView extends Component {
                         transaction
                         outputs
                     </div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
                             <DataTable striped bordered small hover

@@ -88,7 +88,6 @@ class PeerListView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>peers</div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
                         <Row>
                             <DataTable striped

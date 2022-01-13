@@ -225,7 +225,6 @@ class WalletView extends Component {
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>balance
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
                                 <div className={'d-flex'}>
                                     <Table striped bordered hover>
@@ -236,40 +235,39 @@ class WalletView extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr key="1" className="wallet-address">
+                                        <tr key="1">
                                             <td>
-                                                {this.props.wallet.balance_stable.toLocaleString('en-US')}
+                                                <div className={'d-flex'}>
                                                 <span
-                                                    style={{
-                                                        float : 'right',
-                                                        cursor: 'pointer'
-                                                    }}>
-                                                <Button
-                                                    variant="outline-primary"
-                                                    className={'btn-xs icon_only'}
-                                                    onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
+                                                    className={'d-flex align-self-center'}>
+                                                    {this.props.wallet.balance_stable.toLocaleString('en-US')}
+                                                </span>
+                                                    <Button
+                                                        variant="outline-primary"
+                                                        className={'btn-xs icon_only ms-auto'}
+                                                        onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
                                                             size="1x"/>
                                                     </Button>
-                                            </span>
+                                                </div>
                                             </td>
                                             <td>
-                                                {this.props.wallet.balance_pending.toLocaleString('en-US')}
+                                                <div className={'d-flex'}>
                                                 <span
-                                                    style={{
-                                                        float : 'right',
-                                                        cursor: 'pointer'
-                                                    }}>
-                                                <Button
-                                                    variant="outline-primary"
-                                                    className={'btn-xs icon_only'}
-                                                    onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
+                                                    className={'d-flex align-self-center'}>
+                                                {this.props.wallet.balance_pending.toLocaleString('en-US')}
+                                                    </span>
+                                                    <Button
+                                                        variant="outline-primary"
+                                                        className={'btn-xs icon_only ms-auto'}
+                                                        onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
                                                             size="1x"/>
                                                     </Button>
-                                            </span></td>
+                                                </div>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </Table>
@@ -278,7 +276,6 @@ class WalletView extends Component {
                         </div>
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>send</div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
                                 <Row className="mb-3">
                                     <Form>
@@ -379,7 +376,6 @@ class WalletView extends Component {
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>addresses
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
                                 <Row className="mb-3 mt-3">
                                     <Col className="pr-0" style={{

@@ -10,7 +10,6 @@ const WalletCreateInfoView = (props) => {
             </Row>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>wallet</div>
-                <hr className={'hrPanel'}/>
                 <div className={'panel-body'}>
                     <Row className="mb-3">
                         <Form>

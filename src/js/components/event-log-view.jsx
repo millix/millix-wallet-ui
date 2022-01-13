@@ -176,7 +176,6 @@ class EventsLogView extends Component {
                             <div
                                 className={'panel-heading bordered'}>logs
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
 
                                 <Form>
