@@ -1,7 +1,7 @@
 @import '../variable';
 
-$body-bg: #2f323b;
-$body-color: #949ba2;
+$body-bg: $color-body-bg;
+$body-color: $color-body-font;
 
 $primary: $color-primary;
 //$secondary: $gray-600 !default;
@@ -14,3 +14,6 @@ $input-disabled-bg: #2c2e34;
 $input-border-width: 0;
 $input-box-shadow: none;
 $input-focus-box-shadow: none;
+
+$input-btn-focus-box-shadow: none;
+$btn-focus-width: 0;

@@ -1,8 +1,3 @@
-.panel-body > .row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .switchery-small {
     border-radius: 15px;
     height: 15px;
@@ -204,10 +199,6 @@ pre {
 
 .btn-accent[disabled] {
     background-color: transparent;
-}
-
-.content > div {
-    opacity: 1;
 }
 
 a > i.stroke-hamburgermenu, a.navbar-brand {

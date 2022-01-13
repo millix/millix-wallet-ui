@@ -348,8 +348,7 @@ class WalletView extends Component {
                                         </Col>
                                         <Col style={styles.centered}>
                                             <Form.Group as={Row}>
-                                                <Button variant="light"
-                                                        className={'btn btn-w-md btn-accent'}
+                                                <Button variant="outline-primary"
                                                         onClick={this.send.bind(this)}
                                                         disabled={this.state.canceling}>
                                                     {this.state.sending ?

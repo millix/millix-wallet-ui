@@ -1,5 +1,7 @@
 @import './variable';
 @import 'navbar';
+@import 'panel';
+@import 'button';
 
 .navigation {
   background-color: $color-sidenav;
@@ -16,7 +18,10 @@
   margin-top: $navbar-height;
   margin-left: $sidebar-width;
   position: relative;
-  padding: 2rem;
   transition: margin-left 0.3s ease-out;
   -webkit-transition: margin-left 0.3s ease-out;
+}
+
+.content > div {
+  padding: $content-spacing;
 }

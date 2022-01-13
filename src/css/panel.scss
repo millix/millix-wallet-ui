@@ -1,0 +1,10 @@
+@import './variable';
+@import 'bootstrap/mixin_and_variable';
+
+.panel {
+  border-radius: $border-radius;
+}
+
+.panel.panel-filled {
+  background-color: #3b3d45;
+}
