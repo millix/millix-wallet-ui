@@ -200,7 +200,6 @@ class ListAdView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>advertisements</div>
-                    <hr className={'hrPal'}/>
                     <div className={'panel-body'}>
                         <Row id={'adlist'}>
                             <DataTable

@@ -8,3 +8,22 @@ label {
   color: $color-white;
   margin-bottom: .3rem;
 }
+
+.form-error {
+
+}
+
+.form-input-error {
+  margin-top: 0.1rem;
+  display: inline-block;
+}
+
+.btn-outline-input-group-addon {
+  color: $color-body-font;
+  border-color: $color-input-bg;
+
+  &:hover {
+    color: $color-white;
+    border-color: $color-primary;
+  }
+}

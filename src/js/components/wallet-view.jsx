@@ -279,6 +279,12 @@ class WalletView extends Component {
                             <div className={'panel-body'}>
                                 <Row className="mb-3">
                                     <Form>
+                                        <Col style={styles.centered}>
+                                            {this.state.sendTransactionError && (
+                                                <div className={'form-error'}>
+                                                <span>{this.state.sendTransactionErrorMessage}</span>
+                                                </div>)}
+                                        </Col>
                                         <Col>
                                             <Form.Group className="form-group">
                                                 <label>address</label>
@@ -286,11 +292,11 @@ class WalletView extends Component {
                                                               placeholder="address"
                                                               ref={c => this.destinationAddress = c}/>
                                                 {this.state.addressError && (
-                                                    <Form.Text
-                                                        className="text-muted"><small>invalid
+                                                    <span
+                                                        className="form-input-error">invalid
                                                         address.
                                                         please, set a correct
-                                                        value.</small></Form.Text>)}
+                                                        value.</span>)}
                                             </Form.Group>
                                         </Col>
                                         <Col>
@@ -302,18 +308,18 @@ class WalletView extends Component {
                                                               ref={c => this.amount = c}
                                                               onChange={this.handleAmountValueChange.bind(this)}/>
                                                 {this.state.amountError && (
-                                                    <Form.Text
-                                                        className="text-muted"><small>invalid
+                                                    <span
+                                                        className="form-input-error">invalid
                                                         amount.
                                                         please, set a correct
-                                                        value.</small></Form.Text>)}
+                                                        value.</span>)}
                                             </Form.Group>
                                         </Col>
                                         <Col>
                                             <Form.Group className="form-group"
                                                         as={Row}>
                                                 <label>fee</label>
-                                                <Col md={11} ms={11}>
+                                                <Col className={'input-group'}>
                                                     <Form.Control type="text"
                                                                   placeholder="fee"
                                                                   pattern="[0-9]+([,][0-9]{1,2})?"
@@ -326,24 +332,22 @@ class WalletView extends Component {
                                                                   }}
                                                                   onChange={this.handleAmountValueChange.bind(this)}
                                                                   disabled={this.state.feesLocked}/>
-                                                </Col>
-                                                <Col style={styles.centered}
-                                                     md={1} ms={1}>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
-                                                        <FontAwesomeIcon
-                                                            icon={this.state.feesLocked ? 'lock' : 'lock-open'}
-                                                            size="1x"/>
-                                                    </Button>
+                                                            <button
+                                                                className="btn btn-outline-input-group-addon"
+                                                                type="button"
+                                                                onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
+                                                                <FontAwesomeIcon
+                                                                    icon={this.state.feesLocked ? 'lock' : 'lock-open'}
+                                                                    size="sm"/>
+                                                            </button>
+
                                                 </Col>
                                                 {this.state.feeError && (
-                                                    <Form.Text
-                                                        className="text-muted"><small
-                                                        style={{color: 'red'}}>invalid
+                                                    <span
+                                                        className="form-input-error">invalid
                                                         fee.
                                                         please, set a correct
-                                                        value.</small></Form.Text>)}
+                                                        value.</span>)}
                                             </Form.Group>
                                         </Col>
                                         <Col style={styles.centered}>
@@ -364,10 +368,6 @@ class WalletView extends Component {
                                                      </> : <>send millix</>}
                                                 </Button>
                                             </Form.Group>
-                                        </Col>
-                                        <Col style={styles.centered}>
-                                            {this.state.sendTransactionError && (
-                                                <span>{this.state.sendTransactionErrorMessage}</span>)}
                                         </Col>
                                     </Form>
                                 </Row>

@@ -331,7 +331,6 @@ class CreateAdView extends Component {
                     <div className={'panel-heading bordered'}>create
                         advertisement
                     </div>
-                    <hr className={'hrPal'}/>
                     <div className="panel-body">
                         {renderSubmitMessage()}
                         <div>
