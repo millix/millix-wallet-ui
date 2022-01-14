@@ -54,3 +54,22 @@
     color: $color-primary;
   }
 }
+
+.nav-tabs {
+  border: none;
+
+  .nav-link {
+    border: none;
+  }
+
+  .nav-link:hover {
+    background-color: $color-tab-hover !important;
+  }
+
+  .nav-link.active, .nav-item.show .nav-link {
+    border-bottom: none;
+    color: $color-body-font !important;
+    background-color: $color-panel-filed-background !important;
+
+  }
+}
