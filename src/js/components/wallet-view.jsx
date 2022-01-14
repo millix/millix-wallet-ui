@@ -3,9 +3,11 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {MDBDataTable as DataTable} from 'mdbreact';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
 import API from '../api/index';
 import _ from 'lodash';
+import moment from 'moment';
 
 const styles = {
     centered: {
@@ -22,25 +24,10 @@ const styles = {
 class WalletView extends Component {
     constructor(props) {
         super(props);
-        this.state              = {
+        this.state = {
             feesLocked : true,
             addressList: []
         };
-        this.addressListColumns = [
-            {
-                label: '#',
-                field: 'address_position',
-                width: 150
-            },
-            {
-                label: [
-                    <FontAwesomeIcon icon="book" size="1x"/>,
-                    ' address'
-                ],
-                field: 'address',
-                width: 270
-            }
-        ];
     }
 
     componentDidMount() {
@@ -56,14 +43,17 @@ class WalletView extends Component {
     updateAddresses() {
         API.listAddresses(this.props.wallet.address_key_identifier)
            .then(addresses => {
+               let result = _.sortBy(_.map(addresses, itemAddress => {
+                   return {
+                       address         : itemAddress.address,
+                       address_position: itemAddress.address_position,
+                       address_version : itemAddress.address_version,
+                       create_date     : moment.unix(itemAddress.create_date).format('YYYY-MM-DD HH:mm:ss')
+                   };
+               }), address => -address.address_position);
+
                this.setState({
-                   addressList: {
-                       columns: this.addressListColumns,
-                       rows   : _.sortBy(_.map(addresses, address => _.pick(address, [
-                           'address',
-                           'address_position'
-                       ])), address => -address.address_position)
-                   }
+                   addressList: result
                });
            });
     }
@@ -282,7 +272,7 @@ class WalletView extends Component {
                                         <Col style={styles.centered}>
                                             {this.state.sendTransactionError && (
                                                 <div className={'form-error'}>
-                                                <span>{this.state.sendTransactionErrorMessage}</span>
+                                                    <span>{this.state.sendTransactionErrorMessage}</span>
                                                 </div>)}
                                         </Col>
                                         <Col>
@@ -332,14 +322,14 @@ class WalletView extends Component {
                                                                   }}
                                                                   onChange={this.handleAmountValueChange.bind(this)}
                                                                   disabled={this.state.feesLocked}/>
-                                                            <button
-                                                                className="btn btn-outline-input-group-addon"
-                                                                type="button"
-                                                                onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
-                                                                <FontAwesomeIcon
-                                                                    icon={this.state.feesLocked ? 'lock' : 'lock-open'}
-                                                                    size="sm"/>
-                                                            </button>
+                                                    <button
+                                                        className="btn btn-outline-input-group-addon"
+                                                        type="button"
+                                                        onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
+                                                        <FontAwesomeIcon
+                                                            icon={this.state.feesLocked ? 'lock' : 'lock-open'}
+                                                            size="sm"/>
+                                                    </button>
 
                                                 </Col>
                                                 {this.state.feeError && (
@@ -383,21 +373,32 @@ class WalletView extends Component {
                                         justifyContent: 'flex-end'
                                     }}>
                                         <Button variant="outline-primary"
+                                                className={'btn-xs'}
                                                 onClick={() => this.getNextAddress()}>
                                             generate address
                                         </Button>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <DataTable striped bordered small hover
-                                               info={false}
-                                               entries={10}
-                                               entriesOptions={[
-                                                   10,
-                                                   30,
-                                                   50
-                                               ]}
-                                               data={this.state.addressList}/>
+                                    <DataTable value={this.state.addressList}
+                                               stripedRows
+                                               showGridlines
+                                               // resizableColumns
+                                               // columnResizeMode="fit"
+                                               responsiveLayout="scroll">
+                                        <Column field="address_position"
+                                                header="position"
+                                                sortable></Column>
+                                        <Column field="address"
+                                                header="address"
+                                                sortable></Column>
+                                        <Column field="address_version"
+                                                header="version"
+                                                sortable></Column>
+                                        <Column field="create_date"
+                                                header="create date"
+                                                sortable></Column>
+                                    </DataTable>
                                 </Row>
                             </div>
                         </div>

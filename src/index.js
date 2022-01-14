@@ -36,6 +36,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
 import './css/bootstrap/bootstrap.scss';
+import 'primereact/resources/themes/bootstrap4-dark-purple/theme.css';
 import './vendor/luna/custom_form_element.css';
 import './vendor/luna/datatable.css';
 import './vendor/luna/datepicker.css';

@@ -1,0 +1,28 @@
+@import 'bootstrap/variable';
+
+.p-datatable-table {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr {
+  background-color: $table-bg;
+}
+
+.p-datatable .p-datatable-thead > tr:hover,
+.p-datatable .p-datatable-tbody > tr:hover,
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd:hover {
+  background-color: $table-hover-bg;
+}
+
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td {
+  border: 0.1rem solid $border-color;
+  padding: 0.5rem 1rem;
+}
+
+
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd {
+  background-color: $table-striped-bg;
+}
