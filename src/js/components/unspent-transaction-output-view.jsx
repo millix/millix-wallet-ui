@@ -3,10 +3,9 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Row} from 'react-bootstrap';
 import moment from 'moment';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {MDBDataTable as DataTable} from 'mdbreact';
 import {walletUpdateTransactions} from '../redux/actions';
 import API from '../api/index';
+import DatatableView from './utils/datatable-view';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -14,65 +13,12 @@ class UnspentTransactionOutputView extends Component {
         super(props);
         this.updaterHandler = undefined;
         this.state          = {
-            transaction_output_list: {
-                columns: [
-                    {
-                        label: '#',
-                        field: 'idx'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="user-clock" size="1x"/>,
-                            ' date'
-                        ],
-                        field: 'transaction_date'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' transaction id'
-                        ],
-                        field: 'transaction_id'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' output position'
-                        ],
-                        field: 'output_position'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="compress-arrows-alt"
-                                             size="1x"/>,
-                            ' amount'
-                        ],
-                        field: 'amount'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="box"
-                                             size="1x"/>,
-                            ' address'
-                        ],
-                        field: 'address'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="clock" size="1x"/>,
-                            ' stable date'
-                        ],
-                        field: 'stable_date'
-                    }
-                ],
-                rows   : []
-            }
+            transaction_output_list: []
         };
     }
 
     componentDidMount() {
         this.updaterHandler = setInterval(() => API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.props.location.state.stable).then(data => {
-
             let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
                 clickEvent      : () => this.props.history.push('/transaction/' + encodeURIComponent(output.transaction_id), [output]),
                 idx             : data.length - idx,
@@ -84,10 +30,7 @@ class UnspentTransactionOutputView extends Component {
                 stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss')
             }));
             this.setState({
-                transaction_output_list: {
-                    columns: [...this.state.transaction_output_list.columns],
-                    rows   : rows
-                }
+                transaction_output_list: rows
             });
         }), 5000);
     }
@@ -101,22 +44,53 @@ class UnspentTransactionOutputView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div
-                        className={'panel-heading bordered'}>{this.props.location.state.stable ? '' : 'pending'} unspent
-                        transaction
-                        outputs
+                        className={'panel-heading bordered'}>
+                        {this.props.location.state.stable ? '' : 'pending'} unspent transaction output list
                     </div>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
-                            <DataTable striped bordered small hover
-                                       autoWidth={false}
-                                       info={false}
-                                       entries={10}
-                                       entriesOptions={[
-                                           10,
-                                           30,
-                                           50
-                                       ]}
-                                       data={this.state.transaction_output_list}/>
+                            <DatatableView
+                                value={this.state.transaction_output_list}
+                                sortField={'transaction_date'}
+                                sortOrder={-1}
+                                resultColumn={[
+                                    {
+                                        'field'   : 'idx',
+                                        'header'  : 'id',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'transaction_date',
+                                        'header'  : 'date',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'transaction_id',
+                                        'header'  : 'transaction id',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'output_position',
+                                        'header'  : 'output position',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'address',
+                                        'header'  : 'address',
+                                        'sortable': true
+                                    },
+
+                                    {
+                                        'field'   : 'amount',
+                                        'header'  : 'amount',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'stable_date',
+                                        'header'  : 'stable date',
+                                        'sortable': true
+                                    }
+                                ]}/>
                         </Row>
                     </div>
                 </div>

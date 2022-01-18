@@ -47,9 +47,9 @@ class AppContainer extends Component {
                     <Route path="/manage-wallet/" component={ManageWalletView}/>
                     <Route path="/new-wallet/" component={NewWalletView}/>
                     <Route path="/import-wallet/" component={ImportWalletView}/>
-                    <UnlockedWalletRequiredRoute path="/create-ad/"
+                    <UnlockedWalletRequiredRoute path="/ad-create/"
                                                  component={CreateAdView}/>
-                    <UnlockedWalletRequiredRoute path="/list-ad/"
+                    <UnlockedWalletRequiredRoute path="/ad-list/"
                                                  component={ListAdView}/>
                     <UnlockedWalletRequiredRoute path="/peers"
                                                  component={PeerListView}/>
@@ -68,9 +68,9 @@ class AppContainer extends Component {
                     <UnlockedWalletRequiredRoute
                         path="/transaction/:transaction_id"
                         component={TransactionDetails}/>
-                    <UnlockedWalletRequiredRoute path="/history"
+                    <UnlockedWalletRequiredRoute path="/transaction-list"
                                                  component={TransactionHistoryView}/>
-                    <UnlockedWalletRequiredRoute path="/utxo/:state"
+                    <UnlockedWalletRequiredRoute path="/unspent-transaction-output-list/:state"
                                                  component={UnspentTransactionOutputView}/>
                     <UnlockedWalletRequiredRoute component={WalletView}/>
                 </Switch>

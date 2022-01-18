@@ -10,7 +10,7 @@ class Sidebar extends Component {
         super(props);
         let now            = Date.now();
         this.walletScreens = [
-            '/history',
+            '/transaction-list',
             '/log',
             '/config',
             '/transaction',
@@ -19,7 +19,7 @@ class Sidebar extends Component {
         this.state         = {
             fileKeyExport: 'export_' + now,
             fileKeyImport: 'import_' + now,
-            date: new Date()
+            date         : new Date()
         };
     }
 
@@ -29,17 +29,17 @@ class Sidebar extends Component {
             1000
         );
     }
-    
+
     componentWillUnmount() {
         clearInterval(this.timerID);
     }
-    
+
     tick() {
         this.setState({
             date: new Date()
         });
     }
-     
+
     isWalletScreen(pathName) {
         if (!pathName) {
             return false;
@@ -54,6 +54,11 @@ class Sidebar extends Component {
     }
 
     render() {
+        const stateParam = {
+            '/unspent-transaction-output-list/stable' : {stable: 1},
+            '/unspent-transaction-output-list/pending': {stable: 0}
+        };
+
         let props = this.props;
         return (<aside className={'navigation'} style={{
             height   : '100%',
@@ -66,17 +71,21 @@ class Sidebar extends Component {
                 onSelect={(selected) => {
                     switch (selected) {
                         case 'lock':
-
                             props.lockWallet();
                             break;
                         case 'resetValidation':
                             break;
                         default:
-                            props.history.push(selected);
+                            if (typeof(stateParam[selected] !== 'undefined')) {
+                                props.history.push(selected, stateParam[selected]);
+                            }
+                            else {
+                                props.history.push(selected);
+                            }
                     }
                 }}
             >
-                <div className='nav-utc_clock'>
+                <div className="nav-utc_clock">
                     <span>{moment.utc(this.state.date).format('YYYY-MM-DD HH:mm:ss')} utc</span>
                 </div>
                 <SideNav.Nav
@@ -86,11 +95,31 @@ class Sidebar extends Component {
                             home
                         </NavText>
                     </NavItem>
-                    <NavItem key={'history'} eventKey="/history">
+
+                    <NavItem eventKey="transaction">
                         <NavText>
                             transactions
                         </NavText>
+                        <NavItem key={'transaction-list'}
+                                 eventKey="/transaction-list">
+                            <NavText>
+                                all
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'unspent-transaction-output-list-pending'}
+                                 eventKey="/unspent-transaction-output-list/pending">
+                            <NavText>
+                                pending unspent list
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'unspent-transaction-output-list-stable'}
+                                 eventKey={'/unspent-transaction-output-list/stable'}>
+                            <NavText>
+                                stable unspent list
+                            </NavText>
+                        </NavItem>
                     </NavItem>
+
                     <NavItem key={'peers'} eventKey="/peers">
                         <NavText>
                             peers
@@ -122,12 +151,12 @@ class Sidebar extends Component {
                         <NavText>
                             ads
                         </NavText>
-                        <NavItem key={'create-ad'} eventKey="/create-ad">
+                        <NavItem key={'ad-create'} eventKey="/ad-create">
                             <NavText>
                                 create
                             </NavText>
                         </NavItem>
-                        <NavItem key={'list-ad'} eventKey="/list-ad">
+                        <NavItem key={'ad-list'} eventKey="/ad-list">
                             <NavText>
                                 list
                             </NavText>
@@ -139,9 +168,9 @@ class Sidebar extends Component {
                         </NavText>
                     </NavItem>
                 </SideNav.Nav>
-                <div className='nav-info'>
-                     <span>version {props.node.node_version}</span>
-                     </div>
+                <div className="nav-info">
+                    <span>version {props.node.node_version}</span>
+                </div>
             </SideNav>
         </aside>);
     }

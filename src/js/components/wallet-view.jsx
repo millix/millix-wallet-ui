@@ -234,7 +234,7 @@ class WalletView extends Component {
                                                     <Button
                                                         variant="outline-primary"
                                                         className={'btn-xs icon_only ms-auto'}
-                                                        onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
+                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/stable', {stable: 1})}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
                                                             size="1x"/>
@@ -250,7 +250,7 @@ class WalletView extends Component {
                                                     <Button
                                                         variant="outline-primary"
                                                         className={'btn-xs icon_only ms-auto'}
-                                                        onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
+                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/pending', {stable: 0})}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
                                                             size="1x"/>
