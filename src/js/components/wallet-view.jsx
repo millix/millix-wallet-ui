@@ -3,8 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {DataTable} from 'primereact/datatable';
-import {Column} from 'primereact/column';
+import DatatableView from './utils/datatable-view';
 import API from '../api/index';
 import _ from 'lodash';
 import moment from 'moment';
@@ -380,26 +379,32 @@ class WalletView extends Component {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <DataTable value={this.state.addressList}
-                                               stripedRows
-                                               showGridlines
-                                               resizableColumns
-                                               columnResizeMode="fit"
-                                               sortField="address_position" sortOrder={1}
-                                               responsiveLayout="scroll">
-                                        <Column field="address_position"
-                                                header="position"
-                                                sortable></Column>
-                                        <Column field="address"
-                                                header="address"
-                                                sortable></Column>
-                                        <Column field="address_version"
-                                                header="version"
-                                                sortable></Column>
-                                        <Column field="create_date"
-                                                header="create date"
-                                                sortable></Column>
-                                    </DataTable>
+                                    <DatatableView
+                                        value={this.state.addressList}
+                                        sortField={'address_position'}
+                                        sortOrder={1}
+                                        resultColumn={[
+                                            {
+                                                'field'   : 'address_position',
+                                                'header'  : 'position',
+                                                'sortable': true
+                                            },
+                                            {
+                                                'field'   : 'address',
+                                                'header'  : 'address',
+                                                'sortable': true
+                                            },
+                                            {
+                                                'field'   : 'address_version',
+                                                'header'  : 'version',
+                                                'sortable': true
+                                            },
+                                            {
+                                                'field'   : 'create_date',
+                                                'header'  : 'create date',
+                                                'sortable': true
+                                            }
+                                        ]} />
                                 </Row>
                             </div>
                         </div>

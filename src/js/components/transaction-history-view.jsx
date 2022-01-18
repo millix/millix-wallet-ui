@@ -4,16 +4,14 @@ import {withRouter} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import {walletUpdateTransactions} from '../redux/actions/index';
 import moment from 'moment';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {DataTable} from 'primereact/datatable';
-import {Column} from 'primereact/column';
+import DatatableView from './utils/datatable-view';
 
 
 class TransactionHistoryView extends Component {
     constructor(props) {
         super(props);
         this.transactionHistoryUpdateHandler = undefined;
-        this.state                 = {
+        this.state                           = {
             transaction_list: []
         };
     }
@@ -50,31 +48,37 @@ class TransactionHistoryView extends Component {
                     <div className={'panel-heading bordered'}>transactions</div>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
-                            <DataTable value={this.state.transaction_list}
-                                       stripedRows
-                                       showGridlines
-                                       resizableColumns
-                                       columnResizeMode="fit"
-                                       responsiveLayout="scroll">
-                                <Column field="idx"
-                                        header="id"
-                                        sortable></Column>
-                                <Column field="date"
-                                        header="date"
-                                        sortable></Column>
-                                <Column field="txid"
-                                        header="transaction id"
-                                        sortable></Column>
-                                <Column field="amount"
-                                        header="amount"
-                                        sortable></Column>
-                                <Column field="stable_date"
-                                        header="stable date"
-                                        sortable></Column>
-                                <Column field="parent_date"
-                                        header="parent date"
-                                        sortable></Column>
-                            </DataTable>
+                            <DatatableView
+                                value={this.state.transaction_list}
+                                sortField={'date'}
+                                sortOrder={-1}
+                                resultColumn={[
+                                    {
+                                        'field'   : 'idx',
+                                        'header'  : 'id',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'date',
+                                        'header'  : 'date',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'txid',
+                                        'header'  : 'transaction id',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'amount',
+                                        'header'  : 'amount',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'stable_date',
+                                        'header'  : 'stable date',
+                                        'sortable': true
+                                    }
+                                ]}/>
                         </Row>
                     </div>
                 </div>

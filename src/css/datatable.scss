@@ -25,7 +25,7 @@
 }
 
 .p-datatable .p-sortable-column:focus {
-  border-width: $border-width;
+  box-shadow: none;
 }
 
 .p-datatable .p-datatable-tbody > tr {

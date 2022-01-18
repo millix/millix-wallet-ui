@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {DataTable} from 'primereact/datatable';
-import {Column} from 'primereact/column';
 import API from '../api/index';
+import DatatableView from './utils/datatable-view';
 
 
 class PeerListView extends Component {
@@ -14,7 +12,7 @@ class PeerListView extends Component {
         this.peerListUpdateHandler = null;
         this.state                 = {
             node_online_list: new Set(),
-            peer_list: []
+            peer_list       : []
         };
     }
 
@@ -39,7 +37,7 @@ class PeerListView extends Component {
                if (shouldUpdate) {
                    this.setState({
                        node_online_list: onlineNodeList,
-                       peer_list: peerList
+                       peer_list       : peerList
                    });
                }
                this.peerListUpdateHandler = setTimeout(() => this.updatePeerList(), 1500);
@@ -55,30 +53,35 @@ class PeerListView extends Component {
         clearTimeout(this.peerListUpdateHandler);
     }
 
-    render() {
 
+    render() {
         return (
             <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>peers</div>
                     <div className={'panel-body'}>
                         <Row>
-                            <DataTable value={this.state.peer_list}
-                                       stripedRows
-                                       showGridlines
-                                       resizableColumns
-                                       columnResizeMode="fit"
-                                       responsiveLayout="scroll">
-                                <Column field="node_idx"
-                                        header="id"
-                                        sortable></Column>
-                                <Column field="node_url"
-                                        header="node"
-                                        sortable></Column>
-                                <Column field="node_status"
-                                        header="status"
-                                        sortable></Column>
-                            </DataTable>
+                            <DatatableView
+                                value={this.state.peer_list}
+                                sortField={'node_idx'}
+                                sortOrder={-1}
+                                resultColumn={[
+                                    {
+                                        'field'   : 'node_idx',
+                                        'header'  : 'id',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'node_url',
+                                        'header'  : 'node',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'node_status',
+                                        'header'  : 'status',
+                                        'sortable': true
+                                    }
+                                ]}/>
                         </Row>
                     </div>
                 </div>
