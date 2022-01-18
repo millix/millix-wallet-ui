@@ -12,7 +12,7 @@ class DatatableView extends Component {
         super(props);
         this.state = {
             first      : 0,
-            rows       : 50,
+            rows       : 20,
             currentPage: 1
         };
 
@@ -71,6 +71,10 @@ class DatatableView extends Component {
                     {
                         label: 10,
                         value: 10
+                    },
+                    {
+                        label: 20,
+                        value: 20
                     },
                     {
                         label: 50,
