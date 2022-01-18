@@ -5,7 +5,8 @@ import {Row} from 'react-bootstrap';
 import {walletUpdateTransactions} from '../redux/actions/index';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {MDBDataTable as DataTable} from 'mdbreact';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
 
 
 class TransactionHistoryView extends Component {
@@ -13,52 +14,7 @@ class TransactionHistoryView extends Component {
         super(props);
         this.transactionHistoryUpdateHandler = undefined;
         this.state                 = {
-            fileKey         : new Date().getTime(),
-            transaction_list: {
-                columns: [
-                    {
-                        label: '#',
-                        field: 'idx'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="user-clock" size="1x"/>,
-                            ' date'
-                        ],
-                        field: 'date'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' transaction id'
-                        ],
-                        field: 'txid'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="compress-arrows-alt"
-                                             size="1x"/>,
-                            ' amount'
-                        ],
-                        field: 'amount'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="clock" size="1x"/>,
-                            ' stable date'
-                        ],
-                        field: 'stable_date'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="clock" size="1x"/>,
-                            ' parent date'
-                        ],
-                        field: 'parent_date'
-                    }
-                ],
-                rows   : []
-            }
+            transaction_list: []
         };
     }
 
@@ -71,7 +27,7 @@ class TransactionHistoryView extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (this.state.transaction_list.rows.length !== this.props.wallet.transactions.length) {
+        if (this.state.transaction_list.length !== this.props.wallet.transactions.length) {
             const rows = this.props.wallet.transactions.map((transaction, idx) => ({
                 clickEvent : () => this.props.history.push('/transaction/' + encodeURIComponent(transaction.transaction_id), [transaction]),
                 idx        : this.props.wallet.transactions.length - idx,
@@ -82,10 +38,7 @@ class TransactionHistoryView extends Component {
                 parent_date: transaction.parent_date && moment.utc(transaction.parent_date * 1000).format('YYYY-MM-DD HH:mm:ss')
             }));
             this.setState({
-                transaction_list: {
-                    columns: [...this.state.transaction_list.columns],
-                    rows
-                }
+                transaction_list: rows
             });
         }
     }
@@ -97,21 +50,31 @@ class TransactionHistoryView extends Component {
                     <div className={'panel-heading bordered'}>transactions</div>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
-                            <DataTable striped
-                                       bordered
-                                       small
-                                       hover
-                                       autoWidth={false}
-                                       info={false}
-                                       entries={10}
-                                       disableRetreatAfterSorting
-                                       onPageChange={page => this.setState({page})}
-                                       entriesOptions={[
-                                           10,
-                                           30,
-                                           50
-                                       ]}
-                                       data={this.state.transaction_list}/>
+                            <DataTable value={this.state.transaction_list}
+                                       stripedRows
+                                       showGridlines
+                                       resizableColumns
+                                       columnResizeMode="fit"
+                                       responsiveLayout="scroll">
+                                <Column field="idx"
+                                        header="id"
+                                        sortable></Column>
+                                <Column field="date"
+                                        header="date"
+                                        sortable></Column>
+                                <Column field="txid"
+                                        header="transaction id"
+                                        sortable></Column>
+                                <Column field="amount"
+                                        header="amount"
+                                        sortable></Column>
+                                <Column field="stable_date"
+                                        header="stable date"
+                                        sortable></Column>
+                                <Column field="parent_date"
+                                        header="parent date"
+                                        sortable></Column>
+                            </DataTable>
                         </Row>
                     </div>
                 </div>

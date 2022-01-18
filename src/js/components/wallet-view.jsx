@@ -383,8 +383,9 @@ class WalletView extends Component {
                                     <DataTable value={this.state.addressList}
                                                stripedRows
                                                showGridlines
-                                               // resizableColumns
-                                               // columnResizeMode="fit"
+                                               resizableColumns
+                                               columnResizeMode="fit"
+                                               sortField="address_position" sortOrder={1}
                                                responsiveLayout="scroll">
                                         <Column field="address_position"
                                                 header="position"

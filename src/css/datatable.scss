@@ -1,5 +1,3 @@
-@import 'bootstrap/variable';
-
 .p-datatable-table {
   margin-bottom: 1rem;
   width: 100%;
@@ -18,11 +16,37 @@
 
 .p-datatable .p-datatable-thead > tr > th,
 .p-datatable .p-datatable-tbody > tr > td {
-  border: 0.1rem solid $border-color;
+  border: $border-width solid $border-color;
   padding: 0.5rem 1rem;
 }
 
+.p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
+  border-width: $border-width;
+}
+
+.p-datatable .p-sortable-column:focus {
+  border-width: $border-width;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  color: inherit;
+}
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd {
   background-color: $table-striped-bg;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: $body-color;
+  margin-left: auto;
+}
+
+.p-datatable .p-sortable-column.p-highlight:not(.p-sortable-disabled):hover .p-sortable-column-icon,
+.p-datatable .p-sortable-column.p-highlight:not(.p-sortable-disabled):hover,
+.p-datatable .p-sortable-column:not(.p-highlight):not(.p-sortable-disabled):hover,
+.p-datatable .p-sortable-column.p-highlight,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+  color: $color-white;
+  background: inherit;
 }
