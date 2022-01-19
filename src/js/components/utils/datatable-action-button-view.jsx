@@ -34,7 +34,7 @@ class DatatableActionButtonView extends Component {
 DatatableActionButtonView.propTypes = {
     icon         : PropTypes.string,
     history_path : PropTypes.string,
-    history_state: PropTypes.object
+    history_state: PropTypes.any
 };
 
 export default withRouter(DatatableActionButtonView);

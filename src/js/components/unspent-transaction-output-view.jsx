@@ -6,6 +6,7 @@ import moment from 'moment';
 import {walletUpdateTransactions} from '../redux/actions';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
+import DatatableActionButtonView from './utils/datatable-action-button-view';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -18,21 +19,34 @@ class UnspentTransactionOutputView extends Component {
     }
 
     componentDidMount() {
-        this.updaterHandler = setInterval(() => API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.props.location.state.stable).then(data => {
+        this.reloadDatatable();
+        this.updaterHandler = setInterval(() => this.reloadDatatable(), 5000);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.location.state.stable !== prevProps.location.state.stable || this.props.wallet.address_key_identifier !== prevProps.wallet.address_key_identifier) {
+            this.reloadDatatable();
+        }
+    }
+
+    reloadDatatable() {
+        return API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.props.location.state.stable).then(data => {
             let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
-                clickEvent      : () => this.props.history.push('/transaction/' + encodeURIComponent(output.transaction_id), [output]),
                 idx             : data.length - idx,
                 transaction_id  : output.transaction_id,
                 address         : output.address,
                 output_position : output.output_position,
                 amount          : output.amount.toLocaleString('en-US'),
                 transaction_date: moment.utc(output.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss')
+                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                action          : <DatatableActionButtonView
+                    history_path={'/transaction/' + encodeURIComponent(output.transaction_id)}
+                    history_state={[output]}/>
             }));
             this.setState({
                 transaction_output_list: rows
             });
-        }), 5000);
+        });
     }
 
     componentWillUnmount() {
@@ -45,7 +59,8 @@ class UnspentTransactionOutputView extends Component {
                 <div className={'panel panel-filled'}>
                     <div
                         className={'panel-heading bordered'}>
-                        {this.props.location.state.stable ? '' : 'pending'} unspent transaction output list
+                        {this.props.location.state.stable ? '' : 'pending'} unspent
+                        transaction output list
                     </div>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
@@ -53,12 +68,8 @@ class UnspentTransactionOutputView extends Component {
                                 value={this.state.transaction_output_list}
                                 sortField={'transaction_date'}
                                 sortOrder={-1}
+                                showActionColumn={true}
                                 resultColumn={[
-                                    {
-                                        'field'   : 'idx',
-                                        'header'  : 'id',
-                                        'sortable': true
-                                    },
                                     {
                                         'field'   : 'transaction_date',
                                         'header'  : 'date',
@@ -83,11 +94,6 @@ class UnspentTransactionOutputView extends Component {
                                     {
                                         'field'   : 'amount',
                                         'header'  : 'amount',
-                                        'sortable': true
-                                    },
-                                    {
-                                        'field'   : 'stable_date',
-                                        'header'  : 'stable date',
                                         'sortable': true
                                     }
                                 ]}/>

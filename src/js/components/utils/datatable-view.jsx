@@ -90,8 +90,10 @@ class DatatableView extends Component {
                     }
                 ];
 
-                return <div className={'paginator-dropdown-wrapper'}>show<Dropdown value={options.value} options={dropdownOptions}
-                                 onChange={options.onChange}/>records</div>;
+                return <div
+                    className={'paginator-dropdown-wrapper'}>show<Dropdown
+                    value={options.value} options={dropdownOptions}
+                    onChange={options.onChange}/>records</div>;
             }
         };
     }
@@ -105,6 +107,14 @@ class DatatableView extends Component {
                 header={item.header}
                 sortable={item.sortable}/>);
         });
+
+        if (this.props.showActionColumn) {
+            column.push(<Column
+                key={'action'}
+                field={'action'}
+                header={'action'}
+                sortable={false}/>);
+        }
 
         return (
             <DataTable value={this.props.value}
@@ -131,10 +141,11 @@ class DatatableView extends Component {
 
 
 DatatableView.propTypes = {
-    value       : PropTypes.array.isRequired,
-    resultColumn: PropTypes.array.isRequired,
-    sortField   : PropTypes.string,
-    sortOrder   : PropTypes.number
+    value           : PropTypes.array.isRequired,
+    resultColumn    : PropTypes.array.isRequired,
+    sortField       : PropTypes.string,
+    sortOrder       : PropTypes.number,
+    showActionColumn: PropTypes.bool
 };
 
 

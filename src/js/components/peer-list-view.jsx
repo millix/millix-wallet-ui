@@ -78,6 +78,7 @@ class PeerListView extends Component {
                                 value={this.state.peer_list}
                                 sortField={'node_idx'}
                                 sortOrder={-1}
+                                showActionColumn={true}
                                 resultColumn={[
                                     {
                                         'field'   : 'node_idx',
@@ -93,11 +94,6 @@ class PeerListView extends Component {
                                         'field'   : 'node_status',
                                         'header'  : 'status',
                                         'sortable': true
-                                    },
-                                    {
-                                        'field'   : 'action',
-                                        'header'  : 'action',
-                                        'sortable': false
                                     }
                                 ]}/>
                         </Row>

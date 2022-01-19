@@ -5,6 +5,7 @@ import {Row} from 'react-bootstrap';
 import {walletUpdateTransactions} from '../redux/actions/index';
 import moment from 'moment';
 import DatatableView from './utils/datatable-view';
+import DatatableActionButtonView from './utils/datatable-action-button-view';
 
 
 class TransactionHistoryView extends Component {
@@ -27,13 +28,15 @@ class TransactionHistoryView extends Component {
     componentWillReceiveProps(nextProps, nextContext) {
         if (this.state.transaction_list.length !== this.props.wallet.transactions.length) {
             const rows = this.props.wallet.transactions.map((transaction, idx) => ({
-                clickEvent : () => this.props.history.push('/transaction/' + encodeURIComponent(transaction.transaction_id), [transaction]),
                 idx        : this.props.wallet.transactions.length - idx,
                 date       : moment.utc(transaction.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
                 amount     : transaction.amount.toLocaleString('en-US'),
                 txid       : transaction.transaction_id,
                 stable_date: transaction.stable_date && moment.utc(transaction.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                parent_date: transaction.parent_date && moment.utc(transaction.parent_date * 1000).format('YYYY-MM-DD HH:mm:ss')
+                parent_date: transaction.parent_date && moment.utc(transaction.parent_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                action     : <DatatableActionButtonView
+                    history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
+                    history_state={[transaction]}/>
             }));
             this.setState({
                 transaction_list: rows
@@ -52,12 +55,8 @@ class TransactionHistoryView extends Component {
                                 value={this.state.transaction_list}
                                 sortField={'date'}
                                 sortOrder={-1}
+                                showActionColumn={true}
                                 resultColumn={[
-                                    {
-                                        'field'   : 'idx',
-                                        'header'  : 'id',
-                                        'sortable': true
-                                    },
                                     {
                                         'field'   : 'date',
                                         'header'  : 'date',
