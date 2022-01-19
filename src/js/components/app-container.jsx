@@ -65,7 +65,7 @@ class AppContainer extends Component {
 
                     <UnlockedWalletRequiredRoute path="/actions"
                                                  component={ActionView}/>
-                    <UnlockedWalletRequiredRoute path="/status"
+                    <UnlockedWalletRequiredRoute path="/status-summary"
                                                  component={StatsView}/>
 
                     <UnlockedWalletRequiredRoute path="/report-issue"

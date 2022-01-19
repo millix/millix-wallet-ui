@@ -11,9 +11,6 @@ class StatsView extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-    }
-
     render() {
         const props = this.props;
         return (<Col md="12">

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Row} from 'react-bootstrap';
+import {Row, Col, Button} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
+import DatatableActionButtonView from './utils/datatable-action-button-view';
 
 
 class PeerListView extends Component {
@@ -27,11 +28,16 @@ class PeerListView extends Component {
                        shouldUpdate = true;
                    }
                    onlineNodeList.add(item.node_id);
+
+                   const action = <DatatableActionButtonView
+                       history_path={'/peer/' + item.node_id}
+                       history_state={{peer: item.node_id}}/>;
+
                    peerList.push({
-                       clickEvent : () => this.props.history.push('/peer/' + item.node_id, {peer: item.node_id}),
                        node_idx   : idx + 1,
                        node_url   : `${item.node_prefix}${item.node_address}:${item.node_port}`,
-                       node_status: 'connected'
+                       node_status: 'connected',
+                       action     : action
                    });
                });
                if (shouldUpdate) {
@@ -61,6 +67,13 @@ class PeerListView extends Component {
                     <div className={'panel-heading bordered'}>peers</div>
                     <div className={'panel-body'}>
                         <Row>
+                            <Col>
+                                <div className={'form-group'}>
+                                    <span>these are peers to which you are connected. "peer" is another node to which your node connects to in order to send/receive data.</span>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
                             <DatatableView
                                 value={this.state.peer_list}
                                 sortField={'node_idx'}
@@ -80,6 +93,11 @@ class PeerListView extends Component {
                                         'field'   : 'node_status',
                                         'header'  : 'status',
                                         'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'action',
+                                        'header'  : 'action',
+                                        'sortable': false
                                     }
                                 ]}/>
                         </Row>

@@ -126,11 +126,6 @@ class Sidebar extends Component {
                         </NavItem>
                     </NavItem>
 
-                    <NavItem key={'peers'} eventKey="/peers">
-                        <NavText>
-                            peers
-                        </NavText>
-                    </NavItem>
                     {/*
                      <NavItem key={'log'} eventKey="/log">
                      <NavText>
@@ -148,11 +143,31 @@ class Sidebar extends Component {
                             actions
                         </NavText>
                     </NavItem>
-                    <NavItem key={'status'} eventKey="/status">
+
+
+                    <NavItem eventKey="status">
                         <NavText>
-                            status
+                            status <FontAwesomeIcon className={'icon'}
+                                                    icon="chevron-down"
+                                                    size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
+                        <NavItem key={'status-summary'}
+                                 eventKey="/status-summary">
+                            <NavText>
+                                summary
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'peers'} eventKey="/peers">
+                            <NavText>
+                                peers
+                            </NavText>
+                        </NavItem>
                     </NavItem>
+
+
                     <NavItem eventKey="ads">
                         <NavText>
                             ads <FontAwesomeIcon className={'icon'}
