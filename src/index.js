@@ -34,7 +34,9 @@ import {
     faList,
     faBars,
     faChevronDown,
-    faChevronUp
+    faChevronUp,
+    faSignInAlt,
+    faFileImport
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
 import './css/bootstrap/bootstrap.scss';
@@ -62,8 +64,8 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faStream, faExchangeAlt, faCloudDownloadAlt, faSlidersH,
     faSignOutAlt, faPlus, faHeartbeat, faUndoAlt, faTrash, faUndo,
     faBook, faMicrochip, faPowerOff, faUserClock, faClock, faCompressArrowsAlt,
-    faLock, faLockOpen, faTimes, faEye, faList, faBars, faChevronDown,
-    faChevronUp);
+    faLock, faLockOpen, faTimes, faEye, faList, faBars, faSignInAlt, faFileImport,
+    faChevronDown, faChevronUp);
 
 
 let apiInfo = {
@@ -137,7 +139,6 @@ const getNodeAboutAttribute = () => {
 };
 
 const getNodeConfig = () => {
-    console.log('get node config', store.getState().config);
     if (Object.keys(store.getState().config).length === 0) {
         API.getNodeConfig()
            .then(configList => {

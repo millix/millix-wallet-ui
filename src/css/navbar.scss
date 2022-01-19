@@ -52,3 +52,37 @@
     color: $color-primary;
   }
 }
+
+.tab-pane {
+  .panel-body {
+    border: $border-width solid $color-panel-header-border !important;
+    border-top: $border-width solid $color-panel-filed-background !important;
+    min-height: 13rem;
+  }
+}
+
+.nav-tabs {
+  border-bottom: $border-width solid $color-panel-header-border;
+
+  .nav-link {
+    color: $color-font-left-nav-base;
+    border: $border-width solid transparent;
+
+    &:hover {
+      border-color: transparent;
+    }
+
+    &.active,
+    .nav-item.show .nav-link {
+      border-color: $color-panel-header-border;
+      border-bottom: $border-width solid $color-panel-filed-background !important;
+      color: $color-font-left-nav-hover !important;
+      background-color: $color-panel-filed-background !important;
+      cursor: default;
+    }
+
+    .page_subtitle {
+      text-align: center;
+    }
+  }
+}
