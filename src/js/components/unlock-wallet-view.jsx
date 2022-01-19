@@ -41,7 +41,7 @@ const UnlockWalletView = (props) => {
 
     return (
         <Container>
-            <div className="container-center lg" style={{marginTop: '5%'}}>
+            <div className="unlock-container">
                 <div className="cols-xs-12 col-lg-12 hpanel">
                     <div className="panel-body view-header tab">
                         <Tab.Container defaultActiveKey={1}>
@@ -66,7 +66,7 @@ const UnlockWalletView = (props) => {
                                                     <FontAwesomeIcon
                                                         className="fal"
                                                         icon="plus"/>
-                                                    generate wallet
+                                                    create
                                                 </h5>
                                             </Nav.Link>
                                         </Nav.Item>
@@ -77,7 +77,7 @@ const UnlockWalletView = (props) => {
                                                     <FontAwesomeIcon
                                                         className="fal"
                                                         icon="file-import"/>
-                                                    import wallet
+                                                    import
                                                 </h5>
                                             </Nav.Link>
                                         </Nav.Item>
@@ -130,21 +130,32 @@ const UnlockWalletView = (props) => {
                                         <Tab.Pane eventKey={2}>
                                             <div className="panel panel-filled">
                                                 <div className="panel-body">
-                                                    <p className="mt-5">this
-                                                        process will
-                                                        replace your current
-                                                        private_key at the
-                                                        following
-                                                        location <span>{store.getState().config['NODE_KEY_PATH']}</span>
-                                                    </p>
-                                                    <div className="pb-3">
+                                                    <div
+                                                        className={'form-group'}>
                                                         <div
-                                                            className="d-grid gap-2 mt-4">
-                                                            <Button
-                                                                variant="outline-primary"
-                                                                size="lg"
-                                                                onClick={() => props.history.push('/new-wallet/')}>continue</Button>
+                                                            className="section_subtitle">attention
                                                         </div>
+                                                        <div>
+                                                            this will
+                                                            replace existing
+                                                            private_key.
+                                                            you cannot reverse this action.
+                                                            you will not be able to access this wallet or any funds it contains.
+                                                        </div>
+                                                        <div>
+                                                            please make sure you
+                                                            saved a copy of
+                                                            private_key it to a
+                                                            safe
+                                                            place before proceed
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={'submit-row'}>
+                                                        <Button
+                                                            className={'w-100'}
+                                                            variant="outline-primary"
+                                                            onClick={() => props.history.push('/new-wallet/')}>continue</Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -152,21 +163,32 @@ const UnlockWalletView = (props) => {
                                         <Tab.Pane eventKey={3}>
                                             <div className="panel panel-filled">
                                                 <div className="panel-body">
-                                                    <p className="mt-5">this
-                                                        process will
-                                                        replace your current
-                                                        private_key at the
-                                                        following
-                                                        location <span>{store.getState().config['NODE_KEY_PATH']}</span>
-                                                    </p>
-                                                    <div className="pb-3">
+                                                    <div
+                                                        className={'form-group'}>
                                                         <div
-                                                            className="d-grid gap-2 mt-4">
-                                                            <Button
-                                                                variant="outline-primary"
-                                                                size="lg"
-                                                                onClick={() => props.history.push('/import-wallet/')}>continue</Button>
+                                                            className="section_subtitle">attention
                                                         </div>
+                                                        <div>
+                                                            this will
+                                                            replace existing
+                                                            private_key.
+                                                            you cannot reverse this action.
+                                                            you will not be able to access this wallet or any funds it contains.
+                                                        </div>
+                                                        <div>
+                                                            please make sure you
+                                                            saved a copy of
+                                                            private_key it to a
+                                                            safe
+                                                            place before proceed
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={'form-group'}>
+                                                        <Button
+                                                            className={'w-100'}
+                                                            variant="outline-primary"
+                                                            onClick={() => props.history.push('/import-wallet/')}>continue</Button>
                                                     </div>
                                                 </div>
                                             </div>
