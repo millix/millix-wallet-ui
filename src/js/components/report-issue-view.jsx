@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Row} from 'react-bootstrap';
+import {Button, Col, Row, Table} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {updateNetworkState} from '../redux/actions';
 
@@ -53,74 +53,148 @@ class ReportIssueView extends Component {
                 <div className={'panel-body'}>
                     <Row>
                         <Col>
-                            <div className={'section_title'}>
+                            <div className={'section_subtitle'}>
                                 instructions
                             </div>
                             <div className={'form-group'}>
-                                <div>to report about a problem please follow these steps:</div>
+                                <div>to report about a problem please follow
+                                    these steps:
+                                </div>
                                 <ul>
                                     <li>describe current behavior</li>
                                     <li>describe expected behavior</li>
-                                    <li>add information provided on this page</li>
+                                    <li>add information provided on this page
+                                    </li>
                                     <li>send it to us on discord</li>
                                 </ul>
                             </div>
+                            <hr/>
 
-                            <div className={'section_title'}>
-                                version
-                            </div>
-                            <div className={'form-group'}>
-                                <label>build</label>
-                                <div>{this.state.nodeOsInfo.node_millix_version}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>build date</label>
-                                <div>{this.state.nodeOsInfo.node_millix_build_date && moment.unix(this.state.nodeOsInfo.node_millix_build_date).format('YYYY-MM-DD HH:mm:ss')}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>browser</label>
-                                <div>{this.state.browserRelease}</div>
-                            </div>
-                            <hr />
-                            <div className={'section_title'}>
-                                os
-                            </div>
-                            <div className={'form-group'}>
-                                <label>platform</label>
-                                <div>{this.state.nodeOsInfo.platform}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>type</label>
-                                <div>{this.state.nodeOsInfo.type}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>release</label>
-                                <div>{this.state.nodeOsInfo.release}</div>
-                            </div>
-                            <hr />
-                            <div className={'section_title'}>
-                                hardware
-                            </div>
-                            <div className={'form-group'}>
-                                <label>arch</label>
-                                <div>{this.state.nodeOsInfo.arch}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>memory total</label>
-                                <div>{this.state.nodeOsInfo.memory.total}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>memory free</label>
-                                <div>{this.state.nodeOsInfo.memory.free} ({this.state.nodeOsInfo.memory.freePercent})</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>cpu</label>
-                                <div>{this.state.nodeOsInfo.cpu.model}</div>
-                            </div>
-                            <div className={'form-group'}>
-                                <label>cpu load average</label>
-                                <div>{this.state.nodeOsInfo.cpu.loadavg.join(' ')}</div>
-                            </div>
+
+                            <Row>
+                                <Col>
+                                    <div className={'section_subtitle'}>
+                                        version
+                                    </div>
+                                    <Table striped bordered hover>
+                                        <tbody>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                build
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.node_millix_version}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                build date
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.node_millix_build_date && moment.unix(this.state.nodeOsInfo.node_millix_build_date).format('YYYY-MM-DD HH:mm:ss')}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                browser
+                                            </td>
+                                            <td>
+                                                {this.state.browserRelease}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col>
+                                    <div className={'section_subtitle'}>
+                                        os
+                                    </div>
+                                    <Table striped bordered hover>
+                                        <tbody>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                platform
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.platform}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                type
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.type}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                release
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.release}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
+
+
+                            <Row>
+                                <Col>
+                                    <div className={'section_subtitle'}>
+                                        hardware
+                                    </div>
+                                    <Table striped bordered hover>
+                                        <tbody>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                arch
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.arch}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                memory total
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.memory.total}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                memory free
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.memory.free} ({this.state.nodeOsInfo.memory.freePercent})
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                cpu
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.cpu.model}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                cpu load average
+                                            </td>
+                                            <td>
+                                                {this.state.nodeOsInfo.cpu.loadavg.join(' ')}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </div>
