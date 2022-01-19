@@ -156,6 +156,16 @@ class API {
         }
     }
 
+    getNodeOsInfo() {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + '/RLOk0Wji0lQVjynT')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
     getRandomMnemonic() {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + '/Gox4NzTLDnpEr10v')

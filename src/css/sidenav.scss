@@ -60,6 +60,13 @@
   color: $color-font-left-nav-hover;
 }
 
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo > *,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-:hover > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f > *,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo > *,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ-.sidenav---highlighted---oUx9u > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f > * {
+  color: $color-font-left-nav-hover;
+}
+
 .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL .sidenav---sidenav-subnav---1EN61 > .sidenav---sidenav-subnavitem---1cD47.sidenav---selected---1EK3y {
   border-left: 0.42rem solid $color-secondary;
 }
@@ -83,7 +90,6 @@
   background: transparent;
 }
 
-
 .sidenav---sidenav---_2tBP.sidenav---expanded---1KdUL {
   padding-top: 1rem;
   bottom: auto;
@@ -101,4 +107,34 @@
 .nav-utc_clock {
   color: $color-white;
   font-size: 1rem;
+}
+
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navicon---3gCRo > *,
+.sidenav---sidenav-nav---3tvij > .sidenav---sidenav-navitem---uwIJ- > .sidenav---navitem---9uL5T .sidenav---navtext---1AE_f > * {
+  color: inherit;
+}
+
+.sidenav---expandable---3_dr7 {
+  .sidenav---navtext---1AE_f {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    margin-left: auto;
+  }
+
+  .fa-chevron-up {
+    display: none;
+  }
+
+  &.sidenav---expanded---1KdUL {
+    .fa-chevron-down {
+      display: none;
+    }
+
+    .fa-chevron-up {
+      display: inline-block;
+    }
+  }
 }

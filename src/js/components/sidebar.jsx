@@ -3,6 +3,7 @@ import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
 import moment from 'moment';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 class Sidebar extends Component {
@@ -76,7 +77,7 @@ class Sidebar extends Component {
                         case 'resetValidation':
                             break;
                         default:
-                            if (typeof(stateParam[selected] !== 'undefined')) {
+                            if (typeof (stateParam[selected] !== 'undefined')) {
                                 props.history.push(selected, stateParam[selected]);
                             }
                             else {
@@ -98,7 +99,12 @@ class Sidebar extends Component {
 
                     <NavItem eventKey="transaction">
                         <NavText>
-                            transactions
+                            transactions <FontAwesomeIcon className={'icon'}
+                                                          icon="chevron-down"
+                                                          size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
                         <NavItem key={'transaction-list'}
                                  eventKey="/transaction-list">
@@ -149,7 +155,12 @@ class Sidebar extends Component {
                     </NavItem>
                     <NavItem eventKey="ads">
                         <NavText>
-                            ads
+                            ads <FontAwesomeIcon className={'icon'}
+                                                 icon="chevron-down"
+                                                 size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
                         <NavItem key={'ad-create'} eventKey="/ad-create">
                             <NavText>
@@ -162,6 +173,28 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
+
+                    <NavItem eventKey="help">
+                        <NavText>
+                            help <FontAwesomeIcon className={'icon'}
+                                                  icon="chevron-down"
+                                                  size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
+                        </NavText>
+                        <NavItem key={'faq'} eventKey="/faq">
+                            <NavText>
+                                faq
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'report-issue'} eventKey="/report-issue">
+                            <NavText>
+                                report problem
+                            </NavText>
+                        </NavItem>
+                    </NavItem>
+
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
                             logout
