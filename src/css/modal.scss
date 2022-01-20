@@ -1,0 +1,46 @@
+.p-dialog {
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+
+  .p-dialog-footer {
+    .p-confirm-dialog-accept {
+      margin-right: 0;
+      @include button-outline-primary();
+    }
+
+    .p-confirm-dialog-reject {
+      @include button-outline-default();
+    }
+  }
+}
+
+.p-dialog .p-dialog-header,
+.p-confirm-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+  background: $modal-color-bg;
+  color: $color-body-font;
+}
+
+.p-dialog .p-dialog-header{
+  background: $modal-header-color-bg;
+}
+
+.p-dialog .p-dialog-footer {
+  border-top: none;
+}
+
+.p-component {
+  font-family: 'Roboto', sans-serif;
+}
+
+.confirmation_content_without_icon.p-dialog.p-confirm-dialog {
+  .p-confirm-dialog-message {
+    margin-left: 0;
+  }
+}
+
+.p-dialog-title {
+  text-align: center;
+}
+
+

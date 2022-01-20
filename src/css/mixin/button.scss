@@ -1,0 +1,18 @@
+@mixin button-outline-primary() {
+  @include button-outline-variant($color-primary);
+  background-color: transparent;
+  color: $color-body-font;
+}
+
+@mixin button-outline-default() {
+  @include button-outline-variant($color-primary);
+  background-color: transparent;
+  color: $color-body-font;
+  border-color: $color-input-bg;
+
+  &:hover {
+    background-color: transparent;
+    color: $color-white;
+    border-color: $color-primary;
+  }
+}

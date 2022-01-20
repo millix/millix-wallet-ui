@@ -1,10 +1,12 @@
 @import './variable';
+@import 'mixin/mixin';
 @import 'navbar';
 @import 'panel';
 @import 'form';
 @import 'table';
 @import 'datatable';
 @import 'dropdown';
+@import 'modal';
 
 a {
   cursor: pointer;

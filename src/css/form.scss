@@ -20,11 +20,5 @@ label {
 
 .btn-outline-default,
 .btn-outline-input-group-addon {
-  color: $color-body-font;
-  border-color: $color-input-bg;
-
-  &:hover {
-    color: $color-white;
-    border-color: $color-primary;
-  }
+  @include button-outline-default();
 }
