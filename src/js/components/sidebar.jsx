@@ -55,11 +55,6 @@ class Sidebar extends Component {
     }
 
     render() {
-        const stateParam = {
-            '/unspent-transaction-output-list/stable' : {stable: 1},
-            '/unspent-transaction-output-list/pending': {stable: 0}
-        };
-
         let props = this.props;
         return (<aside className={'navigation'} style={{
             height   : '100%',
@@ -77,12 +72,7 @@ class Sidebar extends Component {
                         case 'resetValidation':
                             break;
                         default:
-                            if (typeof (stateParam[selected] !== 'undefined')) {
-                                props.history.push(selected, stateParam[selected]);
-                            }
-                            else {
-                                props.history.push(selected);
-                            }
+                            props.history.push(selected);
                     }
                 }}
             >

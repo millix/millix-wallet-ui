@@ -14,23 +14,42 @@ class UnspentTransactionOutputView extends Component {
         super(props);
         this.updaterHandler = undefined;
         this.state          = {
-            transaction_output_list: []
+            transaction_output_list: [],
+            stable                 : 1
         };
     }
 
     componentDidMount() {
-        this.reloadDatatable();
+        const stable_value_new = this.getStableFromUrl();
+        this.setState({
+            stable: stable_value_new
+        }, this.reloadDatatable);
+
         this.updaterHandler = setInterval(() => this.reloadDatatable(), 5000);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.location.state.stable !== prevProps.location.state.stable || this.props.wallet.address_key_identifier !== prevProps.wallet.address_key_identifier) {
-            this.reloadDatatable();
+        const stable_value_new     = this.getStableFromUrl();
+        const stable_value_current = this.state.stable;
+        if (stable_value_new !== stable_value_current || this.props.wallet.address_key_identifier !== prevProps.wallet.address_key_identifier) {
+            this.setState({
+                stable: stable_value_new
+            }, this.reloadDatatable);
         }
     }
 
+    getStableFromUrl() {
+        const stable_filter  = this.props.location.pathname.split('/').pop();
+        let stable_value_new = 1;
+        if (stable_filter === 'pending') {
+            stable_value_new = 0;
+        }
+
+        return stable_value_new;
+    }
+
     reloadDatatable() {
-        return API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.props.location.state.stable).then(data => {
+        return API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.state.stable).then(data => {
             let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
                 idx             : data.length - idx,
                 transaction_id  : output.transaction_id,
@@ -59,7 +78,7 @@ class UnspentTransactionOutputView extends Component {
                 <div className={'panel panel-filled'}>
                     <div
                         className={'panel-heading bordered'}>
-                        {this.props.location.state.stable ? '' : 'pending'} unspent
+                        {this.state.stable ? '' : 'pending'} unspent
                         transaction output list
                     </div>
                     <div className={'panel-body'}>
