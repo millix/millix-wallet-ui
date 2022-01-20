@@ -6,6 +6,7 @@ import store from '../redux/store';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import {unlockWallet, walletReady} from '../redux/actions';
+import ErrorList from './utils/error-list-view';
 
 const styles           = {
     centered: {
@@ -14,6 +15,7 @@ const styles           = {
     }
 };
 const UnlockWalletView = (props) => {
+    let error_list = [];
     if (props.wallet.unlocked) {
         const {from} = props.location.state || {from: {pathname: '/'}};
         return <Redirect to={from}/>;
@@ -39,11 +41,21 @@ const UnlockWalletView = (props) => {
            }).catch(_ => props.walletReady({authenticationError: true}));
     };
 
+    if (props.wallet.authenticationError) {
+        error_list.push({
+            name   : 'auth_error_name',
+            message: <span>there was a problem authenticating your key file. retry your password or <a
+                style={{cursor: 'pointer'}}
+                onClick={() => props.history.push('import-wallet')}> click here to load your key.</a></span>
+        });
+    }
+
     return (
         <Container>
             <div className="unlock-container">
                 <div className="cols-xs-12 col-lg-12 hpanel">
                     <div className="panel-body view-header tab">
+                        <ErrorList error_list={error_list}/>
                         <Tab.Container defaultActiveKey={1}>
                             <Row>
                                 <Col xs={12}>
@@ -139,8 +151,12 @@ const UnlockWalletView = (props) => {
                                                             this will
                                                             replace existing
                                                             private_key.
-                                                            you cannot reverse this action.
-                                                            you will not be able to access this wallet or any funds it contains.
+                                                            you cannot reverse
+                                                            this action.
+                                                            you will not be able
+                                                            to access this
+                                                            wallet or any funds
+                                                            it contains.
                                                         </div>
                                                         <div>
                                                             please make sure you
@@ -172,8 +188,12 @@ const UnlockWalletView = (props) => {
                                                             this will
                                                             replace existing
                                                             private_key.
-                                                            you cannot reverse this action.
-                                                            you will not be able to access this wallet or any funds it contains.
+                                                            you cannot reverse
+                                                            this action.
+                                                            you will not be able
+                                                            to access this
+                                                            wallet or any funds
+                                                            it contains.
                                                         </div>
                                                         <div>
                                                             please make sure you

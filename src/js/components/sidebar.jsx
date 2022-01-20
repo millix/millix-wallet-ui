@@ -20,7 +20,7 @@ class Sidebar extends Component {
         this.state         = {
             fileKeyExport: 'export_' + now,
             fileKeyImport: 'import_' + now,
-            date         : new Date()
+            date: new Date()
         };
     }
 
