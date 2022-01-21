@@ -228,23 +228,6 @@ class ListAdView extends Component {
                                         'sortable': true
                                     }
                                 ]}/>
-
-                            {/*<DataTable*/}
-                            {/*    hover*/}
-                            {/*    pagesAmount={4}*/}
-                            {/*    striped*/}
-                            {/*    bordered*/}
-                            {/*    responsive*/}
-                            {/*    autoWidth*/}
-                            {/*    info*/}
-                            {/*    noBottomColumns*/}
-                            {/*    entries={10}*/}
-                            {/*    entriesOptions={[*/}
-                            {/*        10,*/}
-                            {/*        30,*/}
-                            {/*        50*/}
-                            {/*    ]}*/}
-                            {/*    data={this.state.ad_list}/>*/}
                         </Row>
                     </div>
                 </div>

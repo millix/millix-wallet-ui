@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link, withRouter} from 'react-router-dom';
-import {Button, Col, Row} from 'react-bootstrap';
+import {Button, Col, Row, Table} from 'react-bootstrap';
 import {clearTransactionDetails, updateTransactionDetails} from '../redux/actions/index';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import config from '../../config';
 import moment from 'moment';
+import DatatableView from './utils/datatable-view';
 
 
 class TransactionDetailsView extends Component {
@@ -27,121 +28,222 @@ class TransactionDetailsView extends Component {
         }
     }
 
+    getBoolLabel(value) {
+        return value ? 'yes' : 'no';
+    }
+
+    getTransactionInputOutputLink(input) {
+        if (input.output_transaction_id === config.GENESIS_TRANSACTION_ID) {
+            return '';
+        }
+
+        return <Link to={'/transaction/' +
+                         encodeURIComponent(input.output_transaction_id)}>
+            <Button
+                variant="outline-default"
+                className={'btn-xs icon_only ms-auto'}>
+                <FontAwesomeIcon
+                    icon={'th-list'}
+                    size="1x"/>
+            </Button>
+        </Link>;
+    }
+
     render() {
         let {transaction} = this.props;
-        return (
-            <div>
-                <Row className="mb-3 mt-3">
-                    <Col className="pl-0" style={{
-                        display       : 'flex',
-                        justifyContent: 'flex-start',
-                        marginLeft    : 10
-                    }}>
-                        <Button variant='outline-primary'
-                                onClick={this.props.history.goBack}>
-                            <FontAwesomeIcon icon="arrow-circle-left"
-                                             size="2x"/>
-                            <span style={{
-                                position   : 'relative',
-                                top        : -5,
-                                marginRight: 10,
-                                marginLeft : 10
-                            }}> Back</span>
-                        </Button>
-                    </Col>
-                </Row>
-                <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>transaction details</div>
-                    <div className={'panel-body'}>
-                        <Row className="mb-3"
-                             style={{color: 'lightcyan'}}>
-                            <h5>transaction:</h5>
-                        </Row>
-                        <Row className="mb-3">
-                            <span>transaction id: {decodeURIComponent(this.props.match.params.transaction_id)}</span>
-                        </Row>
-                        {transaction && transaction.transaction_id && (
-                            <>
-                                <Row className="mb-3"
-                                     style={{color: 'lightcyan'}}>
-                                    <h5>parent transactions:</h5>
-                                </Row>
+        if (!transaction) {
+            return '';
+        }
 
-                                {transaction.transaction_parent_list && transaction.transaction_parent_list.map((parent, idx) => {
-                                    let parentTransactionID = parent.transaction_id_child === transaction.transaction_id ?
-                                                              parent.transaction_id_parent : parent.transaction_id_child;
-                                    return <Row className="mb-3"
-                                                key={'transaction_parent_' + idx}>
-                                        {parentTransactionID !== config.GENESIS_TRANSACTION_ID ? (
-                                            <Link
-                                                to={'/transaction/' + encodeURIComponent(parentTransactionID)}>
-                                                {parentTransactionID}
-                                            </Link>
-                                        ) : (
-                                             <span>{parentTransactionID} (genesis)</span>
-                                         )}
-                                    </Row>;
-                                })}
-                                <Row className="mb-3"
-                                     style={{color: 'lightcyan'}}>
-                                    <h5>inputs</h5>
-                                </Row>
-                                {transaction.transaction_input_list && transaction.transaction_input_list.map((input, idx) =>
-                                    <>
-                                        <Row className="mb-3">
-                                            {input.output_transaction_id !== config.GENESIS_TRANSACTION_ID ? (
-                                                <span>Transaction: <Link
-                                                    to={'/transaction/' + encodeURIComponent(input.output_transaction_id)}>
-                                            {input.output_transaction_id}
-                                        </Link></span>
-                                            ) : (
-                                                 <span>{input.output_transaction_id} (genesis)</span>
-                                             )}
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <span>output index: {input.output_position}</span>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <span>input index: {input.input_position}</span>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <span>address: {input.address}</span>
-                                        </Row>
-                                    </>
-                                )}
-                                <Row className="mb-3"
-                                     style={{color: 'lightcyan'}}>
-                                    <h5>outputs</h5>
-                                </Row>
-                                {transaction.transaction_output_list && transaction.transaction_output_list.map((output, idx) =>
-                                    <>
-                                        <Row className="mb-3">
-                                            <span>output index: {output.output_position}</span>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <span>address: {output.address}</span>
-                                        </Row>
-                                        <Row className="mb-3">
-                                            <span>amount: {output.amount.toLocaleString('en-US')}</span>
-                                        </Row>
-                                    </>
-                                )}
-                                <Row className="mb-3">
-                                    <span>date: {moment.utc(typeof (transaction.transaction_date) === 'number' ? transaction.transaction_date * 1000 : transaction.transaction_date).format('YYYY-MM-DD HH:mm:ss')}</span>
-                                </Row>
-                                <Row className="mb-3">
-                                    <span>node id: {transaction.node_id_origin}</span>
-                                </Row>
-                                {transaction.node_id_proxy &&
-                                 (<Row className="mb-3">
-                                     <span>proxy id: {transaction.node_id_proxy}</span>
-                                 </Row>)
-                                }
-                            </>
-                        )}
+        const transaction_output_list = transaction.transaction_output_list.map((output, idx) => ({
+            address          : output.address,
+            output_position  : output.output_position,
+            amount           : output.amount,
+            is_double_spend  : this.getBoolLabel(output.is_double_spend),
+            double_spend_date: output.double_spend_date && moment.utc(output.double_spend_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+            is_stable        : this.getBoolLabel(output.is_stable),
+            stable_date      : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+            status           : output.status
+        }));
+
+        const transaction_input_list = transaction.transaction_input_list.map((input, idx) => ({
+            address                : input.address,
+            input_position         : input.input_position,
+            output_transaction_id  : input.output_transaction_id,
+            output_position        : input.output_position,
+            output_transaction_date: input.output_transaction_date && moment.utc(input.output_transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+            is_double_spend        : this.getBoolLabel(input.is_double_spend),
+            double_spend_date      : input.double_spend_date && moment.utc(input.double_spend_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+            is_stable              : this.getBoolLabel(input.is_stable),
+            stable_date            : input.stable_date && moment.utc(input.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+            status                 : input.status,
+            action                 : this.getTransactionInputOutputLink(input)
+        }));
+
+        return (
+            <>
+                <Col md="12">
+                    {/*<Button variant="outline-primary"*/}
+                    {/*        onClick={this.props.history.goBack}>*/}
+                    {/*    <FontAwesomeIcon icon="arrow-circle-left"*/}
+                    {/*                     size="1x"/>*/}
+                    {/*    back*/}
+                    {/*</Button>*/}
+                    <div className={'panel panel-filled'}>
+                        <div className={'panel-heading bordered'}>
+                            transaction detail
+                        </div>
+                        <div className={'panel-body'}>
+                            <div className={'section_subtitle'}>
+                                transaction
+                            </div>
+                            <Table striped bordered hover className={'mb-3'}>
+                                <tbody>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        transaction id
+                                    </td>
+                                    <td>
+                                        {transaction.transaction_id}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        shard id
+                                    </td>
+                                    <td>
+                                        {transaction.shard_id}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        version
+                                    </td>
+                                    <td>
+                                        {transaction.version}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        transaction date
+                                    </td>
+                                    <td>
+                                        {moment.utc(transaction.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss')}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        is stable
+                                    </td>
+                                    <td>
+                                        {this.getBoolLabel(transaction.is_stable)} ({transaction.stable_date && moment.utc(transaction.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss')})
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        status
+                                    </td>
+                                    <td>
+                                        {transaction.status}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td className={'w-20'}>
+                                        node id origin
+                                    </td>
+                                    <td>
+                                        {transaction.node_id_origin}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        node id proxy
+                                    </td>
+                                    <td>
+                                        {transaction.node_id_proxy}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </Table>
+
+                            <div className={'mb-3'}>
+                                <div className={'section_subtitle'}>
+                                    input list
+                                </div>
+                                <DatatableView
+                                    value={transaction_input_list}
+                                    sortField={'input_position'}
+                                    sortOrder={1}
+                                    showActionColumn={true}
+                                    resultColumn={[
+                                        {
+                                            'field': 'input_position'
+                                        },
+                                        {
+                                            'field': 'output_transaction_id'
+                                        },
+                                        {
+                                            'field': 'output_position'
+                                        },
+                                        {
+                                            'field': 'output_transaction_date'
+                                        },
+                                        {
+                                            'field': 'is_double_spend'
+                                        },
+                                        {
+                                            'field': 'double_spend_date'
+                                        },
+                                        {
+                                            'field': 'is_stable'
+                                        },
+                                        {
+                                            'field': 'stable_date'
+                                        },
+                                        {
+                                            'field': 'status'
+                                        }
+                                    ]}/>
+                            </div>
+
+                            <div className={'section_subtitle'}>
+                                output list
+                            </div>
+                            <DatatableView
+                                value={transaction_output_list}
+                                sortField={'output_position'}
+                                sortOrder={1}
+                                resultColumn={[
+                                    {
+                                        'field': 'address'
+                                    },
+                                    {
+                                        'field': 'output_position'
+                                    },
+                                    {
+                                        'field': 'amount'
+                                    },
+                                    {
+                                        'field': 'is_double_spend'
+                                    },
+                                    {
+                                        'field': 'double_spend_date'
+                                    },
+                                    {
+                                        'field': 'is_stable'
+                                    },
+                                    {
+                                        'field': 'stable_date'
+                                    },
+                                    {
+                                        'field': 'status'
+                                    }
+                                ]}/>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </Col>
+            </>
         );
     }
 }

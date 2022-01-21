@@ -106,6 +106,14 @@ class DatatableView extends Component {
     render() {
         const column = [];
         this.props.resultColumn.forEach((item, index) => {
+            if (typeof (item.header) === 'undefined') {
+                item.header = item.field.replaceAll('_', ' ');
+            }
+
+            if (typeof (item.sortable) === 'undefined') {
+                item.sortable = true;
+            }
+
             column.push(<Column
                 key={index}
                 field={item.field}

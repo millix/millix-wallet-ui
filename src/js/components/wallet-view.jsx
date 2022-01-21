@@ -165,12 +165,17 @@ class WalletView extends Component {
 
                if (e !== 'validation_error') {
                    if (e.api_message) {
-                       const match = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                       if (match.groups.message === 'maximum allowed number of inputs can not fund the transaction') {
-                           sendTransactionErrorMessage = 'your transaction tries to use too many outputs. please try to send smaller amount or aggregate manually by sending smaller amounts to yourself.';
+                       if (typeof (e.api_message) === 'string') {
+                           const match = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
+                           sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
                        }
                        else {
-                           sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
+                           if (typeof (e.api_message.error) !== 'undefined') {
+                               const error = e.api_message.error;
+                               if (error.error === 'transaction_input_max_error') {
+                                   sendTransactionErrorMessage = <>your transaction tries to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>. please try to send smaller amount or aggregate manually by sending smaller amounts to yourself. max amount you can send now is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
+                               }
+                           }
                        }
                    }
                    else if (e === 'insufficient_balance') {
@@ -188,7 +193,10 @@ class WalletView extends Component {
                        message: sendTransactionErrorMessage
                    });
                }
-               this.setState({error_list: error_list});
+               this.setState({
+                   error_list: error_list,
+                   sending   : false
+               });
            });
     }
 
@@ -227,7 +235,8 @@ class WalletView extends Component {
                                             <th width="50%">available</th>
                                             <th width="50%">pending
                                                 <HelpIconView
-                                                    help_item_name={'pending_balance'}/></th>
+                                                    help_item_name={'pending_balance'}/>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -277,7 +286,8 @@ class WalletView extends Component {
                                     error_list={this.state.error_list}/>
                                 <Row>
                                     <Form>
-                                        <Col className={'d-flex justify-content-center'}>
+                                        <Col
+                                            className={'d-flex justify-content-center'}>
                                             {this.state.sendTransactionError && (
                                                 <div className={'form-error'}>
                                                     <span>{this.state.sendTransactionErrorMessage}</span>
@@ -330,7 +340,8 @@ class WalletView extends Component {
                                                 </Col>
                                             </Form.Group>
                                         </Col>
-                                        <Col className={'d-flex justify-content-center'}>
+                                        <Col
+                                            className={'d-flex justify-content-center'}>
                                             <Form.Group as={Row}>
                                                 <Button
                                                     variant="outline-primary"

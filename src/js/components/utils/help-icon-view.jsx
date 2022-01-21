@@ -16,7 +16,7 @@ class HelpIconView extends Component {
 
     getHelpItem(help_item_name) {
         const result_help = {
-            'pending_balance': {
+            'pending_balance'             : {
                 'title': 'pending balance',
                 'body' : <ul>
                     <li>
@@ -30,7 +30,7 @@ class HelpIconView extends Component {
                         it should not take more than 10-15 minutes to validate
                         transaction. if you observe pending balance for a longer
                         period of time it is recommended to restart your
-                        node/browser.
+                        node/browser
                     </li>
                     <li>
                         if step above didn't help it may help to perform reset
@@ -39,7 +39,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'node_is_public' : {
+            'node_is_public'              : {
                 'title': 'is public?',
                 'body' : <ul>
                     <li>
@@ -65,6 +65,24 @@ class HelpIconView extends Component {
                         on your router to make your node public. you can edit
                         node's network configuration on this <a className={''}
                                                                 onClick={() => this.props.history.push('/config')}>page</a>
+                    </li>
+                </ul>
+            },
+            'transaction_max_input_number': {
+                'title': 'transaction maximum input number',
+                'body' : <ul>
+                    <li>
+                        each transaction can include up to 128 inputs. bigger
+                        number of inputs is not allowed by protocol
+                    </li>
+                    <li>
+                        you may need to aggregate your unspent outputs manually
+                        before you can send big amount
+                    </li>
+                    <li>
+                        to aggregate your unspent outputs you need to manually
+                        send transactions to yourself (you will have to pay
+                        transaction fee)
                     </li>
                 </ul>
             }
