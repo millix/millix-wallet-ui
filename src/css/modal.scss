@@ -43,4 +43,37 @@
   text-align: center;
 }
 
+.modal-header {
+  background-color: $modal-header-color-bg;
+  color: $modal-header-color-font;
+  text-align: center;
+  padding: 2.8rem 1.4rem;
+  position: relative;
 
+  > span {
+    margin: 0 auto;
+  }
+
+  .btn-close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
+}
+
+body .modal-body {
+  padding: 1.4rem 2rem;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 1rem;
+
+  > * {
+    margin: 0;
+  }
+
+  > .btn {
+    margin-left: 0.5rem;
+  }
+}

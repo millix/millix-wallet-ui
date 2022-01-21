@@ -149,6 +149,12 @@ class Sidebar extends Component {
                         </NavItem>
                     </NavItem>
 
+                    <NavItem key={'advertisement-list'} eventKey="/advertisement-list">
+                        <NavText>
+                            advertisements
+                        </NavText>
+                    </NavItem>
+
                     {/*
                      <NavItem key={'log'} eventKey="/log">
                      <NavText>
@@ -192,36 +198,8 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
+                    <NavItem eventKey="help">
 
-
-                    <NavItem
-                        eventKey="ads"
-                        expanded={this.isExpanded('ads', defaultSelected)}
-                    >
-                        <NavText>
-                            ads <FontAwesomeIcon className={'icon'}
-                                                 icon="chevron-down"
-                                                 size="1x"/>
-                            <FontAwesomeIcon className={'icon hidden'}
-                                             icon="chevron-up"
-                                             size="1x"/>
-                        </NavText>
-                        <NavItem key={'ad-create'} eventKey="/ad-create">
-                            <NavText>
-                                create
-                            </NavText>
-                        </NavItem>
-                        <NavItem key={'ad-list'} eventKey="/ad-list">
-                            <NavText>
-                                list
-                            </NavText>
-                        </NavItem>
-                    </NavItem>
-
-                    <NavItem
-                        eventKey="help"
-                        expanded={this.isExpanded('help', defaultSelected)}
-                    >
                         <NavText>
                             help <FontAwesomeIcon className={'icon'}
                                                   icon="chevron-down"
@@ -232,7 +210,7 @@ class Sidebar extends Component {
                         </NavText>
                         <NavItem key={'faq'} eventKey="/faq">
                             <NavText>
-                                faq
+                                frequent questions
                             </NavText>
                         </NavItem>
                         <NavItem key={'report-issue'} eventKey="/report-issue">
@@ -241,7 +219,6 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
-
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
                             logout

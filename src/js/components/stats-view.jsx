@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {Button, Col, Row, Table} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {updateNetworkState} from '../redux/actions';
+import HelpIconView from './utils/help-icon-view';
 
 
 class StatsView extends Component {
@@ -17,10 +18,10 @@ class StatsView extends Component {
             is_public = 'analyzing your network connection';
         }
         else if (this.props.network.node_is_public === true) {
-            is_public = 'your node is public and is eligible to receive transaction fees';
+            is_public = 'your node is public';
         }
         else {
-            is_public = 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.';
+            is_public = 'your node is not public and is unlikely to receive transaction fees. use port forwarding on your router to make your node public.';
         }
 
         const props = this.props;
@@ -57,7 +58,7 @@ class StatsView extends Component {
                             <div className={'section_subtitle'}>
                                 node
                             </div>
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className={'mb-3'}>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
@@ -69,7 +70,8 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        is public
+                                        is public <HelpIconView
+                                        help_item_name={'node_is_public'}/>
                                     </td>
                                     <td>
                                         {is_public}
@@ -85,7 +87,7 @@ class StatsView extends Component {
                             <div className={'section_subtitle'}>
                                 data
                             </div>
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className={'mb-3'}>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>

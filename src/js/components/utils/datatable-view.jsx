@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {Dropdown} from 'primereact/dropdown';
 import {Ripple} from 'primereact/ripple';
 import {classNames} from 'primereact/utils';
+import moment from 'moment';
 
 
 class DatatableView extends Component {
@@ -15,6 +16,10 @@ class DatatableView extends Component {
             rows       : 20,
             currentPage: 1
         };
+
+        moment.relativeTimeThreshold('ss', -1); // required to get diff in
+        // seconds instead of "a few
+        // seconds ago"
 
         this.onCustomPage = this.onCustomPage.bind(this);
 
@@ -145,7 +150,8 @@ DatatableView.propTypes = {
     resultColumn    : PropTypes.array.isRequired,
     sortField       : PropTypes.string,
     sortOrder       : PropTypes.number,
-    showActionColumn: PropTypes.bool
+    showActionColumn: PropTypes.bool,
+    reload_timestamp: PropTypes.any
 };
 
 

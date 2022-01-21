@@ -44,9 +44,7 @@ const UnlockWalletView = (props) => {
     if (props.wallet.authenticationError) {
         error_list.push({
             name   : 'auth_error_name',
-            message: <span>there was a problem authenticating your key file. retry your password or <a
-                style={{cursor: 'pointer'}}
-                onClick={() => props.history.push('import-wallet')}> click here to load your key.</a></span>
+            message: 'there was a problem authenticating your key file. please make sure you are using correct password'
         });
     }
 
@@ -55,7 +53,6 @@ const UnlockWalletView = (props) => {
             <div className="unlock-container">
                 <div className="cols-xs-12 col-lg-12 hpanel">
                     <div className="panel-body view-header tab">
-                        <ErrorList error_list={error_list}/>
                         <Tab.Container defaultActiveKey={1}>
                             <Row>
                                 <Col xs={12}>
@@ -103,6 +100,8 @@ const UnlockWalletView = (props) => {
                                                 <div
                                                     className="panel panel-filled">
                                                     <div className="panel-body">
+                                                        <ErrorList
+                                                            error_list={error_list}/>
                                                         <div
                                                             className="form-group">
                                                             <label
@@ -120,21 +119,11 @@ const UnlockWalletView = (props) => {
                                                                     }
                                                                 }}
                                                             />
-                                                            {props.wallet.authenticationError ? (
-                                                                <span
-                                                                    className="help-block small">there was a problem authenticating your key file. retry your password or <a
-                                                                    style={{cursor: 'pointer'}}
-                                                                    onClick={() => props.history.push('/import-wallet/')}> click here to load your key.</a></span>) : ''}
                                                         </div>
-                                                        <div className="pb-3">
-                                                            <div
-                                                                className="d-grid gap-2 mt-4">
-                                                                <Button
-                                                                    variant="outline-primary"
-                                                                    size="lg"
-                                                                    onClick={() => walletUnlockWithPassword(passphraseRef.value)}>continue</Button>
-                                                            </div>
-                                                        </div>
+                                                        <Button
+                                                            variant="outline-primary"
+                                                            className={'w-100'}
+                                                            onClick={() => walletUnlockWithPassword(passphraseRef.value)}>continue</Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,13 +155,10 @@ const UnlockWalletView = (props) => {
                                                             place before proceed
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        className={'submit-row'}>
-                                                        <Button
-                                                            className={'w-100'}
-                                                            variant="outline-primary"
-                                                            onClick={() => props.history.push('/new-wallet/')}>continue</Button>
-                                                    </div>
+                                                    <Button
+                                                        className={'w-100'}
+                                                        variant="outline-primary"
+                                                        onClick={() => props.history.push('/new-wallet/')}>continue</Button>
                                                 </div>
                                             </div>
                                         </Tab.Pane>
@@ -203,13 +189,10 @@ const UnlockWalletView = (props) => {
                                                             place before proceed
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        className={'form-group'}>
-                                                        <Button
-                                                            className={'w-100'}
-                                                            variant="outline-primary"
-                                                            onClick={() => props.history.push('/import-wallet/')}>continue</Button>
-                                                    </div>
+                                                    <Button
+                                                        className={'w-100'}
+                                                        variant="outline-primary"
+                                                        onClick={() => props.history.push('/import-wallet/')}>continue</Button>
                                                 </div>
                                             </div>
                                         </Tab.Pane>

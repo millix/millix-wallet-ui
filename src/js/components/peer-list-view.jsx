@@ -5,19 +5,22 @@ import {Row, Col, Button} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
+import moment from 'moment';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 class PeerListView extends Component {
     constructor(props) {
         super(props);
-        this.peerListUpdateHandler = null;
-        this.state                 = {
-            node_online_list: new Set(),
-            peer_list       : []
+        this.updateHandler = null;
+        this.state         = {
+            node_online_list          : new Set(),
+            peer_list                 : [],
+            datatable_reload_timestamp: ''
         };
     }
 
-    updatePeerList() {
+    reloadDatatable() {
         API.listActivePeers()
            .then(data => {
                let shouldUpdate   = false;
@@ -42,21 +45,21 @@ class PeerListView extends Component {
                });
                if (shouldUpdate) {
                    this.setState({
-                       node_online_list: onlineNodeList,
-                       peer_list       : peerList
+                       node_online_list          : onlineNodeList,
+                       peer_list                 : peerList,
+                       datatable_reload_timestamp: new Date()
                    });
                }
-               this.peerListUpdateHandler = setTimeout(() => this.updatePeerList(), 1500);
-           })
-           .catch(() => this.peerListUpdateHandler = setTimeout(() => this.updatePeerList(), 1500));
+           });
     }
 
     componentDidMount() {
-        this.peerListUpdateHandler = setTimeout(() => this.updatePeerList(), 0);
+        this.reloadDatatable();
+        this.updateHandler = setInterval(() => this.reloadDatatable(), 10000);
     }
 
     componentWillUnmount() {
-        clearTimeout(this.peerListUpdateHandler);
+        clearTimeout(this.updateHandler);
     }
 
 
@@ -73,6 +76,24 @@ class PeerListView extends Component {
                                 </div>
                             </Col>
                         </Row>
+                        <div className={'datatable_action_row'}>
+                            <Col md={4}>
+                                <Button variant="outline-primary"
+                                        className={'btn-sm refresh_button'}
+                                        onClick={() => this.reloadDatatable()}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={'sync'}
+                                        size="1x"/>
+                                    refresh
+                                </Button>
+                            </Col>
+                            <Col md={4} className={'datatable_refresh_ago'}>
+                            <span>
+                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
+                            </span>
+                            </Col>
+                        </div>
                         <Row>
                             <DatatableView
                                 value={this.state.peer_list}

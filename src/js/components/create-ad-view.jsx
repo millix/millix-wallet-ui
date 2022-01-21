@@ -2,18 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Col, Container, Form, FormControl, FormGroup, Row, Modal} from 'react-bootstrap';
 import API from '../api/index';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import ErrorList from './utils/error-list-view';
 import {walletUpdateAddresses, walletUpdateBalance} from '../redux/actions/index';
 import {withRouter} from 'react-router-dom';
-
-var Typehead = require('react-bootstrap-typeahead').Typeahead;
-
-const styles = {
-    centered: {
-        display       : 'flex',
-        justifyContent: 'center'
-    }
-};
+import ModalView from './utils/modal-view';
 
 
 class CreateAdView extends Component {
@@ -21,10 +13,9 @@ class CreateAdView extends Component {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state        = {
-
-            submitData       : {},
-            errors           : {},
-            fields           : {
+            submitData   : {},
+            error_list   : [],
+            fields       : {
                 creative_name          : '',
                 category               : '',
                 headline               : '',
@@ -35,16 +26,16 @@ class CreateAdView extends Component {
                 daily_budget_mlx       : '',
                 bid_per_impressions_mlx: ''
             },
-            categories       : [],
-            languages        : [],
-            countries        : [
+            categories   : [],
+            languages    : [],
+            countries    : [
                 //todo: replace me
                 'united states',
                 'antigua and barbuda',
                 'barbados',
                 'czech republic'
             ],
-            regions          : [
+            regions      : [
                 //todo: replace me
                 'alaska',
                 'california',
@@ -66,7 +57,7 @@ class CreateAdView extends Component {
                 'moravian-silesia',
                 'pardubice'
             ],
-            cities           : [
+            cities       : [
                 //todo: replace me
                 'new york',
                 'los angeles',
@@ -88,13 +79,13 @@ class CreateAdView extends Component {
                 'ostrava',
                 'plzeň'
             ],
-            searchphrases    : [
+            searchphrases: [
                 //todo: replace me
                 'car insurance',
                 'auto insurance',
                 'honda insurance'
             ],
-            addFundsModalShow: false
+            modalShow    : false
         };
     }
 
@@ -139,66 +130,66 @@ class CreateAdView extends Component {
 
     handleValidation() {
         let fields      = this.state.fields;
-        let errors      = {};
+        let error_list  = [];
         let formIsValid = true;
 
         if (!fields['creative_name']) {
-            formIsValid             = false;
-            errors['creative_name'] = 'this field is required, please provide a value';
+            formIsValid = false;
+            error_list.push('creative_name is required');
         }
 
         if (!fields['headline']) {
-            formIsValid        = false;
-            errors['headline'] = 'this field is required, please provide a value';
+            formIsValid = false;
+            error_list.push('headline is required');
         }
 
         if (!fields['deck']) {
-            formIsValid    = false;
-            errors['deck'] = 'this field is required, please provide a value';
+            formIsValid = false;
+            error_list.push('deck is required');
         }
 
         if (!fields['url']) {
-            formIsValid   = false;
-            errors['url'] = 'this field is required, please provide a value';
+            formIsValid = false;
+            error_list.push('url is required');
         }
 
 
         if (!fields['daily_budget_mlx']) {
-            formIsValid                = false;
-            errors['daily_budget_mlx'] = 'this field is required, please provide a value';
+            formIsValid = false;
+            error_list.push('daily budget is required');
         }
 
         if (typeof fields['daily_budget_mlx'] !== 'undefined' && (typeof fields['daily_budget_mlx']) == 'string') {
             if (!fields['daily_budget_mlx'].match(/^[0-9]+$/)) {
-                formIsValid                = false;
-                errors['daily_budget_mlx'] = 'this field only accepts numbers';
+                formIsValid = false;
+                error_list.push('daily budget must be a number');
             }
         }
 
         if (!fields['bid_per_impressions_mlx']) {
-            formIsValid                       = false;
-            errors['bid_per_impressions_mlx'] = 'this field is required, please provide a value';
+            formIsValid = false;
+            error_list.push('bid per impressio is required');
         }
 
         if (typeof fields['bid_per_impressions_mlx'] !== 'undefined' && (typeof fields['daily_budget_mlx']) == 'string') {
             if (!fields['bid_per_impressions_mlx'].match(/^[0-9]+$/)) {
-                formIsValid                       = false;
-                errors['bid_per_impressions_mlx'] = 'this field only accepts numbers';
+                formIsValid = false;
+                error_list.push('bid per impression must be a number');
             }
         }
 
         if (parseFloat(fields['bid_per_impressions_mlx']) > parseFloat(fields['daily_budget_mlx'])) {
-            formIsValid                       = false;
-            errors['bid_per_impressions_mlx'] = 'the bid per impression cannot exceed the daily budget';
+            formIsValid = false;
+            error_list.push('bid per impression cannot exceed the daily budget');
         }
 
         if (parseFloat(fields['daily_budget_mlx']) > parseFloat(this.props.wallet.balance_stable)) {
-            formIsValid                = false;
-            errors['daily_budget_mlx'] = 'please add funds to enable this ad campaign';
+            formIsValid = false;
+            error_list.push('please add funds to enable this ad campaign');
         }
 
 
-        this.setState({errors: errors});
+        this.setState({error_list: error_list});
         return formIsValid;
     }
 
@@ -207,7 +198,17 @@ class CreateAdView extends Component {
         if (this.handleValidation()) {
             API.submitAdForm(this.state.fields).then(data => {
                 this.setState({submitData: data});
-                this.flushForm();
+
+                if (typeof (data.api_status) !== 'undefined' && data.api_status === 'ok') {
+                    // todo: redirect to list
+                    this.flushForm();
+                    this.props.history.push('/advertisement-list');
+                }
+                else {
+                    let error_list = [];
+                    error_list.push(data.api_message);
+                    this.setState({error_list: error_list});
+                }
             });
         }
     }
@@ -261,13 +262,6 @@ class CreateAdView extends Component {
         this.setState({fields});
     }
 
-    setAddFundsModalShow(show) {
-        this.setState({addFundsModalShow: show});
-    }
-
-    handleAddFundsModalClose = () => this.setAddFundsModalShow(false);
-    handleAddFundsModalShow  = () => this.setAddFundsModalShow(true);
-
     getDomain(url) {
         let domain;
         try {
@@ -284,195 +278,125 @@ class CreateAdView extends Component {
         return domain;
     }
 
-    render() {
-        const renderErrorDock     = (name) => {
-            return <span
-                style={{color: 'red'}}>{this.state.errors[name]}</span>;
-        };
-        const renderSubmitMessage = () => {
-            const data = this.state.submitData;
-            if (typeof data.api_status != 'undefined') {
-                return <div
-                    className={data.api_status === 'ok' ? 'success' : 'error'}>{data.api_message}</div>;
-            }
-        };
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
+    }
 
+    render() {
         return (
             <div>
-                <div>
-                    <Modal show={this.state.addFundsModalShow}
-                           onHide={this.handleAddFundsModalClose}
-                           className="addFundsModal">
-                        <Modal.Header closeButton>
-                            <Modal.Title className="col-lg-10">add
-                                funds</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body style={{
-                            paddingBottom: '90px',
-                            paddingLeft  : '0px',
-                            paddingRight : '0px'
-                        }}>
-                            <div className="col-lg-12">
-                                <span className="col-lg-12 center-text">fund your campaign by sending millix to the address below</span>
-                                <span
-                                    className="col-lg-12 center-text">{this.props.wallet.address}</span>
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="outline-primary"
-                                    onClick={this.handleAddFundsModalClose}>
-                                Close
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </div>
+                <ModalView show={this.state.modalShow}
+                           size={'lg'}
+                           on_hide={() => this.changeModalShow(false)}
+                           heading={'add funds'}
+                           body={<div>
+                               <div>fund your campaign by sending millix to the
+                                   address below
+                               </div>
+                               <span>{this.props.wallet.address}</span>
+                           </div>}/>
 
                 <div className="panel panel-filled">
                     <div className={'panel-heading bordered'}>create
                         advertisement
                     </div>
                     <div className="panel-body">
-                        {renderSubmitMessage()}
-                        <div>
-                            the tangled ad platform allows anyone to create an
-                            advertisement without approvals or permission. when
-                            your ad is created it will appear to other tangled
-                            browser users. the amount that you choose to pay for
-                            the ad to appear is paid directly to the consumer
-                            that views the ad.
-                        </div>
-                        <br/>
+                        <div className="section_subtitle">creative</div>
                         <Form onSubmit={this.handleSubmit.bind(this)}>
-                            <FormGroup as={Row} controlId="creative_name">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-14 ">
-                                        creative name:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Form.Control
-                                        type="text"
-                                        className="col-sm-12"
-                                        value={this.state.fields['creative_name']}
-                                        onChange={this.handleInputChange.bind(this, 'creative_name')}
-                                        placeholder=""/>
-                                    {renderErrorDock('creative_name')}
-                                </Col>
+                            <ErrorList
+                                error_list={this.state.error_list}/>
+                            <FormGroup controlId="creative_name"
+                                       className={'form-group'}>
+                                <Form.Label>
+                                    name
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={this.state.fields['creative_name']}
+                                    onChange={this.handleInputChange.bind(this, 'creative_name')}
+                                    placeholder=""/>
                             </FormGroup>
 
-                            <FormGroup as={Row} controlId="category">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        category:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Form.Control
-                                        as="select"
-                                        value={this.state.fields['category']}
-                                        onChange={this.handleInputChange.bind(this, 'category')}
-                                    >
-                                        {
-                                            this.state.categories ? this.state.categories.map((res, i) => (
-                                                <option key={i}
-                                                        value={res.value}>{res.label}</option>
-                                            )) : ''
-                                        }
-                                    </Form.Control>
-                                </Col>
+                            <FormGroup controlId="category"
+                                       className={'form-group'}>
+                                <Form.Label>
+                                    category
+                                </Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    value={this.state.fields['category']}
+                                    onChange={this.handleInputChange.bind(this, 'category')}
+                                >
+                                    {
+                                        this.state.categories ? this.state.categories.map((res, i) => (
+                                            <option key={i}
+                                                    value={res.value}>{res.label}</option>
+                                        )) : ''
+                                    }
+                                </Form.Control>
                             </FormGroup>
 
-                            <FormGroup as={Row} controlId="headline">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        headline:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Form.Control
-                                        type="text"
-                                        className="col-sm-12"
-                                        value={this.state.fields['headline']}
-                                        onChange={this.handleInputChange.bind(this, 'headline')}
-                                        placeholder=""/>
-                                    {renderErrorDock('headline')}
-                                </Col>
+                            <FormGroup controlId="headline"
+                                       className={'form-group'}>
+                                <Form.Label>
+                                    headline
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={this.state.fields['headline']}
+                                    onChange={this.handleInputChange.bind(this, 'headline')}
+                                    placeholder=""/>
                             </FormGroup>
 
-                            <FormGroup as={Row} controlId="deck">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        deck:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Form.Control
-                                        type="text"
-                                        className="col-sm-12"
-                                        value={this.state.fields['deck']}
-                                        onChange={this.handleInputChange.bind(this, 'deck')}
-                                        placeholder=""/>
-                                    {renderErrorDock('deck')}
-                                </Col>
+                            <FormGroup controlId="deck"
+                                       className={'form-group'}>
+                                <Form.Label>
+                                    deck
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={this.state.fields['deck']}
+                                    onChange={this.handleInputChange.bind(this, 'deck')}
+                                    placeholder=""/>
                             </FormGroup>
 
-                            <FormGroup as={Row} controlId="url">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        url:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Form.Control type="text"
-                                                  className="col-sm-12"
-                                                  value={this.state.fields['url']}
-                                                  onChange={this.handleInputChange.bind(this, 'url')}
-                                                  placeholder=""/>
-                                    {renderErrorDock('url')}
-                                </Col>
+                            <FormGroup controlId="url" className={'form-group'}>
+                                <Form.Label>
+                                    url
+                                </Form.Label>
+                                <Form.Control type="text"
+                                              value={this.state.fields['url']}
+                                              onChange={this.handleInputChange.bind(this, 'url')}
+                                              placeholder=""/>
                             </FormGroup>
 
-                            <FormGroup as={Row} className="ad-preview"
+                            <FormGroup className="ad-preview form-group"
                                        controlId="preview">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        preview:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    {(this.state.fields['url'] || this.state.fields['deck'] || this.state.fields['headline']) && (
-                                        <div className="preview-holder"
-                                             aria-readonly="true">
-                                            <div className="row h-50">
-                                                <div
-                                                    id="ads_holder h-50 pt-7"
-                                                    className="col-8 m-0 ads-slider">
+                                <Form.Label>
+                                    preview
+                                </Form.Label>
+                                {(this.state.fields['url'] || this.state.fields['deck'] || this.state.fields['headline']) && (
+                                    <div className="preview-holder"
+                                         aria-readonly="true">
+                                        <div
+                                            className="ads-slider">
                                                     <span>
                                                         <a id="advertisement_headline"
                                                            href={this.state.fields['url'] ? this.state.fields['url'] : ''}
                                                            title={this.state.fields['deck'] ? this.state.fields['deck'] : ''}>{this.state.fields['headline'] ? this.state.fields['headline'] : ''}</a>
                                                     </span>
-                                                    <span>
+                                            <span>
                                                         {(this.state.fields['url'] || this.state.fields['deck']) && (
                                                             <a id="advertisement_deck"
                                                                href={this.state.fields['url'] ? this.getDomain(this.state.fields['url']) : ''}
                                                                title={this.state.fields['deck'] ? this.state.fields['deck'] : ''}>{this.state.fields['deck'] ? this.state.fields['deck'] : ''} - {this.state.fields['url'] ? this.state.fields['url'] : ''}</a>)}</span>
-                                                </div>
-                                            </div>
-                                        </div>)}
-                                </Col>
+                                        </div>
+                                    </div>)}
                             </FormGroup>
 
-                            <Col sm="2"></Col>
-                            <Col sm="10">
-                                <hr/>
-                            </Col>
+                            <hr/>
 
                             {/*<Form.Group as={Row}
                              controlId="target_language">
@@ -598,137 +522,114 @@ class CreateAdView extends Component {
                              />
                              </Col>
                              </Form.Group>*/}
-                            <Form.Group as={Row} controlId="funding">
-                                <Col sm="2">
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        funding:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Col sm="9">
-                                        balance: {this.props.wallet.balance_stable.toLocaleString('en-US')} millix
-                                    </Col>
-                                    <Col sm="3">
-                                        <Button
-                                            variant="outline-primary"
-                                            onClick={this.handleAddFundsModalShow}
-                                        >add funds</Button>
-                                    </Col>
-                                </Col>
+                            <div className="section_subtitle">funding</div>
+                            <Form.Group controlId="funding"
+                                        className={'form-group'}>
+                                <Form.Label>
+                                    balance
+                                </Form.Label>
+                                <div>
+                                    <span>
+                                        {this.props.wallet.balance_stable.toLocaleString('en-US')} mlx
+                                    </span>
+                                    <Button
+                                        variant="outline-primary"
+                                        size={'sm'}
+                                        className={'ms-3'}
+                                        onClick={() => this.changeModalShow()}
+                                    >add funds</Button>
+                                </div>
                             </Form.Group>
 
-                            <Form.Group as={Row} controlId="daliy-budget">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        daily budget:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <Col sm="9" className="no-padding-left">
-                                        {/*temporarily omitted according to requirements from MILLIX-15*/}
-                                        {/*<Col sm="5"*/}
-                                        {/*     className="no-padding-left">*/}
-                                        {/*    <Form.Control*/}
-                                        {/*        type="text"*/}
-                                        {/*        className="col-sm-12"*/}
-                                        {/*        placeholder="$5"*/}
-                                        {/*    />*/}
-                                        {/*</Col>*/}
-                                        {/*<Col className="no-padding-right"*/}
-                                        {/*     sm="1">*/}
-                                        {/*    =*/}
-                                        {/*</Col>*/}
-                                        <Col sm="5"
-                                             className="no-padding-left">
-                                            <Form.Control
-                                                type="text"
-                                                className="col-sm-12"
-                                                onChange={this.handleInputChange.bind(this, 'daily_budget_mlx')}
-                                                ref={c => {
-                                                    this.budget = c;
-                                                    if (this.budget && this.state.fields['daily_budget_mlx'] !== undefined) {
-                                                        this.budget.value = this.state.fields['daily_budget_mlx'].toLocaleString('en-US');
-                                                    }
-                                                }}
-                                                placeholder=""
-                                            />
-                                            {renderErrorDock('daily_budget_mlx')}
-                                        </Col>
-                                    </Col>
-                                </Col>
+                            <Form.Group controlId="daliy-budget"
+                                        className={'form-group'}>
+                                <Form.Label>
+                                    daily budget
+                                </Form.Label>
+                                {/*temporarily omitted according to requirements from MILLIX-15*/}
+                                {/*<Col sm="5"*/}
+                                {/*     className="no-padding-left">*/}
+                                {/*    <Form.Control*/}
+                                {/*        type="text"*/}
+                                {/*        className="col-sm-12"*/}
+                                {/*        placeholder="$5"*/}
+                                {/*    />*/}
+                                {/*</Col>*/}
+                                {/*<Col className="no-padding-right"*/}
+                                {/*     sm="1">*/}
+                                {/*    =*/}
+                                {/*</Col>*/}
+                                <Form.Control
+                                    type="text"
+                                    onChange={this.handleInputChange.bind(this, 'daily_budget_mlx')}
+                                    ref={c => {
+                                        this.budget = c;
+                                        if (this.budget && this.state.fields['daily_budget_mlx'] !== undefined) {
+                                            this.budget.value = this.state.fields['daily_budget_mlx'].toLocaleString('en-US');
+                                        }
+                                    }}
+                                    placeholder=""
+                                />
                             </Form.Group>
 
-                            <Form.Group as={Row} controlId="daliy-budget">
-                                <Col sm="2" className={'align-right'}>
-                                    <Form.Label
-                                        className="text-right col-sm-12">
-                                        bid per impression:
-                                    </Form.Label>
-                                </Col>
-                                <Col sm="10">
-                                    <div>
-                                        <Col sm="9"
-                                             className="no-padding-left">
-                                            {/*temporarily omitted according to requirements from MILLIX-15*/}
-                                            {/*<Col sm="5"*/}
-                                            {/*     className="no-padding-left">*/}
-                                            {/*    <Form.Control*/}
-                                            {/*        type="text"*/}
-                                            {/*        className="col-sm-12"*/}
-                                            {/*        placeholder="$10"*/}
-                                            {/*    />*/}
-                                            {/*</Col>*/}
-                                            {/*<Col*/}
-                                            {/*    className="no-padding-right"*/}
-                                            {/*    sm="1">*/}
-                                            {/*    =*/}
-                                            {/*</Col>*/}
-                                            <Col sm="5"
-                                                 className="no-padding-left">
-                                                <Form.Control
-                                                    type="text"
-                                                    className="col-sm-12"
-                                                    onChange={this.handleInputChange.bind(this, 'bid_per_impressions_mlx')}
-                                                    ref={c => {
-                                                        this.impression = c;
-                                                        if (this.impression && this.state.fields['bid_per_impressions_mlx'] !== undefined) {
-                                                            this.impression.value = this.state.fields['bid_per_impressions_mlx'].toLocaleString('en-US');
-                                                        }
-                                                    }}
-                                                    placeholder=""
-                                                />
-                                                {renderErrorDock('bid_per_impressions_mlx')}
-                                            </Col>
-                                        </Col>
-                                        {/*<Col sm="3">
-                                         <Button
-                                         className="{btn btn-w-md btn-accent}"
-                                         style={{
-                                         width: '100%'
-                                         }}
-                                         >market analysis</Button>
-                                         </Col>*/}
-                                    </div>
-                                    {/*<div>
-                                     <div className="hint">
-                                     other advertisers with similar
-                                     targeting are currently bidding
-                                     between $8 and $14 per thousand
-                                     impressions.
-                                     </div>
-                                     </div>*/}
-                                </Col>
+                            <Form.Group controlId="bid-per-impression"
+                                        className={'form-group'}>
+                                <Form.Label>
+                                    bid per impression
+                                </Form.Label>
+                                <div>
+                                    {/*temporarily omitted according to requirements from MILLIX-15*/}
+                                    {/*<Col sm="5"*/}
+                                    {/*     className="no-padding-left">*/}
+                                    {/*    <Form.Control*/}
+                                    {/*        type="text"*/}
+                                    {/*        className="col-sm-12"*/}
+                                    {/*        placeholder="$10"*/}
+                                    {/*    />*/}
+                                    {/*</Col>*/}
+                                    {/*<Col*/}
+                                    {/*    className="no-padding-right"*/}
+                                    {/*    sm="1">*/}
+                                    {/*    =*/}
+                                    {/*</Col>*/}
+                                    <Form.Control
+                                        type="text"
+                                        className="col-sm-12"
+                                        onChange={this.handleInputChange.bind(this, 'bid_per_impressions_mlx')}
+                                        ref={c => {
+                                            this.impression = c;
+                                            if (this.impression && this.state.fields['bid_per_impressions_mlx'] !== undefined) {
+                                                this.impression.value = this.state.fields['bid_per_impressions_mlx'].toLocaleString('en-US');
+                                            }
+                                        }}
+                                        placeholder=""
+                                    />
+                                    {/*<Col sm="3">
+                                     <Button
+                                     className="{btn btn-w-md btn-accent}"
+                                     style={{
+                                     width: '100%'
+                                     }}
+                                     >market analysis</Button>
+                                     </Col>*/}
+                                </div>
+                                {/*<div>
+                                 <div className="hint">
+                                 other advertisers with similar
+                                 targeting are currently bidding
+                                 between $8 and $14 per thousand
+                                 impressions.
+                                 </div>
+                                 </div>*/}
                             </Form.Group>
-                            <div className={'submit-row'}
-                                 style={{
-                                     display       : 'flex',
-                                     justifyContent: 'center'
-                                 }}>
+                            <div
+                                style={{
+                                    display       : 'flex',
+                                    justifyContent: 'center'
+                                }}>
                                 <Button
                                     variant="outline-primary"
-                                    type="submit">submit</Button>
+                                    type="submit">continue</Button>
                             </div>
 
                         </Form>

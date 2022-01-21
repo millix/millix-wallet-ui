@@ -16,3 +16,9 @@
     border-color: $color-primary;
   }
 }
+
+.btn-outline-primary:disabled, .btn-outline-primary.disabled {
+  background-color: $color-input-bg;
+  color: $color-body-font;
+  border-color: $color-input-bg;
+}

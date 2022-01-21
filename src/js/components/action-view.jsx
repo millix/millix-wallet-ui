@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Button, Col, Row} from 'react-bootstrap';
 import fs from 'fs';
-import {confirmDialog} from 'primereact/confirmdialog';
 import API from '../api';
+import ModalView from './utils/modal-view';
 
 const styles = {
     centered: {
@@ -22,7 +22,8 @@ class ActionView extends Component {
         let now    = Date.now();
         this.state = {
             fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now
+            fileKeyImport: 'import_' + now,
+            modalShow    : false
         };
     }
 
@@ -115,24 +116,28 @@ class ActionView extends Component {
     }
 
     resetTransactionValidation() {
-        confirmDialog({
-            message    : 'it will force your node to revalidate all your transactions. it is safe, but will take some time. are you sure you want to proceed?',
-            header     : 'confirmation',
-            acceptLabel: 'yes',
-            rejectLabel: 'no',
-            className  : 'confirmation_content_without_icon',
-            accept     : () => {
-                API.resetTransactionValidation().then(_ => {
-                    this.props.history.push('/unspent-transaction-output-list/pending');
-                });
-            }
+        API.resetTransactionValidation().then(_ => {
+            this.props.history.push('/unspent-transaction-output-list/pending');
         });
+    }
 
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
     }
 
     render() {
         return (
             <div>
+                <ModalView show={this.state.modalShow}
+                           size={'lg'}
+                           on_hide={() => this.changeModalShow(false)}
+                           heading={'reset validation'}
+                           on_accept={() => this.resetTransactionValidation()}
+                           body={<div>it will force your node to revalidate all
+                               your transactions. it is safe, but will take some
+                               time. are you sure you want to proceed?</div>}/>
                 <Row>
                     <Col>
                         {/*<div className={'panel panel-filled'}>
@@ -184,12 +189,11 @@ class ActionView extends Component {
                                     </ul>
                                 </div>
 
-                                <Row className="mb-3">
-                                    <Col style={styles.centered}
-                                         className={'submit-row'}>
+                                <Row>
+                                    <Col style={styles.centered}>
                                         <Button
                                             variant="outline-primary"
-                                            onClick={() => this.resetTransactionValidation()}>
+                                            onClick={() => this.changeModalShow()}>
                                             reset validation
                                         </Button>
                                     </Col>

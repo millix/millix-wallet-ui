@@ -10,18 +10,23 @@ class DatatableActionButtonView extends Component {
         super(props);
     }
 
+    onClickHandler() {
+        if (this.props.history_path && this.props.history_state) {
+            this.props.history.push(this.props.history_path, this.props.history_state);
+        }
+    }
+
     render() {
         let icon = 'pencil-alt';
         if (this.props.icon) {
             icon = this.props.icon;
         }
 
-        let props = this.props;
         return (
             <Button
                 variant="outline-default"
                 className={'btn-xs icon_only ms-auto'}
-                onClick={() => props.history.push(this.props.history_path, this.props.history_state)}>
+                onClick={() => this.onClickHandler()}>
                 <FontAwesomeIcon
                     icon={icon}
                     size="1x"/>

@@ -65,7 +65,9 @@ class ReportIssueView extends Component {
                                     <li>describe expected behavior</li>
                                     <li>add information provided on this page
                                     </li>
-                                    <li>send it to us on discord</li>
+                                    <li>send it to us on <a
+                                        href={'https://discord.gg/HgZqav7v66'}
+                                        target={'_blank'}>discord</a></li>
                                 </ul>
                             </div>
                             <hr/>

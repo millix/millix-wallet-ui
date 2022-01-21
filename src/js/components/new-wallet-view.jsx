@@ -5,47 +5,39 @@ import {Button, Col, Container, Row} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import WalletCreatePasswordView from './utils/wallet-create-password-view';
-import MnemonicView from "./utils/mnemonic-view";
-import MnemonicConfirmView from "./utils/mnemonic-confirm-view";
-import NewWalletStepProgressView from "./utils/new-wallet-step-progress-view";
+import MnemonicView from './utils/mnemonic-view';
+import MnemonicConfirmView from './utils/mnemonic-confirm-view';
+import NewWalletStepProgressView from './utils/new-wallet-step-progress-view';
 import WalletCreateInfoView from './utils/wallet-create-info-view';
-import {unlockWallet} from "../redux/actions";
+import {unlockWallet} from '../redux/actions';
 
 const STATUS = {
-    NEW_WALLET_PASSWORD: 1,
-    NEW_WALLET_MNEMONIC: 2,
+    NEW_WALLET_PASSWORD        : 1,
+    NEW_WALLET_MNEMONIC        : 2,
     NEW_WALLET_CONFIRM_MNEMONIC: 3,
-    NEW_WALLET_CREATED: 4
+    NEW_WALLET_CREATED         : 4
 };
 
-const styles = {
-    centered: {
-        display: 'flex',
-        justifyContent: 'center'
-    }
-};
 
 class NewWalletView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mnemonic: undefined,
+            mnemonic             : undefined,
             mnemonic_is_confirmed: false,
-            password_new: undefined,
-            password_confirm: undefined,
-            password_valid: false,
-            wallet_info: undefined,
-            status: STATUS.NEW_WALLET_PASSWORD
+            password_new         : undefined,
+            password_confirm     : undefined,
+            password_valid       : false,
+            wallet_info          : undefined,
+            status               : STATUS.NEW_WALLET_PASSWORD
         };
-        this.progressStepBackwards = null;
-        this.progressStepForward = null;
     }
 
     componentDidMount() {
         API.getRandomMnemonic()
-            .then(data => {
-                this.setState({mnemonic: data.mnemonic.split(' ')});
-            });
+           .then(data => {
+               this.setState({mnemonic: data.mnemonic.split(' ')});
+           });
     }
 
     verifyPassword() {
@@ -62,14 +54,32 @@ class NewWalletView extends Component {
     }
 
     createNewWallet() {
-        API.newSessionWithPhrase(this.state.password_confirm, this.state.mnemonic.join(" "))
-            .then(data => {
-                this.setState({wallet_info: data.wallet});
-            });
+        API.newSessionWithPhrase(this.state.password_confirm, this.state.mnemonic.join(' '))
+           .then(data => {
+               this.setState({wallet_info: data.wallet});
+           });
+    }
+
+    getStepName() {
+        const result_step = [
+            {
+                label: 'create password'
+            },
+            {
+                label: 'save mnemonic phrase'
+            },
+            {
+                label: 'confirm mnemonic phrase'
+            },
+            {
+                label: 'finish'
+            }
+        ];
+
+        return result_step[this.state.status - 1].label;
     }
 
     createWalletNextStep() {
-        this.progressStepForward();
         switch (this.state.status) {
             case STATUS.NEW_WALLET_PASSWORD:
                 this.setState({status: STATUS.NEW_WALLET_MNEMONIC});
@@ -90,15 +100,16 @@ class NewWalletView extends Component {
     }
 
     createWalletPrevStep() {
-        this.progressStepBackwards();
         switch (this.state.status) {
             case STATUS.NEW_WALLET_CONFIRM_MNEMONIC:
                 this.setState({status: STATUS.NEW_WALLET_MNEMONIC});
                 break;
             case STATUS.NEW_WALLET_MNEMONIC:
                 this.setState({
-                    status: STATUS.NEW_WALLET_PASSWORD, password_confirm: false,
-                    password_new: undefined, password_valid: undefined
+                    status          : STATUS.NEW_WALLET_PASSWORD,
+                    password_confirm: false,
+                    password_new    : undefined,
+                    password_valid  : undefined
                 });
                 break;
             default:
@@ -110,53 +121,70 @@ class NewWalletView extends Component {
             return <Redirect to={{pathname: '/'}}/>;
         }
 
-        const {status} = this.state;
+        const {status}             = this.state;
+        const next_button_disabled = !this.state.password_valid ||
+                                     (this.state.status === STATUS.NEW_WALLET_MNEMONIC && !this.state.mnemonic) ||
+                                     (this.state.status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && !this.state.mnemonic_is_confirmed);
+
+        let back_button = <Button variant="outline-primary" onClick={() => {
+            this.props.history.replace('/unlock-wallet/');
+        }}>
+            back
+        </Button>;
+        if (this.state.status !== STATUS.NEW_WALLET_PASSWORD &&
+            this.state.status !== STATUS.NEW_WALLET_CREATED) {
+            back_button = <Button
+                variant="outline-default"
+                onClick={() => this.createWalletPrevStep()}>back</Button>;
+        }
+
         return (
             <Container style={{
-                marginTop: 50,
+                marginTop  : 50,
                 paddingLeft: 25
             }}>
-                <Row className="mb-3">
-                    <Button variant='outline-primary' onClick={() => {
-                        this.props.history.replace('/unlock-wallet/');
-                    }}>
-                        <FontAwesomeIcon icon="fingerprint"
-                                         size="1x"/> unlock
-                    </Button>
-                </Row>
                 <>
-                    <div style={{marginBottom: 40}}>
-                        <NewWalletStepProgressView stepBackwards={ref => this.progressStepBackwards = ref}
-                                                   stepForward={ref => this.progressStepForward = ref}/>
+                    <div className={'panel panel-filled'}>
+                        <div className={'panel-heading bordered'}>
+                            create new wallet
+                        </div>
+                        <div className={'panel-body'}>
+                            <Row>
+                                <Col>
+                                    <div className={'section_subtitle'}>
+                                        step {this.state.status} of {Object.keys(STATUS).length}. {this.getStepName()}
+                                    </div>
+                                    <div>
+                                        {this.state.mnemonic && status === STATUS.NEW_WALLET_MNEMONIC && (
+                                            <MnemonicView
+                                                mnemonic={this.state.mnemonic}/>)}
+                                        {this.state.mnemonic && status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && (
+                                            <MnemonicConfirmView
+                                                mnemonic={this.state.mnemonic}
+                                                onChange={isConfirmed => this.setState({mnemonic_is_confirmed: isConfirmed})}/>)}
+                                        {this.state.status === STATUS.NEW_WALLET_PASSWORD && (
+                                            <WalletCreatePasswordView
+                                                notConfirmed={!this.state.password_valid}
+                                                onPassword={this.onPassword.bind(this)}
+                                                onConfirmPassword={this.onConfirmPassword.bind(this)}/>)}
+                                        {this.state.wallet_info && this.state.status === STATUS.NEW_WALLET_CREATED && (
+                                            <WalletCreateInfoView
+                                                wallet={this.state.wallet_info}/>
+                                        )}
+                                    </div>
+                                    <div
+                                        className={'d-flex justify-content-center'}>
+                                        <div className={'me-2'}>
+                                            {back_button}
+                                        </div>
+                                        <Button variant="outline-primary"
+                                                disabled={next_button_disabled}
+                                                onClick={() => this.createWalletNextStep()}>continue</Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
-                    {this.state.mnemonic && status === STATUS.NEW_WALLET_MNEMONIC && (
-                        <MnemonicView mnemonic={this.state.mnemonic}/>)}
-                    {this.state.mnemonic && status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && (
-                        <MnemonicConfirmView mnemonic={this.state.mnemonic}
-                                             onChange={isConfirmed => this.setState({mnemonic_is_confirmed: isConfirmed})}/>)}
-                    {this.state.status === STATUS.NEW_WALLET_PASSWORD && (
-                        <WalletCreatePasswordView notConfirmed={!this.state.password_valid}
-                                                  onPassword={this.onPassword.bind(this)}
-                                                  onConfirmPassword={this.onConfirmPassword.bind(this)}/>)}
-                    {this.state.wallet_info && this.state.status === STATUS.NEW_WALLET_CREATED && (
-                        <WalletCreateInfoView wallet={this.state.wallet_info}/>
-                    )}
-                    <Row>
-                        <Col style={styles.centered}>
-                            {this.state.status !== STATUS.NEW_WALLET_PASSWORD &&
-                            this.state.status !== STATUS.NEW_WALLET_CREATED && (<div className={'mr-2'}>
-                                <Button variant='outline-primary'
-                                        onClick={() => this.createWalletPrevStep()}>back</Button>
-                            </div>)}
-                            <Button variant='outline-primary'
-                                    disabled={!this.state.password_valid ||
-                                    (this.state.status === STATUS.NEW_WALLET_MNEMONIC && !this.state.mnemonic) ||
-                                    (this.state.status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && !this.state.mnemonic_is_confirmed)}
-                                    onClick={() => this.createWalletNextStep()}>{this.state.status === STATUS.NEW_WALLET_PASSWORD ? 'next'
-                                : this.state.status === STATUS.NEW_WALLET_MNEMONIC ? 'I have saved it' :
-                                    this.state.status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC ? 'create wallet' : 'continue'}</Button>
-                        </Col>
-                    </Row>
                 </>
             </Container>
         );

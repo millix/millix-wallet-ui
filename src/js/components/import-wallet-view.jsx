@@ -36,9 +36,6 @@ class ImportWalletView extends Component {
             wallet_info          : undefined,
             status               : STATUS.NEW_WALLET_MNEMONIC
         };
-
-        this.progressStepBackwards = null;
-        this.progressStepForward   = null;
     }
 
     componentDidMount() {
@@ -65,7 +62,6 @@ class ImportWalletView extends Component {
     }
 
     createWalletNextStep() {
-        this.progressStepForward();
         switch (this.state.status) {
             case STATUS.NEW_WALLET_MNEMONIC:
                 this.setState({
@@ -88,7 +84,6 @@ class ImportWalletView extends Component {
     }
 
     createWalletPrevStep() {
-        this.progressStepBackwards();
         switch (this.state.status) {
             case STATUS.NEW_WALLET_PASSWORD:
                 this.setState({status: STATUS.NEW_WALLET_MNEMONIC});
@@ -96,9 +91,40 @@ class ImportWalletView extends Component {
         }
     }
 
+    getStepName() {
+        const result_step = [
+            {
+                label: 'import mnemonic phrase'
+            },
+            {
+                label: 'password'
+            },
+            {
+                label: 'finish'
+            }
+        ];
+
+        return result_step[this.state.status - 1].label;
+    }
+
     render() {
         if (this.props.wallet.unlocked) {
             return <Redirect to={{pathname: '/'}}/>;
+        }
+
+        const next_button_disabled = !this.state.mnemonic_is_confirmed ||
+                                     (this.state.status === STATUS.NEW_WALLET_PASSWORD && !this.state.password_valid);
+
+        let back_button = <Button variant="outline-primary" onClick={() => {
+            this.props.history.replace('/unlock-wallet/');
+        }}>
+            back
+        </Button>;
+        if (this.state.status !== STATUS.NEW_WALLET_MNEMONIC &&
+            this.state.status !== STATUS.NEW_WALLET_CREATED) {
+            back_button = <Button
+                variant="outline-primary"
+                onClick={() => this.createWalletPrevStep()}>back</Button>;
         }
 
         const {status} = this.state;
@@ -107,51 +133,50 @@ class ImportWalletView extends Component {
                 marginTop  : 50,
                 paddingLeft: 25
             }}>
-                <Row className="mb-3">
-                    <Button variant='outline-primary' onClick={() => {
-                        this.props.history.replace('/unlock-wallet/');
-                    }}>
-                        <FontAwesomeIcon icon="fingerprint"
-                                         size="1x"/> unlock
-                    </Button>
-                </Row>
                 <>
-                    <div style={{marginBottom: 40}}>
-                        <ImportWalletStepProgressView
-                            stepBackwards={ref => this.progressStepBackwards = ref}
-                            stepForward={ref => this.progressStepForward = ref}/>
+                    <div className={'panel panel-filled'}>
+                        <div className={'panel-heading bordered'}>
+                            create new wallet
+                        </div>
+                        <div className={'panel-body'}>
+                            <Row>
+                                <Col>
+                                    <div className={'section_subtitle'}>
+                                        step {this.state.status} of {Object.keys(STATUS).length}. {this.getStepName()}
+                                    </div>
+                                    <div>
+                                        {status === STATUS.NEW_WALLET_MNEMONIC && (
+                                            <MnemonicConfirmView
+                                                mnemonic={new Array(24).fill('')}
+                                                importNew={true}
+                                                onChange={(isConfirmed, mnemonic) => this.setState({
+                                                    mnemonic_is_confirmed: isConfirmed,
+                                                    mnemonic
+                                                })}/>)}
+                                        {this.state.mnemonic_is_confirmed && this.state.status === STATUS.NEW_WALLET_PASSWORD && (
+                                            <WalletCreatePasswordView
+                                                notConfirmed={!this.state.password_valid}
+                                                walletImport={true}
+                                                onPassword={this.onPassword.bind(this)}
+                                                onConfirmPassword={this.onConfirmPassword.bind(this)}/>)}
+                                        {this.state.wallet_info && this.state.status === STATUS.NEW_WALLET_CREATED && (
+                                            <WalletCreateInfoView
+                                                wallet={this.state.wallet_info}/>
+                                        )}
+                                    </div>
+                                    <div
+                                        className={'d-flex justify-content-center'}>
+                                        <div className={'me-2'}>
+                                            {back_button}
+                                        </div>
+                                        <Button variant="outline-primary"
+                                                disabled={next_button_disabled}
+                                                onClick={() => this.createWalletNextStep()}>continue</Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
-                    {status === STATUS.NEW_WALLET_MNEMONIC && (
-                        <MnemonicConfirmView mnemonic={new Array(24).fill('')}
-                                             importNew={true}
-                                             onChange={(isConfirmed, mnemonic) => this.setState({
-                                                 mnemonic_is_confirmed: isConfirmed,
-                                                 mnemonic
-                                             })}/>)}
-                    {this.state.mnemonic_is_confirmed && this.state.status === STATUS.NEW_WALLET_PASSWORD && (
-                        <WalletCreatePasswordView
-                            notConfirmed={!this.state.password_valid}
-                            walletImport={true}
-                            onPassword={this.onPassword.bind(this)}
-                            onConfirmPassword={this.onConfirmPassword.bind(this)}/>)}
-                    {this.state.wallet_info && this.state.status === STATUS.NEW_WALLET_CREATED && (
-                        <WalletCreateInfoView wallet={this.state.wallet_info}/>
-                    )}
-                    <Row>
-                        <Col style={styles.centered}>
-                            {this.state.status !== STATUS.NEW_WALLET_MNEMONIC &&
-                             this.state.status !== STATUS.NEW_WALLET_CREATED && (
-                                 <div className={'mr-2'}>
-                                     <Button variant='outline-primary'
-                                             onClick={() => this.createWalletPrevStep()}>back</Button>
-                                 </div>)}
-                            <Button variant='outline-primary'
-                                    disabled={!this.state.mnemonic_is_confirmed ||
-                                              (this.state.status === STATUS.NEW_WALLET_PASSWORD && !this.state.password_valid)}
-                                    onClick={() => this.createWalletNextStep()}>{this.state.status === STATUS.NEW_WALLET_PASSWORD
-                                                                                 || this.state.status === STATUS.NEW_WALLET_MNEMONIC ? 'next' : 'continue'}</Button>
-                        </Col>
-                    </Row>
                 </>
             </Container>
         );

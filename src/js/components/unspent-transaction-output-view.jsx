@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Row} from 'react-bootstrap';
+import {Button, Col, Row} from 'react-bootstrap';
 import moment from 'moment';
-import {walletUpdateTransactions} from '../redux/actions';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -14,18 +14,23 @@ class UnspentTransactionOutputView extends Component {
         super(props);
         this.updaterHandler = undefined;
         this.state          = {
-            transaction_output_list: [],
-            stable                 : 1
+            transaction_output_list   : [],
+            stable                    : 1,
+            datatable_reload_timestamp: ''
         };
     }
 
     componentDidMount() {
+        moment.relativeTimeThreshold('ss', -1); // required to get diff in
+        // seconds instead of "a few
+        // seconds ago"
+
         const stable_value_new = this.getStableFromUrl();
         this.setState({
             stable: stable_value_new
         }, this.reloadDatatable);
 
-        this.updaterHandler = setInterval(() => this.reloadDatatable(), 5000);
+        this.updaterHandler = setInterval(() => this.reloadDatatable(), 60000);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,7 +68,8 @@ class UnspentTransactionOutputView extends Component {
                     history_state={[output]}/>
             }));
             this.setState({
-                transaction_output_list: rows
+                transaction_output_list   : rows,
+                datatable_reload_timestamp: new Date()
             });
         });
     }
@@ -82,6 +88,24 @@ class UnspentTransactionOutputView extends Component {
                         transaction output list
                     </div>
                     <div className={'panel-body'}>
+                        <div className={'datatable_action_row'}>
+                            <Col md={4}>
+                                <Button variant="outline-primary"
+                                        className={'btn-sm refresh_button'}
+                                        onClick={() => this.reloadDatatable()}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={'sync'}
+                                        size="1x"/>
+                                    refresh
+                                </Button>
+                            </Col>
+                            <Col md={4} className={'datatable_refresh_ago'}>
+                            <span>
+                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
+                            </span>
+                            </Col>
+                        </div>
                         <Row id={'txhistory'}>
                             <DatatableView
                                 value={this.state.transaction_output_list}
@@ -129,7 +153,4 @@ export default connect(
     state => ({
         wallet: state.wallet
     }),
-    {
-        walletUpdateTransactions
-    }
 )(withRouter(UnspentTransactionOutputView));

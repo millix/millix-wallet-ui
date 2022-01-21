@@ -126,3 +126,26 @@ body .section_subtitle {
 .max-w-100 {
   max-width: 100%;
 }
+
+.help_icon {
+  margin-left: 0.3rem;
+  cursor: pointer;
+
+  &:hover {
+    color: $color-secondary;
+  }
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.popover-body {
+  ul {
+    padding-left: 1rem;
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

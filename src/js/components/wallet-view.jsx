@@ -8,17 +8,7 @@ import API from '../api/index';
 import _ from 'lodash';
 import moment from 'moment';
 import ErrorList from './utils/error-list-view';
-
-const styles = {
-    centered: {
-        display       : 'flex',
-        justifyContent: 'center'
-    },
-    left    : {
-        display       : 'flex',
-        justifyContent: 'left'
-    }
-};
+import HelpIconView from './utils/help-icon-view';
 
 
 class WalletView extends Component {
@@ -92,10 +82,10 @@ class WalletView extends Component {
                if (!data.is_valid) {
                    error_list.push({
                        name   : 'address_error',
-                       message: 'invalid address. please, set a correct value.'
+                       message: 'invalid address'
                    });
                    this.setState({error_list: error_list});
-                   return Promise.reject('invalid transaction');
+                   return Promise.reject('validation_error');
                }
 
                const {
@@ -107,16 +97,17 @@ class WalletView extends Component {
                let amount;
                try {
                    amount = this._getAmount(this.amount.value);
+                   console.log(amount);
                }
                catch (e) {
                    error_list.push({
                        name   : 'amountError',
-                       message: 'invalid amount. please, set a correct value.'
+                       message: 'invalid amount'
                    });
                    this.setState({
                        error_list: error_list
                    });
-                   return Promise.reject('invalid transaction');
+                   return Promise.reject('validation_error');
                }
 
                let fees;
@@ -131,7 +122,7 @@ class WalletView extends Component {
                    this.setState({
                        error_list: error_list
                    });
-                   return Promise.reject('invalid transaction');
+                   return Promise.reject('validation_error');
                }
 
                this.setState({
@@ -171,24 +162,32 @@ class WalletView extends Component {
            })
            .catch((e) => {
                let sendTransactionErrorMessage;
-               if (e.api_message) {
-                   const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                   sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
-               }
-               else if (e === 'insufficient_balance') {
-                   sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
-               }
-               else if (e === 'transaction_send_interrupt') {
-                   sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
-               }
-               else {
-                   sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
-               }
 
-               error_list.push({
-                   name   : 'sendTransactionError',
-                   message: sendTransactionErrorMessage
-               });
+               if (e !== 'validation_error') {
+                   if (e.api_message) {
+                       const match = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
+                       if (match.groups.message === 'maximum allowed number of inputs can not fund the transaction') {
+                           sendTransactionErrorMessage = 'your transaction tries to use too many outputs. please try to send smaller amount or aggregate manually by sending smaller amounts to yourself.';
+                       }
+                       else {
+                           sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
+                       }
+                   }
+                   else if (e === 'insufficient_balance') {
+                       sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
+                   }
+                   else if (e === 'transaction_send_interrupt') {
+                       sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
+                   }
+                   else {
+                       sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
+                   }
+
+                   error_list.push({
+                       name   : 'sendTransactionError',
+                       message: sendTransactionErrorMessage
+                   });
+               }
                this.setState({error_list: error_list});
            });
     }
@@ -226,7 +225,9 @@ class WalletView extends Component {
                                         <thead>
                                         <tr>
                                             <th width="50%">available</th>
-                                            <th width="50%">pending</th>
+                                            <th width="50%">pending
+                                                <HelpIconView
+                                                    help_item_name={'pending_balance'}/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -274,9 +275,9 @@ class WalletView extends Component {
                             <div className={'panel-body'}>
                                 <ErrorList
                                     error_list={this.state.error_list}/>
-                                <Row className="mb-3">
+                                <Row>
                                     <Form>
-                                        <Col style={styles.centered}>
+                                        <Col className={'d-flex justify-content-center'}>
                                             {this.state.sendTransactionError && (
                                                 <div className={'form-error'}>
                                                     <span>{this.state.sendTransactionErrorMessage}</span>
@@ -318,7 +319,7 @@ class WalletView extends Component {
                                                                   onChange={this.handleAmountValueChange.bind(this)}
                                                                   disabled={this.state.feesLocked}/>
                                                     <button
-                                                        className="btn btn-outline-input-group-addon"
+                                                        className="btn btn-outline-input-group-addon icon_only"
                                                         type="button"
                                                         onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
                                                         <FontAwesomeIcon
@@ -329,9 +330,8 @@ class WalletView extends Component {
                                                 </Col>
                                             </Form.Group>
                                         </Col>
-                                        <Col style={styles.centered}>
-                                            <Form.Group as={Row}
-                                                        className={'submit-row'}>
+                                        <Col className={'d-flex justify-content-center'}>
+                                            <Form.Group as={Row}>
                                                 <Button
                                                     variant="outline-primary"
                                                     onClick={this.send.bind(this)}
@@ -356,18 +356,15 @@ class WalletView extends Component {
                             <div className={'panel-heading bordered'}>addresses
                             </div>
                             <div className={'panel-body'}>
-                                <Row className="mb-3 mt-3">
-                                    <Col className="pr-0" style={{
-                                        display       : 'flex',
-                                        justifyContent: 'flex-end'
-                                    }}>
-                                        <Button variant="outline-primary"
-                                                className={'btn-xs'}
-                                                onClick={() => this.getNextAddress()}>
-                                            generate address
-                                        </Button>
-                                    </Col>
-                                </Row>
+                                <div className={'datatable_action_row'}>
+                                    <Button variant="outline-primary"
+                                            className={'btn-sm create_button'}
+                                            onClick={() => this.getNextAddress()}>
+                                        <FontAwesomeIcon
+                                            icon={'plus-circle'}
+                                            size="1x"/>generate address
+                                    </Button>
+                                </div>
                                 <Row>
                                     <DatatableView
                                         value={this.state.addressList}
