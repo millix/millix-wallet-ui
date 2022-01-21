@@ -67,8 +67,7 @@ class PeerInfoView extends Component {
                         justifyContent: 'flex-start',
                         marginLeft    : 10
                     }}>
-                        <Button variant="light"
-                                className={'btn btn-w-md btn-accent'}
+                        <Button variant='outline-primary'
                                 onClick={this.props.history.goBack}>
                             <FontAwesomeIcon icon="arrow-circle-left"
                                              size="2x"/>
@@ -82,16 +81,14 @@ class PeerInfoView extends Component {
                     </Col>
                 </Row>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>peer attributes</div>
-                    <hr className={'hrPanel'}/>
+                    <div className={'panel-heading bordered'}>peer attributes</div>
                     <div className={'panel-body'}>
 
                         {simpleAttributes}
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>shard attributes</div>
-                    <hr className={'hrPanel'}/>
+                    <div className={'panel-heading bordered'}>shard attributes</div>
                     <div className={'panel-body'}>
                         <Table striped bordered hover variant="dark">
                             <thead>

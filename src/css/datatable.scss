@@ -1,0 +1,116 @@
+.datatable_action_row {
+  align-items: center;
+  display: flex;
+  margin-bottom: 1rem;
+  width: 100%;
+
+  > div {
+    display: flex;
+  }
+
+  .datatable_refresh_ago {
+    > * {
+      margin: 0 auto;
+    }
+  }
+
+  .create_button {
+    margin-left: auto;
+  }
+}
+
+.p-datatable-table {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr {
+  background-color: $table-bg;
+}
+
+.p-datatable .p-datatable-thead > tr:hover,
+.p-datatable .p-datatable-tbody > tr:hover,
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd:hover {
+  background-color: $table-hover-bg;
+}
+
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td {
+  border: $border-width solid $border-color;
+  padding: 0.5rem 1rem;
+}
+
+.p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
+  border-width: $border-width;
+}
+
+.p-datatable .p-sortable-column:focus {
+  box-shadow: none;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  color: inherit;
+}
+
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd {
+  background-color: $table-striped-bg;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: $body-color;
+  margin-left: auto;
+}
+
+.p-datatable .p-sortable-column.p-highlight:not(.p-sortable-disabled):hover .p-sortable-column-icon,
+.p-datatable .p-sortable-column.p-highlight:not(.p-sortable-disabled):hover,
+.p-datatable .p-sortable-column:not(.p-highlight):not(.p-sortable-disabled):hover,
+.p-datatable .p-sortable-column.p-highlight,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+  color: $color-white;
+  background: inherit;
+}
+
+.p-paginator {
+  background: transparent;
+  color: inherit;
+  border: none;
+  padding: 0;
+}
+
+.p-paginator .paginator-dropdown-wrapper {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.p-paginator .p-dropdown {
+  margin: 0 0.3rem;
+}
+
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last,
+.p-paginator .p-paginator-pages .p-paginator-page {
+  border: $border-width solid $border-color;
+  color: inherit;
+  min-width: 0;
+  margin: 0;
+  padding: 0.1rem 0.7rem;
+}
+
+.p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover,
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: $color-default-item-highlight-bg;
+  border-color: $color-default-item-highlight-border;
+  color: $color-default-item-highlight-font;
+}
+
+.p-paginator .p-link:focus {
+  box-shadow: none;
+}

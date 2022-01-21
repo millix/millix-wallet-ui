@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Row} from 'react-bootstrap';
+import {Button, Col, Row, Table} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {updateNetworkState} from '../redux/actions';
+import HelpIconView from './utils/help-icon-view';
 
 
 class StatsView extends Component {
@@ -11,29 +12,35 @@ class StatsView extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-    }
-
     render() {
+        let is_public = '';
+        if (this.props.network.node_is_public === 'unknown') {
+            is_public = 'analyzing your network connection';
+        }
+        else if (this.props.network.node_is_public === true) {
+            is_public = 'your node is public';
+        }
+        else {
+            is_public = 'your node is not public and is unlikely to receive transaction fees. use port forwarding on your router to make your node public.';
+        }
+
         const props = this.props;
         return (<Col md="12">
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading'}>status
+                <div className={'panel-heading bordered'}>status summary
                 </div>
-                <hr className={'hrPanel'}/>
                 <div className={'panel-body'}>
                     {props.config.MODE_TEST_NETWORK && (<Row>
                         <Col className="pr-0"
                              style={{textAlign: 'left'}}>
-                            <small>millix testnet</small>
+                            <span>millix testnet</span>
                             <hr/>
                         </Col>
                     </Row>)}
                     {!!props.wallet.version_available && !(props.config.NODE_MILLIX_VERSION === props.wallet.version_available || props.config.NODE_MILLIX_VERSION !== (props.wallet.version_available + '-tangled')) &&
                      (<Row>
-                         <Col className="pr-0"
-                              style={{textAlign: 'right'}}>
-                             <Button variant="link"
+                         <Col style={{textAlign: 'right'}}>
+                             <Button variant="outline-primary"
                                      onClick={() => {
                                      }}
                                      style={{
@@ -45,80 +52,128 @@ class StatsView extends Component {
                                  v.{props.wallet.version_available} !</Button>
                          </Col>
                      </Row>)}
+
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>{props.network.node_is_public === 'unknown' ? 'analyzing your network connection' : props.network.node_is_public === true ? 'your node is public and is eligible to receive transaction fees' : 'your node is not public and is not eligible to receive transaction fees.  use port forwarding on your router to make your node public.'}</small>
+                        <Col>
+                            <div className={'section_subtitle'}>
+                                node
+                            </div>
+                            <Table striped bordered hover className={'mb-3'}>
+                                <tbody>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        node id
+                                    </td>
+                                    <td>
+                                        {props.network.node_id}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        is public <HelpIconView
+                                        help_item_name={'node_is_public'}/>
+                                    </td>
+                                    <td>
+                                        {is_public}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </Table>
                         </Col>
                     </Row>
-                    <br/>
+
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>event log
-                                size: {props.log.size.toLocaleString('en-US')}</small>
+                        <Col>
+                            <div className={'section_subtitle'}>
+                                data
+                            </div>
+                            <Table striped bordered hover className={'mb-3'}>
+                                <tbody>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        transaction
+                                        count
+                                    </td>
+                                    <td>
+                                        {props.wallet.transaction_count.toLocaleString('en-US')}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        pending
+                                        transaction
+                                        count
+                                    </td>
+                                    <td>
+                                        {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        event log size
+                                    </td>
+                                    <td>
+                                        {props.log.size.toLocaleString('en-US')}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        backlog size
+                                    </td>
+                                    <td>
+                                        {props.backlog.size.toLocaleString('en-US')}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </Table>
                         </Col>
                     </Row>
+
                     <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>backlog
-                                size: {props.backlog.size.toLocaleString('en-US')}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>pending
-                                transaction
-                                count: {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>transaction
-                                count: {props.wallet.transaction_count.toLocaleString('en-US')}</small>
-                        </Col>
-                    </Row>
-                    <br/>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node id: {props.network.node_id}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node public
-                                address: {props.network.node_public_ip.toLocaleString('en-US') + ':' + props.network.node_port}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>node bind
-                                ip: {props.network.node_bind_ip.toLocaleString('en-US')}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <small>local network
-                                addresses: {props.network.node_network_addresses.join(', ')}</small>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="pr-0"
-                             style={{textAlign: 'left'}}>
-                            <Button variant="link"
-                                    onClick={() => props.history.push('/peers')}
-                                    style={{
-                                        padding    : 0,
-                                        borderWidth: '0rem'
-                                    }}>
-                                <small>peers: {props.network.connections}</small></Button>
+                        <Col>
+                            <div className={'section_subtitle'}>
+                                network
+                            </div>
+                            <Table striped bordered hover>
+                                <tbody>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        node public address
+                                    </td>
+                                    <td>
+                                        {props.network.node_public_ip.toLocaleString('en-US') + ':' + props.network.node_port}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        node bind ip
+                                    </td>
+                                    <td>
+                                        {props.network.node_bind_ip.toLocaleString('en-US')}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        <a className={''}
+                                           onClick={() => props.history.push('/peers')}>
+                                            peers
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {props.network.connections}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        local network
+                                        addresses
+                                    </td>
+                                    <td>
+                                        {props.network.node_network_addresses.join(', ')}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </Table>
                         </Col>
                     </Row>
                 </div>

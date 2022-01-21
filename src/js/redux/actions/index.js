@@ -116,7 +116,6 @@ export function updateTransactionDetails(transactionID, shardID) {
 }
 
 export function walletReady(payload) {
-    console.log('wallet ready', payload);
     return {
         type: WALLET_READY,
         payload

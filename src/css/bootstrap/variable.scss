@@ -1,0 +1,52 @@
+@import '../variable';
+
+$body-bg: $color-body-bg;
+$body-color: $color-body-font;
+
+$primary: $color-primary;
+$link-color: $color-secondary;
+
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+$success: $color-green;
+$warning: $color-yellow;
+$danger: $color-red;
+
+$input-bg: $color-input-bg;
+$input-disabled-bg: $color-input-bg-disabled;
+$input-border-width: 0;
+$input-box-shadow: none;
+$input-focus-box-shadow: none;
+
+$input-btn-focus-box-shadow: none;
+$btn-focus-width: 0;
+
+$border-color: #484c5a;
+$table-group-separator-color: none;
+$table-th-font-weight: 700;
+
+$table-bg: #383b43;
+$table-striped-bg: #44464f;
+$table-hover-bg: #494b54;
+
+$modal-header-color-bg: #1d1f24;
+$modal-color-bg: #21242a;
+
+$modal-content-bg: $modal-color-bg;
+$modal-content-border-color: $border-color;
+
+$modal-header-border-color: #3d404c;
+$modal-header-color-font: $color-white;
+
+$btn-close-color: $color-secondary;
+
+$modal-backdrop-bg: $color-body-font;
+$modal-backdrop-opacity: .1;
+
+$popover-header-color: $color-white;
+$popover-header-bg: $modal-header-color-bg;
+$popover-bg: $modal-color-bg;
+$popover-font-size: 1rem;
+$popover-header-padding-y: 1rem;
+$popover-header-padding-x: 1.4rem;

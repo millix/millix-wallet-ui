@@ -2,53 +2,99 @@ import React, {Component} from 'react';
 import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
+import moment from 'moment';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 class Sidebar extends Component {
     constructor(props) {
         super(props);
-        let now            = Date.now();
-        this.walletScreens = [
-            '/history',
-            '/log',
-            '/config',
-            '/transaction',
-            '/peer'
-        ];
-        this.state         = {
+        let now    = Date.now();
+        this.state = {
             fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now
+            fileKeyImport: 'import_' + now,
+            date         : new Date()
         };
     }
 
-    isWalletScreen(pathName) {
-        if (!pathName) {
-            return false;
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.tick(),
+            1000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
+    tick() {
+        this.setState({
+            date: new Date()
+        });
+    }
+
+    highlightSelected(defaultSelected) {
+
+        if (defaultSelected === '/') {
+            defaultSelected = '/wallet';
         }
 
-        for (let screen of this.walletScreens) {
-            if (pathName.startsWith(screen)) {
-                return true;
-            }
+        return defaultSelected;
+    }
+
+    isExpanded(section, defaultSelected) {
+
+        let result = false;
+        if (section === 'transaction' &&
+            (
+                (defaultSelected === '/unspent-transaction-output-list/pending') ||
+                (defaultSelected === '/unspent-transaction-output-list/stable')
+            )
+        ) {
+            result = true;
         }
-        return false;
+        else if (section === 'status' &&
+                 (
+                     (defaultSelected === '/status-summary') ||
+                     (defaultSelected === '/peers')
+                 )
+        ) {
+            result = true;
+        }
+        else if (section === 'ads' &&
+                 (
+                     (defaultSelected === '/ad-create') ||
+                     (defaultSelected === '/ad-list')
+                 )
+        ) {
+            result = true;
+        }
+        else if (section === 'help' &&
+                 (
+                     (defaultSelected === '/faq') ||
+                     (defaultSelected === '/report-issue')
+                 )
+        ) {
+            result = true;
+        }
+
+        return result;
     }
 
     render() {
-        let props = this.props;
+        let props           = this.props;
+        let defaultSelected = this.highlightSelected(props.location.pathname);
         return (<aside className={'navigation'} style={{
             height   : '100%',
             minHeight: '100vh'
         }}>
             <SideNav
-                expanded={true}
                 onToggle={() => {
                 }}
-                style={{minWidth: 200}}
                 onSelect={(selected) => {
                     switch (selected) {
                         case 'lock':
-
                             props.lockWallet();
                             break;
                         case 'resetValidation':
@@ -57,24 +103,58 @@ class Sidebar extends Component {
                             props.history.push(selected);
                     }
                 }}
+                expanded={true}
             >
+                <div className="nav-utc_clock">
+                    <span>{moment.utc(this.state.date).format('YYYY-MM-DD HH:mm:ss')} utc</span>
+                </div>
                 <SideNav.Nav
-                    defaultSelected={!this.isWalletScreen(props.location.pathname) ? '/wallet' : props.location.pathname}>
+                    selected={defaultSelected}
+                >
                     <NavItem key={'wallet'} eventKey="/wallet">
                         <NavText>
                             home
                         </NavText>
                     </NavItem>
-                    <NavItem key={'history'} eventKey="/history">
+
+                    <NavItem
+                        eventKey="transaction"
+                        expanded={this.isExpanded('transaction', defaultSelected)}
+                    >
                         <NavText>
-                            transactions
+                            transactions <FontAwesomeIcon className={'icon'}
+                                                          icon="chevron-down"
+                                                          size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
+                        </NavText>
+                        <NavItem key={'transaction-list'}
+                                 eventKey="/transaction-list">
+                            <NavText>
+                                all
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'unspent-transaction-output-list-pending'}
+                                 eventKey="/unspent-transaction-output-list/pending">
+                            <NavText>
+                                pending unspent list
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'unspent-transaction-output-list-stable'}
+                                 eventKey={'/unspent-transaction-output-list/stable'}>
+                            <NavText>
+                                stable unspent list
+                            </NavText>
+                        </NavItem>
+                    </NavItem>
+
+                    <NavItem key={'advertisement-list'} eventKey="/advertisement-list">
+                        <NavText>
+                            advertisements
                         </NavText>
                     </NavItem>
-                    <NavItem key={'peers'} eventKey="/peers">
-                        <NavText>
-                            peers
-                        </NavText>
-                    </NavItem>
+
                     {/*
                      <NavItem key={'log'} eventKey="/log">
                      <NavText>
@@ -92,23 +172,50 @@ class Sidebar extends Component {
                             actions
                         </NavText>
                     </NavItem>
-                    <NavItem key={'status'} eventKey="/status">
+
+
+                    <NavItem
+                        eventKey="status"
+                        expanded={this.isExpanded('status', defaultSelected)}
+                    >
                         <NavText>
-                            status
+                            status <FontAwesomeIcon className={'icon'}
+                                                    icon="chevron-down"
+                                                    size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
-                    </NavItem>
-                    <NavItem eventKey="ads">
-                        <NavText>
-                            ads
-                        </NavText>
-                        <NavItem key={'create-ad'} eventKey="/create-ad">
+                        <NavItem key={'status-summary'}
+                                 eventKey="/status-summary">
                             <NavText>
-                                create
+                                summary
                             </NavText>
                         </NavItem>
-                        <NavItem key={'list-ad'} eventKey="/list-ad">
+                        <NavItem key={'peers'} eventKey="/peers">
                             <NavText>
-                                list
+                                peers
+                            </NavText>
+                        </NavItem>
+                    </NavItem>
+                    <NavItem eventKey="help">
+
+                        <NavText>
+                            help <FontAwesomeIcon className={'icon'}
+                                                  icon="chevron-down"
+                                                  size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
+                        </NavText>
+                        <NavItem key={'faq'} eventKey="/faq">
+                            <NavText>
+                                frequent questions
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'report-issue'} eventKey="/report-issue">
+                            <NavText>
+                                report problem
                             </NavText>
                         </NavItem>
                     </NavItem>
@@ -117,20 +224,10 @@ class Sidebar extends Component {
                             logout
                         </NavText>
                     </NavItem>
-                    {/*<div style={{
-                     paddingLeft  : 25,
-                     display      : 'flex',
-                     flexDirection: 'column'
-                     }}>
-                     <div>
-                     <small style={{fontSize: 12}}>millix network
-                     time</small>
-                     <br/>
-                     <small
-                     style={{fontSize: 12}}>{this.props.clock}</small>
-                     </div>
-                     </div>*/}
                 </SideNav.Nav>
+                <div className="nav-info">
+                    <span>version {props.node.node_version}</span>
+                </div>
             </SideNav>
         </aside>);
     }

@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
-import {Button, Col, Container, FormControl, Row} from 'react-bootstrap';
+import {Button, Col, Container, FormControl, Nav, Row, Tab} from 'react-bootstrap';
+import store from '../redux/store';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import {unlockWallet, walletReady} from '../redux/actions';
+import ErrorList from './utils/error-list-view';
 
 const styles           = {
     centered: {
@@ -13,6 +15,7 @@ const styles           = {
     }
 };
 const UnlockWalletView = (props) => {
+    let error_list = [];
     if (props.wallet.unlocked) {
         const {from} = props.location.state || {from: {pathname: '/'}};
         return <Redirect to={from}/>;
@@ -38,56 +41,165 @@ const UnlockWalletView = (props) => {
            }).catch(_ => props.walletReady({authenticationError: true}));
     };
 
+    if (props.wallet.authenticationError) {
+        error_list.push({
+            name   : 'auth_error_name',
+            message: 'there was a problem authenticating your key file. please make sure you are using correct password'
+        });
+    }
+
     return (
-        <Container style={{
-            marginTop  : 50,
-            paddingLeft: 25
-        }}>
-            <div className="container-center lg" style={{marginTop: '5%'}}>
-                <div className="view-header">
-                    <div className="header-icon">
-                        <i className="pe page-header-icon pe-7s-unlock"/>
-                    </div>
-                    <div className="header-title">
-                        <h3>millix</h3>
-                        <small>
-                            please enter your password to unlock your wallet.
-                        </small>
-                    </div>
-                </div>
-
-                <div className="panel panel-filled">
-                    <div className="panel-body">
-
-                        <div className="form-group">
-                            <label className="control-label"
-                                   htmlFor="password">password</label>
-                            <FormControl
-                                ref={c => passphraseRef = c}
-                                type="password"
-                                placeholder="wallet password"
-                                aria-label="wallet password"
-                                aria-describedby="basic-addon"
-                                onKeyPress={(e) => {
-                                    if (e.charCode === 13) {
-                                        walletUnlockWithPassword(passphraseRef.value);
-                                    }
-                                }}
-                            />
-                            {props.wallet.authenticationError ? (
-                                <span className="help-block small">there was a problem authenticating your key file. retry your password or <a
-                                    style={{cursor: 'pointer'}}
-                                    onClick={() => props.history.push('/import-wallet/')}> click here to load your key.</a></span>) : (
-                                 <span className="help-block small">Your strong password</span>)}
-                        </div>
-                        <Row>
-                            <Col style={styles.centered}>
-                                <Button variant="light"
-                                        className={'btn btn-w-md btn-accent'}
-                                        onClick={() => walletUnlockWithPassword(passphraseRef.value)}> login </Button>
-                            </Col>
-                        </Row>
-
+        <Container>
+            <div className="unlock-container">
+                <div className="cols-xs-12 col-lg-12 hpanel">
+                    <div className="panel-body view-header tab">
+                        <Tab.Container defaultActiveKey={1}>
+                            <Row>
+                                <Col xs={12}>
+                                    <Nav variant="tabs" className="col-lg-12">
+                                        <Nav.Item className="col-lg-4">
+                                            <Nav.Link className="col-lg-12"
+                                                      eventKey={1}>
+                                                <h5 className="page_subtitle labeled">
+                                                    <FontAwesomeIcon
+                                                        className="fal"
+                                                        icon="sign-in-alt"/>
+                                                    login
+                                                </h5>
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item className="col-lg-4">
+                                            <Nav.Link className="col-lg-12"
+                                                      eventKey={2}>
+                                                <h5 className="page_subtitle labeled">
+                                                    <FontAwesomeIcon
+                                                        className="fal"
+                                                        icon="plus"/>
+                                                    create
+                                                </h5>
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item className="col-lg-4">
+                                            <Nav.Link className="col-lg-12"
+                                                      eventKey={3}>
+                                                <h5 className="page_subtitle labeled">
+                                                    <FontAwesomeIcon
+                                                        className="fal"
+                                                        icon="file-import"/>
+                                                    import
+                                                </h5>
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                </Col>
+                                <Col xs={12}>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey={1}>
+                                            <div id="login"
+                                                 className="tab-pane">
+                                                <div
+                                                    className="panel panel-filled">
+                                                    <div className="panel-body">
+                                                        <ErrorList
+                                                            error_list={error_list}/>
+                                                        <div
+                                                            className="form-group">
+                                                            <label
+                                                                className="control-label"
+                                                                htmlFor="password">password</label>
+                                                            <FormControl
+                                                                ref={c => passphraseRef = c}
+                                                                type="password"
+                                                                placeholder="******"
+                                                                aria-label="wallet password"
+                                                                aria-describedby="basic-addon"
+                                                                onKeyPress={(e) => {
+                                                                    if (e.charCode === 13) {
+                                                                        walletUnlockWithPassword(passphraseRef.value);
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <Button
+                                                            variant="outline-primary"
+                                                            className={'w-100'}
+                                                            onClick={() => walletUnlockWithPassword(passphraseRef.value)}>continue</Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey={2}>
+                                            <div className="panel panel-filled">
+                                                <div className="panel-body">
+                                                    <div
+                                                        className={'form-group'}>
+                                                        <div
+                                                            className="section_subtitle">attention
+                                                        </div>
+                                                        <div>
+                                                            this will
+                                                            replace existing
+                                                            private_key.
+                                                            you cannot reverse
+                                                            this action.
+                                                            you will not be able
+                                                            to access this
+                                                            wallet or any funds
+                                                            it contains.
+                                                        </div>
+                                                        <div>
+                                                            please make sure you
+                                                            saved a copy of
+                                                            private_key it to a
+                                                            safe
+                                                            place before proceed
+                                                        </div>
+                                                    </div>
+                                                    <Button
+                                                        className={'w-100'}
+                                                        variant="outline-primary"
+                                                        onClick={() => props.history.push('/new-wallet/')}>continue</Button>
+                                                </div>
+                                            </div>
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey={3}>
+                                            <div className="panel panel-filled">
+                                                <div className="panel-body">
+                                                    <div
+                                                        className={'form-group'}>
+                                                        <div
+                                                            className="section_subtitle">attention
+                                                        </div>
+                                                        <div>
+                                                            this will
+                                                            replace existing
+                                                            private_key.
+                                                            you cannot reverse
+                                                            this action.
+                                                            you will not be able
+                                                            to access this
+                                                            wallet or any funds
+                                                            it contains.
+                                                        </div>
+                                                        <div>
+                                                            please make sure you
+                                                            saved a copy of
+                                                            private_key it to a
+                                                            safe
+                                                            place before proceed
+                                                        </div>
+                                                    </div>
+                                                    <Button
+                                                        className={'w-100'}
+                                                        variant="outline-primary"
+                                                        onClick={() => props.history.push('/import-wallet/')}>continue</Button>
+                                                </div>
+                                            </div>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Col>
+                            </Row>
+                        </Tab.Container>
                     </div>
                 </div>
             </div>
@@ -103,42 +215,6 @@ const UnlockWalletView = (props) => {
                          </small>
                      </Col>
                  </Row>)}
-            <div className="container-center lg" style={{marginTop: 0}}>
-                <Row>
-                    <Col sm={6} style={{textAlign: 'right'}}>
-                        <Button variant="light"
-                                className={'btn btn-w-md btn-accent'}
-                                style={{
-                                    width        : '80%',
-                                    paddingTop   : '14.66%',
-                                    paddingBottom: '20.66%'
-                                }}
-                                onClick={() => props.history.push('/new-wallet/')}>
-                            <FontAwesomeIcon icon="wallet" size="8x"
-                                             style={{
-                                                 margin : '0 auto',
-                                                 display: 'block'
-                                             }}/> new wallet
-                        </Button>
-                    </Col>
-                    <Col sm={6}>
-                        <Button variant="light"
-                                className={'btn btn-w-md btn-accent'}
-                                style={{
-                                    width        : '80%',
-                                    paddingTop   : '24.3%',
-                                    paddingBottom: '18.66%'
-                                }}
-                                onClick={() => props.history.push('/import-wallet/')}>
-                            <FontAwesomeIcon icon="key" size="6x"
-                                             style={{
-                                                 margin : '0 auto',
-                                                 display: 'block'
-                                             }}/> import wallet
-                        </Button>
-                    </Col>
-                </Row>
-            </div>
         </Container>
     );
 };

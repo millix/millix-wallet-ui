@@ -7,16 +7,16 @@ const WalletCreatePasswordView = (props) => {
     return (
         <div className={"wallet-create-password"}>
             <Row>
-                {props.walletImport ? (<Col sm={12} className={"center mb-3"}><small>type the password to unlock your wallet. if you do not know the password to unlock the wallet you have lost access to your funds.</small></Col>):
-                    (<Col sm={12} className={"center mb-3"}><small>create a strong password and save it in a safe place. if you lose or forget your password you will lose your funds.</small></Col>)}
+                {props.walletImport ? (<Col className={"center mb-3"}>type the password to unlock your wallet. if you do not know the password to unlock the wallet you have lost access to your funds.</Col>):
+                    (<Col className={"center mb-3"}>create a strong password and save it in a safe place. if you lose or forget your password you will lose your funds.</Col>)}
             </Row>
             <Row>
-                <Col className={'mb-3 col-md-offset-2'} md={8}>
+                <Col className={'form-group'}>
                     <FormControl
                         type="password"
                         ref={c => passphraseRef = c}
-                        placeholder="wallet password"
-                        aria-label="wallet password"
+                        placeholder="password"
+                        aria-label="password"
                         aria-describedby="basic-addon"
                         onChange={(e) => {
                             props.onPassword(passphraseRef.value);
@@ -25,13 +25,12 @@ const WalletCreatePasswordView = (props) => {
                 </Col>
             </Row>
             <Row>
-                <Col className={'mb-3 col-md-offset-2'} md={8}>
+                <Col className={'form-group'}>
                     <FormControl
                         type="password"
                         ref={c => passphraseConfirmRef = c}
-                        style={{...props.notConfirmed ? ({border: 'solid rosybrown 1px'}) : ({})}}
-                        placeholder="confirm wallet password"
-                        aria-label="confirm  wallet password"
+                        placeholder="confirm password"
+                        aria-label="confirm password"
                         aria-describedby="basic-addon"
                         onChange={(e) => {
                             props.onConfirmPassword(passphraseConfirmRef.value);

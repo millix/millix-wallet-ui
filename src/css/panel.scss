@@ -1,0 +1,33 @@
+$panel-spacing: 1rem;
+
+.panel {
+  border-radius: $border-radius;
+  margin-bottom: 1rem;
+}
+
+.panel.panel-filled {
+  background-color: #3b3d45;
+}
+
+.panel > .panel-heading {
+  font-size: 1.4rem;
+  color: $color-white;
+}
+
+.panel-heading {
+  padding: 0.7rem $panel-spacing;
+  border-bottom: $border-width solid transparent;
+  @include border-top-radius();
+}
+
+.panel-heading.bordered {
+  border-bottom: $border-width solid $color-panel-header-border;
+}
+
+.panel .panel-body {
+  padding: $panel-spacing;
+}
+
+.panel .panel-body .submit-row {
+  margin-bottom: 1rem;
+}
