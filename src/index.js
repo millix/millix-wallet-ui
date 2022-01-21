@@ -9,6 +9,7 @@ import {
     faArrowCircleLeft,
     faBook,
     faClock,
+    faRedo,
     faCloudDownloadAlt,
     faCompressArrowsAlt,
     faExchangeAlt,
@@ -59,7 +60,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faStream, faExchangeAlt, faCloudDownloadAlt, faSlidersH,
     faSignOutAlt, faPlus, faHeartbeat, faUndoAlt, faTrash, faUndo,
     faBook, faMicrochip, faPowerOff, faUserClock, faClock, faCompressArrowsAlt,
-    faLock, faLockOpen, faTimes, faEye, faList);
+    faLock, faLockOpen, faTimes, faEye, faList, faRedo);
 
 
 let apiInfo = {

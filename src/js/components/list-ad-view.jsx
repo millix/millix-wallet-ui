@@ -52,6 +52,13 @@ class ListAdView extends Component {
                         ],
                         field: 'status_button'
                     },
+                    {
+                        label: [
+                            <FontAwesomeIcon icon="redo" size="1x"/>,
+                            ' ad reset '
+                        ],
+                        field: 'reset_button'
+                    }
                 ],
                 rows   : []
             }
@@ -66,7 +73,7 @@ class ListAdView extends Component {
         return label;
     }
 
-    async toggleAdStatus(advertisement_guid) {
+    toggleAdStatus(advertisement_guid) {
         API.toggleAdStatus(advertisement_guid).then(data => {
             if (typeof data.api_status != 'undefined' && data.api_status === 'ok') {
                 let updated = data.advertisement;
@@ -90,6 +97,11 @@ class ListAdView extends Component {
         });
     }
 
+
+    resetAd(advertisement_guid) {
+        API.resetAd(advertisement_guid).then(_=>_);
+    }
+
     getFormattedDate(item) {
         let date = new Date(item.create_date * 1000);
         return date.toLocaleString();
@@ -101,6 +113,14 @@ class ListAdView extends Component {
             className={'btn btn-w-md btn-accent ' + active}
             id={item.advertisement_guid}
             onClick={() => this.toggleAdStatus(item.advertisement_guid)}>{this.getStatusLabel(item.status)}</button>;
+
+    }
+
+    getResetButton(item) {
+        return <button
+            className={'btn btn-w-md btn-accent active'}
+            id={item.advertisement_guid}
+            onClick={() => this.resetAd(item.advertisement_guid)}>reset</button>;
 
     }
 
@@ -168,6 +188,7 @@ class ListAdView extends Component {
                                 expiration                 : item.expiration,
                                 status                     : item.status,
                                 status_button              : this.getStatusButton(item),
+                                reset_button               : this.getResetButton(item),
                                 create_date                : this.getFormattedDate(item)
                             });
                         });
@@ -179,7 +200,7 @@ class ListAdView extends Component {
                             }
                         });
                     }
-                }   
+                }
             }
         });
     }
