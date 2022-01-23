@@ -5,6 +5,15 @@ class API {
     constructor() {
         this.nodeID        = undefined;
         this.nodeSignature = undefined;
+
+        try {
+            const environment = require('../../environment');
+
+            this.nodeID        = environment.NODE_ID;
+            this.nodeSignature = environment.NODE_SIGNATURE;
+        }
+        catch (ex) {
+        }
     }
 
     setNodeID(nodeID) {
@@ -151,6 +160,16 @@ class API {
     getNodeStat() {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + '/rKclyiLtHx0dx55M')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    getNodeOsInfo() {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + '/RLOk0Wji0lQVjynT')
                 .then(response => response.ok ? response.json() : Promise.reject());
         }
         catch (e) {

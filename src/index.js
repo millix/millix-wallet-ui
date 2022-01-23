@@ -32,15 +32,27 @@ import {
     faLockOpen,
     faTimes,
     faEye,
-    faList
+    faList,
+    faBars,
+    faChevronDown,
+    faChevronUp,
+    faSignInAlt,
+    faFileImport,
+    faPencilAlt,
+    faSync,
+    faPlusCircle,
+    faPlay,
+    faPause,
+    faQuestionCircle,
+    faThList
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
-import './vendor/bootstrap/css/bootstrap.css';
-import './vendor/pe-icons/pe-icon-7-stroke.css';
-import './vendor/pe-icons/helper.css';
-import './vendor/stroke-icons/style.css';
-import './vendor/luna/luna.css';
-import './vendor/luna/404_publishing.css';
+import './css/bootstrap/bootstrap.scss';
+
+import 'primereact/resources/themes/bootstrap4-dark-purple/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 import './vendor/luna/custom_form_element.css';
 import './vendor/luna/datatable.css';
 import './vendor/luna/datepicker.css';
@@ -60,7 +72,9 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faStream, faExchangeAlt, faCloudDownloadAlt, faSlidersH,
     faSignOutAlt, faPlus, faHeartbeat, faUndoAlt, faTrash, faUndo,
     faBook, faMicrochip, faPowerOff, faUserClock, faClock, faCompressArrowsAlt,
-    faLock, faLockOpen, faTimes, faEye, faList, faRedo);
+    faLock, faLockOpen, faTimes, faEye, faList, faBars, faSignInAlt, faFileImport,
+    faChevronDown, faChevronUp, faPencilAlt, faSync, faPlusCircle, faPlay,
+    faPause, faQuestionCircle, faThList, faRedo);
 
 
 let apiInfo = {
@@ -134,7 +148,6 @@ const getNodeAboutAttribute = () => {
 };
 
 const getNodeConfig = () => {
-    console.log('get node config', store.getState().config);
     if (Object.keys(store.getState().config).length === 0) {
         API.getNodeConfig()
            .then(configList => {

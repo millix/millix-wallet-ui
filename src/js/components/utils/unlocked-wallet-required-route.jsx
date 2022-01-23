@@ -7,6 +7,7 @@ import '../../../../node_modules/mohithg-switchery/switchery.css';
 import $ from 'jquery';
 import API from '../../api';
 import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance} from '../../redux/actions';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const UnlockedWalletRequiredRoute = ({
                                          component: Component,
@@ -45,29 +46,21 @@ const UnlockedWalletRequiredRoute = ({
     return (<Route {...rest} render={props => (
         rest.wallet.unlocked ? (
             <>
-                <nav className={'navbar navbar-default navbar-fixed-top'}>
-                    <div className={'container-fluid'}>
-                        <div className={'navbar-header'}>
-                            <div id="mobile-menu">
-                                <div className={'left-nav-toggle'}>
-                                    <a
-                                        onClick={() => $('body').toggleClass('nav-toggle')}>
-                                        <i className={'stroke-hamburgermenu'}/>
-                                    </a>
-                                </div>
-                            </div>
-                            <a className={'navbar-brand'}>
-                                millix
-                                <span>{rest.node.node_version && `v.${rest.node.node_version}`}</span>
-                            </a>
-                        </div>
-                        <div id="navbar" className={'navbar-collapse collapse'}>
-                            <div className={'left-nav-toggle'}>
-                                <a
-                                    onClick={() => $('body').toggleClass('nav-toggle')}>
-                                    <i className={'stroke-hamburgermenu'}/>
-                                </a>
-                            </div>
+                <nav
+                    className={'navbar navbar-default navbar-fixed-top flex-nowrap'}>
+                    <div className={'navbar-header'}>
+                        <a className={'navbar-brand'}
+                           onClick={() => props.history.push('/')}>
+                            millix
+                        </a>
+                    </div>
+                    <div id="navbar"
+                         className={'navbar-collapse collapse show'}>
+                        <div className={'left-nav-toggle'}
+                             onClick={() => $('body').toggleClass('nav-toggle')}>
+                            <FontAwesomeIcon
+                                icon={'bars'}
+                                size="lg"/>
                         </div>
                     </div>
                 </nav>

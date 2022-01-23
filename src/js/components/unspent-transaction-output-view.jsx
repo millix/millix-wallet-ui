@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Row} from 'react-bootstrap';
+import {Button, Col, Row} from 'react-bootstrap';
 import moment from 'moment';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {MDBDataTable as DataTable} from 'mdbreact';
-import {walletUpdateTransactions} from '../redux/actions';
 import API from '../api/index';
+import DatatableView from './utils/datatable-view';
+import DatatableActionButtonView from './utils/datatable-action-button-view';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -14,82 +14,64 @@ class UnspentTransactionOutputView extends Component {
         super(props);
         this.updaterHandler = undefined;
         this.state          = {
-            transaction_output_list: {
-                columns: [
-                    {
-                        label: '#',
-                        field: 'idx'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="user-clock" size="1x"/>,
-                            ' date'
-                        ],
-                        field: 'transaction_date'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' transaction id'
-                        ],
-                        field: 'transaction_id'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="book" size="1x"/>,
-                            ' output position'
-                        ],
-                        field: 'output_position'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="compress-arrows-alt"
-                                             size="1x"/>,
-                            ' amount'
-                        ],
-                        field: 'amount'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="box"
-                                             size="1x"/>,
-                            ' address'
-                        ],
-                        field: 'address'
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="clock" size="1x"/>,
-                            ' stable date'
-                        ],
-                        field: 'stable_date'
-                    }
-                ],
-                rows   : []
-            }
+            transaction_output_list   : [],
+            stable                    : 1,
+            datatable_reload_timestamp: ''
         };
     }
 
     componentDidMount() {
-        this.updaterHandler = setInterval(() => API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.props.location.state.stable).then(data => {
+        moment.relativeTimeThreshold('ss', -1); // required to get diff in
+        // seconds instead of "a few
+        // seconds ago"
 
+        const stable_value_new = this.getStableFromUrl();
+        this.setState({
+            stable: stable_value_new
+        }, this.reloadDatatable);
+
+        this.updaterHandler = setInterval(() => this.reloadDatatable(), 60000);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const stable_value_new     = this.getStableFromUrl();
+        const stable_value_current = this.state.stable;
+        if (stable_value_new !== stable_value_current || this.props.wallet.address_key_identifier !== prevProps.wallet.address_key_identifier) {
+            this.setState({
+                stable: stable_value_new
+            }, this.reloadDatatable);
+        }
+    }
+
+    getStableFromUrl() {
+        const stable_filter  = this.props.location.pathname.split('/').pop();
+        let stable_value_new = 1;
+        if (stable_filter === 'pending') {
+            stable_value_new = 0;
+        }
+
+        return stable_value_new;
+    }
+
+    reloadDatatable() {
+        return API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.state.stable).then(data => {
             let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
-                clickEvent      : () => this.props.history.push('/transaction/' + encodeURIComponent(output.transaction_id), [output]),
                 idx             : data.length - idx,
                 transaction_id  : output.transaction_id,
                 address         : output.address,
                 output_position : output.output_position,
                 amount          : output.amount.toLocaleString('en-US'),
                 transaction_date: moment.utc(output.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss')
+                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                action          : <DatatableActionButtonView
+                    history_path={'/transaction/' + encodeURIComponent(output.transaction_id)}
+                    history_state={[output]}/>
             }));
             this.setState({
-                transaction_output_list: {
-                    columns: [...this.state.transaction_output_list.columns],
-                    rows   : rows
-                }
+                transaction_output_list   : rows,
+                datatable_reload_timestamp: new Date()
             });
-        }), 5000);
+        });
     }
 
     componentWillUnmount() {
@@ -101,23 +83,63 @@ class UnspentTransactionOutputView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div
-                        className={'panel-heading'}>{this.props.location.state.stable ? '' : 'pending'} unspent
-                        transaction
-                        outputs
+                        className={'panel-heading bordered'}>
+                        {this.state.stable ? '' : 'pending'} unspent
+                        transaction output list
                     </div>
-                    <hr className={'hrPanel'}/>
                     <div className={'panel-body'}>
+                        <div className={'datatable_action_row'}>
+                            <Col md={4}>
+                                <Button variant="outline-primary"
+                                        className={'btn-sm refresh_button'}
+                                        onClick={() => this.reloadDatatable()}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={'sync'}
+                                        size="1x"/>
+                                    refresh
+                                </Button>
+                            </Col>
+                            <Col md={4} className={'datatable_refresh_ago'}>
+                            <span>
+                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
+                            </span>
+                            </Col>
+                        </div>
                         <Row id={'txhistory'}>
-                            <DataTable striped bordered small hover
-                                       autoWidth={false}
-                                       info={false}
-                                       entries={10}
-                                       entriesOptions={[
-                                           10,
-                                           30,
-                                           50
-                                       ]}
-                                       data={this.state.transaction_output_list}/>
+                            <DatatableView
+                                value={this.state.transaction_output_list}
+                                sortField={'transaction_date'}
+                                sortOrder={-1}
+                                showActionColumn={true}
+                                resultColumn={[
+                                    {
+                                        'field'   : 'transaction_date',
+                                        'header'  : 'date',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'transaction_id',
+                                        'header'  : 'transaction id',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'output_position',
+                                        'header'  : 'output position',
+                                        'sortable': true
+                                    },
+                                    {
+                                        'field'   : 'address',
+                                        'header'  : 'address',
+                                        'sortable': true
+                                    },
+
+                                    {
+                                        'field'   : 'amount',
+                                        'header'  : 'amount',
+                                        'sortable': true
+                                    }
+                                ]}/>
                         </Row>
                     </div>
                 </div>
@@ -131,7 +153,4 @@ export default connect(
     state => ({
         wallet: state.wallet
     }),
-    {
-        walletUpdateTransactions
-    }
 )(withRouter(UnspentTransactionOutputView));

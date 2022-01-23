@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, Row} from 'react-bootstrap';
 import fs from 'fs';
 import API from '../api';
+import ModalView from './utils/modal-view';
 
 const styles = {
     centered: {
@@ -21,7 +22,8 @@ class ActionView extends Component {
         let now    = Date.now();
         this.state = {
             fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now
+            fileKeyImport: 'import_' + now,
+            modalShow    : false
         };
     }
 
@@ -114,16 +116,32 @@ class ActionView extends Component {
     }
 
     resetTransactionValidation() {
-        API.resetTransactionValidation().then(_ => _);
+        API.resetTransactionValidation().then(_ => {
+            this.props.history.push('/unspent-transaction-output-list/pending');
+        });
+    }
+
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
     }
 
     render() {
         return (
             <div>
+                <ModalView show={this.state.modalShow}
+                           size={'lg'}
+                           on_hide={() => this.changeModalShow(false)}
+                           heading={'reset validation'}
+                           on_accept={() => this.resetTransactionValidation()}
+                           body={<div>it will force your node to revalidate all
+                               your transactions. it is safe, but will take some
+                               time. are you sure you want to proceed?</div>}/>
                 <Row>
-                    <Col md={12}>
+                    <Col>
                         {/*<div className={'panel panel-filled'}>
-                         <div className={'panel-heading'}>optimize</div>
+                         <div className={'panel-heading bordered'}>optimize</div>
                          <hr className={'hrPanel'}/>
                          <div className={'panel-body'}>
                          <Row className="mb-1">
@@ -133,8 +151,8 @@ class ActionView extends Component {
                          storage.</p>
                          </Col>
                          </Row>
-                                <Row className="mb-3">
-                                    <Col style={styles.centered}>
+                         <Row className="mb-3">
+                         <Col style={styles.centered}>
                          <Button variant="light"
                          className={'btn btn-w-md btn-accent'}
                          onClick={() => {
@@ -147,21 +165,35 @@ class ActionView extends Component {
                          </div>
                          </div>*/}
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>reset validation
+                            <div className={'panel-heading bordered'}>reset
+                                validation
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
-                                <Row className="mb-1">
-                                    <Col style={styles.left}>
-                                        <p>the reset validation action tries to
-                                            revalidate pending transactions.</p>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
+                                <div>
+                                    reset validation forces your node to
+                                    revalidate all your transactions (to or from
+                                    you)
+                                </div>
+                                <div>
+                                    it is recommended to do in one of the
+                                    following cases:
+                                    <ul>
+                                        <li>if you have
+                                            transaction(s) in pending state for
+                                            longer than 10-15 minutes
+                                        </li>
+                                        <li>
+                                            you think that your stable balance
+                                            is wrong
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <Row>
                                     <Col style={styles.centered}>
-                                        <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={() => this.resetTransactionValidation()}>
+                                        <Button
+                                            variant="outline-primary"
+                                            onClick={() => this.changeModalShow()}>
                                             reset validation
                                         </Button>
                                     </Col>
@@ -169,7 +201,7 @@ class ActionView extends Component {
                             </div>
                         </div>
                         {/*<div className={'panel panel-filled'}>
-                         <div className={'panel-heading'}>load wallet</div>
+                         <div className={'panel-heading bordered'}>load wallet</div>
                          <hr className={'hrPanel'}/>
                          <div className={'panel-body'}>
                          <Row className="mb-1">
@@ -179,39 +211,39 @@ class ActionView extends Component {
                          load a previously exported wallet
                          private key in this millix
                          node.</p>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col style={styles.centered}>
-                                        <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={() => {
-                                                    this.inputImport.click();
-                                                    this.setState({importingWallet: true});
-                                                }} disabled={true}>
-                                            load wallet
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                        <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>save wallet</div>
-                            <hr className={'hrPanel'}/>
-                            <div className={'panel-body'}>
-                                <Row className="mb-1">
-                                    <Col style={styles.left}>
-                                        <p>the save wallet action allows the
-                                            user to
-                                            export the wallet private key to a
-                                            file that can be then loaded in a
-                                            milli
-                                            node.</p>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col style={styles.centered}>
-                                        <Button variant="light"
+                         </Col>
+                         </Row>
+                         <Row className="mb-3">
+                         <Col style={styles.centered}>
+                         <Button variant="light"
+                         className={'btn btn-w-md btn-accent'}
+                         onClick={() => {
+                         this.inputImport.click();
+                         this.setState({importingWallet: true});
+                         }} disabled={true}>
+                         load wallet
+                         </Button>
+                         </Col>
+                         </Row>
+                         </div>
+                         </div>
+                         <div className={'panel panel-filled'}>
+                         <div className={'panel-heading bordered'}>save wallet</div>
+                         <hr className={'hrPanel'}/>
+                         <div className={'panel-body'}>
+                         <Row className="mb-1">
+                         <Col style={styles.left}>
+                         <p>the save wallet action allows the
+                         user to
+                         export the wallet private key to a
+                         file that can be then loaded in a
+                         milli
+                         node.</p>
+                         </Col>
+                         </Row>
+                         <Row className="mb-3">
+                         <Col style={styles.centered}>
+                         <Button variant="light"
                          className={'btn btn-w-md btn-accent'}
                          onClick={() => {
                          this.inputExport.click();

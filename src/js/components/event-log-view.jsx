@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Form, Row} from 'react-bootstrap';
+import {Button, Col, Form, Row, Dropdown} from 'react-bootstrap';
 import {CellMeasurerCache} from 'react-virtualized';
 import {createObjectCsvWriter} from 'csv-writer';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -73,7 +73,10 @@ class EventsLogView extends Component {
     }
 
     openDetails(data) {
-        let {type, content} = data;
+        let {
+                type,
+                content
+            } = data;
         if (type === 'transaction_new') {
             let transaction = JSON.parse(content).transaction;
             if (transaction) {
@@ -171,21 +174,17 @@ class EventsLogView extends Component {
                     <Col md={12}>
                         <div className={'panel panel-filled'}>
                             <div
-                                className={'panel-heading'}>logs
+                                className={'panel-heading bordered'}>logs
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
 
                                 <Form>
                                     <Form.Group>
-                                        <label
-                                            className="control-label">message
-                                            type</label>
+                                        <label>message type</label>
                                         <div
                                             className="btn-group btn-full-width">
-                                            <button data-toggle="dropdown"
-                                                    className="btn btn-accent dropdown-toggle btn-full-width dropdown-luna"
-                                                    aria-expanded="false">
+                                            <Dropdown variant="primary"
+                                                      aria-expanded="false">
                                                 <p style={{
                                                     float       : 'left',
                                                     marginBottom: '0px'
@@ -194,25 +193,23 @@ class EventsLogView extends Component {
                                                     float       : 'right',
                                                     marginBottom: '0px'
                                                 }}><span className="caret"/></p>
-                                            </button>
+                                            </Dropdown>
                                             <ul className="dropdown-menu btn-full-width dropdown-lu">
                                                 {Array.from(this.getTypes()).sort().map(type =>
                                                     <li><a
-                                                           className="li-a"
-                                                           key={type}
-                                                           href="#"
-                                                           onClick={() => {
-                                                               this.filterByType(this.props.log.events, type);
-                                                           }}>{type}</a>
+                                                        className="li-a"
+                                                        key={type}
+                                                        href="#"
+                                                        onClick={() => {
+                                                            this.filterByType(this.props.log.events, type);
+                                                        }}>{type}</a>
                                                     </li>
                                                 )}
                                             </ul>
                                         </div>
                                     </Form.Group>
                                     <Form.Group>
-                                        <label
-                                            className="control-label">message
-                                            content</label>
+                                        <label>message content</label>
                                         <Form.Control type="text"
                                                       placeholder="filter content"
                                                       ref={this.inputFilterText}
@@ -230,11 +227,7 @@ class EventsLogView extends Component {
                                 <Row className="mb-3 mt-3">
                                     <Col sm="2">
                                         <Form.Group>
-
-                                            <label
-                                                className="control-label">stream
-                                                log</label>
-
+                                            <label>stream log</label>
                                             <Switch
                                                 className={'switch-class network-switch'}
                                                 id="logSwitch"
@@ -254,10 +247,8 @@ class EventsLogView extends Component {
                                         display       : 'flex',
                                         justifyContent: 'flex-end'
                                     }}>
-                                        <Button variant="light"
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={this.openExportDialog.bind(this)}
-                                                style={{marginTop: "8px"}}>
+                                        <Button variant="outline-primary"
+                                                onClick={this.openExportDialog.bind(this)}>
                                             export log to csv
                                         </Button>
                                         <input style={{display: 'none'}}
@@ -273,7 +264,7 @@ class EventsLogView extends Component {
                                         width   : '100%',
                                         overflow: 'auto'
                                     }}>
-                                        <BootstrapTable keyField='key'
+                                        <BootstrapTable keyField="key"
                                                         style={{tableLayout: 'auto'}}
                                                         data={_.map(events, (event, idx) => {
                                                             return {

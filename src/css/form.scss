@@ -1,0 +1,44 @@
+@import './variable';
+
+.btn-outline-primary {
+  color: $color-body-font;
+}
+
+.form-label,
+label {
+  color: $color-white;
+  margin-bottom: .3rem;
+}
+
+.form-error {
+
+}
+
+.form-input-error {
+  margin-top: 0.1rem;
+  display: inline-block;
+}
+
+.btn-outline-default,
+.btn-outline-input-group-addon {
+  @include button-outline-default();
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.btn:not(.icon_only) {
+  > .svg-inline--fa {
+    margin-right: 0.3em;
+  }
+}
+
+.input-group-text {
+  border: $border-width solid $color-input-bg;
+  border-width: 0 $border-width 0 0;
+  background-color:$color-input-bg-disabled;
+  min-width: 2.65rem;
+  justify-content: center;
+}
+

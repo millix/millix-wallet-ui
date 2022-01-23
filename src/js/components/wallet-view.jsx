@@ -3,44 +3,22 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {MDBDataTable as DataTable} from 'mdbreact';
+import DatatableView from './utils/datatable-view';
 import API from '../api/index';
 import _ from 'lodash';
-
-const styles = {
-    centered: {
-        display       : 'flex',
-        justifyContent: 'center'
-    },
-    left    : {
-        display       : 'flex',
-        justifyContent: 'left'
-    }
-};
+import moment from 'moment';
+import ErrorList from './utils/error-list-view';
+import HelpIconView from './utils/help-icon-view';
 
 
 class WalletView extends Component {
     constructor(props) {
         super(props);
-        this.state              = {
+        this.state = {
             feesLocked : true,
-            addressList: []
+            addressList: [],
+            error_list : []
         };
-        this.addressListColumns = [
-            {
-                label: '#',
-                field: 'address_position',
-                width: 150
-            },
-            {
-                label: [
-                    <FontAwesomeIcon icon="book" size="1x"/>,
-                    ' address'
-                ],
-                field: 'address',
-                width: 270
-            }
-        ];
     }
 
     componentDidMount() {
@@ -56,14 +34,17 @@ class WalletView extends Component {
     updateAddresses() {
         API.listAddresses(this.props.wallet.address_key_identifier)
            .then(addresses => {
+               let result = _.sortBy(_.map(addresses, itemAddress => {
+                   return {
+                       address         : itemAddress.address,
+                       address_position: itemAddress.address_position,
+                       address_version : itemAddress.address_version,
+                       create_date     : moment.unix(itemAddress.create_date).format('YYYY-MM-DD HH:mm:ss')
+                   };
+               }), address => -address.address_position);
+
                this.setState({
-                   addressList: {
-                       columns: this.addressListColumns,
-                       rows   : _.sortBy(_.map(addresses, address => _.pick(address, [
-                           'address',
-                           'address_position'
-                       ])), address => -address.address_position)
-                   }
+                   addressList: result
                });
            });
     }
@@ -82,7 +63,7 @@ class WalletView extends Component {
     }
 
     send() {
-
+        let error_list = [];
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
             this.setState({
@@ -99,8 +80,12 @@ class WalletView extends Component {
         API.verifyAddress(this.destinationAddress.value.trim())
            .then(data => {
                if (!data.is_valid) {
-                   this.setState({addressError: true});
-                   return Promise.reject('invalid transaction');
+                   error_list.push({
+                       name   : 'address_error',
+                       message: 'invalid address'
+                   });
+                   this.setState({error_list: error_list});
+                   return Promise.reject('validation_error');
                }
 
                const {
@@ -112,13 +97,17 @@ class WalletView extends Component {
                let amount;
                try {
                    amount = this._getAmount(this.amount.value);
+                   console.log(amount);
                }
                catch (e) {
-                   this.setState({
-                       amountError : true,
-                       addressError: false
+                   error_list.push({
+                       name   : 'amountError',
+                       message: 'invalid amount'
                    });
-                   return Promise.reject('invalid transaction');
+                   this.setState({
+                       error_list: error_list
+                   });
+                   return Promise.reject('validation_error');
                }
 
                let fees;
@@ -126,19 +115,19 @@ class WalletView extends Component {
                    fees = this._getAmount(this.fees.value, true);
                }
                catch (e) {
-                   this.setState({
-                       feeError    : true,
-                       amountError : false,
-                       addressError: false
+                   error_list.push({
+                       name   : 'feeError',
+                       message: 'invalid fee. please, set a correct value.'
                    });
-                   return Promise.reject('invalid transaction');
+                   this.setState({
+                       error_list: error_list
+                   });
+                   return Promise.reject('validation_error');
                }
 
                this.setState({
-                   addressError: false,
-                   amountError : false,
-                   feeError    : false,
-                   sending     : true
+                   error_list: [],
+                   sending   : true
                });
 
                return API.sendTransaction({
@@ -155,7 +144,6 @@ class WalletView extends Component {
                        amount  : fees
                    }
                }).then(data => {
-                   console.log(data);
                    if (data.api_status === 'fail') {
                        return Promise.reject(data);
                    }
@@ -174,26 +162,40 @@ class WalletView extends Component {
            })
            .catch((e) => {
                let sendTransactionErrorMessage;
-               if (e.api_message) {
-                   const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                   sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
-               }
-               else if (e === 'insufficient_balance') {
-                   sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
-               }
-               else if (e === 'transaction_send_interrupt') {
-                   sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
-               }
-               else {
-                   sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
-               }
 
-               console.log(e);
+               if (e !== 'validation_error') {
+                   if (e.api_message) {
+                       if (typeof (e.api_message) === 'string') {
+                           const match = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
+                           sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
+                       }
+                       else {
+                           if (typeof (e.api_message.error) !== 'undefined') {
+                               const error = e.api_message.error;
+                               if (error.error === 'transaction_input_max_error') {
+                                   sendTransactionErrorMessage = <>your transaction tries to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>. please try to send smaller amount or aggregate manually by sending smaller amounts to yourself. max amount you can send now is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
+                               }
+                           }
+                       }
+                   }
+                   else if (e === 'insufficient_balance') {
+                       sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
+                   }
+                   else if (e === 'transaction_send_interrupt') {
+                       sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
+                   }
+                   else {
+                       sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
+                   }
+
+                   error_list.push({
+                       name   : 'sendTransactionError',
+                       message: sendTransactionErrorMessage
+                   });
+               }
                this.setState({
-                   sendTransactionError: true,
-                   sending             : false,
-                   canceling           : false,
-                   sendTransactionErrorMessage
+                   error_list: error_list,
+                   sending   : false
                });
            });
     }
@@ -223,98 +225,97 @@ class WalletView extends Component {
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>balance</div>
-                            <hr className={'hrPanel'}/>
+                            <div className={'panel-heading bordered'}>balance
+                            </div>
                             <div className={'panel-body'}>
-
-                                <Table striped bordered hover variant="dark">
-                                    <thead>
-                                    <tr>
-                                        <th width="50%">available</th>
-                                        <th width="50%">pending</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr key="1" className="wallet-address">
-                                        <td>
-                                            {this.props.wallet.balance_stable.toLocaleString('en-US')}
-                                            <span
-                                                style={{
-                                                    float : 'right',
-                                                    cursor: 'pointer'
-                                                }}>
-                                                <Button
-                                                    className={'btn-xs icon_only'}
-                                                    onClick={() => this.props.history.push('/utxo/stable', {stable: 1})}>
+                                <div className={'d-flex'}>
+                                    <Table striped bordered hover>
+                                        <thead>
+                                        <tr>
+                                            <th width="50%">available</th>
+                                            <th width="50%">pending
+                                                <HelpIconView
+                                                    help_item_name={'pending_balance'}/>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr key="1">
+                                            <td>
+                                                <div className={'d-flex'}>
+                                                <span
+                                                    className={'d-flex align-self-center'}>
+                                                    {this.props.wallet.balance_stable.toLocaleString('en-US')}
+                                                </span>
+                                                    <Button
+                                                        variant="outline-primary"
+                                                        className={'btn-xs icon_only ms-auto'}
+                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/stable')}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
                                                             size="1x"/>
                                                     </Button>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {this.props.wallet.balance_pending.toLocaleString('en-US')}
-                                            <span
-                                                style={{
-                                                    float : 'right',
-                                                    cursor: 'pointer'
-                                                }}>
-                                                <Button
-                                                    className={'btn-xs icon_only'}
-                                                    onClick={() => this.props.history.push('/utxo/pending', {stable: 0})}>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className={'d-flex'}>
+                                                <span
+                                                    className={'d-flex align-self-center'}>
+                                                {this.props.wallet.balance_pending.toLocaleString('en-US')}
+                                                    </span>
+                                                    <Button
+                                                        variant="outline-primary"
+                                                        className={'btn-xs icon_only ms-auto'}
+                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/pending')}>
                                                         <FontAwesomeIcon
                                                             icon={'list'}
                                                             size="1x"/>
                                                     </Button>
-                                            </span></td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </div>
                             </div>
                         </div>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>send</div>
-                            <hr className={'hrPanel'}/>
+                            <div className={'panel-heading bordered'}>send</div>
                             <div className={'panel-body'}>
-                                <Row className="mb-3">
+                                <ErrorList
+                                    error_list={this.state.error_list}/>
+                                <Row>
                                     <Form>
+                                        <Col
+                                            className={'d-flex justify-content-center'}>
+                                            {this.state.sendTransactionError && (
+                                                <div className={'form-error'}>
+                                                    <span>{this.state.sendTransactionErrorMessage}</span>
+                                                </div>)}
+                                        </Col>
                                         <Col>
-                                            <Form.Group>
-                                                <label
-                                                    className="control-label">address</label>
+                                            <Form.Group className="form-group">
+                                                <label>address</label>
                                                 <Form.Control type="text"
                                                               placeholder="address"
                                                               ref={c => this.destinationAddress = c}/>
-                                                {this.state.addressError && (
-                                                    <Form.Text
-                                                        className="text-muted"><small>invalid
-                                                        address.
-                                                        please, set a correct
-                                                        value.</small></Form.Text>)}
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <label
-                                                className="control-label">amount</label>
-                                            <Form.Group>
+                                            <Form.Group className="form-group">
+                                                <label>amount</label>
                                                 <Form.Control type="text"
                                                               placeholder="amount"
                                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                                               ref={c => this.amount = c}
                                                               onChange={this.handleAmountValueChange.bind(this)}/>
-                                                {this.state.amountError && (
-                                                    <Form.Text
-                                                        className="text-muted"><small>invalid
-                                                        amount.
-                                                        please, set a correct
-                                                        value.</small></Form.Text>)}
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <label
-                                                className="control-label">fee</label>
-                                            <Form.Group as={Row}>
-                                                <Col md={11} ms={11}>
+                                            <Form.Group className="form-group"
+                                                        as={Row}>
+                                                <label>fee</label>
+                                                <Col className={'input-group'}>
                                                     <Form.Control type="text"
                                                                   placeholder="fee"
                                                                   pattern="[0-9]+([,][0-9]{1,2})?"
@@ -327,31 +328,25 @@ class WalletView extends Component {
                                                                   }}
                                                                   onChange={this.handleAmountValueChange.bind(this)}
                                                                   disabled={this.state.feesLocked}/>
-                                                </Col>
-                                                <Col style={styles.centered}
-                                                     md={1} ms={1}>
-                                                    <Button
+                                                    <button
+                                                        className="btn btn-outline-input-group-addon icon_only"
+                                                        type="button"
                                                         onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
                                                         <FontAwesomeIcon
                                                             icon={this.state.feesLocked ? 'lock' : 'lock-open'}
-                                                            size="1x"/>
-                                                    </Button>
+                                                            size="sm"/>
+                                                    </button>
+
                                                 </Col>
-                                                {this.state.feeError && (
-                                                    <Form.Text
-                                                        className="text-muted"><small
-                                                        style={{color: 'red'}}>invalid
-                                                        fee.
-                                                        please, set a correct
-                                                        value.</small></Form.Text>)}
                                             </Form.Group>
                                         </Col>
-                                        <Col style={styles.centered}>
+                                        <Col
+                                            className={'d-flex justify-content-center'}>
                                             <Form.Group as={Row}>
-                                                <Button variant="light"
-                                                        className={'btn btn-w-md btn-accent'}
-                                                        onClick={this.send.bind(this)}
-                                                        disabled={this.state.canceling}>
+                                                <Button
+                                                    variant="outline-primary"
+                                                    onClick={this.send.bind(this)}
+                                                    disabled={this.state.canceling}>
                                                     {this.state.sending ?
                                                      <>
                                                          <div style={{
@@ -364,42 +359,50 @@ class WalletView extends Component {
                                                 </Button>
                                             </Form.Group>
                                         </Col>
-                                        <Col style={styles.centered}>
-                                            {this.state.sendTransactionError && (
-                                                <span>{this.state.sendTransactionErrorMessage}</span>)}
-                                        </Col>
                                     </Form>
                                 </Row>
                             </div>
                         </div>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading'}>addresses
+                            <div className={'panel-heading bordered'}>addresses
                             </div>
-                            <hr className={'hrPanel'}/>
                             <div className={'panel-body'}>
-                                <Row className="mb-3 mt-3">
-                                    <Col className="pr-0" style={{
-                                        display       : 'flex',
-                                        justifyContent: 'flex-end'
-                                    }}>
-                                        <Button variant="light"
-                                                style={{width: 191.2}}
-                                                className={'btn btn-w-md btn-accent'}
-                                                onClick={() => this.getNextAddress()}>
-                                            generate address
-                                        </Button>
-                                    </Col>
-                                </Row>
+                                <div className={'datatable_action_row'}>
+                                    <Button variant="outline-primary"
+                                            className={'btn-sm create_button'}
+                                            onClick={() => this.getNextAddress()}>
+                                        <FontAwesomeIcon
+                                            icon={'plus-circle'}
+                                            size="1x"/>generate address
+                                    </Button>
+                                </div>
                                 <Row>
-                                    <DataTable striped bordered small hover
-                                               info={false}
-                                               entries={10}
-                                               entriesOptions={[
-                                                   10,
-                                                   30,
-                                                   50
-                                               ]}
-                                               data={this.state.addressList}/>
+                                    <DatatableView
+                                        value={this.state.addressList}
+                                        sortField={'address_position'}
+                                        sortOrder={1}
+                                        resultColumn={[
+                                            {
+                                                'field'   : 'address_position',
+                                                'header'  : 'position',
+                                                'sortable': true
+                                            },
+                                            {
+                                                'field'   : 'address',
+                                                'header'  : 'address',
+                                                'sortable': true
+                                            },
+                                            {
+                                                'field'   : 'address_version',
+                                                'header'  : 'version',
+                                                'sortable': true
+                                            },
+                                            {
+                                                'field'   : 'create_date',
+                                                'header'  : 'create date',
+                                                'sortable': true
+                                            }
+                                        ]}/>
                                 </Row>
                             </div>
                         </div>
