@@ -41,7 +41,7 @@ class ListAdView extends Component {
 
 
     resetAd(advertisement_guid) {
-        API.resetAd(advertisement_guid).then(_=>_);
+        API.resetAd(advertisement_guid).then(_ => _);
     }
 
     getFormattedDate(item) {
@@ -63,11 +63,22 @@ class ListAdView extends Component {
     }
 
     getResetButton(item) {
-        return <button
-            className={'btn btn-w-md btn-accent active'}
+        return <Button
             id={item.advertisement_guid}
-            onClick={() => this.resetAd(item.advertisement_guid)}>reset</button>;
+            variant="outline-default"
+            className={'btn-xs icon_only ms-auto'}
+            onClick={() => this.resetAd(item.advertisement_guid)}>
+            <FontAwesomeIcon
+                icon={'redo'}
+                size="1x"/>
+        </Button>;
+    }
 
+    getActionButton(item) {
+        return <div>
+            {this.getStatusButton(item)}
+            {this.getResetButton(item)}
+        </div>;
     }
 
     async getTypes() {
@@ -128,8 +139,7 @@ class ListAdView extends Component {
                             bid_impression_mlx         : item.bid_impression_mlx.toLocaleString('en-US'),
                             expiration                 : item.expiration,
                             status                     : this.getStatusLabel(item.status),
-                            action                     : this.getStatusButton(item),
-                            reset                      : this.getResetButton(item),
+                            action                     : this.getActionButton(item),
                             create_date                : this.getFormattedDate(item)
                         });
                     });
@@ -174,7 +184,8 @@ class ListAdView extends Component {
                             that views the ad.
                         </div>
                         <div className={'form-group'}>
-                            at the moment you can not edit advertisements. you can pause existing and create a new one instead.
+                            at the moment you can not edit advertisements. you
+                            can pause existing and create a new one instead.
                         </div>
                         <div className={'datatable_action_row'}>
                             <Col md={4}>
@@ -234,11 +245,6 @@ class ListAdView extends Component {
                                     {
                                         'field'   : 'status',
                                         'header'  : 'status',
-                                        'sortable': true
-                                    },
-                                    {
-                                        'field'   : 'reset',
-                                        'header'  : 'reset',
                                         'sortable': true
                                     },
                                     {
