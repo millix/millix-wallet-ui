@@ -31,18 +31,18 @@ const MnemonicView = (props) => {
                         const text_id = 'word_' + (idx + 1);
 
                         return (
-                        <Col key={`row_${row}_col_${col}`} sm={2}>
-                            <InputGroup className={'form-group'}>
-                                <InputGroup.Text
-                                    id={text_id}>{idx + 1}</InputGroup.Text>
-                                <FormControl
-                                    aria-label={idx + 1}
-                                    aria-describedby={text_id}
-                                    readOnly={true}
-                                    value={props.mnemonic[row * 6 + col]}
-                                />
-                            </InputGroup>
-                        </Col>);
+                            <Col key={`row_${row}_col_${col}`} sm={2}>
+                                <InputGroup className={'form-group'}>
+                                    <InputGroup.Text
+                                        id={text_id}>{idx + 1}</InputGroup.Text>
+                                    <FormControl
+                                        aria-label={idx + 1}
+                                        aria-describedby={text_id}
+                                        readOnly={true}
+                                        value={props.mnemonic[row * 6 + col]}
+                                    />
+                                </InputGroup>
+                            </Col>);
                     })}
                 </Row>
             )}

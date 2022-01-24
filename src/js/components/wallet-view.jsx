@@ -166,14 +166,21 @@ class WalletView extends Component {
                if (e !== 'validation_error') {
                    if (e.api_message) {
                        if (typeof (e.api_message) === 'string') {
-                           const match = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
+                           const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
                            sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
                        }
                        else {
                            if (typeof (e.api_message.error) !== 'undefined') {
                                const error = e.api_message.error;
                                if (error.error === 'transaction_input_max_error') {
-                                   sendTransactionErrorMessage = <>your transaction tries to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>. please try to send smaller amount or aggregate manually by sending smaller amounts to yourself. max amount you can send now is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
+                                   sendTransactionErrorMessage = <>your
+                                       transaction tries to use too many outputs<HelpIconView
+                                           help_item_name={'transaction_max_input_number'}/>.
+                                       please try to send smaller amount or
+                                       aggregate manually by sending smaller
+                                       amounts to yourself. max amount you can
+                                       send now
+                                       is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
                                }
                            }
                        }

@@ -149,7 +149,8 @@ class Sidebar extends Component {
                         </NavItem>
                     </NavItem>
 
-                    <NavItem key={'advertisement-list'} eventKey="/advertisement-list">
+                    <NavItem key={'advertisement-list'}
+                             eventKey="/advertisement-list">
                         <NavText>
                             advertisements
                         </NavText>
