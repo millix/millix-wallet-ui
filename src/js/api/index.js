@@ -86,6 +86,17 @@ class API {
 
     }
 
+    resetAd(advertisementGUID) {
+        try {
+            return fetch(this.getTangledApiURL() + `/pKZdzEZrrdPA1jtl?p0=${advertisementGUID}`)
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+
+    }
+
     submitAdForm(formData) {
         try {
             return fetch(this.getTangledApiURL() + `/scWZ0yhuk5hHLd8s?p0=${encodeURIComponent(JSON.stringify(formData))}`)

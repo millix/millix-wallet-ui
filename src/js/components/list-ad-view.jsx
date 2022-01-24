@@ -31,12 +31,16 @@ class ListAdView extends Component {
         return label;
     }
 
-    async toggleAdStatus(advertisement_guid) {
+    toggleAdStatus(advertisement_guid) {
         API.toggleAdStatus(advertisement_guid).then(data => {
             if (typeof data.api_status != 'undefined' && data.api_status === 'ok') {
                 this.reloadDatatable();
             }
         });
+    }
+
+    resetAd(advertisement_guid) {
+        API.resetAd(advertisement_guid).then(_ => _);
     }
 
     getFormattedDate(item) {
@@ -54,7 +58,25 @@ class ListAdView extends Component {
                 icon={icon}
                 size="1x"/>
         </Button>;
+    }
 
+    getResetButton(item) {
+        return <Button
+            id={item.advertisement_guid}
+            variant="outline-default"
+            className={'btn-xs icon_only ms-auto'}
+            onClick={() => this.resetAd(item.advertisement_guid)}>
+            <FontAwesomeIcon
+                icon={'redo'}
+                size="1x"/>
+        </Button>;
+    }
+
+    getActionButton(item) {
+        return <div>
+            {this.getStatusButton(item)}
+            {this.getResetButton(item)}
+        </div>;
     }
 
     async getTypes() {
@@ -115,7 +137,7 @@ class ListAdView extends Component {
                             bid_impression_mlx         : item.bid_impression_mlx.toLocaleString('en-US'),
                             expiration                 : item.expiration,
                             status                     : this.getStatusLabel(item.status),
-                            action                     : this.getStatusButton(item),
+                            action                     : this.getActionButton(item),
                             create_date                : this.getFormattedDate(item)
                         });
                     });
@@ -160,7 +182,8 @@ class ListAdView extends Component {
                             that views the ad.
                         </div>
                         <div className={'form-group'}>
-                            at the moment you can not edit advertisements. you can pause existing and create a new one instead.
+                            at the moment you can not edit advertisements. you
+                            can pause existing and create a new one instead.
                         </div>
                         <div className={'datatable_action_row'}>
                             <Col md={4}>
