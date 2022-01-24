@@ -21,15 +21,18 @@ const MnemonicConfirmView = (props) => {
     const entirePhraseChange = (event) => {
         const mnemonic = event.target.value.split(' ');
         props.onChange(isValid(mnemonic), mnemonic);
+    };
+
+    let info_label = 'reproduce the mnemonic phrase from the previous step.';
+    if (props.processName === 'import') {
+        info_label = 'enter the mnemonic phrase from the wallet you want to use.';
     }
 
     return (
         <div className={'mnemonic'}>
-            <Row>
-                <Col sm={12} className={'center mb-3'}>reproduce the
-                    mnemonic phrase from the previous step by placing the words
-                    in inputs below</Col>
-            </Row>
+            <div className={'center mb-3'}>
+                <span>{info_label}</span>
+            </div>
 
             <Form.Group className="form-group">
                 <label>you can paste entire mnemonic phrase</label>
@@ -60,7 +63,6 @@ const MnemonicConfirmView = (props) => {
                                         let newMnemonicConfig  = [...mnemonicConfirm];
                                         newMnemonicConfig[idx] = inputList[idx].value;
                                         setMnemonicConfirm(newMnemonicConfig);
-                                        console.log(newMnemonicConfig);
                                         props.onChange(isValid(newMnemonicConfig), newMnemonicConfig);
                                     }}
                                 />
@@ -74,9 +76,10 @@ const MnemonicConfirmView = (props) => {
 };
 
 MnemonicConfirmView.propTypes = {
-    mnemonic : PropTypes.array.isRequired,
-    onChange : PropTypes.func.isRequired,
-    importNew: PropTypes.bool
+    mnemonic   : PropTypes.array.isRequired,
+    onChange   : PropTypes.func.isRequired,
+    importNew  : PropTypes.bool,
+    processName: PropTypes.string
 };
 
 export default MnemonicConfirmView;

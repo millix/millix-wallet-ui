@@ -78,8 +78,13 @@ body .section_subtitle {
   color: $color-white;
 }
 
-.unlock-container {
+.unlock-container,
+.import_mnemonic_container,
+.create_wallet_container {
   margin: 10rem auto 0;
+}
+
+.unlock-container {
   max-width: 55rem;
 }
 

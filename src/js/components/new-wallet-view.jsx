@@ -139,10 +139,7 @@ class NewWalletView extends Component {
         }
 
         return (
-            <Container style={{
-                marginTop  : 50,
-                paddingLeft: 25
-            }}>
+            <Container className={'create_wallet_container'}>
                 <>
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
@@ -160,15 +157,18 @@ class NewWalletView extends Component {
                                                 mnemonic={this.state.mnemonic}/>)}
                                         {this.state.mnemonic && status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && (
                                             <MnemonicConfirmView
+                                                processName={'create'}
                                                 mnemonic={this.state.mnemonic}
                                                 onChange={isConfirmed => this.setState({mnemonic_is_confirmed: isConfirmed})}/>)}
                                         {this.state.status === STATUS.NEW_WALLET_PASSWORD && (
                                             <WalletCreatePasswordView
+                                                processName={'create'}
                                                 notConfirmed={!this.state.password_valid}
                                                 onPassword={this.onPassword.bind(this)}
                                                 onConfirmPassword={this.onConfirmPassword.bind(this)}/>)}
                                         {this.state.wallet_info && this.state.status === STATUS.NEW_WALLET_CREATED && (
                                             <WalletCreateInfoView
+                                                processName={'create'}
                                                 wallet={this.state.wallet_info}/>
                                         )}
                                     </div>
