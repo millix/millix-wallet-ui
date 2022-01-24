@@ -55,30 +55,36 @@ class TransactionDetailsView extends Component {
             return '';
         }
 
-        const transaction_output_list = transaction.transaction_output_list.map((output, idx) => ({
-            address          : output.address,
-            output_position  : output.output_position,
-            amount           : output.amount,
-            is_double_spend  : this.getBoolLabel(output.is_double_spend),
-            double_spend_date: output.double_spend_date && moment.utc(output.double_spend_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-            is_stable        : this.getBoolLabel(output.is_stable),
-            stable_date      : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-            status           : output.status
-        }));
+        let transaction_output_list = [];
+        let transaction_input_list  = [];
+        if (transaction.transaction_output_list) {
+            transaction_output_list = transaction.transaction_output_list.map((output, idx) => ({
+                address          : output.address,
+                output_position  : output.output_position,
+                amount           : output.amount,
+                is_double_spend  : this.getBoolLabel(output.is_double_spend),
+                double_spend_date: output.double_spend_date && moment.utc(output.double_spend_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                is_stable        : this.getBoolLabel(output.is_stable),
+                stable_date      : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                status           : output.status
+            }));
+        }
 
-        const transaction_input_list = transaction.transaction_input_list.map((input, idx) => ({
-            address                : input.address,
-            input_position         : input.input_position,
-            output_transaction_id  : input.output_transaction_id,
-            output_position        : input.output_position,
-            output_transaction_date: input.output_transaction_date && moment.utc(input.output_transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-            is_double_spend        : this.getBoolLabel(input.is_double_spend),
-            double_spend_date      : input.double_spend_date && moment.utc(input.double_spend_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-            is_stable              : this.getBoolLabel(input.is_stable),
-            stable_date            : input.stable_date && moment.utc(input.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-            status                 : input.status,
-            action                 : this.getTransactionInputOutputLink(input)
-        }));
+        if (transaction.transaction_input_list) {
+            transaction_input_list = transaction.transaction_input_list.map((input, idx) => ({
+                address                : input.address,
+                input_position         : input.input_position,
+                output_transaction_id  : input.output_transaction_id,
+                output_position        : input.output_position,
+                output_transaction_date: input.output_transaction_date && moment.utc(input.output_transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                is_double_spend        : this.getBoolLabel(input.is_double_spend),
+                double_spend_date      : input.double_spend_date && moment.utc(input.double_spend_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                is_stable              : this.getBoolLabel(input.is_stable),
+                stable_date            : input.stable_date && moment.utc(input.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                status                 : input.status,
+                action                 : this.getTransactionInputOutputLink(input)
+            }));
+        }
 
         return (
             <>

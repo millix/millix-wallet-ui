@@ -7,6 +7,7 @@ import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import DatatableHeaderView from './utils/datatable-header-view';
 
 
 class PeerListView extends Component {
@@ -16,11 +17,16 @@ class PeerListView extends Component {
         this.state         = {
             node_online_list          : new Set(),
             peer_list                 : [],
-            datatable_reload_timestamp: ''
+            datatable_reload_timestamp: '',
+            datatable_loading         : false
         };
     }
 
     reloadDatatable() {
+        this.setState({
+            datatable_loading: true
+        });
+
         API.listActivePeers()
            .then(data => {
                let shouldUpdate   = false;
@@ -34,7 +40,8 @@ class PeerListView extends Component {
 
                    const action = <DatatableActionButtonView
                        history_path={'/peer/' + item.node_id}
-                       history_state={{peer: item.node_id}}/>;
+                       history_state={{peer: item.node_id}}
+                       icon={'eye'}/>;
 
                    peerList.push({
                        node_idx   : idx + 1,
@@ -47,7 +54,8 @@ class PeerListView extends Component {
                    this.setState({
                        node_online_list          : onlineNodeList,
                        peer_list                 : peerList,
-                       datatable_reload_timestamp: new Date()
+                       datatable_reload_timestamp: new Date(),
+                       datatable_loading         : false
                    });
                }
            });
@@ -76,28 +84,15 @@ class PeerListView extends Component {
                                 </div>
                             </Col>
                         </Row>
-                        <div className={'datatable_action_row'}>
-                            <Col md={4}>
-                                <Button variant="outline-primary"
-                                        className={'btn-sm refresh_button'}
-                                        onClick={() => this.reloadDatatable()}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={'sync'}
-                                        size="1x"/>
-                                    refresh
-                                </Button>
-                            </Col>
-                            <Col md={4} className={'datatable_refresh_ago'}>
-                            <span>
-                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
-                            </span>
-                            </Col>
-                        </div>
+                        <DatatableHeaderView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                        />
                         <Row>
                             <DatatableView
                                 value={this.state.peer_list}
                                 sortField={'node_idx'}
+                                loading={this.state.datatable_loading}
                                 sortOrder={-1}
                                 showActionColumn={true}
                                 resultColumn={[

@@ -7,6 +7,7 @@ import DatatableView from './utils/datatable-view';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button} from 'react-bootstrap';
 import moment from 'moment';
+import DatatableHeaderView from './utils/datatable-header-view';
 
 
 class ListAdView extends Component {
@@ -18,7 +19,8 @@ class ListAdView extends Component {
             types                     : [],
             fileKey                   : new Date().getTime(),
             ad_list                   : [],
-            datatable_reload_timestamp: ''
+            datatable_reload_timestamp: '',
+            datatable_loading         : false
         };
     }
 
@@ -116,6 +118,10 @@ class ListAdView extends Component {
     }
 
     async reloadDatatable() {
+        this.setState({
+            datatable_loading: true
+        });
+
         API.listAds().then(data => {
             if (typeof data.api_status != 'undefined' && data.api_status === 'ok') {
                 let ad_list = [];
@@ -144,7 +150,8 @@ class ListAdView extends Component {
 
                     this.setState({
                         ad_list                   : ad_list,
-                        datatable_reload_timestamp: new Date()
+                        datatable_reload_timestamp: new Date(),
+                        datatable_loading         : false
                     });
                 }
             }
@@ -185,39 +192,17 @@ class ListAdView extends Component {
                             at the moment you can not edit advertisements. you
                             can pause existing and create a new one instead.
                         </div>
-                        <div className={'datatable_action_row'}>
-                            <Col md={4}>
-                                <Button variant="outline-primary"
-                                        className={'btn-sm refresh_button'}
-                                        onClick={() => this.reloadDatatable()}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={'sync'}
-                                        size="1x"/>
-                                    refresh
-                                </Button>
-                            </Col>
-                            <Col md={4} className={'datatable_refresh_ago'}>
-                            <span>
-                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
-                            </span>
-                            </Col>
-                            <Col md={4}>
-                                <Button variant="outline-primary"
-                                        className={'btn-sm create_button'}
-                                        onClick={() => this.props.history.push('/advertisement-create')}>
-                                    <FontAwesomeIcon
-                                        icon={'plus-circle'}
-                                        size="1x"/>
-                                    create advertisement
-                                </Button>
-                            </Col>
-                        </div>
+                        <DatatableHeaderView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                            action_button_on_click={() => this.props.history.push('/advertisement-create')}
+                        />
                         <Row id={'adlist'}>
                             <DatatableView
                                 value={this.state.ad_list}
                                 sortField={'date'}
                                 sortOrder={-1}
+                                loading={this.state.datatable_loading}
                                 showActionColumn={true}
                                 resultColumn={[
                                     {

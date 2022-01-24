@@ -135,9 +135,8 @@ class ActionView extends Component {
                            on_hide={() => this.changeModalShow(false)}
                            heading={'reset validation'}
                            on_accept={() => this.resetTransactionValidation()}
-                           body={<div>it will force your node to revalidate all
-                               your transactions. it is safe, but will take some
-                               time. are you sure you want to proceed?</div>}/>
+                           body={<div><div>continuing will force your node to revalidate all your transactions.  this may take some time depending on how many transactions you have.</div>
+                               <div>are you sure you want to proceed?</div></div>}/>
                 <Row>
                     <Col>
                         {/*<div className={'panel panel-filled'}>

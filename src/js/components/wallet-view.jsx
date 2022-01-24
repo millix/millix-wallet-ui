@@ -9,6 +9,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import ErrorList from './utils/error-list-view';
 import HelpIconView from './utils/help-icon-view';
+import DatatableHeaderView from './utils/datatable-header-view';
 
 
 class WalletView extends Component {
@@ -374,15 +375,10 @@ class WalletView extends Component {
                             <div className={'panel-heading bordered'}>addresses
                             </div>
                             <div className={'panel-body'}>
-                                <div className={'datatable_action_row'}>
-                                    <Button variant="outline-primary"
-                                            className={'btn-sm create_button'}
-                                            onClick={() => this.getNextAddress()}>
-                                        <FontAwesomeIcon
-                                            icon={'plus-circle'}
-                                            size="1x"/>generate address
-                                    </Button>
-                                </div>
+                                <DatatableHeaderView
+                                    action_button_on_click={() => this.getNextAddress()}
+                                    action_button_label={'generate address'}
+                                />
                                 <Row>
                                     <DatatableView
                                         value={this.state.addressList}

@@ -155,7 +155,7 @@ class ReportIssueView extends Component {
                                         <tbody>
                                         <tr>
                                             <td className={'w-20'}>
-                                                arch
+                                                architecture
                                             </td>
                                             <td>
                                                 {this.state.nodeOsInfo.arch}

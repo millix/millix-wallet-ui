@@ -7,6 +7,7 @@ import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api';
+import DatatableHeaderView from './utils/datatable-header-view';
 
 
 class TransactionHistoryView extends Component {
@@ -15,7 +16,8 @@ class TransactionHistoryView extends Component {
         this.transactionHistoryUpdateHandler = undefined;
         this.state                           = {
             transaction_list          : [],
-            datatable_reload_timestamp: ''
+            datatable_reload_timestamp: '',
+            datatable_loading         : false
         };
     }
 
@@ -33,6 +35,10 @@ class TransactionHistoryView extends Component {
     }
 
     reloadDatatable() {
+        this.setState({
+            datatable_loading: true
+        });
+
         return API.getTransactionHistory(this.props.wallet.address_key_identifier).then(data => {
             const rows = data.map((transaction, idx) => ({
                 idx        : data.length - idx,
@@ -43,12 +49,14 @@ class TransactionHistoryView extends Component {
                 parent_date: transaction.parent_date && moment.utc(transaction.parent_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
                 action     : <DatatableActionButtonView
                     history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
-                    history_state={[transaction]}/>
+                    history_state={[transaction]}
+                    icon={'eye'}/>
             }));
 
             this.setState({
                 transaction_list          : rows,
-                datatable_reload_timestamp: new Date()
+                datatable_reload_timestamp: new Date(),
+                datatable_loading         : false
             });
         });
     }
@@ -59,29 +67,16 @@ class TransactionHistoryView extends Component {
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>transactions</div>
                     <div className={'panel-body'}>
-                        <div className={'datatable_action_row'}>
-                            <Col md={4}>
-                                <Button variant="outline-primary"
-                                        className={'btn-sm refresh_button'}
-                                        onClick={() => this.reloadDatatable()}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={'sync'}
-                                        size="1x"/>
-                                    refresh
-                                </Button>
-                            </Col>
-                            <Col md={4} className={'datatable_refresh_ago'}>
-                            <span>
-                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
-                            </span>
-                            </Col>
-                        </div>
+                        <DatatableHeaderView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                        />
                         <Row id={'txhistory'}>
                             <DatatableView
                                 value={this.state.transaction_list}
                                 sortField={'date'}
                                 sortOrder={-1}
+                                loading={this.state.datatable_loading}
                                 showActionColumn={true}
                                 resultColumn={[
                                     {

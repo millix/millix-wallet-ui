@@ -7,6 +7,7 @@ import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import DatatableHeaderView from './utils/datatable-header-view';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -16,7 +17,8 @@ class UnspentTransactionOutputView extends Component {
         this.state          = {
             transaction_output_list   : [],
             stable                    : 1,
-            datatable_reload_timestamp: ''
+            datatable_reload_timestamp: '',
+            datatable_loading         : false
         };
     }
 
@@ -54,6 +56,10 @@ class UnspentTransactionOutputView extends Component {
     }
 
     reloadDatatable() {
+        this.setState({
+            datatable_loading: true
+        });
+
         return API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.state.stable).then(data => {
             let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
                 idx             : data.length - idx,
@@ -65,11 +71,13 @@ class UnspentTransactionOutputView extends Component {
                 stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
                 action          : <DatatableActionButtonView
                     history_path={'/transaction/' + encodeURIComponent(output.transaction_id)}
-                    history_state={[output]}/>
+                    history_state={[output]}
+                    icon={'eye'}/>
             }));
             this.setState({
                 transaction_output_list   : rows,
-                datatable_reload_timestamp: new Date()
+                datatable_reload_timestamp: new Date(),
+                datatable_loading         : false
             });
         });
     }
@@ -88,29 +96,16 @@ class UnspentTransactionOutputView extends Component {
                         transaction output list
                     </div>
                     <div className={'panel-body'}>
-                        <div className={'datatable_action_row'}>
-                            <Col md={4}>
-                                <Button variant="outline-primary"
-                                        className={'btn-sm refresh_button'}
-                                        onClick={() => this.reloadDatatable()}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={'sync'}
-                                        size="1x"/>
-                                    refresh
-                                </Button>
-                            </Col>
-                            <Col md={4} className={'datatable_refresh_ago'}>
-                            <span>
-                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
-                            </span>
-                            </Col>
-                        </div>
+                        <DatatableHeaderView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                        />
                         <Row id={'txhistory'}>
                             <DatatableView
                                 value={this.state.transaction_output_list}
                                 sortField={'transaction_date'}
                                 sortOrder={-1}
+                                loading={this.state.datatable_loading}
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
@@ -152,5 +147,5 @@ class UnspentTransactionOutputView extends Component {
 export default connect(
     state => ({
         wallet: state.wallet
-    }),
+    })
 )(withRouter(UnspentTransactionOutputView));

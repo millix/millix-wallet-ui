@@ -137,8 +137,7 @@ class DatatableView extends Component {
                        rows={this.state.rows}
                        onPage={this.onCustomPage}
                        paginatorClassName="p-jc-end"
-
-
+                       loading={this.props.loading}
                        stripedRows
                        showGridlines
                        resizableColumns
@@ -159,7 +158,8 @@ DatatableView.propTypes = {
     sortField       : PropTypes.string,
     sortOrder       : PropTypes.number,
     showActionColumn: PropTypes.bool,
-    reload_timestamp: PropTypes.any
+    reload_timestamp: PropTypes.any,
+    loading         : PropTypes.bool
 };
 
 

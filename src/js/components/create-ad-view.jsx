@@ -178,17 +178,6 @@ class CreateAdView extends Component {
             }
         }
 
-        if (parseFloat(fields['bid_per_impressions_mlx']) > parseFloat(fields['daily_budget_mlx'])) {
-            formIsValid = false;
-            error_list.push('bid per impression cannot exceed the daily budget');
-        }
-
-        if (parseFloat(fields['daily_budget_mlx']) > parseFloat(this.props.wallet.balance_stable)) {
-            formIsValid = false;
-            error_list.push('please add funds to enable this ad campaign');
-        }
-
-
         this.setState({error_list: error_list});
         return formIsValid;
     }
