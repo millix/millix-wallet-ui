@@ -10,16 +10,25 @@ import moment from 'moment';
 import ErrorList from './utils/error-list-view';
 import HelpIconView from './utils/help-icon-view';
 import DatatableHeaderView from './utils/datatable-header-view';
+import ModalView from './utils/modal-view';
 
 
 class WalletView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            feesLocked : true,
-            addressList: [],
-            error_list : []
+            feesLocked            : true,
+            addressList           : [],
+            error_list            : [],
+            modalShow             : false,
+            address_base          : '',
+            address_version       : '',
+            address_key_identifier: '',
+            amount                : '',
+            fees                  : ''
         };
+
+        this.send = this.send.bind(this);
     }
 
     componentDidMount() {
@@ -98,7 +107,6 @@ class WalletView extends Component {
                let amount;
                try {
                    amount = this._getAmount(this.amount.value);
-                   console.log(amount);
                }
                catch (e) {
                    error_list.push({
@@ -127,85 +135,102 @@ class WalletView extends Component {
                }
 
                this.setState({
-                   error_list: [],
-                   sending   : true
+                   error_list            : [],
+                   sending               : true,
+                   address_base          : destinationAddress,
+                   address_version       : destinationAddressVersion,
+                   address_key_identifier: destinationAddressIdentifier,
+                   amount                : amount,
+                   fees                  : fees
                });
 
-               return API.sendTransaction({
-                   transaction_output_list: [
-                       {
-                           address_base          : destinationAddress,
-                           address_version       : destinationAddressVersion,
-                           address_key_identifier: destinationAddressIdentifier,
-                           amount
-                       }
-                   ],
-                   transaction_output_fee : {
-                       fee_type: 'transaction_fee_default',
-                       amount  : fees
-                   }
-               }).then(data => {
-                   if (data.api_status === 'fail') {
-                       return Promise.reject(data);
-                   }
-               });
+               this.changeModalShow();
            })
-           .then(() => {
-               this.destinationAddress.value = '';
-               this.amount.value             = '';
-               if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
-                   this.fees.value = this.props.config.TRANSACTION_FEE_DEFAULT.toLocaleString('en-US');
-               }
-               this.setState({
-                   sending   : false,
-                   feesLocked: true
-               });
-           })
-           .catch((e) => {
-               let sendTransactionErrorMessage;
+    }
 
-               if (e !== 'validation_error') {
-                   if (e.api_message) {
-                       if (typeof (e.api_message) === 'string') {
-                           const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                           sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
-                       }
-                       else {
-                           if (typeof (e.api_message.error) !== 'undefined') {
-                               const error = e.api_message.error;
-                               if (error.error === 'transaction_input_max_error') {
-                                   sendTransactionErrorMessage = <>your
-                                       transaction tries to use too many outputs<HelpIconView
-                                           help_item_name={'transaction_max_input_number'}/>.
-                                       please try to send smaller amount or
-                                       aggregate manually by sending smaller
-                                       amounts to yourself. max amount you can
-                                       send now
-                                       is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
-                               }
-                           }
-                       }
-                   }
-                   else if (e === 'insufficient_balance') {
-                       sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
-                   }
-                   else if (e === 'transaction_send_interrupt') {
-                       sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
-                   }
-                   else {
-                       sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
-                   }
+    sendTransaction(){
+        const amount = this.state.amount;
+        API.sendTransaction({
+            transaction_output_list: [
+                {
+                    address_base          : this.state.address_base,
+                    address_version       : this.state.address_version,
+                    address_key_identifier: this.state.address_key_identifier,
+                    amount
+                }
+            ],
+            transaction_output_fee : {
+                fee_type: 'transaction_fee_default',
+                amount  : this.state.fees
+            }
+        }).then(data => {
+            if (data.api_status === 'fail') {
+                return Promise.reject(data);
+            }
+        }).then(() => {
+            this.destinationAddress.value = '';
+            this.amount.value             = '';
+            if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
+                this.fees.value = this.props.config.TRANSACTION_FEE_DEFAULT.toLocaleString('en-US');
+            }
+            this.setState({
+                sending   : false,
+                feesLocked: true
+            });
+        }).catch((e) => {
+            let sendTransactionErrorMessage;
+            let error_list = [];
+            if (e !== 'validation_error') {
+                if (e.api_message) {
+                    if (typeof (e.api_message) === 'string') {
+                        const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
+                        sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
+                    }
+                    else {
+                        if (typeof (e.api_message.error) !== 'undefined') {
+                            const error = e.api_message.error;
+                            if (error.error === 'transaction_input_max_error') {
+                                sendTransactionErrorMessage = <>your
+                                    transaction tries to use too many outputs<HelpIconView
+                                        help_item_name={'transaction_max_input_number'}/>.
+                                    please try to send smaller amount or
+                                    aggregate manually by sending smaller
+                                    amounts to yourself. max amount you can
+                                    send now
+                                    is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
+                            }
+                        }
+                    }
+                }
 
-                   error_list.push({
-                       name   : 'sendTransactionError',
-                       message: sendTransactionErrorMessage
-                   });
-               }
-               this.setState({
-                   error_list: error_list,
-                   sending   : false
-               });
-           });
+                if (e === 'insufficient_balance' || e.api_message.error.error === 'insufficient_balance') {
+                    sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
+                }
+                else if (e === 'transaction_send_interrupt' || e.api_message.error === 'transaction_send_interrupt') {
+                    sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
+                }
+                else {
+                    sendTransactionErrorMessage = `your transaction could not be sent: (${e.api_message.error.error || e.api_message.error || e.message || e.api_message || e})`;
+                }
+
+                error_list.push({
+                    name   : 'sendTransactionError',
+                    message: sendTransactionErrorMessage
+                });
+            }
+            this.setState({
+                error_list: error_list,
+                sending   : false,
+                canceling : false
+            });
+        });
+    }
+
+    cancelSendTransaction() {
+        this.setState({
+            canceling: false,
+            sending  : false
+        });
     }
 
     handleAmountValueChange(e) {
@@ -225,6 +250,12 @@ class WalletView extends Component {
         e.target.value = !isNaN(amount) ? amount.toLocaleString('en-US') : 0;
 
         e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
+    }
+
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
     }
 
     render() {
@@ -350,10 +381,21 @@ class WalletView extends Component {
                                         </Col>
                                         <Col
                                             className={'d-flex justify-content-center'}>
+                                            <ModalView show={this.state.modalShow}
+                                                       size={'lg'}
+                                                       on_hide={() => this.changeModalShow(false)}
+                                                       heading={'send confirmation'}
+                                                       on_accept={() => this.sendTransaction()}
+                                                       on_cancel={() => this.cancelSendTransaction()}
+                                                       body={<div>are you sure you want to send
+                                                            {this.state.amount}
+                                                           mlx to  {this.state.address_base}
+                                                           paying {this.state.fees}
+                                                           mlx fee?</div>}/>
                                             <Form.Group as={Row}>
                                                 <Button
                                                     variant="outline-primary"
-                                                    onClick={this.send.bind(this)}
+                                                    onClick={() => this.send()}
                                                     disabled={this.state.canceling}>
                                                     {this.state.sending ?
                                                      <>
