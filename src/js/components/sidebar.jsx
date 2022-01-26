@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import ModalView from './utils/modal-view';
 
 
 class Sidebar extends Component {
@@ -13,7 +14,8 @@ class Sidebar extends Component {
         this.state = {
             fileKeyExport: 'export_' + now,
             fileKeyImport: 'import_' + now,
-            date         : new Date()
+            date         : new Date(),
+            modalShow    : false
         };
     }
 
@@ -82,6 +84,12 @@ class Sidebar extends Component {
         return result;
     }
 
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
+    }
+
     render() {
         let props           = this.props;
         let defaultSelected = this.highlightSelected(props.location.pathname);
@@ -95,7 +103,7 @@ class Sidebar extends Component {
                 onSelect={(selected) => {
                     switch (selected) {
                         case 'lock':
-                            props.lockWallet();
+                            this.changeModalShow(true)
                             break;
                         case 'resetValidation':
                             break;
@@ -105,6 +113,12 @@ class Sidebar extends Component {
                 }}
                 expanded={true}
             >
+                <ModalView show={this.state.modalShow}
+                           size={'lg'}
+                           on_hide={() => this.changeModalShow(false)}
+                           heading={'logout'}
+                           on_accept={() => props.lockWallet()}
+                           body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
                     <span>{moment.utc(this.state.date).format('YYYY-MM-DD HH:mm:ss')} utc</span>
                 </div>
