@@ -23,6 +23,7 @@ import ManageWalletView from './manage-wallet-view';
 import StatsView from './stats-view';
 import ReportIssueView from './report-issue-view';
 import FaqView from './faq-view';
+import AddressListView from './address-list-view';
 
 
 class AppContainer extends Component {
@@ -75,6 +76,8 @@ class AppContainer extends Component {
                     <UnlockedWalletRequiredRoute
                         path="/transaction/:transaction_id"
                         component={TransactionDetails}/>
+                    <UnlockedWalletRequiredRoute path="/address-list"
+                                                 component={AddressListView}/>
                     <UnlockedWalletRequiredRoute path="/transaction-list"
                                                  component={TransactionHistoryView}/>
                     <UnlockedWalletRequiredRoute path="/faq"

@@ -5,6 +5,7 @@ import {lockWallet} from '../redux/actions/index';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './utils/modal-view';
+import * as format from '../helper/format';
 
 
 class Sidebar extends Component {
@@ -103,7 +104,7 @@ class Sidebar extends Component {
                 onSelect={(selected) => {
                     switch (selected) {
                         case 'lock':
-                            this.changeModalShow(true)
+                            this.changeModalShow(true);
                             break;
                         case 'resetValidation':
                             break;
@@ -115,12 +116,12 @@ class Sidebar extends Component {
             >
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
-                           on_hide={() => this.changeModalShow(false)}
+                           on_close={() => this.changeModalShow(false)}
                            heading={'logout'}
                            on_accept={() => props.lockWallet()}
                            body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
-                    <span>{moment.utc(this.state.date).format('YYYY-MM-DD HH:mm:ss')} utc</span>
+                    <span>{format.date(this.state.date)} utc</span>
                 </div>
                 <SideNav.Nav
                     selected={defaultSelected}
@@ -128,6 +129,12 @@ class Sidebar extends Component {
                     <NavItem key={'wallet'} eventKey="/wallet">
                         <NavText>
                             home
+                        </NavText>
+                    </NavItem>
+
+                    <NavItem key={'address-list'} eventKey="/address-list">
+                        <NavText>
+                            addresses
                         </NavText>
                     </NavItem>
 
@@ -152,13 +159,13 @@ class Sidebar extends Component {
                         <NavItem key={'unspent-transaction-output-list-pending'}
                                  eventKey="/unspent-transaction-output-list/pending">
                             <NavText>
-                                pending unspent list
+                                pending unspents
                             </NavText>
                         </NavItem>
                         <NavItem key={'unspent-transaction-output-list-stable'}
                                  eventKey={'/unspent-transaction-output-list/stable'}>
                             <NavText>
-                                stable unspent list
+                                stable unspents
                             </NavText>
                         </NavItem>
                     </NavItem>

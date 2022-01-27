@@ -8,6 +8,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button} from 'react-bootstrap';
 import moment from 'moment';
 import DatatableHeaderView from './utils/datatable-header-view';
+import * as format from '../helper/format';
 
 
 class ListAdView extends Component {
@@ -43,10 +44,6 @@ class ListAdView extends Component {
 
     resetAd(advertisement_guid) {
         API.resetAd(advertisement_guid).then(_ => _);
-    }
-
-    getFormattedDate(item) {
-        return moment.utc(item.create_date * 1000).format('YYYY-MM-DD HH:mm:ss');
     }
 
     getStatusButton(item) {
@@ -137,14 +134,14 @@ class ListAdView extends Component {
                             advertisement_name         : item.advertisement_name,
                             advertisement_url          : item.advertisement_url,
                             protocol_address_funding   : item.protocol_address_funding,
-                            budget_daily_usd           : item.budget_daily_usd.toLocaleString('en-US'),
-                            budget_daily_mlx           : item.budget_daily_mlx.toLocaleString('en-US'),
-                            bid_impression_usd         : item.bid_impression_usd.toLocaleString('en-US'),
-                            bid_impression_mlx         : item.bid_impression_mlx.toLocaleString('en-US'),
+                            budget_daily_usd           : format.fiat(item.budget_daily_usd),
+                            budget_daily_mlx           : format.millix(item.budget_daily_mlx, false),
+                            bid_impression_usd         : format.fiat(item.bid_impression_usd),
+                            bid_impression_mlx         : format.millix(item.bid_impression_mlx, false),
                             expiration                 : item.expiration,
                             status                     : this.getStatusLabel(item.status),
                             action                     : this.getActionButton(item),
-                            create_date                : this.getFormattedDate(item)
+                            create_date                : format.date(item.create_date)
                         });
                     });
 
@@ -159,10 +156,6 @@ class ListAdView extends Component {
     }
 
     componentDidMount() {
-        moment.relativeTimeThreshold('ss', -1); // required to get diff in
-        // seconds instead of "a few
-        // seconds ago"
-
         this.getCategories();
         this.getTypes();
         this.reloadDatatable();
@@ -206,34 +199,25 @@ class ListAdView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        'field'   : 'advertisement_name',
-                                        'header'  : 'name',
-                                        'sortable': true
+                                        field : 'advertisement_name',
+                                        header: 'name'
                                     },
                                     {
-                                        'field'   : 'advertisement_category',
-                                        'header'  : 'category',
-                                        'sortable': true
+                                        field : 'advertisement_category',
+                                        header: 'category'
                                     },
                                     {
-                                        'field'   : 'advertisement_url',
-                                        'header'  : 'url',
-                                        'sortable': true
+                                        field : 'advertisement_url',
+                                        header: 'url'
                                     },
                                     {
-                                        'field'   : 'expiration',
-                                        'header'  : 'expiration',
-                                        'sortable': true
+                                        field: 'expiration'
                                     },
                                     {
-                                        'field'   : 'status',
-                                        'header'  : 'status',
-                                        'sortable': true
+                                        field: 'status'
                                     },
                                     {
-                                        'field'   : 'create_date',
-                                        'header'  : 'create date',
-                                        'sortable': true
+                                        field: 'create_date'
                                     }
                                 ]}/>
                         </Row>

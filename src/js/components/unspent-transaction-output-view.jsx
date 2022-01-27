@@ -6,8 +6,9 @@ import moment from 'moment';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import * as format from '../helper/format';
 import DatatableHeaderView from './utils/datatable-header-view';
+import HelpIconView from './utils/help-icon-view';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -23,10 +24,6 @@ class UnspentTransactionOutputView extends Component {
     }
 
     componentDidMount() {
-        moment.relativeTimeThreshold('ss', -1); // required to get diff in
-        // seconds instead of "a few
-        // seconds ago"
-
         const stable_value_new = this.getStableFromUrl();
         this.setState({
             stable: stable_value_new
@@ -66,9 +63,9 @@ class UnspentTransactionOutputView extends Component {
                 transaction_id  : output.transaction_id,
                 address         : output.address,
                 output_position : output.output_position,
-                amount          : output.amount.toLocaleString('en-US'),
-                transaction_date: moment.utc(output.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                amount          : output.amount,
+                transaction_date: format.date(output.transaction_date),
+                stable_date     : format.date(output.stable_date),
                 action          : <DatatableActionButtonView
                     history_path={'/transaction/' + encodeURIComponent(output.transaction_id)}
                     history_state={[output]}
@@ -87,15 +84,30 @@ class UnspentTransactionOutputView extends Component {
     }
 
     render() {
+        let title = '';
+        if (this.state.stable) {
+            title = 'stable unspents';
+        }
+        else {
+            title = 'pending unspents'
+        }
+
         return (
             <div>
                 <div className={'panel panel-filled'}>
                     <div
                         className={'panel-heading bordered'}>
-                        {this.state.stable ? '' : 'pending'} unspent
-                        transaction output list
+                        {title}
                     </div>
                     <div className={'panel-body'}>
+                        <div>
+                            an unspent is a transaction output sent to your address that you received and
+                            have not used to fund a payment. your balance is the sum of your validated unspents. your pending balance<HelpIconView
+                            help_item_name={'pending_balance'}/> is the sum of your unspents that haven't been validated yet.
+                        </div>
+                        <div className={'form-group'}>
+                            when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the remaining change as a new unspent.
+                        </div>
                         <DatatableHeaderView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
@@ -109,30 +121,21 @@ class UnspentTransactionOutputView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        'field'   : 'transaction_date',
-                                        'header'  : 'date',
-                                        'sortable': true
+                                        field : 'transaction_date',
+                                        header: 'date'
                                     },
                                     {
-                                        'field'   : 'transaction_id',
-                                        'header'  : 'transaction id',
-                                        'sortable': true
+                                        field : 'amount',
+                                        format: 'amount'
                                     },
                                     {
-                                        'field'   : 'output_position',
-                                        'header'  : 'output position',
-                                        'sortable': true
+                                        field: 'address'
                                     },
                                     {
-                                        'field'   : 'address',
-                                        'header'  : 'address',
-                                        'sortable': true
+                                        field: 'transaction_id'
                                     },
-
                                     {
-                                        'field'   : 'amount',
-                                        'header'  : 'amount',
-                                        'sortable': true
+                                        field: 'output_position'
                                     }
                                 ]}/>
                         </Row>

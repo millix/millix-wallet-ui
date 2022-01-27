@@ -154,3 +154,19 @@ ul {
     }
   }
 }
+
+.balance_container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  .stable {
+    color: $color-white;
+    font-size: 2.8rem;
+  }
+
+  .primary_address,
+  .pending {
+    font-size: 1.4rem;
+  }
+}

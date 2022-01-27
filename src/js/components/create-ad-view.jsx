@@ -6,6 +6,7 @@ import ErrorList from './utils/error-list-view';
 import {walletUpdateAddresses, walletUpdateBalance} from '../redux/actions/index';
 import {withRouter} from 'react-router-dom';
 import ModalView from './utils/modal-view';
+import * as format from '../helper/format';
 
 
 class CreateAdView extends Component {
@@ -168,7 +169,7 @@ class CreateAdView extends Component {
 
         if (!fields['bid_per_impressions_mlx']) {
             formIsValid = false;
-            error_list.push('bid per impressio is required');
+            error_list.push('bid per impression is required');
         }
 
         if (typeof fields['bid_per_impressions_mlx'] !== 'undefined' && (typeof fields['daily_budget_mlx']) == 'string') {
@@ -176,6 +177,11 @@ class CreateAdView extends Component {
                 formIsValid = false;
                 error_list.push('bid per impression must be a number');
             }
+        }
+
+        if (parseFloat(fields['bid_per_impressions_mlx']) > parseFloat(fields['daily_budget_mlx'])) {
+            formIsValid = false;
+            error_list.push('bid per impression cannot exceed the daily budget');
         }
 
         this.setState({error_list: error_list});
@@ -278,7 +284,7 @@ class CreateAdView extends Component {
             <div>
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
-                           on_hide={() => this.changeModalShow(false)}
+                           on_close={() => this.changeModalShow(false)}
                            heading={'add funds'}
                            body={<div>
                                <div>fund your campaign by sending millix to the
@@ -519,7 +525,7 @@ class CreateAdView extends Component {
                                 </Form.Label>
                                 <div>
                                     <span>
-                                        {this.props.wallet.balance_stable.toLocaleString('en-US')} mlx
+                                        {format.millix(this.props.wallet.balance_stable)}
                                     </span>
                                     <Button
                                         variant="outline-primary"
@@ -554,7 +560,7 @@ class CreateAdView extends Component {
                                     ref={c => {
                                         this.budget = c;
                                         if (this.budget && this.state.fields['daily_budget_mlx'] !== undefined) {
-                                            this.budget.value = this.state.fields['daily_budget_mlx'].toLocaleString('en-US');
+                                            this.budget.value = format.millix(this.state.fields['daily_budget_mlx'], false);
                                         }
                                     }}
                                     placeholder=""
@@ -588,7 +594,7 @@ class CreateAdView extends Component {
                                         ref={c => {
                                             this.impression = c;
                                             if (this.impression && this.state.fields['bid_per_impressions_mlx'] !== undefined) {
-                                                this.impression.value = this.state.fields['bid_per_impressions_mlx'].toLocaleString('en-US');
+                                                this.impression.value = format.millix(this.state.fields['bid_per_impressions_mlx'], false);
                                             }
                                         }}
                                         placeholder=""

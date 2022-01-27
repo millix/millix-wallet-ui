@@ -1,7 +1,7 @@
 .alert-danger {
   color: $color-white;
   border-color: $color-red;
-  background-color: $color-red;
+  background-color: rgba($color-red, 0.1);
 
   ul {
     margin-bottom: 0;

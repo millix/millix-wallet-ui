@@ -70,20 +70,15 @@ class PeerListView extends Component {
         clearTimeout(this.updateHandler);
     }
 
-
     render() {
         return (
             <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>peers</div>
                     <div className={'panel-body'}>
-                        <Row>
-                            <Col>
-                                <div className={'form-group'}>
-                                    <span>these are peers to which you are connected. "peer" is another node to which your node connects to in order to send/receive data.</span>
-                                </div>
-                            </Col>
-                        </Row>
+                        <div className={'form-group'}>
+                            <span>these are peers to which you are connected. "peer" is another node to which your node connects to in order to send/receive data.</span>
+                        </div>
                         <DatatableHeaderView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
@@ -97,19 +92,16 @@ class PeerListView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        'field'   : 'node_idx',
-                                        'header'  : 'id',
-                                        'sortable': true
+                                        field : 'node_idx',
+                                        header: 'id'
                                     },
                                     {
-                                        'field'   : 'node_url',
-                                        'header'  : 'node',
-                                        'sortable': true
+                                        field : 'node_url',
+                                        header: 'node'
                                     },
                                     {
-                                        'field'   : 'node_status',
-                                        'header'  : 'status',
-                                        'sortable': true
+                                        field : 'node_status',
+                                        header: 'status'
                                     }
                                 ]}/>
                         </Row>

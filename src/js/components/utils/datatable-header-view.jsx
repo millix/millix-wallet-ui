@@ -9,6 +9,9 @@ import moment from 'moment';
 class DatatableHeaderView extends Component {
     constructor(props) {
         super(props);
+        moment.relativeTimeThreshold('ss', -1); // required to get diff in
+        // seconds instead of "a few
+        // seconds ago"
     }
 
     render() {
@@ -27,7 +30,8 @@ class DatatableHeaderView extends Component {
                 <Col md={4}>
                     {typeof (this.props.reload_datatable) === 'function' && (
                         <Button variant="outline-primary"
-                                className={'btn-sm refresh_button'}
+                                size={'sm'}
+                                className={'refresh_button'}
                                 onClick={() => this.props.reload_datatable()}
                         >
                             <FontAwesomeIcon
@@ -49,7 +53,8 @@ class DatatableHeaderView extends Component {
                 <Col md={4}>
                     {typeof (this.props.action_button_on_click) === 'function' && (
                         <Button variant="outline-primary"
-                                className={'btn-sm datatable_action_button'}
+                                size={'sm'}
+                                className={'datatable_action_button'}
                                 onClick={() => this.props.action_button_on_click()}>
                             <FontAwesomeIcon
                                 icon={action_button_icon}
@@ -65,7 +70,7 @@ class DatatableHeaderView extends Component {
 
 
 DatatableHeaderView.propTypes = {
-    datatable_reload_timestamp: PropTypes.string,
+    datatable_reload_timestamp: PropTypes.any,
     action_button_icon        : PropTypes.string,
     action_button_label       : PropTypes.string,
     action_button_on_click    : PropTypes.func,

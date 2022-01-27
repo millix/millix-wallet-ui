@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Row, Table} from 'react-bootstrap';
+import {Col, Row, Table} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {updateNetworkState} from '../redux/actions';
-
 import os from 'os';
 import API from '../api';
-import moment from 'moment';
+import * as format from '../helper/format';
 
 
 class ReportIssueView extends Component {
@@ -93,7 +92,7 @@ class ReportIssueView extends Component {
                                                 build date
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.node_millix_build_date && moment.unix(this.state.nodeOsInfo.node_millix_build_date).format('YYYY-MM-DD HH:mm:ss')}
+                                                {format.date(this.state.nodeOsInfo.node_millix_build_date)}
                                             </td>
                                         </tr>
                                         <tr>
@@ -151,7 +150,7 @@ class ReportIssueView extends Component {
                                     <div className={'section_subtitle'}>
                                         hardware
                                     </div>
-                                    <Table striped bordered hover>
+                                    <Table striped bordered hover className={'mb-0'}>
                                         <tbody>
                                         <tr>
                                             <td className={'w-20'}>

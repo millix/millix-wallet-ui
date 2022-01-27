@@ -72,17 +72,41 @@ class HelpIconView extends Component {
                 'title': 'transaction maximum input number',
                 'body' : <ul>
                     <li>
-                        each transaction can include up to 128 inputs. bigger
-                        number of inputs is not allowed by protocol
+                        the millix protocol limits each transaction to be funded
+                        by a maximum of 128 inputs.
                     </li>
                     <li>
-                        you may need to aggregate your unspent outputs manually
-                        before you can send big amount
+                        you can resolve this situation by aggregating your
+                        unspent outputs manually
+                        before you send a large amount.
                     </li>
                     <li>
-                        to aggregate your unspent outputs you need to manually
-                        send transactions to yourself (you will have to pay
-                        transaction fee)
+                        you can aggregate your unspent outputs manually
+                        by sending transactions to yourself.
+                    </li>
+                </ul>
+            },
+            'primary_address'             : {
+                'title': 'primary address',
+                'body' : <ul>
+                    <li>
+                        is the first address created by a new wallet.
+                    </li>
+                    <li>
+                        is the address announced by your node to the network.
+                    </li>
+                    <li>
+                        is the address where you receive transaction fees when
+                        selected as a proxy.
+                    </li>
+                    <li>
+                        is the address where you receive advertisement payments.
+                    </li>
+                    <li>
+                        click <a
+                        className={''}
+                        onClick={() => this.props.history.push('/address-list')}>here</a> to
+                        create new addresses and view existing addresses
                     </li>
                 </ul>
             }

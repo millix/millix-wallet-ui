@@ -3,14 +3,13 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import DatatableView from './utils/datatable-view';
 import API from '../api/index';
-import _ from 'lodash';
-import moment from 'moment';
 import ErrorList from './utils/error-list-view';
 import HelpIconView from './utils/help-icon-view';
-import DatatableHeaderView from './utils/datatable-header-view';
 import ModalView from './utils/modal-view';
+import * as format from '../helper/format';
+import BalanceView from './utils/balance-view';
+import AddressListView from './address-list-view';
 
 
 class WalletView extends Component {
@@ -18,9 +17,10 @@ class WalletView extends Component {
         super(props);
         this.state = {
             feesLocked            : true,
-            addressList           : [],
             error_list            : [],
             modalShow             : false,
+            modalShowSendResult   : false,
+            modalBodySendResult   : [],
             address_base          : '',
             address_version       : '',
             address_key_identifier: '',
@@ -31,42 +31,15 @@ class WalletView extends Component {
         this.send = this.send.bind(this);
     }
 
-    componentDidMount() {
-        this.updateAddresses();
-    }
-
     componentWillUnmount() {
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
         }
     }
 
-    updateAddresses() {
-        API.listAddresses(this.props.wallet.address_key_identifier)
-           .then(addresses => {
-               let result = _.sortBy(_.map(addresses, itemAddress => {
-                   return {
-                       address         : itemAddress.address,
-                       address_position: itemAddress.address_position,
-                       address_version : itemAddress.address_version,
-                       create_date     : moment.unix(itemAddress.create_date).format('YYYY-MM-DD HH:mm:ss')
-                   };
-               }), address => -address.address_position);
-
-               this.setState({
-                   addressList: result
-               });
-           });
-    }
-
-    getNextAddress() {
-        API.getNextAddress()
-           .then(() => this.updateAddresses());
-    }
-
     _getAmount(value, allowZero = false) {
         const pValue = parseInt(value.replace(/[,.]/g, ''));
-        if ((allowZero ? pValue < 0 : pValue <= 0) || pValue.toLocaleString('en-US') !== value) {
+        if ((allowZero ? pValue < 0 : pValue <= 0) || format.millix(pValue, false) !== value) {
             throw Error('invalid_value');
         }
         return pValue;
@@ -145,10 +118,10 @@ class WalletView extends Component {
                });
 
                this.changeModalShow();
-           })
+           });
     }
 
-    sendTransaction(){
+    sendTransaction() {
         const amount = this.state.amount;
         API.sendTransaction({
             transaction_output_list: [
@@ -167,16 +140,35 @@ class WalletView extends Component {
             if (data.api_status === 'fail') {
                 return Promise.reject(data);
             }
-        }).then(() => {
+
+            return data;
+        }).then(data => {
             this.destinationAddress.value = '';
             this.amount.value             = '';
+
             if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
-                this.fees.value = this.props.config.TRANSACTION_FEE_DEFAULT.toLocaleString('en-US');
+                this.fees.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
             }
-            this.setState({
-                sending   : false,
-                feesLocked: true
+
+            const transaction = data.transaction.find(item => {
+                return item.version.indexOf('0a') !== -1;
             });
+
+            const modalBodySendResult = <div className={'text-center'}>
+                <div>
+                    transaction id
+                </div>
+                <div>
+                    {transaction.transaction_id}
+                </div>
+            </div>;
+
+            this.setState({
+                sending            : false,
+                feesLocked         : true,
+                modalBodySendResult: modalBodySendResult
+            });
+            this.changeModalShowSendResult();
         }).catch((e) => {
             let sendTransactionErrorMessage;
             let error_list = [];
@@ -191,13 +183,15 @@ class WalletView extends Component {
                             const error = e.api_message.error;
                             if (error.error === 'transaction_input_max_error') {
                                 sendTransactionErrorMessage = <>your
-                                    transaction tries to use too many outputs<HelpIconView
+                                    transaction tried to use too many
+                                    outputs<HelpIconView
                                         help_item_name={'transaction_max_input_number'}/>.
-                                    please try to send smaller amount or
-                                    aggregate manually by sending smaller
-                                    amounts to yourself. max amount you can
-                                    send now
-                                    is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
+                                    please try to send a smaller amount or
+                                    aggregate manually by sending a smaller
+                                    amounts to yourself. the max amount you
+                                    can
+                                    send
+                                    is {format.millix(error.data.amount_max)}</>;
                             }
                         }
                     }
@@ -231,6 +225,7 @@ class WalletView extends Component {
             canceling: false,
             sending  : false
         });
+        this.changeModalShow(false);
     }
 
     handleAmountValueChange(e) {
@@ -247,7 +242,7 @@ class WalletView extends Component {
         }
 
         amount         = parseInt(amount);
-        e.target.value = !isNaN(amount) ? amount.toLocaleString('en-US') : 0;
+        e.target.value = !isNaN(amount) ? format.millix(amount, false) : 0;
 
         e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
     }
@@ -258,66 +253,22 @@ class WalletView extends Component {
         });
     }
 
+    changeModalShowSendResult(value = true) {
+        this.setState({
+            modalShowSendResult: value
+        });
+    }
+
     render() {
         return (
             <div>
                 <Row>
                     <Col md={12}>
-                        <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>balance
-                            </div>
-                            <div className={'panel-body'}>
-                                <div className={'d-flex'}>
-                                    <Table striped bordered hover>
-                                        <thead>
-                                        <tr>
-                                            <th width="50%">available</th>
-                                            <th width="50%">pending
-                                                <HelpIconView
-                                                    help_item_name={'pending_balance'}/>
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr key="1">
-                                            <td>
-                                                <div className={'d-flex'}>
-                                                <span
-                                                    className={'d-flex align-self-center'}>
-                                                    {this.props.wallet.balance_stable.toLocaleString('en-US')}
-                                                </span>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        className={'btn-xs icon_only ms-auto'}
-                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/stable')}>
-                                                        <FontAwesomeIcon
-                                                            icon={'list'}
-                                                            size="1x"/>
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className={'d-flex'}>
-                                                <span
-                                                    className={'d-flex align-self-center'}>
-                                                {this.props.wallet.balance_pending.toLocaleString('en-US')}
-                                                    </span>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        className={'btn-xs icon_only ms-auto'}
-                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/pending')}>
-                                                        <FontAwesomeIcon
-                                                            icon={'list'}
-                                                            size="1x"/>
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            </div>
-                        </div>
+                        <BalanceView
+                            stable={this.props.wallet.balance_stable}
+                            pending={this.props.wallet.balance_pending}
+                            primary_address={this.props.wallet.address}
+                        />
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>send</div>
                             <div className={'panel-body'}>
@@ -362,7 +313,7 @@ class WalletView extends Component {
                                                                       this.fees = c;
                                                                       if (this.fees && !this.feesInitialized && this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
                                                                           this.feesInitialized = true;
-                                                                          this.fees.value      = this.props.config.TRANSACTION_FEE_DEFAULT.toLocaleString('en-US');
+                                                                          this.fees.value      = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
                                                                       }
                                                                   }}
                                                                   onChange={this.handleAmountValueChange.bind(this)}
@@ -375,23 +326,29 @@ class WalletView extends Component {
                                                             icon={this.state.feesLocked ? 'lock' : 'lock-open'}
                                                             size="sm"/>
                                                     </button>
-
                                                 </Col>
                                             </Form.Group>
                                         </Col>
                                         <Col
                                             className={'d-flex justify-content-center'}>
-                                            <ModalView show={this.state.modalShow}
-                                                       size={'lg'}
-                                                       on_hide={() => this.changeModalShow(false)}
-                                                       heading={'send confirmation'}
-                                                       on_accept={() => this.sendTransaction()}
-                                                       on_cancel={() => this.cancelSendTransaction()}
-                                                       body={<div>are you sure you want to send
-                                                            {this.state.amount}
-                                                           mlx to  {this.state.address_base}
-                                                           paying {this.state.fees}
-                                                           mlx fee?</div>}/>
+                                            <ModalView
+                                                show={this.state.modalShow}
+                                                size={'lg'}
+                                                heading={'send confirmation'}
+                                                on_accept={() => this.sendTransaction()}
+                                                on_close={() => this.cancelSendTransaction()}
+                                                body={<div>you are about to
+                                                    send {format.millix(this.state.amount)} to {this.state.address_key_identifier}{this.state.address_version}{this.state.address_base}.
+                                                    <div>confirm that you want
+                                                        to
+                                                        continue.</div></div>}/>
+
+                                            <ModalView
+                                                show={this.state.modalShowSendResult}
+                                                size={'lg'}
+                                                on_close={() => this.changeModalShowSendResult(false)}
+                                                heading={'payment has been sent'}
+                                                body={this.state.modalBodySendResult}/>
                                             <Form.Group as={Row}>
                                                 <Button
                                                     variant="outline-primary"
@@ -405,49 +362,11 @@ class WalletView extends Component {
                                                          }}
                                                               className="loader-spin"/>
                                                          {this.state.canceling ? 'canceling' : 'cancel transaction'}
-                                                     </> : <>send millix</>}
+                                                     </> : <>send</>}
                                                 </Button>
                                             </Form.Group>
                                         </Col>
                                     </Form>
-                                </Row>
-                            </div>
-                        </div>
-                        <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>addresses
-                            </div>
-                            <div className={'panel-body'}>
-                                <DatatableHeaderView
-                                    action_button_on_click={() => this.getNextAddress()}
-                                    action_button_label={'generate address'}
-                                />
-                                <Row>
-                                    <DatatableView
-                                        value={this.state.addressList}
-                                        sortField={'address_position'}
-                                        sortOrder={1}
-                                        resultColumn={[
-                                            {
-                                                'field'   : 'address_position',
-                                                'header'  : 'position',
-                                                'sortable': true
-                                            },
-                                            {
-                                                'field'   : 'address',
-                                                'header'  : 'address',
-                                                'sortable': true
-                                            },
-                                            {
-                                                'field'   : 'address_version',
-                                                'header'  : 'version',
-                                                'sortable': true
-                                            },
-                                            {
-                                                'field'   : 'create_date',
-                                                'header'  : 'create date',
-                                                'sortable': true
-                                            }
-                                        ]}/>
                                 </Row>
                             </div>
                         </div>

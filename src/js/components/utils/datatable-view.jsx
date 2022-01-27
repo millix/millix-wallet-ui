@@ -6,6 +6,7 @@ import {Dropdown} from 'primereact/dropdown';
 import {Ripple} from 'primereact/ripple';
 import {classNames} from 'primereact/utils';
 import moment from 'moment';
+import * as format from '../../helper/format';
 
 
 class DatatableView extends Component {
@@ -17,12 +18,8 @@ class DatatableView extends Component {
             currentPage: 1
         };
 
-        moment.relativeTimeThreshold('ss', -1); // required to get diff in
-        // seconds instead of "a few
-        // seconds ago"
-
-        this.onCustomPage = this.onCustomPage.bind(this);
-
+        this.onCustomPage       = this.onCustomPage.bind(this);
+        this.bodyTemplateAmount = this.bodyTemplateAmount.bind(this);
     }
 
     onCustomPage(event) {
@@ -30,6 +27,10 @@ class DatatableView extends Component {
             first: event.first,
             rows : event.rows
         });
+    }
+
+    bodyTemplateAmount(rowData, field) {
+        return format.millix(rowData[field], false);
     }
 
     getPaginatorTemplate() {
@@ -114,11 +115,16 @@ class DatatableView extends Component {
                 item.sortable = true;
             }
 
+            if (typeof (item.format) !== 'undefined' && item.format === 'amount') {
+                item.body = (rowData) => this.bodyTemplateAmount(rowData, item.field);
+            }
+
             column.push(<Column
                 key={index}
                 field={item.field}
                 header={item.header}
-                sortable={item.sortable}/>);
+                sortable={item.sortable}
+                body={item.body}/>);
         });
 
         if (this.props.showActionColumn) {
