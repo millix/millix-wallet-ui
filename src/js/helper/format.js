@@ -29,3 +29,11 @@ export function date(timestamp) {
 
     return result;
 }
+
+export function status_label(status) {
+    return status ? 'active' : 'inactive';
+}
+
+export function bool_label(value) {
+    return value ? 'yes' : 'no';
+}

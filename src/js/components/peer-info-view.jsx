@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Row, Table} from 'react-bootstrap';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Table} from 'react-bootstrap';
 import API from '../api/index';
-import moment from 'moment';
 import DatatableView from './utils/datatable-view';
+import * as format from '../helper/format';
 
 
 class PeerInfoView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            attributes: []
+            result_attribute: [],
+            node_about      : {},
+            job_list        : [],
+            shard_list      : []
         };
     }
 
@@ -22,106 +24,120 @@ class PeerInfoView extends Component {
 
     getNodeAttribute(nodeID) {
         API.getNodeAttributes(nodeID)
-           .then(attributes => {
-               this.setState({attributes});
+           .then(result_attribute => {
+               let node_about = {};
+               let job_list   = [];
+               let shard_list = [];
+
+               result_attribute.forEach(attribute => {
+                   if (attribute.attribute_type === 'job_list') {
+                       job_list = attribute.value.map((input, idx) => ({
+                           job_name: input.job_name,
+                           status  : format.status_label(input.status)
+                       }));
+                   }
+
+                   if (attribute.value instanceof Array) {
+                       if (attribute.attribute_type === 'shard_protocol') {
+                           attribute.value.forEach(entry => {
+                               if (Number.isInteger(entry.update_date)) {
+                                   entry.update_date = format.date(entry.update_date);
+                               }
+                               entry.is_required = format.bool_label(entry.is_required);
+                               shard_list.push(entry);
+                           });
+                       }
+                   }
+                   else if (attribute.value instanceof Object) {
+                       for (let [key, value] of Object.entries(attribute.value)) {
+                           let attribute_type_label = key.replaceAll('_', ' ');
+
+                           if (attribute_type_label.includes('date')) {
+                               value = format.date(value);
+                           }
+                           if (attribute_type_label.includes('fee')) {
+                               value = format.millix(value);
+                           }
+                           else if (Number.isInteger(value)) {
+                               value = format.number(value);
+                           }
+
+                           node_about[key] = {
+                               label: attribute_type_label,
+                               value: value
+                           };
+                       }
+                   }
+                   else {
+                       let attribute_type_label = attribute.attribute_type.replaceAll('_', ' ');
+                       let value                = attribute.value;
+                       if (Number.isInteger(value)) {
+                           value = format.number(value);
+                       }
+
+                       node_about[attribute.attribute_type] = {
+                           label: attribute_type_label,
+                           value: value
+                       };
+                   }
+               });
+
+               this.setState({
+                   result_attribute,
+                   node_about,
+                   shard_list,
+                   job_list
+               });
            }).catch((e) => {
             console.error(e);
         });
     }
 
     render() {
-        let attributes        = this.state.attributes;
-        let simpleAttributes  = [];
-        let jobList  = [];
-        let tabularAttributes = [];
-        attributes.forEach(ele => {
-            if (ele.attribute_type === 'job_list') {
-                jobList = ele.value.map((input, idx) => ({
-                    job_name: input.job_name,
-                    status: input.status
-                }));
-            }
+        const node_about_order = [
+            'address_default',
+            'node_public_key',
 
-            if (ele.value instanceof Array) {
-                if (ele.attribute_type === 'shard_protocol') {
-                    ele.value.forEach(entry => {
-                        if (Number.isInteger(entry.update_date)){
-                            entry.update_date = moment.utc(entry.update_date * 1000).format('YYYY-MM-DD HH:mm:ss');
-                        }
-                        entry.is_required = entry.is_required === true ? 1 : 0;
-                        tabularAttributes.push(entry);
-                    });
-                }
-            }
-            else if (ele.value instanceof Object) {
-                for (let [key, value] of Object.entries(ele.value)) {
-                    let attributeType = key.replace(/_/g, ' ');
-                    if (attributeType.includes('date') && (new Date(value)).getTime() > 0){
-                        value = moment.utc(value * 1000).format('YYYY-MM-DD HH:mm:ss')
-                    }
-                    simpleAttributes.push(
-                        <tr>
-                            <td className={'w-20'}>
-                                {attributeType}
-                            </td>
-                            <td className={'text-break'}>
-                                {value?.toString()}
-                            </td>
-                        </tr>
-                    );
-                }
-            }
-            else {
-                let attributeType = ele.attribute_type.replace(/_/g, ' ');
-                simpleAttributes.push(
-                    <tr>
-                        <td className={'w-20'}>
-                            {attributeType}
-                        </td>
-                        <td className={'text-break'}>
-                            {ele.value?.toString()}
-                        </td>
-                    </tr>
-                );
-            }
-        });
+            'node_version',
+            'node_update_date',
+            'node_create_date',
+
+            'transaction_count',
+            'transaction_fee_default',
+            'transaction_fee_proxy',
+            'transaction_fee_network',
+
+            'peer_count',
+            'peer_connection_count_day',
+            'peer_connection_count_hour',
+            'peer_connection_count_minute'
+        ];
 
         return (
             <div>
-                <Row className="mb-3 mt-3">
-                    <Col className="pl-0" style={{
-                        display       : 'flex',
-                        justifyContent: 'flex-start',
-                        marginLeft    : 10
-                    }}>
-                        <Button variant='outline-primary'
-                                onClick={this.props.history.goBack}>
-                            <FontAwesomeIcon icon="arrow-circle-left"
-                                             size="2x"/>
-                            <span style={{
-                                position   : 'relative',
-                                top        : -5,
-                                marginRight: 10,
-                                marginLeft : 10
-                            }}> Back</span>
-                        </Button>
-                    </Col>
-                </Row>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
-                        node attributes
+                        node
                     </div>
                     <div className={'panel-body'}>
-                        <div className={'panel-body'}>
-                            <div className={'section_subtitle'}>
-                                node
-                            </div>
-                            <Table striped bordered hover className={'mb-3'}>
-                                <tbody>
-                                {simpleAttributes}
-                                </tbody>
-                            </Table>
-                        </div>
+                        <Table striped bordered hover className={'mb-0'}>
+                            <tbody>
+                            {node_about_order.map(type => {
+                                if (typeof (this.state.node_about[type]) === 'undefined') {
+                                    return '';
+                                }
+
+                                return <tr>
+                                    <td className={'w-20'}>
+                                        {this.state.node_about[type].label}
+                                    </td>
+                                    <td className={'text-break'}>
+                                        {this.state.node_about[type].value}
+                                    </td>
+                                </tr>;
+                            })}
+                            </tbody>
+                        </Table>
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
@@ -129,41 +145,38 @@ class PeerInfoView extends Component {
                         job list
                     </div>
                     <div className={'panel-body'}>
-                        <div className={'panel-body'}>
-                            <DatatableView
-                                value={jobList}
-                                sortOrder={1}
-                                showActionColumn={false}
-                                resultColumn={[
-                                    {
-                                        'field': 'job_name'
-                                    },
-                                    {
-                                        'field': 'status'
-                                    },
-                                ]}/>
-                        </div>
-                    </div>
-                </div>
-                <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>shard list</div>
-                    <div className={'panel-body'}>
                         <DatatableView
-                            value={tabularAttributes}
+                            value={this.state.job_list}
                             sortOrder={1}
                             showActionColumn={false}
                             resultColumn={[
                                 {
-                                    'field': 'shard_id'
+                                    field: 'job_name'
                                 },
                                 {
-                                    'field': 'transaction_count'
+                                    field: 'status'
+                                }
+                            ]}/>
+                    </div>
+                </div>
+                <div className={'panel panel-filled'}>
+                    <div className={'panel-heading bordered'}>storage</div>
+                    <div className={'panel-body'}>
+                        <DatatableView
+                            value={this.state.shard_list}
+                            sortOrder={1}
+                            resultColumn={[
+                                {
+                                    field: 'shard_id'
                                 },
                                 {
-                                    'field': 'update_date'
+                                    field: 'transaction_count'
                                 },
                                 {
-                                    'field': 'is_required'
+                                    field: 'update_date'
+                                },
+                                {
+                                    field: 'is_required'
                                 }
                             ]}/>
                     </div>
