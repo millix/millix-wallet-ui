@@ -7,6 +7,7 @@ import {walletUpdateAddresses, walletUpdateBalance} from '../redux/actions/index
 import {withRouter} from 'react-router-dom';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
+import _ from 'lodash';
 
 
 class CreateAdView extends Component {
@@ -97,16 +98,17 @@ class CreateAdView extends Component {
 
     async getCategories() {
         API.listCategories().then(data => {
-
-            const options   = data.map(d => ({
+            let result_option = data.map(d => ({
                 'value': d.advertisement_category_guid,
                 'label': d.advertisement_category
             }));
-            let fields      = this.state.fields;
-            fields.category = options[0].value;
+            let fields        = this.state.fields;
+            fields.category   = result_option[0].value;
+
+            result_option = _.orderBy(result_option, ['label'], ['asc']);
 
             this.setState({
-                categories: options,
+                categories: result_option,
                 fields    : fields
             });
         });
@@ -114,7 +116,6 @@ class CreateAdView extends Component {
 
     async getLanguages() {
         API.listLanguages().then(data => {
-
             const options          = data.map(d => ({
                 'value': d.language_guid,
                 'label': d.language_name + ' - ' + d.language_name_native
@@ -153,7 +154,6 @@ class CreateAdView extends Component {
             formIsValid = false;
             error_list.push('url is required');
         }
-
 
         if (!fields['daily_budget_mlx']) {
             formIsValid = false;
@@ -195,7 +195,6 @@ class CreateAdView extends Component {
                 this.setState({submitData: data});
 
                 if (typeof (data.api_status) !== 'undefined' && data.api_status === 'ok') {
-                    // todo: redirect to list
                     this.flushForm();
                     this.props.history.push('/advertisement-list');
                 }
