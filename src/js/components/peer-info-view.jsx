@@ -3,6 +3,8 @@ import {withRouter} from 'react-router-dom';
 import {Button, Col, Row, Table} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
+import moment from 'moment';
+import DatatableView from './utils/datatable-view';
 
 
 class PeerInfoView extends Component {
@@ -30,11 +32,23 @@ class PeerInfoView extends Component {
     render() {
         let attributes        = this.state.attributes;
         let simpleAttributes  = [];
+        let jobList  = [];
         let tabularAttributes = [];
         attributes.forEach(ele => {
+            if (ele.attribute_type === 'job_list') {
+                jobList = ele.value.map((input, idx) => ({
+                    job_name: input.job_name,
+                    status: input.status
+                }));
+            }
+
             if (ele.value instanceof Array) {
                 if (ele.attribute_type === 'shard_protocol') {
                     ele.value.forEach(entry => {
+                        if (Number.isInteger(entry.update_date)){
+                            entry.update_date = moment.utc(entry.update_date * 1000).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                        entry.is_required = entry.is_required === true ? 1 : 0;
                         tabularAttributes.push(entry);
                     });
                 }
@@ -42,19 +56,32 @@ class PeerInfoView extends Component {
             else if (ele.value instanceof Object) {
                 for (let [key, value] of Object.entries(ele.value)) {
                     let attributeType = key.replace(/_/g, ' ');
+                    if (attributeType.includes('date') && (new Date(value)).getTime() > 0){
+                        value = moment.utc(value * 1000).format('YYYY-MM-DD HH:mm:ss')
+                    }
                     simpleAttributes.push(
-                        <Row className="mb-3">
-                            <span>{attributeType}: {value?.toString()}</span>
-                        </Row>
+                        <tr>
+                            <td className={'w-20'}>
+                                {attributeType}
+                            </td>
+                            <td className={'text-break'}>
+                                {value?.toString()}
+                            </td>
+                        </tr>
                     );
                 }
             }
             else {
                 let attributeType = ele.attribute_type.replace(/_/g, ' ');
                 simpleAttributes.push(
-                    <Row className="mb-3">
-                        <span>{attributeType}: {ele.value?.toString()}</span>
-                    </Row>
+                    <tr>
+                        <td className={'w-20'}>
+                            {attributeType}
+                        </td>
+                        <td className={'text-break'}>
+                            {ele.value?.toString()}
+                        </td>
+                    </tr>
                 );
             }
         });
@@ -81,39 +108,64 @@ class PeerInfoView extends Component {
                     </Col>
                 </Row>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>peer attributes</div>
+                    <div className={'panel-heading bordered'}>
+                        node attributes
+                    </div>
                     <div className={'panel-body'}>
-
-                        {simpleAttributes}
+                        <div className={'panel-body'}>
+                            <div className={'section_subtitle'}>
+                                node
+                            </div>
+                            <Table striped bordered hover className={'mb-3'}>
+                                <tbody>
+                                {simpleAttributes}
+                                </tbody>
+                            </Table>
+                        </div>
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>shard attributes</div>
+                    <div className={'panel-heading bordered'}>
+                        job list
+                    </div>
                     <div className={'panel-body'}>
-                        <Table striped bordered hover variant="dark">
-                            <thead>
-                            <tr>
-                                <th>shard id</th>
-                                <th>transaction count</th>
-                                <th>update date</th>
-                                <th>is required</th>
-                                <th>fee ask request byte</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {tabularAttributes.map((item, idx) => {
-                                return (
-                                    <tr key={idx} className="wallet-node">
-                                        <td>{item.shard_id}</td>
-                                        <td>{item.transaction_count}</td>
-                                        <td>{item.update_date}</td>
-                                        <td>{item.is_required ? 'yes' : 'no'}</td>
-                                        <td>{item.fee_ask_request_byte}</td>
-                                    </tr>);
-                            })}
-                            </tbody>
-                        </Table>
-
+                        <div className={'panel-body'}>
+                            <DatatableView
+                                value={jobList}
+                                sortOrder={1}
+                                showActionColumn={false}
+                                resultColumn={[
+                                    {
+                                        'field': 'job_name'
+                                    },
+                                    {
+                                        'field': 'status'
+                                    },
+                                ]}/>
+                        </div>
+                    </div>
+                </div>
+                <div className={'panel panel-filled'}>
+                    <div className={'panel-heading bordered'}>shard list</div>
+                    <div className={'panel-body'}>
+                        <DatatableView
+                            value={tabularAttributes}
+                            sortOrder={1}
+                            showActionColumn={false}
+                            resultColumn={[
+                                {
+                                    'field': 'shard_id'
+                                },
+                                {
+                                    'field': 'transaction_count'
+                                },
+                                {
+                                    'field': 'update_date'
+                                },
+                                {
+                                    'field': 'is_required'
+                                }
+                            ]}/>
                     </div>
                 </div>
             </div>
