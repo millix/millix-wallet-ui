@@ -97,7 +97,8 @@ class DatatableView extends Component {
                 ];
 
                 return <div
-                    className={'paginator-dropdown-wrapper'}>show<Dropdown
+                    className={'paginator-dropdown-wrapper d-flex align-items-center'}>show
+                    <Dropdown
                     value={options.value} options={dropdownOptions}
                     onChange={options.onChange}/>records</div>;
             }

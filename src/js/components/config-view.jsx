@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Dropdown, Form, Row, Table} from 'react-bootstrap';
+import {Button, Col, Form, Row} from 'react-bootstrap';
 import {addWalletAddressVersion, removeWalletAddressVersion, walletUpdateConfig} from '../redux/actions/index';
 import API from '../api/index';
 import _ from 'lodash';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import DropdownToggle from 'react-bootstrap/DropdownToggle';
-import DropdownMenu from 'react-bootstrap/DropdownMenu';
-
+import DatatableView from './utils/datatable-view';
 
 class ConfigView extends Component {
 
@@ -18,7 +16,8 @@ class ConfigView extends Component {
             address_version_name : '',
             address_version_regex: '',
             address_is_default   : false,
-            node_public_ip       : ''
+            node_public_ip       : '',
+            datatables           : []
         };
     }
 
@@ -31,7 +30,8 @@ class ConfigView extends Component {
     }
 
     componentDidMount() {
-        this.getNodePublicIP();
+        this.getNodePublicIP()
+        this.setConfigToState();
     }
 
     setConfig(data) {
@@ -70,12 +70,62 @@ class ConfigView extends Component {
         configList.push(value);
         this.setState({[stateName]: ''});
         this.setConfig({[configName]: configList});
+        this.setConfigToState();
     }
 
 
     removeFromConfigList(configName, value) {
         _.pull(this.props.config[configName], value);
         this.setConfig({[configName]: this.props.config[configName]});
+        this.setConfigToState();
+    }
+
+    setConfigToState() {
+        this.setState({
+            datatables: {
+                connection_inbound: this.props.config.NODE_CONNECTION_INBOUND_WHITELIST.map((input) => ({
+                    node_id: input,
+                    action : this.getConnectionDeleteButton(input, 'NODE_CONNECTION_INBOUND_WHITELIST')
+                })),
+                connection_outbound: this.props.config.NODE_CONNECTION_OUTBOUND_WHITELIST.map((input) => ({
+                    node_id: input,
+                    action : this.getConnectionDeleteButton(input, 'NODE_CONNECTION_OUTBOUND_WHITELIST')
+                })),
+                connection_static: this.props.config.NODE_CONNECTION_STATIC.map((input) => ({
+                    node_id: input,
+                    action : this.getConnectionDeleteButton(input, 'NODE_CONNECTION_STATIC')
+                })),
+                address_version_list: this.props.wallet.address_version_list.map((input) => ({
+                    version: input.version,
+                    regex_pattern: input.regex_pattern,
+                    default_address: input.is_default === 1 ? 'yes' : 'no',
+                    action : this.getRemoveWalletAddressVersionButton(input)
+                }))
+            }
+        })
+    }
+
+
+    getConnectionDeleteButton(nodeID, configName) {
+        return <Button
+            variant="outline-default"
+            onClick={() => this.removeFromConfigList(configName, nodeID)}
+            className={'btn-xs icon_only ms-auto'}>
+            <FontAwesomeIcon
+                icon={'trash'}
+                size="1x"/>
+        </Button>;
+    }
+
+    getRemoveWalletAddressVersionButton(addressVersion) {
+        return <Button
+            variant="outline-default"
+            onClick={() => this.props.removeWalletAddressVersion(addressVersion)}
+            className={'btn-xs icon_only ms-auto'}>
+            <FontAwesomeIcon
+                icon={'trash'}
+                size="1x"/>
+        </Button>;
     }
 
     render() {
@@ -84,180 +134,173 @@ class ConfigView extends Component {
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>network</div>
                     <div className={'panel-body'}>
-                        <Form.Group>
-
-                            <label
-                                className="control-label">debug</label>
-                            <div
-                                className="btn-group btn-full-width">
-                                <Dropdown>
-                                    <DropdownToggle id="dropdown=debug"
-                                                    className="btn btn-w-sm  btn-accent dropdown-toggle btn-full-width dropdown-luna">
-                                        <p style={{
-                                            float       : 'left',
-                                            marginBottom: '0px'
-                                        }}>{this.props.config.MODE_DEBUG ? 'on' : 'off'}</p>
-                                        <p style={{
-                                            float       : 'right',
-                                            marginBottom: '0px'
-                                        }}>
-                                            <span className="caret"/></p>
-                                    </DropdownToggle>
-                                    <DropdownMenu className="col-lg-12">
-                                        {Array.from([
-                                            'on',
-                                            'off'
-                                        ]).map(type =>
-                                            <Dropdown.Item
-                                                key={type}
-                                                onClick={() => {
-                                                    this.setConfig({MODE_DEBUG: type === 'on'});
+                        <Row>
+                            <Form>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label
+                                            className="control-label">debug</label>
+                                        <div
+                                            className="btn-group btn-full-width">
+                                            <Form.Control
+                                                as="select"
+                                                value={this.props.config.MODE_DEBUG ? 'on' : 'off'}
+                                                onChange={(e) => {
+                                                    this.setConfig({MODE_DEBUG: e.target.value === 'on'})
                                                 }}
-                                            >{type}</Dropdown.Item>
-                                        )}
-                                    </DropdownMenu>
-                                </Dropdown>
-                            </div>
-                        </Form.Group>
+                                            >
+                                                {Array.from([
+                                                    'on',
+                                                    'off'
+                                                ]).map(type =>
+                                                    <option
+                                                        key={type}
+                                                    >{type}</option>
+                                                )}
+                                            </Form.Control>
+                                        </div>
+                                    </Form.Group>
+                                </Col>
 
-                        {/*            /!**/}
-                        {/*             <Form.Group as={Row}>*/}
-                        {/*             <Form.Label column sm="1">*/}
-                        {/*             network*/}
-                        {/*             </Form.Label>*/}
+                                {/*            /!**/}
+                                {/*             <Form.Group className="form-group" as={Row}>*/}
+                                {/*             <Form.Label column sm="1">*/}
+                                {/*             network*/}
+                                {/*             </Form.Label>*/}
 
-                        {/*             <Col sm="10" style={{*/}
-                        {/*             marginTop   : 'auto',*/}
-                        {/*             marginBottom: 'auto'*/}
-                        {/*             }}>*/}
-                        {/*             <Switch*/}
-                        {/*             className={"switch-class network-switch"}*/}
-                        {/*             id="networkSelectSwitch"*/}
-                        {/*             options={*/}
-                        {/*             {*/}
-                        {/*             color: '#9400CE',*/}
-                        {/*             size : 'small'*/}
-                        {/*             }*/}
-                        {/*             }*/}
-                        {/*             label={!this.props.config.MODE_TEST_NETWORK ? 'main network' : 'test network'}*/}
-                        {/*             checked={!this.props.config.MODE_TEST_NETWORK}*/}
-                        {/*             ref={(c) => this._network = c}*/}
-                        {/*             onChange={(checked) => {*/}
-                        {/*             this.setState({*/}
-                        {/*             is_main_network   : checked,*/}
-                        {/*             show_restart_modal: true*/}
-                        {/*             });*/}
-                        {/*             }}*/}
-                        {/*             />*/}
-                        {/*             </Col>*/}
-                        {/*             </Form.Group>*!/*/}
+                                {/*             <Col sm="10" style={{*/}
+                                {/*             marginTop   : 'auto',*/}
+                                {/*             marginBottom: 'auto'*/}
+                                {/*             }}>*/}
+                                {/*             <Switch*/}
+                                {/*             className={"switch-class network-switch"}*/}
+                                {/*             id="networkSelectSwitch"*/}
+                                {/*             options={*/}
+                                {/*             {*/}
+                                {/*             color: '#9400CE',*/}
+                                {/*             size : 'small'*/}
+                                {/*             }*/}
+                                {/*             }*/}
+                                {/*             label={!this.props.config.MODE_TEST_NETWORK ? 'main network' : 'test network'}*/}
+                                {/*             checked={!this.props.config.MODE_TEST_NETWORK}*/}
+                                {/*             ref={(c) => this._network = c}*/}
+                                {/*             onChange={(checked) => {*/}
+                                {/*             this.setState({*/}
+                                {/*             is_main_network   : checked,*/}
+                                {/*             show_restart_modal: true*/}
+                                {/*             });*/}
+                                {/*             }}*/}
+                                {/*             />*/}
+                                {/*             </Col>*/}
+                                {/*             </Form.Group>*!/*/}
 
-                        <Col>
-                            <Form.Group>
-                                <label>network
-                                    port</label>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>network
+                                            port</label>
 
-                                <Form.Control
-                                    type="text"
-                                    placeholder=""
-                                    ref={(c) => this._port = c}
-                                    onChange={() => {
-                                        this.setConfig({NODE_PORT: this._port.value});
-                                    }}
-                                    value={this.props.config.NODE_PORT}/>
-                            </Form.Group>
-                        </Col>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder=""
+                                            ref={(c) => this._port = c}
+                                            onChange={() => {
+                                                this.setConfig({NODE_PORT: this._port.value});
+                                            }}
+                                            value={this.props.config.NODE_PORT}/>
+                                    </Form.Group>
+                                </Col>
 
-                        <Col>
-                            <Form.Group>
-                                <label>rpc
-                                    port</label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder=""
-                                    ref={(c) => this._api_port = c}
-                                    onChange={() => {
-                                        this.setConfig({NODE_PORT_API: this._api_port.value});
-                                    }}
-                                    value={this.props.config.NODE_PORT_API}/>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>rpc
+                                            port</label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder=""
+                                            ref={(c) => this._api_port = c}
+                                            onChange={() => {
+                                                this.setConfig({NODE_PORT_API: this._api_port.value});
+                                            }}
+                                            value={this.props.config.NODE_PORT_API}/>
 
-                            </Form.Group>
-                        </Col>
+                                    </Form.Group>
+                                </Col>
 
-                        <Col>
-                            <Form.Group>
-                                <label>server bind</label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder=""
-                                    ref={(c) => this._host = c}
-                                    onChange={() => {
-                                        this.setConfig({NODE_HOST: this._host.value});
-                                    }}
-                                    value={this.props.config.NODE_HOST}/>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>server bind</label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder=""
+                                            ref={(c) => this._host = c}
+                                            onChange={() => {
+                                                this.setConfig({NODE_HOST: this._host.value});
+                                            }}
+                                            value={this.props.config.NODE_HOST}/>
 
-                            </Form.Group>
-                        </Col>
+                                    </Form.Group>
+                                </Col>
 
-                        <Col>
-                            <Form.Group>
-                                <label>node
-                                    public ip</label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder=""
-                                    value={this.state.node_public_ip}
-                                    readOnly/>
-                            </Form.Group>
-                        </Col>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>node
+                                            public ip</label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder=""
+                                            value={this.state.node_public_ip}
+                                            readOnly/>
+                                    </Form.Group>
+                                </Col>
 
-                        <Col>
-                            <Form.Group>
-                                <label>nodes</label>
-                                <Form.Control as="textarea" rows={10}
-                                              placeholder=""
-                                              ref={(c) => this._nodes = c}
-                                              onChange={() => {
-                                                  this.setConfig({NODE_INITIAL_LIST: JSON.parse(this._nodes.value.split(','))});
-                                              }}
-                                              value={JSON.stringify(this.props.config.NODE_INITIAL_LIST)}
-                                />
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>nodes</label>
+                                        <Form.Control as="textarea" rows={10}
+                                                      placeholder=""
+                                                      ref={(c) => this._nodes = c}
+                                                      onChange={() => {
+                                                          this.setConfig({NODE_INITIAL_LIST: JSON.parse(this._nodes.value.split(','))});
+                                                      }}
+                                                      value={JSON.stringify(this.props.config.NODE_INITIAL_LIST)}
+                                        />
 
-                            </Form.Group>
-                        </Col>
+                                    </Form.Group>
+                                </Col>
 
-                        <Col>
-                            <Form.Group>
-                                <label>max
-                                    connections
-                                    in</label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder=""
-                                    ref={(c) => this._max_in_connections = c}
-                                    onChange={() => {
-                                        this.setConfig({NODE_CONNECTION_INBOUND_MAX: this._max_in_connections.value});
-                                    }}
-                                    value={this.props.config.NODE_CONNECTION_INBOUND_MAX}/>
-                            </Form.Group>
-                        </Col>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>max
+                                            connections
+                                            in</label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder=""
+                                            ref={(c) => this._max_in_connections = c}
+                                            onChange={() => {
+                                                this.setConfig({NODE_CONNECTION_INBOUND_MAX: this._max_in_connections.value});
+                                            }}
+                                            value={this.props.config.NODE_CONNECTION_INBOUND_MAX}/>
+                                    </Form.Group>
+                                </Col>
 
-                        <Col>
-                            <Form.Group>
-                                <label>max
-                                    connections
-                                    out</label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder=""
-                                    ref={(c) => this.max_out_connections = c}
-                                    onChange={() => {
-                                        this.setConfig({NODE_CONNECTION_OUTBOUND_MAX: this.max_out_connections.value});
-                                    }}
-                                    value={this.props.config.NODE_CONNECTION_OUTBOUND_MAX}/>
-
-                            </Form.Group>
-                        </Col>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>max
+                                            connections
+                                            out</label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder=""
+                                            ref={(c) => this.max_out_connections = c}
+                                            onChange={() => {
+                                                this.setConfig({NODE_CONNECTION_OUTBOUND_MAX: this.max_out_connections.value});
+                                            }}
+                                            value={this.props.config.NODE_CONNECTION_OUTBOUND_MAX}/>
+                                    </Form.Group>
+                                </Col>
+                            </Form>
+                        </Row>
                     </div>
                 </div>
 
@@ -267,7 +310,7 @@ class ConfigView extends Component {
                     </div>
                     <div className={'panel-body'}>
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>add
                                     inbound
                                     connection
@@ -298,40 +341,16 @@ class ConfigView extends Component {
                                 </Row>
                             </Form.Group>
                         </Col>
-
                         <Col>
-                            <Table striped bordered
-                                   hover
-                                   variant="dark">
-                                <thead>
-                                <tr>
-                                    <th>node id</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    typeof this.props.config.NODE_CONNECTION_INBOUND_WHITELIST != 'undefined' ?
-                                    this.props.config.NODE_CONNECTION_INBOUND_WHITELIST.map((nodeID, idx) => {
-                                        return (
-                                            <tr key={idx}
-                                                className="table-row">
-                                                <td>{nodeID}</td>
-                                                <td style={{width: '5%'}}>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        size={'lg'}
-                                                        onClick={() => this.removeFromConfigList('NODE_CONNECTION_INBOUND_WHITELIST', nodeID)}>
-                                                        <FontAwesomeIcon
-                                                            icon="trash"
-                                                            size="1x"/>
-                                                    </Button>
-                                                </td>
-                                            </tr>);
-                                    }) : null
-                                }
-                                </tbody>
-                            </Table>
+                            <DatatableView
+                                value={this.state.datatables.connection_inbound}
+                                sortOrder={1}
+                                showActionColumn={true}
+                                resultColumn={[
+                                    {
+                                        field: 'node_id'
+                                    },
+                                ]}/>
                         </Col>
                     </div>
                 </div>
@@ -343,7 +362,7 @@ class ConfigView extends Component {
                     </div>
                     <div className={'panel-body'}>
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>add
                                     outbound
                                     connection
@@ -375,38 +394,15 @@ class ConfigView extends Component {
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Table striped bordered
-                                   hover
-                                   variant="dark">
-                                <thead>
-                                <tr>
-                                    <th>node id</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    typeof this.props.config.NODE_CONNECTION_OUTBOUND_WHITELIST != 'undefined' ?
-                                    this.props.config.NODE_CONNECTION_OUTBOUND_WHITELIST.map((nodeID, idx) => {
-                                        return (
-                                            <tr key={idx}
-                                                className="table-row">
-                                                <td>{nodeID}</td>
-                                                <td style={{width: '5%'}}>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        size={'lg'}
-                                                        onClick={() => this.removeFromConfigList('NODE_CONNECTION_OUTBOUND_WHITELIST', nodeID)}>
-                                                        <FontAwesomeIcon
-                                                            icon="trash"
-                                                            size="1x"/>
-                                                    </Button>
-                                                </td>
-                                            </tr>);
-                                    }) : null
-                                }
-                                </tbody>
-                            </Table>
+                            <DatatableView
+                                value={this.state.datatables.connection_outbound}
+                                sortOrder={1}
+                                showActionColumn={true}
+                                resultColumn={[
+                                    {
+                                        field: 'node_id'
+                                    },
+                                ]}/>
                         </Col>
                     </div>
                 </div>
@@ -417,7 +413,7 @@ class ConfigView extends Component {
                     </div>
                     <div className={'panel-body'}>
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>add
                                     static
                                     connection
@@ -449,38 +445,15 @@ class ConfigView extends Component {
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Table striped bordered
-                                   hover
-                                   variant="dark">
-                                <thead>
-                                <tr>
-                                    <th>node id</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    typeof this.props.config.NODE_CONNECTION_STATIC != 'undefined' ?
-                                    this.props.config.NODE_CONNECTION_STATIC.map((nodeID, idx) => {
-                                        return (
-                                            <tr key={idx}
-                                                className="table-row">
-                                                <td>{nodeID}</td>
-                                                <td style={{width: '5%'}}>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        size={'lg'}
-                                                        onClick={() => this.removeFromConfigList('NODE_CONNECTION_STATIC', nodeID)}>
-                                                        <FontAwesomeIcon
-                                                            icon="trash"
-                                                            size="1x"/>
-                                                    </Button>
-                                                </td>
-                                            </tr>);
-                                    }) : null
-                                }
-                                </tbody>
-                            </Table>
+                            <DatatableView
+                                value={this.state.datatables.connection_static}
+                                sortOrder={1}
+                                showActionColumn={true}
+                                resultColumn={[
+                                    {
+                                        field: 'node_id'
+                                    },
+                                ]}/>
                         </Col>
                     </div>
                 </div>
@@ -489,7 +462,7 @@ class ConfigView extends Component {
                     <div className={'panel-heading bordered'}>fees</div>
                     <div className={'panel-body'}>
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>transaction proxy
                                     fees</label>
                                 <Form.Control
@@ -504,7 +477,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>transaction
                                     fees</label>
                                 <Form.Control
@@ -519,7 +492,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>network fee
                                     (%)</label>
                                 <Form.Control
@@ -539,7 +512,7 @@ class ConfigView extends Component {
                     <div className={'panel-heading bordered'}>consensus</div>
                     <div className={'panel-body'}>
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>number
                                     of nodes</label>
                                 <Form.Control
@@ -554,7 +527,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>min
                                     include
                                     path</label>
@@ -570,7 +543,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>number
                                     of validation
                                     rounds</label>
@@ -586,7 +559,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>max
                                     double spend
                                     bound</label>
@@ -602,7 +575,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>number
                                     of validation
                                     required</label>
@@ -618,7 +591,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>max
                                     wait
                                     (sec)</label>
@@ -634,7 +607,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>retry
                                     wait
                                     (sec)</label>
@@ -656,46 +629,34 @@ class ConfigView extends Component {
                     </div>
                     <div className={'panel-body'}>
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label
                                     className="label-btn">default
                                     address</label>
                                 <div
                                     className="btn-group btn-full-width">
-                                    <Dropdown>
-                                        <DropdownToggle
-                                            id="dropdown=default_address"
-                                            className="btn btn-w-sm  btn-accent dropdown-toggle btn-full-width dropdown-luna">
-                                            <p style={{
-                                                float       : 'left',
-                                                marginBottom: '0px'
-                                            }}>{this.state.address_is_default ? 'yes' : 'no'}</p>
-                                            <p style={{
-                                                float       : 'right',
-                                                marginBottom: '0px'
-                                            }}>
-                                                <span className="caret"/></p>
-                                        </DropdownToggle>
-                                        <DropdownMenu className="col-lg-12">
-                                            {Array.from([
-                                                'yes',
-                                                'no'
-                                            ]).map(type =>
-                                                <Dropdown.Item
-                                                    key={type}
-                                                    onClick={() => {
-                                                        this.setState({address_is_default: type === 'on'});
-                                                    }}
-                                                >{type}</Dropdown.Item>
-                                            )}
-                                        </DropdownMenu>
-                                    </Dropdown>
+                                    <Form.Control
+                                        as="select"
+                                        value={this.state.address_is_default ? 'yes' : 'no'}
+                                        onChange={(e) => {
+                                            this.setState({address_is_default: e.target.value === 'yes'});
+                                        }}
+                                    >
+                                        {Array.from([
+                                            'yes',
+                                            'no'
+                                        ]).map(type =>
+                                            <option
+                                                key={type}
+                                            >{type}</option>
+                                        )}
+                                    </Form.Control>
                                 </div>
                             </Form.Group>
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>version</label>
                                 <Form.Control
                                     type="text"
@@ -709,7 +670,7 @@ class ConfigView extends Component {
                         </Col>
 
                         <Col>
-                            <Form.Group>
+                            <Form.Group className="form-group">
                                 <label>add
                                     static
                                     connection
@@ -742,42 +703,21 @@ class ConfigView extends Component {
                         </Col>
 
                         <div>
-                            <Table striped bordered
-                                   hover
-                                   variant="dark">
-                                <thead>
-                                <tr>
-                                    <th style={{width: 185}}>version</th>
-                                    <th>regex pattern</th>
-                                    <th>default address</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    typeof this.props.wallet.address_version_list != 'undefined' ?
-                                    this.props.wallet.address_version_list.map((addressVersion, idx) => {
-                                        return (
-                                            <tr key={idx}
-                                                className="table-row">
-                                                <td>{addressVersion.version}</td>
-                                                <td>{addressVersion.regex_pattern}</td>
-                                                <td>{addressVersion.is_default === 1 ? 'yes' : 'no'}</td>
-                                                <td style={{width: '5%'}}>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        size={'lg'}
-                                                        onClick={() => this.props.removeWalletAddressVersion(addressVersion)}>
-                                                        <FontAwesomeIcon
-                                                            icon="trash"
-                                                            size="1x"/>
-                                                    </Button>
-                                                </td>
-                                            </tr>);
-                                    }) : null
-                                }
-                                </tbody>
-                            </Table>
+                            <DatatableView
+                                value={this.state.datatables.address_version_list}
+                                sortOrder={1}
+                                showActionColumn={true}
+                                resultColumn={[
+                                    {
+                                        field: 'version'
+                                    },
+                                    {
+                                        field: 'regex_pattern'
+                                    },
+                                    {
+                                        field: 'default_address'
+                                    },
+                                ]}/>
                         </div>
                     </div>
                 </div>
