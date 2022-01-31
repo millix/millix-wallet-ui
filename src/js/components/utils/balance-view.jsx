@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import HelpIconView from './help-icon-view';
 import * as format from '../../helper/format';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
+import * as svg from '../../helper/svg';
 
 
 class BalanceView extends Component {
@@ -16,26 +15,30 @@ class BalanceView extends Component {
     render() {
         return (
             <div className={'panel panel-filled'}>
-                <div className={'panel-body'}>
+                <div className={'panel-body balance_panel'}>
                     <div className={'balance_container'}>
-                        <div
-                            className={'stable'}>
-                            {format.millix(this.props.stable)}
-                        </div>
-                        <div
-                            className={'pending'}>
-                            {format.millix(this.props.pending)}
-                            <HelpIconView
-                                help_item_name={'pending_balance'}/>
-                        </div>
-                        <div
-                            className={'primary_address'}>
-                            {this.props.primary_address}
-                            <HelpIconView
-                                help_item_name={'primary_address'}/>
+                        {svg.millix_logo()}
+                        <div>
+                            <div
+                                className={'stable'}>
+                                <span>{format.millix(this.props.stable, false)}</span>
+                            </div>
+                            <div
+                                className={'pending'}>
+                                {/*<span>{format.millix(5, false)}</span>*/}
+                                <span>{format.millix(this.props.pending, false)}</span>
+                                <HelpIconView
+                                    help_item_name={'pending_balance'}/>
+                            </div>
                         </div>
                     </div>
-
+                    <hr className={'w-100'}/>
+                    <div
+                        className={'primary_address'}>
+                        {this.props.primary_address}
+                        <HelpIconView
+                            help_item_name={'primary_address'}/>
+                    </div>
                 </div>
             </div>
         );

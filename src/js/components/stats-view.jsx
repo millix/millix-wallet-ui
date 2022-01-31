@@ -71,8 +71,8 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        is public <HelpIconView
-                                        help_item_name={'node_is_public'}/>
+                                        network state<HelpIconView
+                                        help_item_name={'network_state'}/>
                                     </td>
                                     <td>
                                         {is_public}

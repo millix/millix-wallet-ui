@@ -135,6 +135,8 @@ body .section_subtitle {
 .help_icon {
   margin-left: 0.3rem;
   cursor: pointer;
+  font-size: 0.8em;
+  display: inline-flex;
 
   &:hover {
     color: $color-secondary;
@@ -155,14 +157,36 @@ ul {
   }
 }
 
-.balance_container {
+.balance_panel {
   align-items: center;
   display: flex;
   flex-direction: column;
 
-  .stable {
-    color: $color-white;
-    font-size: 2.8rem;
+  .balance_container {
+    display: flex;
+
+    > svg {
+      fill: $color-primary;
+      height: 2.1rem;
+      margin-top: 0.25rem;
+      margin-right: 0.3rem;
+    }
+
+    .stable {
+      display: flex;
+      color: $color-white;
+      font-size: 2.8rem;
+
+      > span {
+        line-height: 1;
+      }
+    }
+
+    .pending {
+      > span {
+        margin-left: 0.5rem;
+      }
+    }
   }
 
   .primary_address,

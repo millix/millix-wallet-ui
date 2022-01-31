@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import config from '../../config';
 import DatatableView from './utils/datatable-view';
 import * as format from '../helper/format';
+import HelpIconView from './utils/help-icon-view';
 
 
 class TransactionDetailsView extends Component {
@@ -28,10 +29,6 @@ class TransactionDetailsView extends Component {
         }
     }
 
-    getBoolLabel(value) {
-        return value ? 'yes' : 'no';
-    }
-
     getTransactionInputOutputLink(input) {
         if (input.output_transaction_id === config.GENESIS_TRANSACTION_ID) {
             return '';
@@ -43,7 +40,7 @@ class TransactionDetailsView extends Component {
                 variant="outline-default"
                 className={'btn-xs icon_only ms-auto'}>
                 <FontAwesomeIcon
-                    icon={'th-list'}
+                    icon={'eye'}
                     size="1x"/>
             </Button>
         </Link>;
@@ -62,11 +59,11 @@ class TransactionDetailsView extends Component {
                 address          : output.address,
                 output_position  : output.output_position,
                 amount           : output.amount,
-                is_double_spend  : this.getBoolLabel(output.is_double_spend),
+                is_double_spend  : format.bool_label(output.is_double_spend),
                 double_spend_date: format.date(output.double_spend_date),
-                is_stable        : this.getBoolLabel(output.is_stable),
+                is_stable        : format.bool_label(output.is_stable),
                 stable_date      : format.date(output.stable_date),
-                status           : output.status
+                status           : format.transaction_status_label(output.status)
             }));
         }
 
@@ -77,24 +74,23 @@ class TransactionDetailsView extends Component {
                 output_transaction_id  : input.output_transaction_id,
                 output_position        : input.output_position,
                 output_transaction_date: format.date(input.output_transaction_date),
-                is_double_spend        : this.getBoolLabel(input.is_double_spend),
+                is_double_spend        : format.bool_label(input.is_double_spend),
                 double_spend_date      : format.date(input.double_spend_date),
-                is_stable              : this.getBoolLabel(input.is_stable),
+                is_stable              : format.bool_label(input.is_stable),
                 stable_date            : format.date(input.stable_date),
-                status                 : input.status,
+                status                 : format.transaction_status_label(input.status),
                 action                 : this.getTransactionInputOutputLink(input)
             }));
+        }
+
+        let stable_value = format.bool_label(transaction.is_stable);
+        if (transaction.stable_date) {
+            stable_value += ` (${format.date(transaction.stable_date)})`;
         }
 
         return (
             <>
                 <Col md="12">
-                    {/*<Button variant="outline-primary"*/}
-                    {/*        onClick={this.props.history.goBack}>*/}
-                    {/*    <FontAwesomeIcon icon="arrow-circle-left"*/}
-                    {/*                     size="1x"/>*/}
-                    {/*    back*/}
-                    {/*</Button>*/}
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
                             transaction detail
@@ -139,24 +135,25 @@ class TransactionDetailsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        is stable
+                                        stable
                                     </td>
                                     <td>
-                                        {this.getBoolLabel(transaction.is_stable)} ({format.date(transaction.stable_date)})
+                                        {stable_value}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        status
+                                        status<HelpIconView
+                                        help_item_name={'transaction_status'}/>
                                     </td>
                                     <td>
-                                        {transaction.status}
+                                        {format.transaction_status_label(transaction.status)}
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td className={'w-20'}>
-                                        node id origin
+                                        node id sender
                                     </td>
                                     <td>
                                         {transaction.node_id_origin}
@@ -175,7 +172,8 @@ class TransactionDetailsView extends Component {
 
                             <div className={'mb-3'}>
                                 <div className={'section_subtitle'}>
-                                    input list
+                                    input list<HelpIconView
+                                    help_item_name={'transaction_input'}/>
                                 </div>
                                 <DatatableView
                                     value={transaction_input_list}
@@ -214,7 +212,8 @@ class TransactionDetailsView extends Component {
                             </div>
 
                             <div className={'section_subtitle'}>
-                                output list
+                                output list<HelpIconView
+                                help_item_name={'transaction_output'}/>
                             </div>
                             <DatatableView
                                 value={transaction_output_list}
@@ -228,7 +227,8 @@ class TransactionDetailsView extends Component {
                                         field: 'output_position'
                                     },
                                     {
-                                        field: 'amount'
+                                        field : 'amount',
+                                        format: 'amount'
                                     },
                                     {
                                         field: 'is_double_spend'

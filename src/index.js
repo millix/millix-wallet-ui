@@ -44,7 +44,8 @@ import {
     faPlay,
     faPause,
     faQuestionCircle,
-    faThList
+    faThList,
+    faEllipsisV
 } from '@fortawesome/free-solid-svg-icons';
 import './vendor/animate.css/animate.css';
 import './css/bootstrap/bootstrap.scss';
@@ -74,7 +75,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faBook, faMicrochip, faPowerOff, faUserClock, faClock, faCompressArrowsAlt,
     faLock, faLockOpen, faTimes, faEye, faList, faBars, faSignInAlt, faFileImport,
     faChevronDown, faChevronUp, faPencilAlt, faSync, faPlusCircle, faPlay,
-    faPause, faQuestionCircle, faThList, faRedo);
+    faPause, faQuestionCircle, faThList, faRedo, faEllipsisV);
 
 
 let apiInfo = {

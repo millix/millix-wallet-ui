@@ -39,18 +39,12 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'node_is_public'              : {
-                'title': 'is public?',
+            'network_state'               : {
+                'title': 'network state',
                 'body' : <ul>
                     <li>
-                        if your node is public it is much more likely that you
-                        will
-                        receive transactions' fee
-                    </li>
-                    <li>
-                        if your node is private the chance to receive
-                        transaction
-                        fee is extremely low
+                        if your node is public it is more likely that you will
+                        receive transaction fees
                     </li>
                     <li>
                         if your node is private you can still send and receive
@@ -58,13 +52,13 @@ class HelpIconView extends Component {
                     </li>
                     <li>
                         if your node is private you will still receive payments
-                        for watching ads in tangled browser
+                        from advertisers
                     </li>
                     <li>
-                        if you node is not public you can use port forwarding
-                        on your router to make your node public. you can edit
-                        node's network configuration on this <a className={''}
-                                                                onClick={() => this.props.history.push('/config')}>page</a>
+                        if you node is private you can use port forwarding on
+                        your router to make your node public. you can edit your
+                        node's network configuration <a className={''}
+                                                        onClick={() => this.props.history.push('/config')}>here</a>
                     </li>
                 </ul>
             },
@@ -109,6 +103,68 @@ class HelpIconView extends Component {
                         create new addresses and view existing addresses
                     </li>
                 </ul>
+            },
+            'transaction_output'          : {
+                'title': 'transaction output',
+                'body' : <ul>
+                    <li>
+                        transaction outputs indicate an amount and an address
+                        that millix was sent to.
+                    </li>
+                    <li>
+                        outputs in position -1 are the transaction fee that the
+                        sender paid.
+                    </li>
+                    <li>
+                        there can be multiple outputs sent to multiple
+                        recipients in a transaction.
+                    </li>
+                    <li>
+                        this can cause the total transaction amount to be larger
+                        than the payment received by a specific address.
+                    </li>
+                    <li>
+                        when the sum of the inputs exceeds the fee and the
+                        amount the sender is paying to recipients, an additional
+                        output is created to send change back to the sender's
+                        address.
+                    </li>
+                </ul>
+            },
+            'transaction_input'           : {
+                'title': 'transaction input',
+                'body' : <ul>
+                    <li>
+                        transaction inputs are what the sender uses to fund a
+                        transaction.
+                    </li>
+                    <li>
+                        there can be multiple inputs used to fund a transaction.
+                    </li>
+                    <li>
+                        inputs are related to transactions previously received
+                        by the sender.
+                    </li>
+                </ul>
+            },
+            'transaction_status'          : {
+                'title': 'transaction status',
+                'body' : <ul>
+                    <li>
+                        pending hibernation - this transaction was received less
+                        than 10 minutes ago and may change.
+                    </li>
+                    <li>
+                        hibernated - this transaction is hibernating and will
+                        not change. before it can be used to fund a new
+                        transaction it will be used to fund a refresh
+                        transaction which will be validated by the network.
+                    </li>
+                    <li>
+                        invalid - there is something wrong with this
+                        transaction. it could be improperly formatted.
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;
@@ -145,7 +201,7 @@ class HelpIconView extends Component {
                 >
                     <span className={'help_icon'}>
                     <FontAwesomeIcon
-                        icon="question-circle"
+                        icon="chevron-down"
                         size="1x"/>
                         </span>
                 </OverlayTrigger>

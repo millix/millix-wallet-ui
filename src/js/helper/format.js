@@ -37,3 +37,18 @@ export function status_label(status) {
 export function bool_label(value) {
     return value ? 'yes' : 'no';
 }
+
+export function transaction_status_label(status) {
+    const result_status = {
+        1: 'pending hibernation',
+        2: 'hibernated',
+        3: 'invalid',
+    };
+
+    let label = '';
+    if (status && Object.keys(result_status).includes(status.toString())) {
+        label = result_status[status];
+    }
+
+    return label;
+}
