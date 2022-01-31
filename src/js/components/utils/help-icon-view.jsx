@@ -67,16 +67,16 @@ class HelpIconView extends Component {
                 'body' : <ul>
                     <li>
                         the millix protocol limits each transaction to be funded
-                        by a maximum of 128 inputs.
+                        by a maximum of 128 inputs
                     </li>
                     <li>
                         you can resolve this situation by aggregating your
                         unspent outputs manually
-                        before you send a large amount.
+                        before you send a large amount
                     </li>
                     <li>
                         you can aggregate your unspent outputs manually
-                        by sending transactions to yourself.
+                        by sending transactions to yourself
                     </li>
                 </ul>
             },
@@ -84,17 +84,17 @@ class HelpIconView extends Component {
                 'title': 'primary address',
                 'body' : <ul>
                     <li>
-                        is the first address created by a new wallet.
+                        is the first address created by a new wallet
                     </li>
                     <li>
-                        is the address announced by your node to the network.
+                        is the address announced by your node to the network
                     </li>
                     <li>
                         is the address where you receive transaction fees when
-                        selected as a proxy.
+                        selected as a proxy
                     </li>
                     <li>
-                        is the address where you receive advertisement payments.
+                        is the address where you receive advertisement payments
                     </li>
                     <li>
                         click <a
@@ -109,25 +109,25 @@ class HelpIconView extends Component {
                 'body' : <ul>
                     <li>
                         transaction outputs indicate an amount and an address
-                        that millix was sent to.
+                        that millix was sent to
                     </li>
                     <li>
                         outputs in position -1 are the transaction fee that the
-                        sender paid.
+                        sender paid
                     </li>
                     <li>
                         there can be multiple outputs sent to multiple
-                        recipients in a transaction.
+                        recipients in a transaction
                     </li>
                     <li>
                         this can cause the total transaction amount to be larger
-                        than the payment received by a specific address.
+                        than the payment received by a specific address
                     </li>
                     <li>
                         when the sum of the inputs exceeds the fee and the
                         amount the sender is paying to recipients, an additional
                         output is created to send change back to the sender's
-                        address.
+                        address
                     </li>
                 </ul>
             },
@@ -136,14 +136,14 @@ class HelpIconView extends Component {
                 'body' : <ul>
                     <li>
                         transaction inputs are what the sender uses to fund a
-                        transaction.
+                        transaction
                     </li>
                     <li>
-                        there can be multiple inputs used to fund a transaction.
+                        there can be multiple inputs used to fund a transaction
                     </li>
                     <li>
                         inputs are related to transactions previously received
-                        by the sender.
+                        by the sender
                     </li>
                 </ul>
             },
@@ -158,11 +158,11 @@ class HelpIconView extends Component {
                         hibernated - this transaction is hibernating and will
                         not change. before it can be used to fund a new
                         transaction it will be used to fund a refresh
-                        transaction which will be validated by the network.
+                        transaction which will be validated by the network
                     </li>
                     <li>
                         invalid - there is something wrong with this
-                        transaction. it could be improperly formatted.
+                        transaction. it could be improperly formatted
                     </li>
                 </ul>
             }

@@ -73,8 +73,7 @@ class UnlockWalletView extends Component {
 
 
     render() {
-        let props      = this.props;
-        let error_list = this.state.error_list;
+        let props = this.props;
         if (props.wallet.unlocked) {
             const {from} = props.location.state || {from: {pathname: '/'}};
             return <Redirect to={from}/>;
@@ -91,21 +90,26 @@ class UnlockWalletView extends Component {
         let passphraseRef;
 
         const walletUnlockWithPassword = (password) => {
+            const error_list = [];
             API.newSession(password)
                .then(data => {
                    if (data.api_status === 'fail') {
                        return;
                    }
                    goToWalletView(data.wallet);
-               }).catch(_ => props.walletReady({authenticationError: true}));
-        };
+               }).catch(_ => {
+                props.walletReady({authenticationError: true});
 
-        if (props.wallet.authenticationError) {
-            error_list.push({
-                name   : 'auth_error_name',
-                message: 'there was a problem authenticating your key file. please make sure you are using correct password'
+                error_list.push({
+                    name   : 'auth_error_name',
+                    message: 'there was a problem authenticating your key file. please make sure you are using correct password'
+                });
+
+                this.setState({
+                    error_list: error_list
+                });
             });
-        }
+        };
 
         return (
             <Container>
@@ -173,7 +177,7 @@ class UnlockWalletView extends Component {
                                                         <div
                                                             className="panel-body">
                                                             <ErrorList
-                                                                error_list={error_list}/>
+                                                                error_list={this.state.error_list}/>
                                                             {this.state.private_key_exist === undefined ? (
                                                                 <div
                                                                     className="col-lg-12 text-center mt-4 mb-4">

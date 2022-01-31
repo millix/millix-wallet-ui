@@ -9,14 +9,14 @@ import HelpIconView from './utils/help-icon-view';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import BalanceView from './utils/balance-view';
-import AddressListView from './address-list-view';
+import * as validate from '../helper/validate';
 
 
 class WalletView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            feesLocked            : true,
+            feeInputLocked        : true,
             error_list            : [],
             modalShow             : false,
             modalShowSendResult   : false,
@@ -25,7 +25,7 @@ class WalletView extends Component {
             address_version       : '',
             address_key_identifier: '',
             amount                : '',
-            fees                  : ''
+            fee                   : ''
         };
 
         this.send = this.send.bind(this);
@@ -35,14 +35,6 @@ class WalletView extends Component {
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
         }
-    }
-
-    _getAmount(value, allowZero = false) {
-        const pValue = parseInt(value.replace(/[,.]/g, ''));
-        if ((allowZero ? pValue < 0 : pValue <= 0) || format.millix(pValue, false) !== value) {
-            throw Error('invalid_value');
-        }
-        return pValue;
     }
 
     send() {
@@ -60,68 +52,51 @@ class WalletView extends Component {
             sendTransactionErrorMessage: null
         });
 
-        API.verifyAddress(this.destinationAddress.value.trim())
-           .then(data => {
-               if (!data.is_valid) {
-                   error_list.push({
-                       name   : 'address_error',
-                       message: 'invalid address'
-                   });
-                   this.setState({error_list: error_list});
-                   return Promise.reject('validation_error');
-               }
+        const address = validate.required('address', this.destinationAddress.value, error_list);
+        const amount  = validate.amount('amount', this.amount.value, error_list);
+        const fee     = validate.amount('fee', this.fee.value, error_list);
 
-               const {
-                         address_base          : destinationAddress,
-                         address_key_identifier: destinationAddressIdentifier,
-                         address_version       : destinationAddressVersion
-                     } = data;
+        this.setState({
+            error_list: error_list
+        });
 
-               let amount;
-               try {
-                   amount = this._getAmount(this.amount.value);
-               }
-               catch (e) {
-                   error_list.push({
-                       name   : 'amountError',
-                       message: 'invalid amount'
-                   });
-                   this.setState({
-                       error_list: error_list
-                   });
-                   return Promise.reject('validation_error');
-               }
+        if (error_list.length === 0) {
+            API.verifyAddress(address)
+               .then(data => {
+                   if (!data.is_valid) {
+                       error_list.push({
+                           name   : 'address_invalid',
+                           message: 'valid address is required'
+                       });
+                       this.setState({error_list: error_list});
+                   }
+                   else {
+                       const {
+                                 address_base          : destinationAddress,
+                                 address_key_identifier: destinationAddressIdentifier,
+                                 address_version       : destinationAddressVersion
+                             } = data;
 
-               let fees;
-               try {
-                   fees = this._getAmount(this.fees.value, true);
-               }
-               catch (e) {
-                   error_list.push({
-                       name   : 'feeError',
-                       message: 'invalid fee. please, set a correct value.'
-                   });
-                   this.setState({
-                       error_list: error_list
-                   });
-                   return Promise.reject('validation_error');
-               }
+                       this.setState({
+                           error_list            : [],
+                           address_base          : destinationAddress,
+                           address_version       : destinationAddressVersion,
+                           address_key_identifier: destinationAddressIdentifier,
+                           amount                : amount,
+                           fee                   : fee
+                       });
 
-               this.setState({
-                   error_list            : [],
-                   sending               : true,
-                   address_base          : destinationAddress,
-                   address_version       : destinationAddressVersion,
-                   address_key_identifier: destinationAddressIdentifier,
-                   amount                : amount,
-                   fees                  : fees
+                       this.changeModalShow();
+                   }
                });
-
-               this.changeModalShow();
-           });
+        }
     }
 
     sendTransaction() {
+        this.setState({
+            sending: true
+        });
+
         const amount = this.state.amount;
         API.sendTransaction({
             transaction_output_list: [
@@ -134,10 +109,12 @@ class WalletView extends Component {
             ],
             transaction_output_fee : {
                 fee_type: 'transaction_fee_default',
-                amount  : this.state.fees
+                amount  : this.state.fee
             }
         }).then(data => {
             if (data.api_status === 'fail') {
+                this.changeModalShow(false);
+
                 return Promise.reject(data);
             }
 
@@ -147,7 +124,7 @@ class WalletView extends Component {
             this.amount.value             = '';
 
             if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
-                this.fees.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
+                this.fee.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
             }
 
             const transaction = data.transaction.find(item => {
@@ -165,7 +142,7 @@ class WalletView extends Component {
 
             this.setState({
                 sending            : false,
-                feesLocked         : true,
+                feeInputLocked     : true,
                 modalBodySendResult: modalBodySendResult
             });
             this.changeModalShowSendResult();
@@ -174,34 +151,7 @@ class WalletView extends Component {
             let error_list = [];
             if (e !== 'validation_error') {
                 if (e.api_message) {
-                    if (typeof (e.api_message) === 'string') {
-                        const match                 = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                        sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
-                    }
-                    else {
-                        if (typeof (e.api_message.error) !== 'undefined') {
-                            const error = e.api_message.error;
-                            if (error.error === 'transaction_input_max_error') {
-                                sendTransactionErrorMessage = <>your
-                                    transaction tried to use too many
-                                    outputs<HelpIconView
-                                        help_item_name={'transaction_max_input_number'}/>.
-                                    please try to send a smaller amount or
-                                    aggregate manually by sending a smaller
-                                    amounts to yourself. the max amount you
-                                    can
-                                    send
-                                    is {format.millix(error.data.amount_max)}</>;
-                            }
-                        }
-                    }
-                }
-
-                if (e === 'insufficient_balance' || e.api_message.error.error === 'insufficient_balance') {
-                    sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
-                }
-                else if (e === 'transaction_send_interrupt' || e.api_message.error === 'transaction_send_interrupt') {
-                    sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
+                    sendTransactionErrorMessage = this.getUiError(e.api_message);
                 }
                 else {
                     sendTransactionErrorMessage = `your transaction could not be sent: (${e.api_message.error.error || e.api_message.error || e.message || e.api_message || e})`;
@@ -217,7 +167,48 @@ class WalletView extends Component {
                 sending   : false,
                 canceling : false
             });
+            this.changeModalShow(false);
         });
+    }
+
+    getUiError(api_message) {
+        let error          = '';
+        let api_error_name = 'unknown';
+
+        if (typeof (api_message) === 'object') {
+            let result_error = api_message.error;
+            api_error_name   = result_error.error;
+
+            switch (api_error_name) {
+                case 'transaction_input_max_error':
+                    error = <>your
+                        transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>.
+                        please try to send a smaller amount or aggregate manually by sending a smaller
+                        amounts to yourself. the max amount you can send is {format.millix(result_error.data.amount_max)}.</>;
+                    break;
+                case 'insufficient_balance':
+                    error = <>your balance is lower than the amount you are trying to send. the max amount you can send
+                        is {format.millix(result_error.data.balance_stable)}.</>;
+                    break;
+                case 'transaction_send_interrupt':
+                    error = <>transaction has been canceled.</>;
+                    break;
+                case 'proxy_not_found':
+                    error = <>proxy not found. please try again.</>;
+                    break;
+                case 'transaction_proxy_rejected':
+                    error = <>transaction rejected by a proxy. please try again.</>;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (typeof (api_message) === 'string') {
+            const match = /unexpected generic api error: \((?<message>.*)\)/.exec(api_message);
+            error       = `your transaction could not be sent: (${match.groups.message})`;
+        }
+
+        return error;
     }
 
     cancelSendTransaction() {
@@ -310,20 +301,20 @@ class WalletView extends Component {
                                                                   placeholder="fee"
                                                                   pattern="[0-9]+([,][0-9]{1,2})?"
                                                                   ref={c => {
-                                                                      this.fees = c;
-                                                                      if (this.fees && !this.feesInitialized && this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
-                                                                          this.feesInitialized = true;
-                                                                          this.fees.value      = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
+                                                                      this.fee = c;
+                                                                      if (this.fee && !this.feeInitialized && this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
+                                                                          this.feeInitialized = true;
+                                                                          this.fee.value      = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
                                                                       }
                                                                   }}
                                                                   onChange={this.handleAmountValueChange.bind(this)}
-                                                                  disabled={this.state.feesLocked}/>
+                                                                  disabled={this.state.feeInputLocked}/>
                                                     <button
                                                         className="btn btn-outline-input-group-addon icon_only"
                                                         type="button"
-                                                        onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
+                                                        onClick={() => this.setState({feeInputLocked: !this.state.feeInputLocked})}>
                                                         <FontAwesomeIcon
-                                                            icon={this.state.feesLocked ? 'lock' : 'lock-open'}
+                                                            icon={this.state.feeInputLocked ? 'lock' : 'lock-open'}
                                                             size="sm"/>
                                                     </button>
                                                 </Col>
