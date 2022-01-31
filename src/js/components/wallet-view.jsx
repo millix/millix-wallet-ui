@@ -219,25 +219,6 @@ class WalletView extends Component {
         this.changeModalShow(false);
     }
 
-    handleAmountValueChange(e) {
-        if (e.target.value.length === 0) {
-            return;
-        }
-
-        let cursorStart = e.target.selectionStart,
-            cursorEnd   = e.target.selectionEnd;
-        let amount      = e.target.value.replace(/[,.]/g, '');
-        let offset      = 0;
-        if ((amount.length - 1) % 3 === 0) {
-            offset = 1;
-        }
-
-        amount         = parseInt(amount);
-        e.target.value = !isNaN(amount) ? format.millix(amount, false) : 0;
-
-        e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
-    }
-
     changeModalShow(value = true) {
         this.setState({
             modalShow: value
@@ -289,7 +270,7 @@ class WalletView extends Component {
                                                               placeholder="amount"
                                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                                               ref={c => this.amount = c}
-                                                              onChange={this.handleAmountValueChange.bind(this)}/>
+                                                              onChange={validate.handleAmountInputChange.bind(this)}/>
                                             </Form.Group>
                                         </Col>
                                         <Col>
@@ -307,7 +288,7 @@ class WalletView extends Component {
                                                                           this.fee.value      = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
                                                                       }
                                                                   }}
-                                                                  onChange={this.handleAmountValueChange.bind(this)}
+                                                                  onChange={validate.handleAmountInputChange.bind(this)}
                                                                   disabled={this.state.feeInputLocked}/>
                                                     <button
                                                         className="btn btn-outline-input-group-addon icon_only"

@@ -49,3 +49,21 @@ function get_error_name(prefix, field_name) {
     return `${prefix}_${field_name.replaceAll(' ', '_')}`;
 }
 
+export function handleAmountInputChange(e) {
+    if (e.target.value.length === 0) {
+        return;
+    }
+
+    let cursorStart = e.target.selectionStart,
+        cursorEnd   = e.target.selectionEnd;
+    let amount      = e.target.value.replace(/[,.]/g, '');
+    let offset      = 0;
+    if ((amount.length - 1) % 3 === 0) {
+        offset = 1;
+    }
+
+    amount         = parseInt(amount);
+    e.target.value = !isNaN(amount) ? format.millix(amount, false) : 0;
+
+    e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
+}
