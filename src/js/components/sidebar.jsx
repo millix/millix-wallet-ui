@@ -6,6 +6,7 @@ import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
+import API from '../api';
 
 
 class Sidebar extends Component {
@@ -13,14 +14,21 @@ class Sidebar extends Component {
         super(props);
         let now    = Date.now();
         this.state = {
-            fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now,
-            date         : new Date(),
-            modalShow    : false
+            fileKeyExport      : 'export_' + now,
+            fileKeyImport      : 'import_' + now,
+            date               : new Date(),
+            modalShow          : false,
+            node_millix_version: ''
         };
     }
 
     componentDidMount() {
+        API.getNodeOsInfo().then(response => {
+            this.setState({
+                node_millix_version: response.node_millix_version
+            });
+        });
+
         this.timerID = setInterval(
             () => this.tick(),
             1000
@@ -248,7 +256,7 @@ class Sidebar extends Component {
                     </NavItem>
                 </SideNav.Nav>
                 <div className="nav-info">
-                    <span>version {props.node.node_version}</span>
+                    <span>version {this.state.node_millix_version}</span>
                 </div>
             </SideNav>
         </aside>);
