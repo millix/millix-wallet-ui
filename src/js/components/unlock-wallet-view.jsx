@@ -18,10 +18,10 @@ const styles = {
 class UnlockWalletView extends Component {
     constructor(props) {
         super(props);
-        this.private_key_exist_interval_id = undefined;
+        this.private_key_exists_interval_id = undefined;
         this.state                         = {
             error_list       : [],
-            private_key_exist: undefined, //ternary status: false -- doesn't
+            private_key_exists: undefined, //ternary status: false -- doesn't
             // exists, true -- exist, undefined --
             // unknown. ajax didn't return a response yet
             defaultTabActiveKey: 1
@@ -29,13 +29,13 @@ class UnlockWalletView extends Component {
     }
 
     componentDidMount() {
-        this.private_key_exist_interval_id = setInterval(() => {
+        this.private_key_exists_interval_id = setInterval(() => {
             this.isPrivateKeyExist();
         }, 500);
     }
 
     componentWillUnmount() {
-        clearInterval(this.private_key_exist_interval_id);
+        clearInterval(this.private_key_exists_interval_id);
     }
 
     activateTab(eventKey) {
@@ -48,10 +48,10 @@ class UnlockWalletView extends Component {
 
     isPrivateKeyExist() {
         API.getIsPrivateKeyExist().then(response => {
-            if (typeof (response.private_key_exist) === 'boolean') {
-                if (response.private_key_exist) {
+            if (typeof (response.private_key_exists) === 'boolean') {
+                if (response.private_key_exists) {
                     this.setState({
-                        private_key_exist: true
+                        private_key_exists: true
                     });
                 }
             }
@@ -62,12 +62,12 @@ class UnlockWalletView extends Component {
                     message: 'millix_private_key.json not found'
                 });
                 this.setState({
-                    private_key_exist  : false,
+                    private_key_exists  : false,
                     defaultTabActiveKey: 2,
                     error_list         : error_list
                 });
             }
-            clearInterval(this.private_key_exist_interval_id);
+            clearInterval(this.private_key_exists_interval_id);
         });
     }
 
@@ -178,7 +178,7 @@ class UnlockWalletView extends Component {
                                                             className="panel-body">
                                                             <ErrorList
                                                                 error_list={this.state.error_list}/>
-                                                            {this.state.private_key_exist === undefined ? (
+                                                            {this.state.private_key_exists === undefined ? (
                                                                 <div
                                                                     className="col-lg-12 text-center mt-4 mb-4">
                                                                     looking
@@ -188,7 +188,7 @@ class UnlockWalletView extends Component {
                                                                 </div>
                                                             ) : ('')}
                                                             {
-                                                                this.state.private_key_exist === true ? (
+                                                                this.state.private_key_exists === true ? (
                                                                     <div>
                                                                         <div
                                                                             className="form-group">

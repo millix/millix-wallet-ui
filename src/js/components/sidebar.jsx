@@ -47,7 +47,6 @@ class Sidebar extends Component {
     }
 
     isExpanded(section, defaultSelected) {
-
         let result = false;
         if (section === 'transaction' &&
             (
@@ -94,6 +93,7 @@ class Sidebar extends Component {
     render() {
         let props           = this.props;
         let defaultSelected = this.highlightSelected(props.location.pathname);
+
         return (<aside className={'navigation'} style={{
             height   : '100%',
             minHeight: '100vh'

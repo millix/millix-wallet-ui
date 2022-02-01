@@ -165,6 +165,20 @@ class HelpIconView extends Component {
                         transaction. it could be improperly formatted
                     </li>
                 </ul>
+            },
+            'key_identifier'      : {
+                'title': 'key identifier',
+                'body' : <ul>
+                    <li>
+                        key identifier is contained within each address available to the wallet
+                    </li>
+                    <li>
+                        it identifies the wallet
+                    </li>
+                    <li>
+                        wallet and all the addresses are associated with the key identifier
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;

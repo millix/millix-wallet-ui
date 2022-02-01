@@ -6,6 +6,7 @@ import {updateNetworkState} from '../redux/actions';
 import os from 'os';
 import API from '../api';
 import * as format from '../helper/format';
+import HelpIconView from './utils/help-icon-view';
 
 
 class ReportIssueView extends Component {
@@ -44,6 +45,8 @@ class ReportIssueView extends Component {
     }
 
     render() {
+        const props = this.props;
+
         return (<Col md="12">
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
@@ -71,6 +74,34 @@ class ReportIssueView extends Component {
                             </div>
                             <hr/>
 
+                            <Row>
+                                <Col>
+                                    <div className={'section_subtitle'}>
+                                        node
+                                    </div>
+                                    <Table striped bordered hover>
+                                        <tbody>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                node id
+                                            </td>
+                                            <td>
+                                                {props.network.node_id}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className={'w-20'}>
+                                                key identifier<HelpIconView
+                                                help_item_name={'key_identifier'}/>
+                                            </td>
+                                            <td>
+                                                {props.wallet.address_key_identifier}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
 
                             <Row>
                                 <Col>

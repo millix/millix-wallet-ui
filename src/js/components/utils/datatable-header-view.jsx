@@ -44,7 +44,7 @@ class DatatableHeaderView extends Component {
                         <hr/>
                     </>
                 )}
-                <Col md={4}>
+                <Col xs={12} md={4}>
                     {typeof (this.props.reload_datatable) === 'function' && (
                         <Button variant="outline-primary"
                                 size={'sm'}
@@ -59,7 +59,7 @@ class DatatableHeaderView extends Component {
                     )}
                 </Col>
 
-                <Col md={4} className={'datatable_refresh_ago'}>
+                <Col xs={12} md={4} className={'datatable_refresh_ago'}>
                     {this.props.datatable_reload_timestamp && (
                         <span>
                                 refreshed {this.props.datatable_reload_timestamp && moment(this.props.datatable_reload_timestamp).fromNow()}
@@ -67,7 +67,7 @@ class DatatableHeaderView extends Component {
                     )}
                 </Col>
 
-                <Col md={4}>
+                <Col xs={12} md={4}>
                     {typeof (this.props.on_global_search_change) === 'function' && (
                         <Form.Control
                             type="text"

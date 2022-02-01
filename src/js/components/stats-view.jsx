@@ -78,6 +78,15 @@ class StatsView extends Component {
                                         {is_public}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        key identifier<HelpIconView
+                                        help_item_name={'key_identifier'}/>
+                                    </td>
+                                    <td>
+                                        {props.wallet.address_key_identifier}
+                                    </td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </Col>

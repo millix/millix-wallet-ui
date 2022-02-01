@@ -13,6 +13,18 @@
 .navbar {
   min-height: $navbar-height;
   padding: 0;
+
+  .navbar-collapse {
+    display: flex;
+  }
+
+  .address_key_identifier {
+    align-items: center;
+    display: inline-flex;
+    word-break: break-all;
+    margin-left: auto;
+    padding: 0 $content-spacing 0 0;
+  }
 }
 
 .navbar .navbar-header {
