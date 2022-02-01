@@ -201,7 +201,7 @@ class DatatableView extends Component {
         return (
             <>
                 <DatatableHeaderView
-                    reload_datatable={() => this.props.reload_datatable()}
+                    reload_datatable={this.props.reload_datatable}
                     datatable_reload_timestamp={this.props.datatable_reload_timestamp}
                     action_button_label={this.props.action_button_label}
                     action_button_on_click={this.props.action_button_on_click}
