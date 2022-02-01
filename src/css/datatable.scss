@@ -1,5 +1,6 @@
 .datatable_action_row {
   align-items: center;
+  flex-wrap: wrap;
   display: flex;
   margin-bottom: 1rem;
   width: 100%;
@@ -16,6 +17,11 @@
 
   .datatable_action_button {
     margin-left: auto;
+  }
+
+  .datatable_search_input {
+    margin-left: auto;
+    max-width: 32rem;
   }
 }
 

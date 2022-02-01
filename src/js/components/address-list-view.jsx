@@ -63,14 +63,13 @@ class AddressListView extends Component {
                 <div className={'panel-heading bordered'}>addresses
                 </div>
                 <div className={'panel-body'}>
-                    <DatatableHeaderView
-                        reload_datatable={() => this.reloadDatatable()}
-                        datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                        action_button_on_click={() => this.generateAddress()}
-                        action_button_label={'generate address'}
-                    />
                     <Row>
                         <DatatableView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                            action_button_on_click={() => this.generateAddress()}
+                            action_button_label={'generate address'}
+
                             value={this.state.address_list}
                             sortField={'address_position'}
                             sortOrder={1}

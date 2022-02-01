@@ -107,12 +107,11 @@ class UnspentTransactionOutputView extends Component {
                         <div className={'form-group'}>
                             when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the remaining change as a new unspent.
                         </div>
-                        <DatatableHeaderView
-                            reload_datatable={() => this.reloadDatatable()}
-                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                        />
                         <Row id={'txhistory'}>
                             <DatatableView
+                                reload_datatable={() => this.reloadDatatable()}
+                                datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+
                                 value={this.state.transaction_output_list}
                                 sortField={'transaction_date'}
                                 sortOrder={-1}

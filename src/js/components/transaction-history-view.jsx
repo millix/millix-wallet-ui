@@ -63,12 +63,11 @@ class TransactionHistoryView extends Component {
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>transactions</div>
                     <div className={'panel-body'}>
-                        <DatatableHeaderView
-                            reload_datatable={() => this.reloadDatatable()}
-                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                        />
                         <Row id={'txhistory'}>
                             <DatatableView
+                                reload_datatable={() => this.reloadDatatable()}
+                                datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+
                                 value={this.state.transaction_list}
                                 sortField={'date'}
                                 sortOrder={-1}

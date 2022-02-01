@@ -196,14 +196,13 @@ class ListAdView extends Component {
                         at the moment you can not edit advertisements. you
                         can pause existing and create a new one instead.
                     </div>
-                    <DatatableHeaderView
-                        reload_datatable={() => this.reloadDatatable()}
-                        datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                        action_button_label={'create advertisement'}
-                        action_button_on_click={() => this.props.history.push('/advertisement-create')}
-                    />
                     <Row id={'adlist'}>
                         <DatatableView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                            action_button_label={'create advertisement'}
+                            action_button_on_click={() => this.props.history.push('/advertisement-create')}
+
                             value={this.state.ad_list}
                             sortField={'date'}
                             sortOrder={-1}
@@ -226,7 +225,8 @@ class ListAdView extends Component {
                                     field: 'expiration'
                                 },
                                 {
-                                    field: 'status'
+                                    field      : 'status',
+                                    // filter_type: 'multi_select'
                                 },
                                 {
                                     field: 'create_date'

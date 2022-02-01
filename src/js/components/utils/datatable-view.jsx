@@ -5,21 +5,85 @@ import PropTypes from 'prop-types';
 import {Dropdown} from 'primereact/dropdown';
 import {Ripple} from 'primereact/ripple';
 import {classNames} from 'primereact/utils';
-import moment from 'moment';
 import * as format from '../../helper/format';
+import {Button} from 'primereact/button';
+import {MultiSelect} from 'primereact/multiselect';
+import {FilterMatchMode, FilterOperator} from 'primereact/api';
+import DatatableHeaderView from './datatable-header-view';
 
 
 class DatatableView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            first      : 0,
-            rows       : 20,
-            currentPage: 1
+            first                     : 0,
+            rows                      : 20,
+            currentPage               : 1,
+            result_column             : [],
+            result_filter             : {
+                global: {
+                    value    : null,
+                    matchMode: FilterMatchMode.CONTAINS
+                }
+            },
+            result_global_search_field: [],
+            global_search_value       : ''
         };
 
         this.onCustomPage       = this.onCustomPage.bind(this);
         this.bodyTemplateAmount = this.bodyTemplateAmount.bind(this);
+    }
+
+    componentDidMount() {
+        this.generateResultColumn();
+    }
+
+    generateResultColumn() {
+        const result_global_search_field = [];
+        const result_column              = [];
+        this.props.resultColumn.forEach((item, index) => {
+            if (typeof (item.header) === 'undefined') {
+                item.header = item.field.replaceAll('_', ' ');
+            }
+
+            if (typeof (item.sortable) === 'undefined') {
+                item.sortable = true;
+            }
+
+            if (typeof (item.format) !== 'undefined' && item.format === 'amount') {
+                item.body = (rowData) => this.bodyTemplateAmount(rowData, item.field);
+            }
+
+            if (typeof (item.filter_type) !== 'undefined' && item.filter_type === 'multi_select') {
+                item.filter = true;
+            }
+
+            result_global_search_field.push(item.field);
+            result_column.push(<Column
+                key={index}
+                field={item.field}
+                header={item.header}
+                // filter={item.filter}
+                // filterField={item.field}
+                // filterElement={this.filterTemplateMultiSelect}
+
+                showFilterMatchModes={false}
+                sortable={item.sortable}
+                body={item.body}/>);
+        });
+
+        if (this.props.showActionColumn) {
+            result_column.push(<Column
+                key={'action'}
+                field={'action'}
+                header={'action'}
+                sortable={false}/>);
+        }
+
+        this.setState({
+            'result_column'             : result_column,
+            'result_global_search_field': result_global_search_field
+        });
     }
 
     onCustomPage(event) {
@@ -104,68 +168,87 @@ class DatatableView extends Component {
         };
     }
 
-    render() {
-        const column = [];
-        this.props.resultColumn.forEach((item, index) => {
-            if (typeof (item.header) === 'undefined') {
-                item.header = item.field.replaceAll('_', ' ');
-            }
+    // filterTemplateMultiSelect(options) {
+    //     console.log(options);
+    //     return <MultiSelect value={options.value} options={this.representatives} //itemTemplate={this.representativesItemTemplate}
+    //                         onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter"/>;
+    // }
 
-            if (typeof (item.sortable) === 'undefined') {
-                item.sortable = true;
-            }
+    // filterClearTemplate(options) {
+    //     return <Button type="button" icon="pi pi-times" onClick={options.filterClearCallback} className="p-button-secondary"></Button>;
+    // }
+    //
+    // filterApplyTemplate(options) {
+    //     return <Button type="button" icon="pi pi-check" onClick={options.filterApplyCallback} className="p-button-success"></Button>;
+    // }
+    //
+    // filterFooterTemplate() {
+    //     return <div className="px-3 pt-0 pb-3 text-center font-bold">Customized Buttons</div>;
+    // }
 
-            if (typeof (item.format) !== 'undefined' && item.format === 'amount') {
-                item.body = (rowData) => this.bodyTemplateAmount(rowData, item.field);
-            }
+    on_global_search_change(e) {
+        const value                   = e.target.value;
+        let result_filter             = {...this.state.result_filter};
+        result_filter['global'].value = value;
 
-            column.push(<Column
-                key={index}
-                field={item.field}
-                header={item.header}
-                sortable={item.sortable}
-                body={item.body}/>);
+        this.setState({
+            result_filter,
+            global_search_value: value
         });
+    }
 
-        if (this.props.showActionColumn) {
-            column.push(<Column
-                key={'action'}
-                field={'action'}
-                header={'action'}
-                sortable={false}/>);
-        }
-
+    render() {
         return (
-            <DataTable value={this.props.value}
-                       paginator
-                       paginatorTemplate={this.getPaginatorTemplate()}
-                       first={this.state.first}
-                       rows={this.state.rows}
-                       onPage={this.onCustomPage}
-                       paginatorClassName="p-jc-end"
-                       loading={this.props.loading}
-                       stripedRows
-                       showGridlines
-                       resizableColumns
-                       columnResizeMode="fit"
-                       sortField={this.props.sortField}
-                       sortOrder={this.props.sortOrder}
-                       responsiveLayout="scroll">
-                {column}
-            </DataTable>
+            <>
+                <DatatableHeaderView
+                    reload_datatable={() => this.props.reload_datatable()}
+                    datatable_reload_timestamp={this.props.datatable_reload_timestamp}
+                    action_button_label={this.props.action_button_label}
+                    action_button_on_click={this.props.action_button_on_click}
+                    on_global_search_change={(e) => this.on_global_search_change(e)}
+                />
+                <DataTable value={this.props.value}
+                           paginator
+                           paginatorTemplate={this.getPaginatorTemplate()}
+                           first={this.state.first}
+                           rows={this.state.rows}
+                           onPage={this.onCustomPage}
+                           paginatorClassName="p-jc-end"
+                           loading={this.props.loading}
+                           stripedRows
+                           showGridlines
+                           resizableColumns
+                           columnResizeMode="fit"
+                           sortField={this.props.sortField}
+                           sortOrder={this.props.sortOrder}
+                           emptyMessage="no records found"
+
+                           globalFilterFields={this.state.result_global_search_field}
+                           filters={this.state.result_filter}
+                           filterDisplay="menu"
+
+                           responsiveLayout="scroll">
+                    {this.state.result_column}
+                </DataTable>
+            </>
         );
     }
 }
 
 
 DatatableView.propTypes = {
-    value           : PropTypes.array.isRequired,
-    resultColumn    : PropTypes.array.isRequired,
-    sortField       : PropTypes.string,
-    sortOrder       : PropTypes.number,
-    showActionColumn: PropTypes.bool,
-    reload_timestamp: PropTypes.any,
-    loading         : PropTypes.bool
+    value                     : PropTypes.array.isRequired,
+    resultColumn              : PropTypes.array.isRequired,
+    sortField                 : PropTypes.string,
+    sortOrder                 : PropTypes.number,
+    showActionColumn          : PropTypes.bool,
+    reload_timestamp          : PropTypes.any,
+    loading                   : PropTypes.bool,
+    datatable_reload_timestamp: PropTypes.any,
+    action_button_icon        : PropTypes.string,
+    action_button_label       : PropTypes.string,
+    action_button_on_click    : PropTypes.func,
+    reload_datatable          : PropTypes.func
 };
 
 

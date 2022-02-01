@@ -79,12 +79,11 @@ class PeerListView extends Component {
                         <div className={'form-group'}>
                             <span>these are peers to which you are connected. "peer" is another node to which your node connects to in order to send/receive data.</span>
                         </div>
-                        <DatatableHeaderView
-                            reload_datatable={() => this.reloadDatatable()}
-                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                        />
                         <Row>
                             <DatatableView
+                                reload_datatable={() => this.reloadDatatable()}
+                                datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+
                                 value={this.state.peer_list}
                                 sortField={'node_idx'}
                                 loading={this.state.datatable_loading}

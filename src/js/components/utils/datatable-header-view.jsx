@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col} from 'react-bootstrap';
+import {Button, Col, Form, Row} from 'react-bootstrap';
 import {Route, withRouter} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import moment from 'moment';
@@ -27,6 +27,23 @@ class DatatableHeaderView extends Component {
 
         return (
             <div className={'datatable_action_row'}>
+                {typeof (this.props.action_button_on_click) === 'function' && (
+                    <>
+                        <Col>
+                            <Button variant="outline-primary"
+                                    size={'sm'}
+                                    className={'datatable_action_button'}
+                                    onClick={() => this.props.action_button_on_click()}>
+                                <FontAwesomeIcon
+                                    icon={action_button_icon}
+                                    size="1x"/>
+                                {action_button_label}
+                            </Button>
+
+                        </Col>
+                        <hr/>
+                    </>
+                )}
                 <Col md={4}>
                     {typeof (this.props.reload_datatable) === 'function' && (
                         <Button variant="outline-primary"
@@ -51,16 +68,12 @@ class DatatableHeaderView extends Component {
                 </Col>
 
                 <Col md={4}>
-                    {typeof (this.props.action_button_on_click) === 'function' && (
-                        <Button variant="outline-primary"
-                                size={'sm'}
-                                className={'datatable_action_button'}
-                                onClick={() => this.props.action_button_on_click()}>
-                            <FontAwesomeIcon
-                                icon={action_button_icon}
-                                size="1x"/>
-                            {action_button_label}
-                        </Button>
+                    {typeof (this.props.on_global_search_change) === 'function' && (
+                        <Form.Control
+                            type="text"
+                            className={'datatable_search_input'}
+                            onChange={this.props.on_global_search_change.bind(this)}
+                            placeholder="search"/>
                     )}
                 </Col>
             </div>
@@ -74,7 +87,8 @@ DatatableHeaderView.propTypes = {
     action_button_icon        : PropTypes.string,
     action_button_label       : PropTypes.string,
     action_button_on_click    : PropTypes.func,
-    reload_datatable          : PropTypes.func
+    reload_datatable          : PropTypes.func,
+    on_global_search_change   : PropTypes.func
 };
 
 export default withRouter(DatatableHeaderView);
