@@ -3,63 +3,38 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import DatatableView from './utils/datatable-view';
 import API from '../api/index';
-import _ from 'lodash';
-import moment from 'moment';
 import ErrorList from './utils/error-list-view';
 import HelpIconView from './utils/help-icon-view';
+import ModalView from './utils/modal-view';
+import * as format from '../helper/format';
+import BalanceView from './utils/balance-view';
+import * as validate from '../helper/validate';
 
 
 class WalletView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            feesLocked : true,
-            addressList: [],
-            error_list : []
+            feeInputLocked        : true,
+            error_list            : [],
+            modalShow             : false,
+            modalShowSendResult   : false,
+            modalBodySendResult   : [],
+            address_base          : '',
+            address_version       : '',
+            address_key_identifier: '',
+            amount                : '',
+            fee                   : ''
         };
-    }
 
-    componentDidMount() {
-        this.updateAddresses();
+        this.send = this.send.bind(this);
     }
 
     componentWillUnmount() {
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
         }
-    }
-
-    updateAddresses() {
-        API.listAddresses(this.props.wallet.address_key_identifier)
-           .then(addresses => {
-               let result = _.sortBy(_.map(addresses, itemAddress => {
-                   return {
-                       address         : itemAddress.address,
-                       address_position: itemAddress.address_position,
-                       address_version : itemAddress.address_version,
-                       create_date     : moment.unix(itemAddress.create_date).format('YYYY-MM-DD HH:mm:ss')
-                   };
-               }), address => -address.address_position);
-
-               this.setState({
-                   addressList: result
-               });
-           });
-    }
-
-    getNextAddress() {
-        API.getNextAddress()
-           .then(() => this.updateAddresses());
-    }
-
-    _getAmount(value, allowZero = false) {
-        const pValue = parseInt(value.replace(/[,.]/g, ''));
-        if ((allowZero ? pValue < 0 : pValue <= 0) || pValue.toLocaleString('en-US') !== value) {
-            throw Error('invalid_value');
-        }
-        return pValue;
     }
 
     send() {
@@ -77,146 +52,184 @@ class WalletView extends Component {
             sendTransactionErrorMessage: null
         });
 
-        API.verifyAddress(this.destinationAddress.value.trim())
-           .then(data => {
-               if (!data.is_valid) {
-                   error_list.push({
-                       name   : 'address_error',
-                       message: 'invalid address'
-                   });
-                   this.setState({error_list: error_list});
-                   return Promise.reject('validation_error');
-               }
+        const address = validate.required('address', this.destinationAddress.value, error_list);
+        const amount  = validate.amount('amount', this.amount.value, error_list);
+        const fee     = validate.amount('fee', this.fee.value, error_list);
 
-               const {
-                         address_base          : destinationAddress,
-                         address_key_identifier: destinationAddressIdentifier,
-                         address_version       : destinationAddressVersion
-                     } = data;
+        this.setState({
+            error_list: error_list
+        });
 
-               let amount;
-               try {
-                   amount = this._getAmount(this.amount.value);
-                   console.log(amount);
-               }
-               catch (e) {
-                   error_list.push({
-                       name   : 'amountError',
-                       message: 'invalid amount'
-                   });
-                   this.setState({
-                       error_list: error_list
-                   });
-                   return Promise.reject('validation_error');
-               }
+        if (error_list.length === 0) {
+            API.verifyAddress(address)
+               .then(data => {
+                   if (!data.is_valid) {
+                       error_list.push({
+                           name   : 'address_invalid',
+                           message: 'valid address is required'
+                       });
+                       this.setState({error_list: error_list});
+                   }
+                   else {
+                       const {
+                                 address_base          : destinationAddress,
+                                 address_key_identifier: destinationAddressIdentifier,
+                                 address_version       : destinationAddressVersion
+                             } = data;
 
-               let fees;
-               try {
-                   fees = this._getAmount(this.fees.value, true);
-               }
-               catch (e) {
-                   error_list.push({
-                       name   : 'feeError',
-                       message: 'invalid fee. please, set a correct value.'
-                   });
-                   this.setState({
-                       error_list: error_list
-                   });
-                   return Promise.reject('validation_error');
-               }
-
-               this.setState({
-                   error_list: [],
-                   sending   : true
-               });
-
-               return API.sendTransaction({
-                   transaction_output_list: [
-                       {
+                       this.setState({
+                           error_list            : [],
                            address_base          : destinationAddress,
                            address_version       : destinationAddressVersion,
                            address_key_identifier: destinationAddressIdentifier,
-                           amount
-                       }
-                   ],
-                   transaction_output_fee : {
-                       fee_type: 'transaction_fee_default',
-                       amount  : fees
-                   }
-               }).then(data => {
-                   if (data.api_status === 'fail') {
-                       return Promise.reject(data);
-                   }
-               });
-           })
-           .then(() => {
-               this.destinationAddress.value = '';
-               this.amount.value             = '';
-               if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
-                   this.fees.value = this.props.config.TRANSACTION_FEE_DEFAULT.toLocaleString('en-US');
-               }
-               this.setState({
-                   sending   : false,
-                   feesLocked: true
-               });
-           })
-           .catch((e) => {
-               let sendTransactionErrorMessage;
+                           amount                : amount,
+                           fee                   : fee
+                       });
 
-               if (e !== 'validation_error') {
-                   if (e.api_message) {
-                       if (typeof (e.api_message) === 'string') {
-                           const match = /unexpected generic api error: \((?<message>.*)\)/.exec(e.api_message);
-                           sendTransactionErrorMessage = `your transaction could not be sent: (${match.groups.message})`;
-                       }
-                       else {
-                           if (typeof (e.api_message.error) !== 'undefined') {
-                               const error = e.api_message.error;
-                               if (error.error === 'transaction_input_max_error') {
-                                   sendTransactionErrorMessage = <>your transaction tries to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>. please try to send smaller amount or aggregate manually by sending smaller amounts to yourself. max amount you can send now is {error.data.amount_max.toLocaleString('en-US')} mlx</>;
-                               }
-                           }
-                       }
+                       this.changeModalShow();
                    }
-                   else if (e === 'insufficient_balance') {
-                       sendTransactionErrorMessage = 'your transaction could not be sent: insufficient millix balance';
-                   }
-                   else if (e === 'transaction_send_interrupt') {
-                       sendTransactionErrorMessage = 'your transaction could not be sent: your transaction was canceled';
-                   }
-                   else {
-                       sendTransactionErrorMessage = `your transaction could not be sent: (${e.message || e.api_message || e})`;
-                   }
-
-                   error_list.push({
-                       name   : 'sendTransactionError',
-                       message: sendTransactionErrorMessage
-                   });
-               }
-               this.setState({
-                   error_list: error_list,
-                   sending   : false
                });
-           });
+        }
     }
 
-    handleAmountValueChange(e) {
-        if (e.target.value.length === 0) {
-            return;
+    sendTransaction() {
+        this.setState({
+            sending: true
+        });
+
+        const amount = this.state.amount;
+        API.sendTransaction({
+            transaction_output_list: [
+                {
+                    address_base          : this.state.address_base,
+                    address_version       : this.state.address_version,
+                    address_key_identifier: this.state.address_key_identifier,
+                    amount
+                }
+            ],
+            transaction_output_fee : {
+                fee_type: 'transaction_fee_default',
+                amount  : this.state.fee
+            }
+        }).then(data => {
+            if (data.api_status === 'fail') {
+                this.changeModalShow(false);
+
+                return Promise.reject(data);
+            }
+
+            return data;
+        }).then(data => {
+            this.destinationAddress.value = '';
+            this.amount.value             = '';
+
+            if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
+                this.fee.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
+            }
+
+            const transaction = data.transaction.find(item => {
+                return item.version.indexOf('0a') !== -1;
+            });
+
+            const modalBodySendResult = <div className={'text-center'}>
+                <div>
+                    transaction id
+                </div>
+                <div>
+                    {transaction.transaction_id}
+                </div>
+            </div>;
+
+            this.setState({
+                sending            : false,
+                feeInputLocked     : true,
+                modalBodySendResult: modalBodySendResult
+            });
+            this.changeModalShow(false);
+            this.changeModalShowSendResult();
+        }).catch((e) => {
+            let sendTransactionErrorMessage;
+            let error_list = [];
+            if (e !== 'validation_error') {
+                if (e.api_message) {
+                    sendTransactionErrorMessage = this.getUiError(e.api_message);
+                }
+                else {
+                    sendTransactionErrorMessage = `your transaction could not be sent: (${e.api_message.error.error || e.api_message.error || e.message || e.api_message || e})`;
+                }
+
+                error_list.push({
+                    name   : 'sendTransactionError',
+                    message: sendTransactionErrorMessage
+                });
+            }
+            this.setState({
+                error_list: error_list,
+                sending   : false,
+                canceling : false
+            });
+            this.changeModalShow(false);
+        });
+    }
+
+    getUiError(api_message) {
+        let error          = '';
+        let api_error_name = 'unknown';
+
+        if (typeof (api_message) === 'object') {
+            let result_error = api_message.error;
+            api_error_name   = result_error.error;
+
+            switch (api_error_name) {
+                case 'transaction_input_max_error':
+                    error = <>your
+                        transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>.
+                        please try to send a smaller amount or aggregate manually by sending a smaller
+                        amounts to yourself. the max amount you can send is {format.millix(result_error.data.amount_max)}.</>;
+                    break;
+                case 'insufficient_balance':
+                    error = <>your balance is lower than the amount you are trying to send. the max amount you can send
+                        is {format.millix(result_error.data.balance_stable)}.</>;
+                    break;
+                case 'transaction_send_interrupt':
+                    error = <>transaction has been canceled.</>;
+                    break;
+                case 'proxy_not_found':
+                    error = <>proxy not found. please try again.</>;
+                    break;
+                case 'transaction_proxy_rejected':
+                    error = <>transaction rejected by a proxy. please try again.</>;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (typeof (api_message) === 'string') {
+            const match = /unexpected generic api error: \((?<message>.*)\)/.exec(api_message);
+            error       = `your transaction could not be sent: (${match.groups.message})`;
         }
 
-        let cursorStart = e.target.selectionStart,
-            cursorEnd   = e.target.selectionEnd;
-        let amount      = e.target.value.replace(/[,.]/g, '');
-        let offset      = 0;
-        if ((amount.length - 1) % 3 === 0) {
-            offset = 1;
-        }
+        return error;
+    }
 
-        amount         = parseInt(amount);
-        e.target.value = !isNaN(amount) ? amount.toLocaleString('en-US') : 0;
+    cancelSendTransaction() {
+        this.setState({
+            canceling: false,
+            sending  : false
+        });
+        this.changeModalShow(false);
+    }
 
-        e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
+    }
+
+    changeModalShowSendResult(value = true) {
+        this.setState({
+            modalShowSendResult: value
+        });
     }
 
     render() {
@@ -224,61 +237,11 @@ class WalletView extends Component {
             <div>
                 <Row>
                     <Col md={12}>
-                        <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>balance
-                            </div>
-                            <div className={'panel-body'}>
-                                <div className={'d-flex'}>
-                                    <Table striped bordered hover>
-                                        <thead>
-                                        <tr>
-                                            <th width="50%">available</th>
-                                            <th width="50%">pending
-                                                <HelpIconView
-                                                    help_item_name={'pending_balance'}/>
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr key="1">
-                                            <td>
-                                                <div className={'d-flex'}>
-                                                <span
-                                                    className={'d-flex align-self-center'}>
-                                                    {this.props.wallet.balance_stable.toLocaleString('en-US')}
-                                                </span>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        className={'btn-xs icon_only ms-auto'}
-                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/stable')}>
-                                                        <FontAwesomeIcon
-                                                            icon={'list'}
-                                                            size="1x"/>
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className={'d-flex'}>
-                                                <span
-                                                    className={'d-flex align-self-center'}>
-                                                {this.props.wallet.balance_pending.toLocaleString('en-US')}
-                                                    </span>
-                                                    <Button
-                                                        variant="outline-primary"
-                                                        className={'btn-xs icon_only ms-auto'}
-                                                        onClick={() => this.props.history.push('/unspent-transaction-output-list/pending')}>
-                                                        <FontAwesomeIcon
-                                                            icon={'list'}
-                                                            size="1x"/>
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            </div>
-                        </div>
+                        <BalanceView
+                            stable={this.props.wallet.balance_stable}
+                            pending={this.props.wallet.balance_pending}
+                            primary_address={this.props.wallet.address}
+                        />
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>send</div>
                             <div className={'panel-body'}>
@@ -308,7 +271,7 @@ class WalletView extends Component {
                                                               placeholder="amount"
                                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                                               ref={c => this.amount = c}
-                                                              onChange={this.handleAmountValueChange.bind(this)}/>
+                                                              onChange={validate.handleAmountInputChange.bind(this)}/>
                                             </Form.Group>
                                         </Col>
                                         <Col>
@@ -320,32 +283,49 @@ class WalletView extends Component {
                                                                   placeholder="fee"
                                                                   pattern="[0-9]+([,][0-9]{1,2})?"
                                                                   ref={c => {
-                                                                      this.fees = c;
-                                                                      if (this.fees && !this.feesInitialized && this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
-                                                                          this.feesInitialized = true;
-                                                                          this.fees.value      = this.props.config.TRANSACTION_FEE_DEFAULT.toLocaleString('en-US');
+                                                                      this.fee = c;
+                                                                      if (this.fee && !this.feeInitialized && this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
+                                                                          this.feeInitialized = true;
+                                                                          this.fee.value      = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
                                                                       }
                                                                   }}
-                                                                  onChange={this.handleAmountValueChange.bind(this)}
-                                                                  disabled={this.state.feesLocked}/>
+                                                                  onChange={validate.handleAmountInputChange.bind(this)}
+                                                                  disabled={this.state.feeInputLocked}/>
                                                     <button
                                                         className="btn btn-outline-input-group-addon icon_only"
                                                         type="button"
-                                                        onClick={() => this.setState({feesLocked: !this.state.feesLocked})}>
+                                                        onClick={() => this.setState({feeInputLocked: !this.state.feeInputLocked})}>
                                                         <FontAwesomeIcon
-                                                            icon={this.state.feesLocked ? 'lock' : 'lock-open'}
+                                                            icon={this.state.feeInputLocked ? 'lock' : 'lock-open'}
                                                             size="sm"/>
                                                     </button>
-
                                                 </Col>
                                             </Form.Group>
                                         </Col>
                                         <Col
                                             className={'d-flex justify-content-center'}>
+                                            <ModalView
+                                                show={this.state.modalShow}
+                                                size={'lg'}
+                                                heading={'send confirmation'}
+                                                on_accept={() => this.sendTransaction()}
+                                                on_close={() => this.cancelSendTransaction()}
+                                                body={<div>you are about to
+                                                    send {format.millix(this.state.amount)} to {this.state.address_key_identifier}{this.state.address_version}{this.state.address_base}.
+                                                    <div>confirm that you want
+                                                        to
+                                                        continue.</div></div>}/>
+
+                                            <ModalView
+                                                show={this.state.modalShowSendResult}
+                                                size={'lg'}
+                                                on_close={() => this.changeModalShowSendResult(false)}
+                                                heading={'payment has been sent'}
+                                                body={this.state.modalBodySendResult}/>
                                             <Form.Group as={Row}>
                                                 <Button
                                                     variant="outline-primary"
-                                                    onClick={this.send.bind(this)}
+                                                    onClick={() => this.send()}
                                                     disabled={this.state.canceling}>
                                                     {this.state.sending ?
                                                      <>
@@ -355,54 +335,11 @@ class WalletView extends Component {
                                                          }}
                                                               className="loader-spin"/>
                                                          {this.state.canceling ? 'canceling' : 'cancel transaction'}
-                                                     </> : <>send millix</>}
+                                                     </> : <>send</>}
                                                 </Button>
                                             </Form.Group>
                                         </Col>
                                     </Form>
-                                </Row>
-                            </div>
-                        </div>
-                        <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>addresses
-                            </div>
-                            <div className={'panel-body'}>
-                                <div className={'datatable_action_row'}>
-                                    <Button variant="outline-primary"
-                                            className={'btn-sm create_button'}
-                                            onClick={() => this.getNextAddress()}>
-                                        <FontAwesomeIcon
-                                            icon={'plus-circle'}
-                                            size="1x"/>generate address
-                                    </Button>
-                                </div>
-                                <Row>
-                                    <DatatableView
-                                        value={this.state.addressList}
-                                        sortField={'address_position'}
-                                        sortOrder={1}
-                                        resultColumn={[
-                                            {
-                                                'field'   : 'address_position',
-                                                'header'  : 'position',
-                                                'sortable': true
-                                            },
-                                            {
-                                                'field'   : 'address',
-                                                'header'  : 'address',
-                                                'sortable': true
-                                            },
-                                            {
-                                                'field'   : 'address_version',
-                                                'header'  : 'version',
-                                                'sortable': true
-                                            },
-                                            {
-                                                'field'   : 'create_date',
-                                                'header'  : 'create date',
-                                                'sortable': true
-                                            }
-                                        ]}/>
                                 </Row>
                             </div>
                         </div>

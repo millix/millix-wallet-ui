@@ -6,6 +6,8 @@ import ErrorList from './utils/error-list-view';
 import {walletUpdateAddresses, walletUpdateBalance} from '../redux/actions/index';
 import {withRouter} from 'react-router-dom';
 import ModalView from './utils/modal-view';
+import * as format from '../helper/format';
+import _ from 'lodash';
 
 
 class CreateAdView extends Component {
@@ -96,16 +98,17 @@ class CreateAdView extends Component {
 
     async getCategories() {
         API.listCategories().then(data => {
-
-            const options   = data.map(d => ({
+            let result_option = data.map(d => ({
                 'value': d.advertisement_category_guid,
                 'label': d.advertisement_category
             }));
-            let fields      = this.state.fields;
-            fields.category = options[0].value;
+            let fields        = this.state.fields;
+            fields.category   = result_option[0].value;
+
+            result_option = _.orderBy(result_option, ['label'], ['asc']);
 
             this.setState({
-                categories: options,
+                categories: result_option,
                 fields    : fields
             });
         });
@@ -113,7 +116,6 @@ class CreateAdView extends Component {
 
     async getLanguages() {
         API.listLanguages().then(data => {
-
             const options          = data.map(d => ({
                 'value': d.language_guid,
                 'label': d.language_name + ' - ' + d.language_name_native
@@ -153,7 +155,6 @@ class CreateAdView extends Component {
             error_list.push('url is required');
         }
 
-
         if (!fields['daily_budget_mlx']) {
             formIsValid = false;
             error_list.push('daily budget is required');
@@ -168,7 +169,7 @@ class CreateAdView extends Component {
 
         if (!fields['bid_per_impressions_mlx']) {
             formIsValid = false;
-            error_list.push('bid per impressio is required');
+            error_list.push('bid per impression is required');
         }
 
         if (typeof fields['bid_per_impressions_mlx'] !== 'undefined' && (typeof fields['daily_budget_mlx']) == 'string') {
@@ -183,12 +184,6 @@ class CreateAdView extends Component {
             error_list.push('bid per impression cannot exceed the daily budget');
         }
 
-        if (parseFloat(fields['daily_budget_mlx']) > parseFloat(this.props.wallet.balance_stable)) {
-            formIsValid = false;
-            error_list.push('please add funds to enable this ad campaign');
-        }
-
-
         this.setState({error_list: error_list});
         return formIsValid;
     }
@@ -200,7 +195,6 @@ class CreateAdView extends Component {
                 this.setState({submitData: data});
 
                 if (typeof (data.api_status) !== 'undefined' && data.api_status === 'ok') {
-                    // todo: redirect to list
                     this.flushForm();
                     this.props.history.push('/advertisement-list');
                 }
@@ -289,7 +283,7 @@ class CreateAdView extends Component {
             <div>
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
-                           on_hide={() => this.changeModalShow(false)}
+                           on_close={() => this.changeModalShow(false)}
                            heading={'add funds'}
                            body={<div>
                                <div>fund your campaign by sending millix to the
@@ -530,7 +524,7 @@ class CreateAdView extends Component {
                                 </Form.Label>
                                 <div>
                                     <span>
-                                        {this.props.wallet.balance_stable.toLocaleString('en-US')} mlx
+                                        {format.millix(this.props.wallet.balance_stable)}
                                     </span>
                                     <Button
                                         variant="outline-primary"
@@ -565,7 +559,7 @@ class CreateAdView extends Component {
                                     ref={c => {
                                         this.budget = c;
                                         if (this.budget && this.state.fields['daily_budget_mlx'] !== undefined) {
-                                            this.budget.value = this.state.fields['daily_budget_mlx'].toLocaleString('en-US');
+                                            this.budget.value = format.millix(this.state.fields['daily_budget_mlx'], false);
                                         }
                                     }}
                                     placeholder=""
@@ -599,7 +593,7 @@ class CreateAdView extends Component {
                                         ref={c => {
                                             this.impression = c;
                                             if (this.impression && this.state.fields['bid_per_impressions_mlx'] !== undefined) {
-                                                this.impression.value = this.state.fields['bid_per_impressions_mlx'].toLocaleString('en-US');
+                                                this.impression.value = format.millix(this.state.fields['bid_per_impressions_mlx'], false);
                                             }
                                         }}
                                         placeholder=""

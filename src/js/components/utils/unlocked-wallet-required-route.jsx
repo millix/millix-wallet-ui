@@ -8,6 +8,7 @@ import $ from 'jquery';
 import API from '../../api';
 import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance} from '../../redux/actions';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import HelpIconView from './help-icon-view';
 
 const UnlockedWalletRequiredRoute = ({
                                          component: Component,
@@ -61,6 +62,10 @@ const UnlockedWalletRequiredRoute = ({
                             <FontAwesomeIcon
                                 icon={'bars'}
                                 size="lg"/>
+                        </div>
+                        <div className={'address_key_identifier'}>
+                            {rest.wallet.address_key_identifier}<HelpIconView
+                            help_item_name={'key_identifier'}/>
                         </div>
                     </div>
                 </nav>

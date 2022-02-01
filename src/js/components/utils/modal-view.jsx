@@ -26,15 +26,12 @@ class ModalView extends Component {
     }
 
     closeModal() {
-        if (typeof (this.props.on_hide) === 'function') {
-            this.props.on_hide();
-        }
         this.setModalShow(false);
     }
 
     cancel() {
-        if (typeof (this.props.on_cancel) === 'function') {
-            this.props.on_cancel();
+        if (typeof (this.props.on_close) === 'function') {
+            this.props.on_close();
         }
         this.closeModal();
     }
@@ -61,7 +58,7 @@ class ModalView extends Component {
 
         return (
             <>
-                <Modal show={this.state.show} onHide={() => this.closeModal()}
+                <Modal show={this.state.show} onHide={() => this.cancel()}
                        size={this.props.size}
                        animation={false}>
                     <Modal.Header closeButton>
@@ -85,9 +82,8 @@ class ModalView extends Component {
 
 ModalView.propTypes = {
     show     : PropTypes.bool,
-    on_cancel: PropTypes.any,
+    on_close : PropTypes.any,
     on_accept: PropTypes.any,
-    on_hide  : PropTypes.any,
     heading  : PropTypes.string,
     body     : PropTypes.any,
     size     : PropTypes.string

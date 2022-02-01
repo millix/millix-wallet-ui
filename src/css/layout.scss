@@ -8,6 +8,10 @@
 @import 'dropdown';
 @import 'modal';
 
+hr {
+  width: 100%;
+}
+
 a {
   cursor: pointer;
 }
@@ -78,8 +82,13 @@ body .section_subtitle {
   color: $color-white;
 }
 
-.unlock-container {
+.unlock-container,
+.import_mnemonic_container,
+.create_wallet_container {
   margin: 10rem auto 0;
+}
+
+.unlock-container {
   max-width: 55rem;
 }
 
@@ -130,6 +139,8 @@ body .section_subtitle {
 .help_icon {
   margin-left: 0.3rem;
   cursor: pointer;
+  font-size: 0.8em;
+  display: inline-flex;
 
   &:hover {
     color: $color-secondary;
@@ -147,5 +158,44 @@ ul {
     li {
       margin-bottom: 0.5rem;
     }
+  }
+}
+
+.balance_panel {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  .balance_container {
+    display: flex;
+
+    > svg {
+      fill: $color-primary;
+      height: 2.1rem;
+      margin-top: 0.25rem;
+      margin-right: 0.3rem;
+    }
+
+    .stable {
+      display: flex;
+      color: $color-white;
+      font-size: 2.8rem;
+
+      > span {
+        line-height: 1;
+      }
+    }
+
+    .pending {
+      > span {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .primary_address,
+  .pending {
+    font-size: 1.4rem;
+    word-break: break-all;
   }
 }

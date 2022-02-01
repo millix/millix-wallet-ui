@@ -4,6 +4,7 @@ import {Button, Col, Row, Table} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {updateNetworkState} from '../redux/actions';
 import HelpIconView from './utils/help-icon-view';
+import * as format from '../helper/format';
 
 
 class StatsView extends Component {
@@ -58,7 +59,7 @@ class StatsView extends Component {
                             <div className={'section_subtitle'}>
                                 node
                             </div>
-                            <Table striped bordered hover className={'mb-3'}>
+                            <Table striped bordered hover>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
@@ -70,11 +71,20 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        is public <HelpIconView
-                                        help_item_name={'node_is_public'}/>
+                                        network state<HelpIconView
+                                        help_item_name={'network_state'}/>
                                     </td>
                                     <td>
                                         {is_public}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
+                                        key identifier<HelpIconView
+                                        help_item_name={'key_identifier'}/>
+                                    </td>
+                                    <td>
+                                        {props.wallet.address_key_identifier}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -87,7 +97,7 @@ class StatsView extends Component {
                             <div className={'section_subtitle'}>
                                 data
                             </div>
-                            <Table striped bordered hover className={'mb-3'}>
+                            <Table striped bordered hover>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
@@ -95,7 +105,7 @@ class StatsView extends Component {
                                         count
                                     </td>
                                     <td>
-                                        {props.wallet.transaction_count.toLocaleString('en-US')}
+                                        {format.number(props.wallet.transaction_count)}
                                     </td>
                                 </tr>
                                 <tr>
@@ -105,7 +115,7 @@ class StatsView extends Component {
                                         count
                                     </td>
                                     <td>
-                                        {props.wallet.transaction_wallet_unstable_count.toLocaleString('en-US')}
+                                        {format.number(props.wallet.transaction_wallet_unstable_count)}
                                     </td>
                                 </tr>
                                 <tr>
@@ -113,7 +123,7 @@ class StatsView extends Component {
                                         event log size
                                     </td>
                                     <td>
-                                        {props.log.size.toLocaleString('en-US')}
+                                        {format.number(props.log.size)}
                                     </td>
                                 </tr>
                                 <tr>
@@ -121,7 +131,7 @@ class StatsView extends Component {
                                         backlog size
                                     </td>
                                     <td>
-                                        {props.backlog.size.toLocaleString('en-US')}
+                                        {format.number(props.backlog.size)}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -134,14 +144,14 @@ class StatsView extends Component {
                             <div className={'section_subtitle'}>
                                 network
                             </div>
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className={'mb-0'}>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
                                         node public address
                                     </td>
                                     <td>
-                                        {props.network.node_public_ip.toLocaleString('en-US') + ':' + props.network.node_port}
+                                        {this.props.network.node_is_public === true && props.network.node_public_ip + ':' + props.network.node_port}
                                     </td>
                                 </tr>
                                 <tr>
@@ -149,7 +159,7 @@ class StatsView extends Component {
                                         node bind ip
                                     </td>
                                     <td>
-                                        {props.network.node_bind_ip.toLocaleString('en-US')}
+                                        {props.network.node_bind_ip}
                                     </td>
                                 </tr>
                                 <tr>

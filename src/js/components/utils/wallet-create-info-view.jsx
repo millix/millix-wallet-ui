@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import {Col, Row, Form} from 'react-bootstrap';
 
 const WalletCreateInfoView = (props) => {
+    let info_label = 'your wallet has been successfully created.';
+    if (props.processName === 'import') {
+        info_label = 'your wallet has been successfully imported.';
+    }
+
     return (
         <div className={'wallet-create-password'}>
-            <Row>
-                <Col sm={12} className={'center mb-3'}>your wallet was
-                    successfully created.</Col>
-            </Row>
+            <div className={'center mb-3'}>{info_label}</div>
             <Form.Group className={'form-group'}>
                 <label>wallet id</label>
                 <Form.Control type="text"
@@ -32,7 +34,8 @@ const WalletCreateInfoView = (props) => {
 };
 
 WalletCreateInfoView.propTypes = {
-    wallet: PropTypes.object.isRequired
+    wallet     : PropTypes.object.isRequired,
+    processName: PropTypes.string
 };
 
 export default WalletCreateInfoView;

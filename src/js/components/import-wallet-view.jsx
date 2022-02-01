@@ -129,14 +129,11 @@ class ImportWalletView extends Component {
 
         const {status} = this.state;
         return (
-            <Container style={{
-                marginTop  : 50,
-                paddingLeft: 25
-            }}>
+            <Container className="import_mnemonic_container">
                 <>
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
-                            create new wallet
+                            import wallet
                         </div>
                         <div className={'panel-body'}>
                             <Row>
@@ -147,6 +144,7 @@ class ImportWalletView extends Component {
                                     <div>
                                         {status === STATUS.NEW_WALLET_MNEMONIC && (
                                             <MnemonicConfirmView
+                                                processName={'import'}
                                                 mnemonic={new Array(24).fill('')}
                                                 importNew={true}
                                                 onChange={(isConfirmed, mnemonic) => this.setState({
@@ -155,12 +153,13 @@ class ImportWalletView extends Component {
                                                 })}/>)}
                                         {this.state.mnemonic_is_confirmed && this.state.status === STATUS.NEW_WALLET_PASSWORD && (
                                             <WalletCreatePasswordView
+                                                processName={'import'}
                                                 notConfirmed={!this.state.password_valid}
-                                                walletImport={true}
                                                 onPassword={this.onPassword.bind(this)}
                                                 onConfirmPassword={this.onConfirmPassword.bind(this)}/>)}
                                         {this.state.wallet_info && this.state.status === STATUS.NEW_WALLET_CREATED && (
                                             <WalletCreateInfoView
+                                                processName={'import'}
                                                 wallet={this.state.wallet_info}/>
                                         )}
                                     </div>

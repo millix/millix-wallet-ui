@@ -4,6 +4,9 @@ import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import ModalView from './utils/modal-view';
+import * as format from '../helper/format';
+import API from '../api';
 
 
 class Sidebar extends Component {
@@ -11,13 +14,21 @@ class Sidebar extends Component {
         super(props);
         let now    = Date.now();
         this.state = {
-            fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now,
-            date         : new Date()
+            fileKeyExport      : 'export_' + now,
+            fileKeyImport      : 'import_' + now,
+            date               : new Date(),
+            modalShow          : false,
+            node_millix_version: ''
         };
     }
 
     componentDidMount() {
+        API.getNodeOsInfo().then(response => {
+            this.setState({
+                node_millix_version: response.node_millix_version
+            });
+        });
+
         this.timerID = setInterval(
             () => this.tick(),
             1000
@@ -44,7 +55,6 @@ class Sidebar extends Component {
     }
 
     isExpanded(section, defaultSelected) {
-
         let result = false;
         if (section === 'transaction' &&
             (
@@ -82,9 +92,16 @@ class Sidebar extends Component {
         return result;
     }
 
+    changeModalShow(value = true) {
+        this.setState({
+            modalShow: value
+        });
+    }
+
     render() {
         let props           = this.props;
         let defaultSelected = this.highlightSelected(props.location.pathname);
+
         return (<aside className={'navigation'} style={{
             height   : '100%',
             minHeight: '100vh'
@@ -95,7 +112,7 @@ class Sidebar extends Component {
                 onSelect={(selected) => {
                     switch (selected) {
                         case 'lock':
-                            props.lockWallet();
+                            this.changeModalShow(true);
                             break;
                         case 'resetValidation':
                             break;
@@ -105,8 +122,14 @@ class Sidebar extends Component {
                 }}
                 expanded={true}
             >
+                <ModalView show={this.state.modalShow}
+                           size={'lg'}
+                           on_close={() => this.changeModalShow(false)}
+                           heading={'logout'}
+                           on_accept={() => props.lockWallet()}
+                           body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
-                    <span>{moment.utc(this.state.date).format('YYYY-MM-DD HH:mm:ss')} utc</span>
+                    <span>{format.date(this.state.date)} utc</span>
                 </div>
                 <SideNav.Nav
                     selected={defaultSelected}
@@ -114,6 +137,12 @@ class Sidebar extends Component {
                     <NavItem key={'wallet'} eventKey="/wallet">
                         <NavText>
                             home
+                        </NavText>
+                    </NavItem>
+
+                    <NavItem key={'address-list'} eventKey="/address-list">
+                        <NavText>
+                            addresses
                         </NavText>
                     </NavItem>
 
@@ -138,18 +167,19 @@ class Sidebar extends Component {
                         <NavItem key={'unspent-transaction-output-list-pending'}
                                  eventKey="/unspent-transaction-output-list/pending">
                             <NavText>
-                                pending unspent list
+                                pending unspents
                             </NavText>
                         </NavItem>
                         <NavItem key={'unspent-transaction-output-list-stable'}
                                  eventKey={'/unspent-transaction-output-list/stable'}>
                             <NavText>
-                                stable unspent list
+                                stable unspents
                             </NavText>
                         </NavItem>
                     </NavItem>
 
-                    <NavItem key={'advertisement-list'} eventKey="/advertisement-list">
+                    <NavItem key={'advertisement-list'}
+                             eventKey="/advertisement-list">
                         <NavText>
                             advertisements
                         </NavText>
@@ -226,7 +256,7 @@ class Sidebar extends Component {
                     </NavItem>
                 </SideNav.Nav>
                 <div className="nav-info">
-                    <span>version {props.node.node_version}</span>
+                    <span>version {this.state.node_millix_version}</span>
                 </div>
             </SideNav>
         </aside>);

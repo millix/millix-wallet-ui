@@ -6,7 +6,9 @@ import moment from 'moment';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import * as format from '../helper/format';
+import DatatableHeaderView from './utils/datatable-header-view';
+import HelpIconView from './utils/help-icon-view';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -16,15 +18,12 @@ class UnspentTransactionOutputView extends Component {
         this.state          = {
             transaction_output_list   : [],
             stable                    : 1,
-            datatable_reload_timestamp: ''
+            datatable_reload_timestamp: '',
+            datatable_loading         : false
         };
     }
 
     componentDidMount() {
-        moment.relativeTimeThreshold('ss', -1); // required to get diff in
-        // seconds instead of "a few
-        // seconds ago"
-
         const stable_value_new = this.getStableFromUrl();
         this.setState({
             stable: stable_value_new
@@ -54,22 +53,28 @@ class UnspentTransactionOutputView extends Component {
     }
 
     reloadDatatable() {
+        this.setState({
+            datatable_loading: true
+        });
+
         return API.getWalletUnspentTransactionOutputList(this.props.wallet.address_key_identifier, this.state.stable).then(data => {
             let rows = data.filter(output => output.status !== 3).map((output, idx) => ({
                 idx             : data.length - idx,
                 transaction_id  : output.transaction_id,
                 address         : output.address,
                 output_position : output.output_position,
-                amount          : output.amount.toLocaleString('en-US'),
-                transaction_date: moment.utc(output.transaction_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                stable_date     : output.stable_date && moment.utc(output.stable_date * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                amount          : output.amount,
+                transaction_date: format.date(output.transaction_date),
+                stable_date     : format.date(output.stable_date),
                 action          : <DatatableActionButtonView
                     history_path={'/transaction/' + encodeURIComponent(output.transaction_id)}
-                    history_state={[output]}/>
+                    history_state={[output]}
+                    icon={'eye'}/>
             }));
             this.setState({
                 transaction_output_list   : rows,
-                datatable_reload_timestamp: new Date()
+                datatable_reload_timestamp: new Date(),
+                datatable_loading         : false
             });
         });
     }
@@ -79,65 +84,56 @@ class UnspentTransactionOutputView extends Component {
     }
 
     render() {
+        let title = '';
+        if (this.state.stable) {
+            title = 'stable unspents';
+        }
+        else {
+            title = 'pending unspents'
+        }
+
         return (
             <div>
                 <div className={'panel panel-filled'}>
                     <div
                         className={'panel-heading bordered'}>
-                        {this.state.stable ? '' : 'pending'} unspent
-                        transaction output list
+                        {title}
                     </div>
                     <div className={'panel-body'}>
-                        <div className={'datatable_action_row'}>
-                            <Col md={4}>
-                                <Button variant="outline-primary"
-                                        className={'btn-sm refresh_button'}
-                                        onClick={() => this.reloadDatatable()}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={'sync'}
-                                        size="1x"/>
-                                    refresh
-                                </Button>
-                            </Col>
-                            <Col md={4} className={'datatable_refresh_ago'}>
-                            <span>
-                                refreshed {this.state.datatable_reload_timestamp && moment(this.state.datatable_reload_timestamp).fromNow()}
-                            </span>
-                            </Col>
+                        <div>
+                            an unspent is a transaction output sent to your address that you received and
+                            have not used to fund a payment. your balance is the sum of your validated unspents. your pending balance is the sum of your unspents that haven't been validated yet.
+                        </div>
+                        <div className={'form-group'}>
+                            when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the remaining change as a new unspent.
                         </div>
                         <Row id={'txhistory'}>
                             <DatatableView
+                                reload_datatable={() => this.reloadDatatable()}
+                                datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+
                                 value={this.state.transaction_output_list}
                                 sortField={'transaction_date'}
                                 sortOrder={-1}
+                                loading={this.state.datatable_loading}
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        'field'   : 'transaction_date',
-                                        'header'  : 'date',
-                                        'sortable': true
+                                        field : 'transaction_date',
+                                        header: 'date'
                                     },
                                     {
-                                        'field'   : 'transaction_id',
-                                        'header'  : 'transaction id',
-                                        'sortable': true
+                                        field : 'amount',
+                                        format: 'amount'
                                     },
                                     {
-                                        'field'   : 'output_position',
-                                        'header'  : 'output position',
-                                        'sortable': true
+                                        field: 'address'
                                     },
                                     {
-                                        'field'   : 'address',
-                                        'header'  : 'address',
-                                        'sortable': true
+                                        field: 'transaction_id'
                                     },
-
                                     {
-                                        'field'   : 'amount',
-                                        'header'  : 'amount',
-                                        'sortable': true
+                                        field: 'output_position'
                                     }
                                 ]}/>
                         </Row>
@@ -152,5 +148,5 @@ class UnspentTransactionOutputView extends Component {
 export default connect(
     state => ({
         wallet: state.wallet
-    }),
+    })
 )(withRouter(UnspentTransactionOutputView));
