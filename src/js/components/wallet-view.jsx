@@ -145,6 +145,7 @@ class WalletView extends Component {
                 feeInputLocked     : true,
                 modalBodySendResult: modalBodySendResult
             });
+            this.changeModalShow(false);
             this.changeModalShowSendResult();
         }).catch((e) => {
             let sendTransactionErrorMessage;
