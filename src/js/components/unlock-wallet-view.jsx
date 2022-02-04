@@ -93,9 +93,10 @@ class UnlockWalletView extends Component {
             const error_list = [];
             API.newSession(password)
                .then(data => {
-                   if (data.api_status === 'fail') {
+                   if (data.api_status !== 'success') {
                        return;
                    }
+
                    goToWalletView(data.wallet);
                }).catch(_ => {
                 props.walletReady({authenticationError: true});
@@ -207,11 +208,6 @@ class UnlockWalletView extends Component {
                                                                                     }
                                                                                 }}
                                                                             />
-                                                                            {props.wallet.authenticationError ? (
-                                                                                <span
-                                                                                    className="help-block small">there was a problem authenticating your key file. retry your password or <a
-                                                                                    style={{cursor: 'pointer'}}
-                                                                                    onClick={() => props.history.push('/import-wallet/')}> click here to load your key.</a></span>) : ''}
                                                                         </div>
                                                                         <Button
                                                                             variant="outline-primary"
