@@ -311,7 +311,7 @@ class WalletView extends Component {
                                                 on_accept={() => this.sendTransaction()}
                                                 on_close={() => this.cancelSendTransaction()}
                                                 body={<div>you are about to
-                                                    send {format.millix(this.state.amount)} to {this.state.address_key_identifier}{this.state.address_version}{this.state.address_base}.
+                                                    send {format.millix(this.state.amount)} to {this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}
                                                     <div>confirm that you want
                                                         to
                                                         continue.</div></div>}/>
