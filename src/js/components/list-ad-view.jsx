@@ -184,15 +184,13 @@ class ListAdView extends Component {
                 <div className={'panel-heading bordered'}>advertisements
                 </div>
                 <div className={'panel-body'}>
-                    <div>
+                    <div className={'form-group'}>
                         the tangled ad platform allows anyone to create an
                         advertisement without approvals or permission. when
                         your ad is created it will appear to other tangled
                         browser users. the amount that you choose to pay for
                         the ad to appear is paid directly to the consumer
                         that views the ad.
-                    </div>
-                    <div className={'form-group'}>
                         at the moment you can not edit advertisements. you
                         can pause existing and create a new one instead.
                     </div>

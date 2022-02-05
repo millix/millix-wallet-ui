@@ -100,11 +100,9 @@ class UnspentTransactionOutputView extends Component {
                         {title}
                     </div>
                     <div className={'panel-body'}>
-                        <div>
+                        <div className={'form-group'}>
                             an unspent is a transaction output sent to your address that you received and
                             have not used to fund a payment. your balance is the sum of your validated unspents. your pending balance is the sum of your unspents that haven't been validated yet.
-                        </div>
-                        <div className={'form-group'}>
                             when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the remaining change as a new unspent.
                         </div>
                         <Row id={'txhistory'}>
