@@ -178,7 +178,12 @@ class WalletView extends Component {
 
         if (typeof (api_message) === 'object') {
             let result_error = api_message.error;
-            api_error_name   = result_error.error;
+            if (typeof (result_error.error) !== 'undefined') {
+                api_error_name = result_error.error;
+            }
+            else {
+                api_error_name = result_error;
+            }
 
             switch (api_error_name) {
                 case 'transaction_input_max_error':
@@ -314,7 +319,9 @@ class WalletView extends Component {
                                                     send {format.millix(this.state.amount)} to {this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}
                                                     <div>confirm that you want
                                                         to
-                                                        continue.</div></div>}/>
+                                                        continue.
+                                                    </div>
+                                                </div>}/>
 
                                             <ModalView
                                                 show={this.state.modalShowSendResult}
