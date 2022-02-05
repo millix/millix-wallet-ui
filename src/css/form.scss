@@ -1,7 +1,59 @@
 @import './variable';
 
+.labeled > .fa,
+button > .fa,
+body .section_subtitle > .fa,
+.labeled > .fal,
+button > .fal,
+body .section_subtitle > .fal,
+.labeled > .far,
+button > .far,
+body .section_subtitle > .far,
+.labeled > .fas,
+button > .fas,
+body .section_subtitle > .fas,
+.labeled > .fab,
+button > .fab,
+body .section_subtitle > .fab {
+  margin-right: 0.3em;
+}
+
+.btn,
+.form-control,
+.input-group-addon {
+  padding: 0.5em 1em;
+  font-size: 1em;
+}
+
+.input-group-btn {
+  font-size: 1em;
+}
+
+.form-group,
+.form-group.custom_form_element {
+  margin-bottom: 1rem;
+}
+
 .btn-outline-primary {
   color: $color-body-font;
+}
+
+.btn {
+  border-width: 0.1rem;
+  border-radius: 0.3rem;
+}
+
+.btn-xs {
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  padding: 0.1rem 0.7rem;
+}
+
+.btn-sm,
+.btn-group-sm > .btn {
+  padding: 0.3em 0.8em;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .form-label,

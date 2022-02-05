@@ -3,10 +3,17 @@ $panel-spacing: 1rem;
 .panel {
   border-radius: $border-radius;
   margin-bottom: 1rem;
+  border: $border-width solid $border-color;
+}
+
+.tab-pane {
+  > .panel {
+    border-top: none;
+  }
 }
 
 .panel.panel-filled {
-  background-color: #3b3d45;
+  background-color: $panel-color-bg;
 }
 
 .panel > .panel-heading {
@@ -21,7 +28,7 @@ $panel-spacing: 1rem;
 }
 
 .panel-heading.bordered {
-  border-bottom: $border-width solid $color-panel-header-border;
+  border-bottom: $border-width solid $border-color;
 }
 
 .panel .panel-body {
@@ -30,4 +37,45 @@ $panel-spacing: 1rem;
 
 .panel .panel-body .submit-row {
   margin-bottom: 1rem;
+}
+
+.tab-pane {
+  .panel {
+    border: none;
+  }
+
+  .panel-body {
+    border-width: 0 $border-width $border-width $border-width;
+    border-style: solid;
+    border-color: $border-color;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.nav-tabs {
+  border-bottom: $border-width solid $border-color;
+
+  .nav-link {
+    color: $color-font-left-nav-base;
+    border-width: $border-width $border-width 0 $border-width;
+    border-style: solid;
+    border-color: transparent;
+
+    &:hover {
+      border-color: transparent;
+    }
+
+    &.active,
+    .nav-item.show .nav-link {
+      border-color: $border-color;
+      color: $color-font-left-nav-hover !important;
+      background-color: $color-panel-filed-background !important;
+      cursor: default;
+    }
+
+    .page_subtitle {
+      text-align: center;
+    }
+  }
 }

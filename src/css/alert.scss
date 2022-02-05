@@ -1,6 +1,6 @@
 .alert-danger {
   color: $color-white;
-  border-color: $color-red;
+  border-color: rgba($color-red, 0.5);
   background-color: rgba($color-red, 0.1);
 
   ul {
