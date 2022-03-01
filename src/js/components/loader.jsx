@@ -5,27 +5,18 @@ import { Oval } from  'react-loader-spinner'
 const LoadingContainer = props => {
   return (
 
-    /*<div className="loader-container">
+    <div className="loader-container">
       <div className="loader">
-        <div class="lds-grid">
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
+        <div className="circle">         
         </div>
       </div>
-    </div>*/
+    </div>
 
-    <div className="loader-container">
+    /*<div className="loader-container">
       <div className="loader">
         <Oval color="#9400ce" height={80} width={80} />
       </div>
-    </div>
+    </div>*/
     
   );
 };

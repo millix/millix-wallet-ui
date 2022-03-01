@@ -1,0 +1,28 @@
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    background: #00000067;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+     
+  .loader-container .loader .circle {
+    animation: spin 1s linear infinite;
+    border: 0.5rem solid $border-color;
+    border-top: 0.5rem solid $color-primary;
+    border-radius: 50%;
+    width: 4rem;
+    height: 4rem;
+  }
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+  
