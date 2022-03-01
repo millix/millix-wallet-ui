@@ -8,6 +8,7 @@ import config from '../../config';
 import DatatableView from './utils/datatable-view';
 import * as format from '../helper/format';
 import HelpIconView from './utils/help-icon-view';
+import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
 
 
 class TransactionDetailsView extends Component {
@@ -34,8 +35,7 @@ class TransactionDetailsView extends Component {
             return '';
         }
 
-        return <Link to={'/transaction/' +
-                         encodeURIComponent(input.output_transaction_id)}>
+        return <Link to={'/transaction/' + encodeURIComponent(input.output_transaction_id)}>
             <Button
                 variant="outline-default"
                 className={'btn-xs icon_only ms-auto'}>
@@ -90,6 +90,7 @@ class TransactionDetailsView extends Component {
 
         return (
             <>
+                <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance}/>
                 <Col md="12">
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
@@ -97,7 +98,21 @@ class TransactionDetailsView extends Component {
                         </div>
                         <div className={'panel-body'}>
                             <div className={'section_subtitle'}>
+                                <span>
                                 transaction
+                                </span>
+                                <Button
+                                    className={'ms-auto'}
+                                    variant="outline-primary"
+                                    size={'sm'}
+                                    onClick={() => this.resetTransactionValidationRef.toggleConfirmationModal(transaction.transaction_id)}
+                                    title={'reset validation'}
+                                >
+                                    <FontAwesomeIcon
+                                        icon="rotate-left"
+                                        size="1x"/>
+                                    reset validation
+                                </Button>
                             </div>
                             <Table striped bordered hover>
                                 <tbody>
@@ -255,11 +270,9 @@ class TransactionDetailsView extends Component {
 }
 
 
-export default connect(
-    state => ({
-        transaction: state.transactionDetails
-    }),
-    {
-        clearTransactionDetails,
-        updateTransactionDetails
-    })(withRouter(TransactionDetailsView));
+export default connect(state => ({
+    transaction: state.transactionDetails
+}), {
+    clearTransactionDetails,
+    updateTransactionDetails
+})(withRouter(TransactionDetailsView));

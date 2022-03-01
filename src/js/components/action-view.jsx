@@ -3,6 +3,8 @@ import {Button, Col, Row} from 'react-bootstrap';
 import fs from 'fs';
 import API from '../api';
 import ModalView from './utils/modal-view';
+import * as text from '../helper/text';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const styles = {
     centered: {
@@ -141,7 +143,7 @@ class ActionView extends Component {
                                    take some time depending on how many
                                    transactions you have.
                                </div>
-                               <div>are you sure you want to proceed?</div>
+                               {text.get_confirmation_modal_question()}
                            </div>}/>
                 <Row>
                     <Col>
@@ -188,7 +190,7 @@ class ActionView extends Component {
                                             longer than 10-15 minutes
                                         </li>
                                         <li>
-                                            you think that your balance                                            is wrong
+                                            you think that your balance is wrong
                                         </li>
                                     </ul>
                                 </div>
@@ -198,7 +200,9 @@ class ActionView extends Component {
                                         <Button
                                             variant="outline-primary"
                                             onClick={() => this.changeModalShow()}>
-                                            reset validation
+                                            <FontAwesomeIcon
+                                                icon="rotate-left"
+                                                size="1x"/>reset validation
                                         </Button>
                                     </Col>
                                 </Row>

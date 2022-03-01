@@ -1,25 +1,30 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
+import React, {useRef, Component} from 'react';
+import {withRouter, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Button, Col, Row} from 'react-bootstrap';
-import moment from 'moment';
+import {Row} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import * as format from '../helper/format';
-import DatatableHeaderView from './utils/datatable-header-view';
-import HelpIconView from './utils/help-icon-view';
+import * as text from '../helper/text';
+import ModalView from './utils/modal-view';
+import _ from 'lodash';
+import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
 
 
 class UnspentTransactionOutputView extends Component {
     constructor(props) {
         super(props);
+
         this.updaterHandler = undefined;
         this.state          = {
             transaction_output_list   : [],
             stable                    : 1,
             datatable_reload_timestamp: '',
-            datatable_loading         : false
+            datatable_loading         : false,
+            confirmation_modal_show   : false,
+            result_modal_show         : false,
+            reset_transaction_id      : ''
         };
     }
 
@@ -40,6 +45,10 @@ class UnspentTransactionOutputView extends Component {
                 stable: stable_value_new
             }, this.reloadDatatable);
         }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.updaterHandler);
     }
 
     getStableFromUrl() {
@@ -66,10 +75,17 @@ class UnspentTransactionOutputView extends Component {
                 amount          : output.amount,
                 transaction_date: format.date(output.transaction_date),
                 stable_date     : format.date(output.stable_date),
-                action          : <DatatableActionButtonView
+                action          : <><DatatableActionButtonView
                     history_path={'/transaction/' + encodeURIComponent(output.transaction_id)}
                     history_state={[output]}
                     icon={'eye'}/>
+                    <DatatableActionButtonView
+                        icon={'rotate-left'}
+                        title={'reset validation'}
+                        callback={() => this.resetTransactionValidationRef.toggleConfirmationModal(output.transaction_id)}
+                        callback_args={output.transaction_id}
+                    />
+                </>
             }));
             this.setState({
                 transaction_output_list   : rows,
@@ -79,21 +95,18 @@ class UnspentTransactionOutputView extends Component {
         });
     }
 
-    componentWillUnmount() {
-        clearTimeout(this.updaterHandler);
-    }
-
     render() {
         let title = '';
         if (this.state.stable) {
             title = 'stable unspents';
         }
         else {
-            title = 'pending unspents'
+            title = 'pending unspents';
         }
 
         return (
             <div>
+                <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance}/>
                 <div className={'panel panel-filled'}>
                     <div
                         className={'panel-heading bordered'}>
@@ -102,14 +115,21 @@ class UnspentTransactionOutputView extends Component {
                     <div className={'panel-body'}>
                         <div className={'form-group'}>
                             an unspent is a transaction output sent to your address that you received and
-                            have not used to fund a payment. your balance is the sum of your validated unspents. your pending balance is the sum of your unspents that haven't been validated yet.
-                            when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the remaining change as a new unspent.
+                            have not used to fund a payment. your balance is the sum of your validated unspents. your pending balance is the sum of your
+                            unspents that haven't been validated yet.
+                            when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the
+                            remaining change as a new unspent.
                         </div>
                         <Row id={'txhistory'}>
                             <DatatableView
                                 reload_datatable={() => this.reloadDatatable()}
                                 datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-
+                                action_button={{
+                                    label   : 'reset validation',
+                                    icon    : 'rotate-left',
+                                    on_click: this.state.stable === 0 && this.state.transaction_output_list.length > 0 && (() => this.resetTransactionValidationRef.toggleConfirmationModal(this.state.transaction_output_list)),
+                                    args    : this.state.transaction_output_list
+                                }}
                                 value={this.state.transaction_output_list}
                                 sortField={'transaction_date'}
                                 sortOrder={-1}

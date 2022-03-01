@@ -10,6 +10,7 @@ import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import BalanceView from './utils/balance-view';
 import * as validate from '../helper/validate';
+import * as text from '../helper/text';
 
 
 class WalletView extends Component {
@@ -315,12 +316,10 @@ class WalletView extends Component {
                                                 heading={'send confirmation'}
                                                 on_accept={() => this.sendTransaction()}
                                                 on_close={() => this.cancelSendTransaction()}
-                                                body={<div>you are about to
-                                                    send {format.millix(this.state.amount)} to {this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}
-                                                    <div>confirm that you want
-                                                        to
-                                                        continue.
-                                                    </div>
+                                                body={<div>
+                                                    <div>you are about to send {format.millix(this.state.amount)} to</div>
+                                                    <div>{this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}</div>
+                                                    {text.get_confirmation_modal_question()}
                                                 </div>}/>
 
                                             <ModalView

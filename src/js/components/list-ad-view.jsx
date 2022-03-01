@@ -198,9 +198,10 @@ class ListAdView extends Component {
                         <DatatableView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                            action_button_label={'create advertisement'}
-                            action_button_on_click={() => this.props.history.push('/advertisement-create')}
-
+                            action_button={{
+                                label   : 'create advertisement',
+                                on_click: () => this.props.history.push('/advertisement-create')
+                            }}
                             value={this.state.ad_list}
                             sortField={'date'}
                             sortOrder={-1}
@@ -223,7 +224,7 @@ class ListAdView extends Component {
                                     field: 'expiration'
                                 },
                                 {
-                                    field      : 'status',
+                                    field: 'status'
                                     // filter_type: 'multi_select'
                                 },
                                 {

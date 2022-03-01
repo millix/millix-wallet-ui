@@ -203,8 +203,7 @@ class DatatableView extends Component {
                 <DatatableHeaderView
                     reload_datatable={this.props.reload_datatable}
                     datatable_reload_timestamp={this.props.datatable_reload_timestamp}
-                    action_button_label={this.props.action_button_label}
-                    action_button_on_click={this.props.action_button_on_click}
+                    action_button={this.props.action_button}
                     on_global_search_change={(e) => this.on_global_search_change(e)}
                 />
                 <DataTable value={this.props.value}
@@ -245,10 +244,8 @@ DatatableView.propTypes = {
     reload_timestamp          : PropTypes.any,
     loading                   : PropTypes.bool,
     datatable_reload_timestamp: PropTypes.any,
-    action_button_icon        : PropTypes.string,
-    action_button_label       : PropTypes.string,
-    action_button_on_click    : PropTypes.func,
-    reload_datatable          : PropTypes.func
+    reload_datatable          : PropTypes.func,
+    action_button             : PropTypes.any
 };
 
 

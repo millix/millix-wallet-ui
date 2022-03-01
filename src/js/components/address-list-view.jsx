@@ -67,9 +67,10 @@ class AddressListView extends Component {
                         <DatatableView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                            action_button_on_click={() => this.generateAddress()}
-                            action_button_label={'generate address'}
-
+                            action_button={{
+                                label   : 'generate address',
+                                on_click: () => this.generateAddress()
+                            }}
                             value={this.state.address_list}
                             sortField={'address_position'}
                             sortOrder={1}

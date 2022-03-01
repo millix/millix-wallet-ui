@@ -134,7 +134,7 @@ body .section_title {
 
 body .widget_title,
 body .section_subtitle {
-  display: inline-block;
+  display: inline-flex;
   font-size: 1.2rem;
   font-weight: 500;
   color: $color-white;
@@ -197,10 +197,11 @@ body .section_subtitle {
 }
 
 .help_icon {
-  margin-left: 0.3rem;
+  align-items: center;
   cursor: pointer;
-  font-size: 0.8em;
   display: inline-flex;
+  font-size: 0.8em;
+  margin-left: 0.3rem;
 
   &:hover {
     color: $color-secondary;
