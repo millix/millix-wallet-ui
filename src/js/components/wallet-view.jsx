@@ -132,7 +132,7 @@ class WalletView extends Component {
                 return item.version.indexOf('0a') !== -1;
             });
 
-            const modalBodySendResult = <div className={'text-center'}>
+            const modalBodySendResult = <div>
                 <div>
                     transaction id
                 </div>
