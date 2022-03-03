@@ -7,7 +7,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import API from '../api';
-
+import {loaderStatus} from './utils/loader-status';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -126,7 +126,11 @@ class Sidebar extends Component {
                            size={'lg'}
                            on_close={() => this.changeModalShow(false)}
                            heading={'logout'}
-                           on_accept={() => props.lockWallet()}
+                           on_accept={() => {
+                            loaderStatus.next(true);
+                            props.lockWallet().then(() => {
+                                loaderStatus.next(false);                            
+                            })}}
                            body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
                     <span>{format.date(this.state.date)} utc</span>
