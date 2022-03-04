@@ -48,9 +48,9 @@ class AppContainer extends Component {
     }
 
     onShowLoading() {
-        loaderStatus.next(true); // Emitting true for loaderStatus to turn on loading screen
+        loaderStatus.next(true);
         setTimeout(() => {
-        loaderStatus.next(false); // Emitting false for loaderStatus to turn on loading screen
+        loaderStatus.next(false);
         }, 2000);
     }
 
