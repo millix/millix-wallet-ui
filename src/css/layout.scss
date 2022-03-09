@@ -1,3 +1,4 @@
+@import './bootstrap/variable';
 @import './variable';
 @import 'mixin/mixin';
 @import 'navbar';
@@ -7,6 +8,68 @@
 @import 'datatable';
 @import 'dropdown';
 @import 'modal';
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+}
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  min-height: 100%;
+  position: relative;
+}
+
+
+@media screen and (min-width: 2881px) {
+  html,
+  body {
+    font-size: 28px;
+  }
+}
+
+@media screen and (min-width: 2521px) and (max-width: 2880px) {
+  html,
+  body {
+    font-size: 22px;
+  }
+}
+
+@media screen and (min-width: 2021px) and (max-width: 2521px) {
+  html,
+  body {
+    font-size: 18px;
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 2020px) {
+  html,
+  body {
+    font-size: 14px;
+  }
+}
+
+.labeled > .fa,
+button > .fa,
+body .section_subtitle > .fa,
+.labeled > .fal,
+button > .fal,
+body .section_subtitle > .fal,
+.labeled > .far,
+button > .far,
+body .section_subtitle > .far,
+.labeled > .fas,
+button > .fas,
+body .section_subtitle > .fas,
+.labeled > .fab,
+button > .fab,
+body .section_subtitle > .fab {
+  margin-right: 0.3em;
+}
 
 hr {
   width: 100%;
@@ -36,7 +99,7 @@ body.nav-toggle .content {
 }
 
 .content {
-  background: #2d3038;
+  background: $color-body-bg;
   margin-top: $navbar-height;
   margin-left: $sidebar-width;
   position: relative;
@@ -49,7 +112,6 @@ body.nav-toggle .content {
 }
 
 
-.referral_widget .brand_title,
 body .modal_title,
 body .page_title {
   font-size: 1.8rem;
@@ -70,16 +132,14 @@ body .section_title {
   margin-top: 0;
 }
 
-body .progress_bar_label,
 body .widget_title,
 body .section_subtitle {
+  display: inline-flex;
   font-size: 1.2rem;
   font-weight: 500;
-}
-
-body .widget_title,
-body .section_subtitle {
   color: $color-white;
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .unlock-container,
@@ -137,10 +197,11 @@ body .section_subtitle {
 }
 
 .help_icon {
-  margin-left: 0.3rem;
+  align-items: center;
   cursor: pointer;
-  font-size: 0.8em;
   display: inline-flex;
+  font-size: 0.8em;
+  margin-left: 0.3rem;
 
   &:hover {
     color: $color-secondary;
@@ -198,4 +259,49 @@ ul {
     font-size: 1.4rem;
     word-break: break-all;
   }
+}
+
+h1, .h1,
+.font_size_h1 {
+  font-size: 3rem;
+}
+
+h2, .h2,
+.font_size_h2 {
+  font-size: 2.6rem;
+}
+
+h3, .h3,
+.font_size_h3 {
+  font-size: 2.2rem;
+}
+
+h4, .h4,
+.font_size_h4 {
+  font-size: 1.8rem;
+}
+
+h5, .h5,
+.font_size_h5 {
+  font-size: 1.4rem;
+}
+
+h6, .h6,
+.font_size_h6 {
+  font-size: 1.2rem;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+h4, .h4, h5, .h5, h6, .h6 {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.panel-body h5,
+.panel-body h4 {
+  font-weight: 400;
 }

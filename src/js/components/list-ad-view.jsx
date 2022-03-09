@@ -184,15 +184,13 @@ class ListAdView extends Component {
                 <div className={'panel-heading bordered'}>advertisements
                 </div>
                 <div className={'panel-body'}>
-                    <div>
+                    <div className={'form-group'}>
                         the tangled ad platform allows anyone to create an
                         advertisement without approvals or permission. when
                         your ad is created it will appear to other tangled
                         browser users. the amount that you choose to pay for
                         the ad to appear is paid directly to the consumer
                         that views the ad.
-                    </div>
-                    <div className={'form-group'}>
                         at the moment you can not edit advertisements. you
                         can pause existing and create a new one instead.
                     </div>
@@ -200,9 +198,10 @@ class ListAdView extends Component {
                         <DatatableView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
-                            action_button_label={'create advertisement'}
-                            action_button_on_click={() => this.props.history.push('/advertisement-create')}
-
+                            action_button={{
+                                label   : 'create advertisement',
+                                on_click: () => this.props.history.push('/advertisement-create')
+                            }}
                             value={this.state.ad_list}
                             sortField={'date'}
                             sortOrder={-1}
@@ -225,7 +224,7 @@ class ListAdView extends Component {
                                     field: 'expiration'
                                 },
                                 {
-                                    field      : 'status',
+                                    field: 'status'
                                     // filter_type: 'multi_select'
                                 },
                                 {

@@ -63,10 +63,6 @@ const UnlockedWalletRequiredRoute = ({
                                 icon={'bars'}
                                 size="lg"/>
                         </div>
-                        <div className={'address_key_identifier'}>
-                            {rest.wallet.address_key_identifier}<HelpIconView
-                            help_item_name={'key_identifier'}/>
-                        </div>
                     </div>
                 </nav>
                 <Sidebar {...rest} {...props}/>

@@ -124,7 +124,7 @@ class PeerInfoView extends Component {
                             <tbody>
                             {node_about_order.map(type => {
                                 if (typeof (this.state.node_about[type]) === 'undefined') {
-                                    return '';
+                                    return false;
                                 }
 
                                 return <tr>

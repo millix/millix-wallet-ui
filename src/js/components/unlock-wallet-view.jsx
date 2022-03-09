@@ -115,7 +115,7 @@ class UnlockWalletView extends Component {
         return (
             <Container>
                 <div className="unlock-container">
-                    <div className="cols-xs-12 col-lg-12 hpanel">
+                    <div className="cols-xs-12">
                         <div className="panel-body view-header tab">
                             <Tab.Container
                                 activeKey={this.state.defaultTabActiveKey}

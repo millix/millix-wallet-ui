@@ -10,6 +10,7 @@ import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import BalanceView from './utils/balance-view';
 import * as validate from '../helper/validate';
+import * as text from '../helper/text';
 
 
 class WalletView extends Component {
@@ -131,7 +132,7 @@ class WalletView extends Component {
                 return item.version.indexOf('0a') !== -1;
             });
 
-            const modalBodySendResult = <div className={'text-center'}>
+            const modalBodySendResult = <div>
                 <div>
                     transaction id
                 </div>
@@ -178,7 +179,12 @@ class WalletView extends Component {
 
         if (typeof (api_message) === 'object') {
             let result_error = api_message.error;
-            api_error_name   = result_error.error;
+            if (typeof (result_error.error) !== 'undefined') {
+                api_error_name = result_error.error;
+            }
+            else {
+                api_error_name = result_error;
+            }
 
             switch (api_error_name) {
                 case 'transaction_input_max_error':
@@ -310,11 +316,11 @@ class WalletView extends Component {
                                                 heading={'send confirmation'}
                                                 on_accept={() => this.sendTransaction()}
                                                 on_close={() => this.cancelSendTransaction()}
-                                                body={<div>you are about to
-                                                    send {format.millix(this.state.amount)} to {this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}
-                                                    <div>confirm that you want
-                                                        to
-                                                        continue.</div></div>}/>
+                                                body={<div>
+                                                    <div>you are about to send {format.millix(this.state.amount)} to</div>
+                                                    <div>{this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}</div>
+                                                    {text.get_confirmation_modal_question()}
+                                                </div>}/>
 
                                             <ModalView
                                                 show={this.state.modalShowSendResult}

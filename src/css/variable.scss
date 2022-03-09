@@ -1,47 +1,78 @@
 // todo: consider if color variables below should exist
 
+// color
+$color-bg-layer-0: #110f19;
+$color-bg-layer-1: #1E2033;
+$color-bg-layer-2: #171827;
+$color-bg-layer-3: #1c1d2f;
+
+$highlight-bg-base: #cdcfd6;
+$backdrop-bg: rgba($highlight-bg-base, 0.15);
+
+$border-color: rgba($highlight-bg-base, 0.25);// #5b5f6e;
+
 $color-red: #db524b;
 $color-yellow: #f7af3e;
 $color-green: #1bbf89;
 
-$color-white: #ffffff;
+$color-white: #dadada;
 $color-black: #000000;
-
-$color-font-primary: #C741FC;
 
 $color-font-left-nav-base: #848c94;
 $color-font-left-nav-hover: #c0c4c8;
 
-$color-body-bg: #2d3038;
-$color-body-font: #949ba2;
+$color-body-bg: $color-bg-layer-0;
+$color-body-font: #a9a9a9;
 
 $color-primary: #9400ce;
 $color-secondary: #c741fc;
 
-$color-input-bg: #494b54;
-$color-input-bg-disabled: #2c2e34;
+$color-input-bg: rgba($highlight-bg-base, 0.10);
+$color-input-bg-disabled: rgba($highlight-bg-base, 0.05);
 
-$color-sidenav: #24262d;
-$navbar-height: 4.3rem;
-$navbar-shadow-color: #161616;
+$color-sidenav: $color-bg-layer-2;
 
 $content-spacing: 1.5rem;
 
+// unclassified
+$color-tab-active: $color-bg-layer-2;
+$color-panel-filed-background: $color-bg-layer-2;
+$color-tab-hover: #494b54;
+
+// control
+$color-default-item-highlight-bg: $color-bg-layer-0;
+$color-default-item-highlight-border: $color-primary;
+$color-default-item-highlight-font: $color-white;
+
+// navbar (top manu)
+$navbar-height: 4.3rem;
+$navbar-shadow-color: #161616;
+
+// sidebar (left nav)
 $sidebar-width: 14.2rem;
-$sidebar-nav-background-color: #2a2d35;
+$sidebar-nav-background-color: $color-bg-layer-2;
 $sidebar-nav-item-padding-y: 0.57rem;
 $sidebar-nav-item-padding-left: 1.78rem;
 $sidebar-nav-item-padding-right: 1rem;
 
-$color-panel-header-border: #484c5a;
-$nav-tabs-link-active-border-color: $color-panel-header-border;
-$color-tab-active: #3b3d45;
-$color-panel-filed-background: #3b3d45;
-$color-tab-hover: #494b54;
+// panel
+$panel-color-bg: $color-bg-layer-2;
 
+// table
+$table-th-font-weight: 700;
+$table-bg: $color-bg-layer-2;
+$table-striped-bg: $color-bg-layer-1;
+$table-hover-bg: $color-bg-layer-0;
 
-//background: rgba(97, 103, 121, 0.1);
-$color-default-item-highlight-bg: #43454c;
-//border-color: rgba(97, 103, 121, 1);
-$color-default-item-highlight-border: #575a63;
-$color-default-item-highlight-font: $color-white;
+// input
+$input-border-width: 1px;
+
+// popover
+$popover-font-size: 1rem;
+$popover-header-padding-y: 1rem;
+$popover-header-padding-x: 1.4rem;
+$popover-border-color:              $border-color;
+
+// modal
+$modal-backdrop-opacity: .1;
+

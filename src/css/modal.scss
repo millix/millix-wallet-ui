@@ -1,3 +1,7 @@
+.modal-backdrop.show {
+  opacity: 1;
+}
+
 .p-dialog {
   border: $border-width solid $border-color;
   border-radius: $border-radius;

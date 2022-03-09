@@ -42,7 +42,7 @@ export function transaction_status_label(status) {
     const result_status = {
         1: 'pending hibernation',
         2: 'hibernated',
-        3: 'invalid',
+        3: 'invalid'
     };
 
     let label = '';

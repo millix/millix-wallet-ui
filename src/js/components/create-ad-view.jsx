@@ -15,9 +15,9 @@ class CreateAdView extends Component {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state        = {
-            submitData   : {},
-            error_list   : [],
-            fields       : {
+            submitData: {},
+            error_list: [],
+            fields    : {
                 creative_name          : '',
                 category               : '',
                 headline               : '',
