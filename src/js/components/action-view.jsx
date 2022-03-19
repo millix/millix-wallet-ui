@@ -5,6 +5,10 @@ import API from '../api';
 import ModalView from './utils/modal-view';
 import * as text from '../helper/text';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import VolumeControl from './utils/volume-control-view';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
+import {updateNotificationVolume} from '../redux/actions';
 
 const styles = {
     centered: {
@@ -29,7 +33,10 @@ class ActionView extends Component {
         };
     }
 
-    componentDidMount() {
+    componentWillReceiveProps(nextProps) {
+        if(this.state.initialVolume === undefined){
+            this.setState({initialVolume: nextProps.notification.volume});
+        }
     }
 
     exportKeys() {
@@ -208,6 +215,21 @@ class ActionView extends Component {
                                 </Row>
                             </div>
                         </div>
+                        <div className={'panel panel-filled'}>
+                            <div className={'panel-heading bordered'}>audio configuration
+                            </div>
+                            <div className={'panel-body'}>
+                                <div>
+                                    adjust the notification volume of new transaction received.
+                                </div>
+                                <Row>
+                                    <Col style={styles.centered}>
+                                        <VolumeControl initialVolume={this.state.initialVolume}
+                                                       onVolumeChange={volume => this.props.updateNotificationVolume(volume)}/>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
                         {/*<div className={'panel panel-filled'}>
                          <div className={'panel-heading bordered'}>load wallet</div>
                          <hr className={'hrPanel'}/>
@@ -282,4 +304,10 @@ class ActionView extends Component {
 }
 
 
-export default ActionView;
+export default connect(
+    state => ({
+        notification: state.notification
+    }),
+    {
+        updateNotificationVolume
+    })(withRouter(ActionView));
