@@ -199,7 +199,7 @@ class UnlockWalletView extends Component {
                                                                             <FormControl
                                                                                 ref={c => {
                                                                                     passphraseRef = c;
-                                                                                    passphraseRef.focus();
+                                                                                    passphraseRef && passphraseRef.focus();
                                                                                 }}
                                                                                 type="password"
                                                                                 placeholder="******"
