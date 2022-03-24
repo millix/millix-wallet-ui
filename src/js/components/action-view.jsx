@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, Row} from 'react-bootstrap';
+import {Button, Col, Form, Row} from 'react-bootstrap';
 import fs from 'fs';
 import API from '../api';
 import ModalView from './utils/modal-view';
@@ -9,6 +9,7 @@ import VolumeControl from './utils/volume-control-view';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {updateNotificationVolume} from '../redux/actions';
+import ErrorList from './utils/error-list-view';
 
 const styles = {
     centered: {
@@ -27,14 +28,22 @@ class ActionView extends Component {
         super(props);
         let now    = Date.now();
         this.state = {
-            fileKeyExport: 'export_' + now,
-            fileKeyImport: 'import_' + now,
-            modalShow    : false
+            fileKeyExport                       : 'export_' + now,
+            fileKeyImport                       : 'import_' + now,
+            modalShow                           : false,
+            sending                             : false,
+            canceling                           : false,
+            sendAggregateTransactionError       : false,
+            sendAggregateTransactionErrorMessage: null,
+            errorList                           : [],
+            modalAggregateShow                  : false,
+            modalAggregateShowSendResult        : false,
+            modalAggregateBodySendResult        : []
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.state.initialVolume === undefined){
+        if (this.state.initialVolume === undefined) {
             this.setState({initialVolume: nextProps.notification.volume});
         }
     }
@@ -124,6 +133,82 @@ class ActionView extends Component {
          });*/
     }
 
+    aggregateUnspentOutputs() {
+        this.setState({sending: true});
+
+        API.sendAggregationTransaction()
+           .then(data => {
+               if (data.api_status === 'fail') {
+                   this.changeAggregateModalShow(false);
+                   return Promise.reject(data);
+               }
+               return data;
+           })
+           .then(data => {
+               const transaction = data.transaction.find(item => {
+                   return item.version.indexOf('0a') !== -1;
+               });
+
+               const modalAggregateBodySendResult = <div>
+                   <div>
+                       transaction id
+                   </div>
+                   <div>
+                       {transaction.transaction_id}
+                   </div>
+               </div>;
+
+               this.setState({
+                   sending       : false,
+                   feeInputLocked: true,
+                   modalAggregateBodySendResult
+               });
+               this.changeAggregateModalShow(false);
+               this.changeAggregateModalShowSendResult();
+           }).catch((e) => {
+            let sendTransactionErrorMessage;
+            let errorList = [];
+
+            if (e !== 'validation_error') {
+                if (e && e.api_message) {
+                    sendTransactionErrorMessage = text.get_ui_error(e.api_message);
+                }
+                else {
+                    sendTransactionErrorMessage = `your transaction could not be sent: (${e?.api_message?.error.error || e?.api_message?.error || e?.message || e?.api_message || e || 'undefined behaviour'})`;
+                }
+
+                errorList.push({
+                    name   : 'sendTransactionError',
+                    message: sendTransactionErrorMessage
+                });
+            }
+            this.setState({
+                errorList,
+                sending  : false,
+                canceling: false
+            });
+            this.changeAggregateModalShow(false);
+        });
+    }
+
+    doAggregation() {
+        let errorList = [];
+        if (this.state.sending) {
+            API.interruptTransaction().then(_ => _);
+            this.setState({canceling: true});
+            return;
+        }
+
+        this.setState({
+            sendAggregateTransactionError       : false,
+            sendAggregateTransactionErrorMessage: null
+        });
+
+        this.setState({errorList});
+
+        this.changeAggregateModalShow();
+    }
+
     resetTransactionValidation() {
         API.resetTransactionValidation().then(_ => {
             this.props.history.push('/unspent-transaction-output-list/pending');
@@ -133,6 +218,26 @@ class ActionView extends Component {
     changeModalShow(value = true) {
         this.setState({
             modalShow: value
+        });
+    }
+
+    changeAggregateModalShow(value = true) {
+        this.setState({
+            modalAggregateShow: value
+        });
+    }
+
+    cancelSendAggregateTransaction() {
+        this.setState({
+            canceling: false,
+            sending  : false
+        });
+        this.changeAggregateModalShow(false);
+    }
+
+    changeAggregateModalShowSendResult(value = true) {
+        this.setState({
+            modalAggregateShowSendResult: value
         });
     }
 
@@ -179,6 +284,81 @@ class ActionView extends Component {
                          </div>
                          </div>*/}
                         <div className={'panel panel-filled'}>
+                            <div className={'panel-heading bordered'}>audio configuration
+                            </div>
+                            <div className={'panel-body'}>
+                                <div style={{marginBottom: 10}}>
+                                    notification volume of new transactions.
+                                </div>
+                                <Row>
+                                    <Col style={styles.centered}>
+                                        <VolumeControl initialVolume={this.state.initialVolume}
+                                                       onVolumeChange={volume => this.props.updateNotificationVolume(volume)}/>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                        <div className={'panel panel-filled'}>
+                            <div className={'panel-heading bordered'}>optimize wallet
+                            </div>
+                            <div className={'panel-body'}>
+                                <div>
+                                    aggregation optimizes your funds and allows you to spend more of your balance in fewer transactions.
+                                </div>
+                                <div style={{marginBottom: 10}}>
+                                    your balance and pending balance will change while aggregation is processing.
+                                </div>
+                                <Row>
+                                    <Col
+                                        className={'d-flex justify-content-center'}>
+                                        <ModalView
+                                            show={this.state.modalAggregateShow}
+                                            size={'lg'}
+                                            heading={'send confirmation'}
+                                            on_accept={() => this.aggregateUnspentOutputs()}
+                                            on_close={() => this.cancelSendAggregateTransaction()}
+                                            body={<div>
+                                                <div>you are about to send a transaction to aggregate the unspent outputs</div>
+                                                {text.get_confirmation_modal_question()}
+                                            </div>}/>
+
+                                        <ModalView
+                                            show={this.state.modalAggregateShowSendResult}
+                                            size={'lg'}
+                                            on_close={() => this.changeAggregateModalShowSendResult(false)}
+                                            heading={'the transaction has been sent'}
+                                            body={this.state.modalAggregateBodySendResult}/>
+                                        <Form.Group as={Row}>
+                                            <Button
+                                                variant="outline-primary"
+                                                onClick={() => this.doAggregation()}
+                                                disabled={this.state.canceling}>
+                                                {this.state.sending ?
+                                                 <>
+                                                     <div style={{
+                                                         fontSize: '6px',
+                                                         float   : 'left'
+                                                     }}
+                                                          className="loader-spin"/>
+                                                     {this.state.canceling ? 'canceling' : 'cancel transaction'}
+                                                 </> : <><FontAwesomeIcon
+                                                        icon="code-merge"
+                                                        size="1x"/>aggregate</>}
+                                            </Button>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                {this.state.errorList.length > 0 && <Row className={'mt-3'}>
+                                    <Col
+                                        className={'d-flex justify-content-center'}>
+                                        <ErrorList
+                                            error_list={this.state.errorList}/>
+                                    </Col>
+                                </Row>}
+                            </div>
+                        </div>
+
+                        <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered'}>reset
                                 validation
                             </div>
@@ -211,21 +391,6 @@ class ActionView extends Component {
                                                 icon="rotate-left"
                                                 size="1x"/>reset validation
                                         </Button>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                        <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>audio configuration
-                            </div>
-                            <div className={'panel-body'}>
-                                <div>
-                                    adjust the notification volume of new transaction received.
-                                </div>
-                                <Row>
-                                    <Col style={styles.centered}>
-                                        <VolumeControl initialVolume={this.state.initialVolume}
-                                                       onVolumeChange={volume => this.props.updateNotificationVolume(volume)}/>
                                     </Col>
                                 </Row>
                             </div>
