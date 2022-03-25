@@ -336,8 +336,8 @@ class ActionView extends Component {
                                                 {this.state.sending ?
                                                  <>
                                                      <div style={{
-                                                         fontSize: '6px',
-                                                         float   : 'left'
+                                                         float   : 'left',
+                                                         marginRight: 10
                                                      }}
                                                           className="loader-spin"/>
                                                      {this.state.canceling ? 'canceling' : 'cancel transaction'}
