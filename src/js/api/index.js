@@ -180,6 +180,16 @@ class API {
         }
     }
 
+    getUnspentOutputStat() {
+        try {
+            return fetch(this.getAuthenticatedMillixApiURL() + '/FC8ylC617zzn1Gaa')
+                .then(response => response.ok ? response.json() : Promise.reject());
+        }
+        catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
     getNodeOsInfo() {
         try {
             return fetch(this.getAuthenticatedMillixApiURL() + '/RLOk0Wji0lQVjynT')

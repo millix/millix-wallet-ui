@@ -12,7 +12,7 @@ export function get_ui_error(api_message) {
 
     if (typeof (api_message) === 'object') {
         let result_error = api_message.error;
-        if (typeof (result_error.error) !== 'undefined') {
+        if (typeof (result_error?.error) !== 'undefined') {
             api_error_name = result_error.error;
         }
         else {
@@ -40,10 +40,10 @@ export function get_ui_error(api_message) {
                 error = <>transaction rejected by a proxy. please try again.</>;
                 break;
             case 'aggregation_not_required':
-                error = <>transaction output aggregation is not required because there are few unspent outputs.</>;
+                error = <>cannot process the request. the number of unspent deposits is too low.</>;
                 break;
             default:
-                error = <>your transaction could not be sent: ({api_message?.error.error || api_message?.error || api_message || 'undefined behaviour'})</>
+                error = <>your transaction could not be sent: ({api_message?.error?.error || api_message?.error || api_message || 'undefined behaviour'})</>
                 break;
         }
     }

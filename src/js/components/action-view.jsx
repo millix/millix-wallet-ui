@@ -4,6 +4,7 @@ import fs from 'fs';
 import API from '../api';
 import ModalView from './utils/modal-view';
 import * as text from '../helper/text';
+import {millix, number} from '../helper/format';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import VolumeControl from './utils/volume-control-view';
 import {connect} from 'react-redux';
@@ -26,26 +27,61 @@ const styles = {
 class ActionView extends Component {
     constructor(props) {
         super(props);
-        let now    = Date.now();
-        this.state = {
+        let now                              = Date.now();
+        this.state                           = {
             fileKeyExport                       : 'export_' + now,
             fileKeyImport                       : 'import_' + now,
             modalShow                           : false,
             sending                             : false,
             canceling                           : false,
+            disableAggregateButton              : true,
             sendAggregateTransactionError       : false,
             sendAggregateTransactionErrorMessage: null,
             errorList                           : [],
+            transactionOutputCount              : undefined,
+            transactionMaxAmount                : undefined,
+            transactionOutputToAggregate        : 0,
             modalAggregateShow                  : false,
             modalAggregateShowSendResult        : false,
             modalAggregateBodySendResult        : []
         };
+        this.minTransactionOutputToAggregate = 10;
+        this.transactionOutputMax            = 128;
+        this.transactionRefreshCountMax      = 10;
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.state.initialVolume === undefined) {
             this.setState({initialVolume: nextProps.notification.volume});
         }
+    }
+
+    componentDidMount() {
+        API.getUnspentOutputStat()
+           .then(data => {
+               if (data.api_status === 'fail') {
+                   return Promise.reject(data);
+               }
+
+               let transactionOutputToAggregate = Math.min(data.transaction_output_count, this.transactionOutputMax * this.transactionRefreshCountMax);
+
+               this.setState({
+                   transactionOutputCount: data.transaction_output_count,
+                   transactionMaxAmount  : data.transaction_max_amount,
+                   disableAggregateButton: data.transaction_output_count < this.minTransactionOutputToAggregate,
+                   transactionOutputToAggregate
+               });
+           })
+           .catch(() => {
+               this.setState({
+                   errorList: [
+                       {
+                           name   : 'sendTransactionError',
+                           message: 'cannot get information about the unspent deposits from the api'
+                       }
+                   ]
+               });
+           });
     }
 
     exportKeys() {
@@ -299,11 +335,17 @@ class ActionView extends Component {
                             </div>
                         </div>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>optimize wallet
+                            <div className={'panel-heading bordered'}>balance aggregation
                             </div>
                             <div className={'panel-body'}>
                                 <div>
-                                    aggregation optimizes your funds and allows you to spend more of your balance in fewer transactions.
+                                    your wallet has {this.state.transactionOutputCount === undefined ? <div style={{display: 'inline-block'}}
+                                                                                                            className="loader-spin-xs"/> : number(this.state.transactionOutputCount)} unspent
+                                    deposits and can send a maximum
+                                    of {this.state.transactionMaxAmount === undefined ? <div style={{display: 'inline-block'}}
+                                                                                             className="loader-spin-xs"/> : millix(this.state.transactionMaxAmount)} in
+                                    a single payment. Every time you click aggregate
+                                    you will see these numbers become more optimized.
                                 </div>
                                 <div style={{marginBottom: 10}}>
                                     your balance and pending balance will change while aggregation is processing.
@@ -314,11 +356,14 @@ class ActionView extends Component {
                                         <ModalView
                                             show={this.state.modalAggregateShow}
                                             size={'lg'}
-                                            heading={'send confirmation'}
+                                            heading={'aggregation confirmation'}
                                             on_accept={() => this.aggregateUnspentOutputs()}
                                             on_close={() => this.cancelSendAggregateTransaction()}
                                             body={<div>
-                                                <div>you are about to send a transaction to aggregate the unspent outputs</div>
+                                                <div>you are about to
+                                                    aggregate {this.state.transactionOutputToAggregate} unspent
+                                                    deposits.
+                                                </div>
                                                 {text.get_confirmation_modal_question()}
                                             </div>}/>
 
@@ -332,11 +377,11 @@ class ActionView extends Component {
                                             <Button
                                                 variant="outline-primary"
                                                 onClick={() => this.doAggregation()}
-                                                disabled={this.state.canceling}>
+                                                disabled={this.state.canceling || this.state.disableAggregateButton}>
                                                 {this.state.sending ?
                                                  <>
                                                      <div style={{
-                                                         float   : 'left',
+                                                         float      : 'left',
                                                          marginRight: 10
                                                      }}
                                                           className="loader-spin"/>
