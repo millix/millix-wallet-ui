@@ -24,11 +24,11 @@ export function get_ui_error(api_message) {
                 error = <>your
                     transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>.
                     please try to send a smaller amount or aggregate manually by sending a smaller
-                    amounts to yourself. the max amount you can send is {format.millix(result_error.data.amount_max)}.</>;
+                    amounts to yourself. the max amount you can send is {format.millix(api_message.data.amount_max)}.</>;
                 break;
             case 'insufficient_balance':
                 error = <>your balance is lower than the amount you are trying to send. the max amount you can send
-                    is {format.millix(result_error.data.balance_stable)}.</>;
+                    is {format.millix(api_message.data.balance_stable)}.</>;
                 break;
             case 'transaction_send_interrupt':
                 error = <>transaction has been canceled.</>;
