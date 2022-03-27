@@ -40,7 +40,10 @@ export function get_ui_error(api_message) {
                 error = <>transaction rejected by a proxy. please try again.</>;
                 break;
             case 'aggregation_not_required':
-                error = <>cannot process the request. the number of unspent deposits is too low.</>;
+                error = <>cannot process the request. the aggregation will generate on the same number of unspent deposits.</>;
+                break;
+            case 'aggregation_not_possible':
+                error = <>cannot aggregate the unspent deposits. the transaction value is too small</>;
                 break;
             default:
                 error = <>your transaction could not be sent: ({api_message?.error?.error || api_message?.error || api_message || 'undefined behaviour'})</>

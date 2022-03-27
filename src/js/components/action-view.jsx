@@ -45,9 +45,8 @@ class ActionView extends Component {
             modalAggregateShowSendResult        : false,
             modalAggregateBodySendResult        : []
         };
-        this.minTransactionOutputToAggregate = 10;
-        this.transactionOutputMax            = 128;
-        this.transactionRefreshCountMax      = 10;
+        this.minTransactionOutputToAggregate = 2;
+        this.maxTransactionOutputToAggregate = 120;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -57,13 +56,17 @@ class ActionView extends Component {
     }
 
     componentDidMount() {
+        this.updateAggregationStats();
+    }
+
+    updateAggregationStats() {
         API.getUnspentOutputStat()
            .then(data => {
                if (data.api_status === 'fail') {
                    return Promise.reject(data);
                }
 
-               let transactionOutputToAggregate = Math.min(data.transaction_output_count, this.transactionOutputMax * this.transactionRefreshCountMax);
+               let transactionOutputToAggregate = Math.min(data.transaction_output_count, this.maxTransactionOutputToAggregate);
 
                this.setState({
                    transactionOutputCount: data.transaction_output_count,
@@ -195,10 +198,14 @@ class ActionView extends Component {
                </div>;
 
                this.setState({
-                   sending       : false,
-                   feeInputLocked: true,
+                   sending                     : false,
+                   feeInputLocked              : true,
+                   transactionOutputCount      : undefined,
+                   transactionMaxAmount        : undefined,
+                   disableAggregateButton      : true,
+                   transactionOutputToAggregate: 0,
                    modalAggregateBodySendResult
-               });
+               }, () => setTimeout(() => this.updateAggregationStats(), 5000));
                this.changeAggregateModalShow(false);
                this.changeAggregateModalShowSendResult();
            }).catch((e) => {
@@ -221,8 +228,12 @@ class ActionView extends Component {
             this.setState({
                 errorList,
                 sending  : false,
-                canceling: false
-            });
+                canceling: false,
+                transactionOutputCount      : undefined,
+                transactionMaxAmount        : undefined,
+                disableAggregateButton      : true,
+                transactionOutputToAggregate: 0
+            }, () => setTimeout(() => this.updateAggregationStats(), 5000));
             this.changeAggregateModalShow(false);
         });
     }
@@ -344,7 +355,7 @@ class ActionView extends Component {
                                     deposits and can send a maximum
                                     of {this.state.transactionMaxAmount === undefined ? <div style={{display: 'inline-block'}}
                                                                                              className="loader-spin-xs"/> : millix(this.state.transactionMaxAmount)} in
-                                    a single payment. Every time you click aggregate
+                                    a single payment. every time you click aggregate
                                     you will see these numbers become more optimized.
                                 </div>
                                 <div style={{marginBottom: 10}}>
