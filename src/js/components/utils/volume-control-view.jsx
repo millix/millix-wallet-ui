@@ -120,7 +120,7 @@ export default (props) => {
     return (
         <div className="volume-control">
             <div className="icon">
-                <svg width="90px" height="100%" viewBox="0 0 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                <svg width="90px" height="1.3rem" viewBox="0 0 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <defs>
                         <clipPath id="speaker-mask" transform={`scale(${maskProps.scaleX})`}>
                             <rect fill="#36C9FF" x="-1" y="-1" width="51" height="71"/>

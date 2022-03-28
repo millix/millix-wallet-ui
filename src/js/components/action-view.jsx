@@ -227,8 +227,8 @@ class ActionView extends Component {
             }
             this.setState({
                 errorList,
-                sending  : false,
-                canceling: false,
+                sending                     : false,
+                canceling                   : false,
                 transactionOutputCount      : undefined,
                 transactionMaxAmount        : undefined,
                 disableAggregateButton      : true,
@@ -335,7 +335,7 @@ class ActionView extends Component {
                             </div>
                             <div className={'panel-body'}>
                                 <div style={{marginBottom: 10}}>
-                                    notification volume of new transactions.
+                                    adjust the notification volume of new transactions.
                                 </div>
                                 <Row>
                                     <Col style={styles.centered}>
@@ -352,14 +352,14 @@ class ActionView extends Component {
                                 <div>
                                     your wallet has {this.state.transactionOutputCount === undefined ? <div style={{display: 'inline-block'}}
                                                                                                             className="loader-spin-xs"/> : number(this.state.transactionOutputCount)} unspent
-                                    deposits and can send a maximum
+                                    deposits. millix uses the smallest unspent deposits first, and there is a limit of 128 unspent deposits used to fund a
+                                    single payment. based on the value of your unspent deposits you can send a maximum
                                     of {this.state.transactionMaxAmount === undefined ? <div style={{display: 'inline-block'}}
                                                                                              className="loader-spin-xs"/> : millix(this.state.transactionMaxAmount)} in
-                                    a single payment. every time you click aggregate
-                                    you will see these numbers become more optimized.
+                                    a single payment. aggregating your balance consumes the small unspent deposits by sending a payment to yourself.
                                 </div>
-                                <div style={{marginBottom: 10}}>
-                                    your balance and pending balance will change while aggregation is processing.
+                                <div style={{marginBottom: 10, marginTop: 20}}>
+                                    each time you click aggregate you will see these numbers become more optimized.  continue to click the aggregate button until the maximum millix you can send in a single payment meets your needs.  your balance and pending balance will change while aggregation is processing.
                                 </div>
                                 <Row>
                                     <Col
@@ -422,10 +422,7 @@ class ActionView extends Component {
                                 <div>
                                     reset validation forces your node to
                                     revalidate all your transactions (to or from
-                                    you)
-                                </div>
-                                <div>
-                                    it is recommended to do in one of the
+                                    you). it is recommended to do in one of the
                                     following cases:
                                     <ul>
                                         <li>if you have
