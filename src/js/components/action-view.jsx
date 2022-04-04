@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, Form, Row} from 'react-bootstrap';
+import {Button, Col, Dropdown, Form, Row} from 'react-bootstrap';
 import fs from 'fs';
 import API from '../api';
 import ModalView from './utils/modal-view';
@@ -11,6 +11,8 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {updateNotificationVolume} from '../redux/actions';
 import ErrorList from './utils/error-list-view';
+import DropdownToggle from 'react-bootstrap/DropdownToggle';
+import DropdownMenu from 'react-bootstrap/DropdownMenu';
 
 const styles = {
     centered: {
@@ -43,7 +45,8 @@ class ActionView extends Component {
             transactionOutputToAggregate        : 0,
             modalAggregateShow                  : false,
             modalAggregateShowSendResult        : false,
-            modalAggregateBodySendResult        : []
+            modalAggregateBodySendResult        : [],
+            modeNodeSyncFull                    : false
         };
         this.minTransactionOutputToAggregate = 2;
         this.maxTransactionOutputToAggregate = 120;
@@ -57,6 +60,20 @@ class ActionView extends Component {
 
     componentDidMount() {
         this.updateAggregationStats();
+        this.getFullNodeMode();
+    }
+
+    getFullNodeMode() {
+        API.getNodeConfigValueByName('MODE_NODE_SYNC_FULL')
+           .then(data => {
+               this.setState({modeNodeSyncFull: data.value === 'true'});
+           });
+    }
+
+    setIsFullNode(isFullNode) {
+        this.setState({modeNodeSyncFull: isFullNode});
+        API.updateNodeConfigValue('MODE_NODE_SYNC_FULL', isFullNode.toString())
+           .then(_ => _);
     }
 
     updateAggregationStats() {
@@ -358,8 +375,13 @@ class ActionView extends Component {
                                                                                              className="loader-spin-xs"/> : millix(this.state.transactionMaxAmount)} in
                                     a single payment. aggregating your balance consumes the small unspent deposits by sending a payment to yourself.
                                 </div>
-                                <div style={{marginBottom: 10, marginTop: 20}}>
-                                    each time you click aggregate you will see these numbers become more optimized.  continue to click the aggregate button until the maximum millix you can send in a single payment meets your needs.  your balance and pending balance will change while aggregation is processing.
+                                <div style={{
+                                    marginBottom: 10,
+                                    marginTop   : 20
+                                }}>
+                                    each time you click aggregate you will see these numbers become more optimized. continue to click the aggregate button until
+                                    the maximum millix you can send in a single payment meets your needs. your balance and pending balance will change while
+                                    aggregation is processing.
                                 </div>
                                 <Row>
                                     <Col
@@ -411,6 +433,54 @@ class ActionView extends Component {
                                             error_list={this.state.errorList}/>
                                     </Col>
                                 </Row>}
+                            </div>
+                        </div>
+
+                        <div className={'panel panel-filled'}>
+                            <div className={'panel-heading bordered'}>synch switch
+                            </div>
+                            <div className={'panel-body'}>
+                                <Form.Group>
+                                    full node
+                                    <div
+                                        className="btn-group btn-full-width" style={{marginLeft: 10}}>
+                                        <Dropdown>
+                                            <DropdownToggle id="dropdown=debug"
+                                                            className="btn btn-w-sm  btn-accent dropdown-toggle btn-full-width dropdown-luna">
+                                                <p style={{
+                                                    float       : 'left',
+                                                    marginBottom: '0px'
+                                                }}>{this.state.modeNodeSyncFull ? 'on' : 'off'}</p>
+                                                <p style={{
+                                                    float       : 'right',
+                                                    marginBottom: '0px'
+                                                }}>
+                                                    <span className="caret"/></p>
+                                            </DropdownToggle>
+                                            <DropdownMenu className="col-lg-12">
+                                                {Array.from([
+                                                    'on',
+                                                    'off'
+                                                ]).map(type =>
+                                                    <Dropdown.Item
+                                                        key={type}
+                                                        onClick={() => {
+                                                            this.setIsFullNode(type === 'on');
+                                                        }}
+                                                    >{type}</Dropdown.Item>
+                                                )}
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </div>
+                                </Form.Group>
+                                <div style={{
+                                    marginBottom: 10,
+                                    marginTop   : 20
+                                }}>
+                                    running a full node is not required to send and receive transactions or receive payments from advertisers. it is recommended
+                                    for devices with good bandwidth availability as it strengthens the millix network and increases your ability and efficiency
+                                    to earn fees from the millix network.
+                                </div>
                             </div>
                         </div>
 
