@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './js/components/app-container';
 import store from './js/redux/store';
-import {unlockWallet, updateClock, addWalletConfig, updateNodeAttribute, updateWalletAddressVersion} from './js/redux/actions';
+import {unlockWallet, updateClock, addWalletConfig, updateNodeAttribute, updateWalletAddressVersion, updateNotificationVolume} from './js/redux/actions';
 import reportWebVitals from './reportWebVitals';
 import {config as faConfig, library} from '@fortawesome/fontawesome-svg-core';
 import {
@@ -46,17 +46,25 @@ import {
     faQuestionCircle,
     faThList,
     faEllipsisV,
-    faRotateLeft
+    faRotateLeft,
+    faCodeMerge
 } from '@fortawesome/free-solid-svg-icons';
+import './vendor/animate.css/animate.css';
 import './css/bootstrap/bootstrap.scss';
 
 import 'primereact/resources/themes/bootstrap4-dark-purple/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
+import './vendor/luna/custom_form_element.css';
+import './vendor/luna/datatable.css';
+import './vendor/luna/datepicker.css';
+import './vendor/luna/universal_admin.css';
+
 import '../node_modules/@trendmicro/react-sidenav/dist/react-sidenav.css';
 import '../node_modules/@fortawesome/fontawesome-svg-core/styles.css';
 import './css/app.scss';
+import './vendor/luna/luna';
 import API from './js/api';
 import ntp from './js/core/ntp';
 import moment from 'moment';
@@ -70,7 +78,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faLock, faLockOpen, faTimes, faEye, faList, faBars, faSignInAlt, faFileImport,
     faChevronDown, faChevronUp, faPencilAlt, faSync, faPlusCircle, faPlay,
     faPause, faQuestionCircle, faThList, faRedo, faEllipsisV,
-    faRotateLeft);
+    faRotateLeft, faCodeMerge);
 
 
 let apiInfo = {
@@ -90,6 +98,13 @@ localforage.getItem('api_info', (err, data) => {
                store.dispatch(unlockWallet(data.wallet));
            }
        });
+});
+
+localforage.getItem('notification_volume', (err, data) => {
+    if (err || data === null) {
+        data = 100;
+    }
+    store.dispatch(updateNotificationVolume(data));
 });
 
 window.addEventListener('message', (e) => {

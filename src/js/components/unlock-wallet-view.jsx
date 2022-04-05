@@ -197,7 +197,10 @@ class UnlockWalletView extends Component {
                                                                                 className="control-label"
                                                                                 htmlFor="password">password</label>
                                                                             <FormControl
-                                                                                ref={c => passphraseRef = c}
+                                                                                ref={c => {
+                                                                                    passphraseRef = c;
+                                                                                    passphraseRef && passphraseRef.focus();
+                                                                                }}
                                                                                 type="password"
                                                                                 placeholder="******"
                                                                                 aria-label="wallet password"

@@ -5,7 +5,7 @@ import {
     UPDATE_WALLET_ADDRESS, UPDATE_WALLET_CONFIG, UPDATE_WALLET_MAINTENANCE,
     UPDATE_WALLET_TRANSACTIONS, WALLET_READY, UPDATE_WALLET_ADDRESS_VERSION,
     ADD_WALLET_ADDRESS_VERSION, GET_NODE_ATTRIBUTES, UPDATE_WALLET_BALANCE,
-    WALLET_VERSION_AVAILABLE, UPDATE_WALLET_NOTIFICATION, UPDATE_NODE_ATTRIBUTE
+    WALLET_VERSION_AVAILABLE, UPDATE_WALLET_NOTIFICATION, UPDATE_NODE_ATTRIBUTE, UPDATE_NOTIFICATION_VOLUME
 } from '../constants/action-types';
 import config from '../../../config.js';
 import _ from 'lodash';
@@ -52,7 +52,10 @@ const initialState = {
         size: 0
     },
     transactionDetails: null,
-    node              : {}
+    node              : {},
+    notification      : {
+        volume: 0
+    }
 };
 
 function rootReducer(state = initialState, action) {
@@ -62,6 +65,7 @@ function rootReducer(state = initialState, action) {
             action
         }, '*');
     }
+
     if (action.type === UNLOCK_WALLET) {
         return Object.assign({}, state, {
             wallet: {
@@ -263,6 +267,13 @@ function rootReducer(state = initialState, action) {
         return Object.assign({}, state, {
             node: {
                 ...state.node,
+                ...action.payload
+            }
+        });
+    }
+    else if (action.type === UPDATE_NOTIFICATION_VOLUME) {
+        return Object.assign({}, state, {
+            notification: {
                 ...action.payload
             }
         });
