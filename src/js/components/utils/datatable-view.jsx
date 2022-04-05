@@ -163,7 +163,7 @@ class DatatableView extends Component {
                 return <div
                     className={'paginator-dropdown-wrapper'}>show<Dropdown
                     value={options.value} options={dropdownOptions}
-                    onChange={options.onChange}/>records</div>;
+                    onChange={options.onChange}/>records. total records {options.totalRecords}.</div>;
             }
         };
     }

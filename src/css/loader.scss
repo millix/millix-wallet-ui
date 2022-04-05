@@ -1,0 +1,38 @@
+@import "variable";
+
+@mixin loader {
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+  border: 3px solid #1E2033;
+  border-top: 3px solid $color-primary;
+  border-radius: 50%;
+  height: 1.8rem;
+  width: 1.8rem;
+}
+
+.loader-spin {
+  @include loader;
+}
+
+.loader-spin-xs {
+  @include loader;
+  border-width: 1px;
+  height: 1rem;
+  width: 1rem;
+}
+
+@-webkit-keyframes spin {
+  to {
+    border-top-color: $color-secondary;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  to {
+    border-top-color: $color-secondary;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
