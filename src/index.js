@@ -62,6 +62,7 @@ import API from './js/api';
 import ntp from './js/core/ntp';
 import moment from 'moment';
 import localforage from 'localforage';
+import Loader from './js/components/loader';
 
 faConfig.autoAddCss = false;
 library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
@@ -181,9 +182,12 @@ getNodeAboutAttribute();
 getNodeConfig();
 getWalletAddressVersion();
 ReactDOM.render(
-    <React.StrictMode>
-        <AppContainer store={store}/>
-    </React.StrictMode>,
+    <div>
+        <Loader/>
+        <React.StrictMode>
+            <AppContainer store={store}/>
+        </React.StrictMode>
+    </div>,
     document.getElementById('app')
 );
 

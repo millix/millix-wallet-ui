@@ -31,6 +31,7 @@
     "react-switchery": "^1.2.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "rxjs": "^7.5.4",
     "sass": "^1.32.8",
     "web-vitals": "^1.0.1",
     "webpack": "4.44.2"

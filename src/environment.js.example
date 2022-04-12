@@ -5,4 +5,5 @@ const environment = {
     NODE_ID,
     NODE_SIGNATURE
 };
+
 export default environment;

@@ -27,6 +27,7 @@ import async from 'async';
 import _ from 'lodash';
 import localforage from 'localforage';
 
+
 export function updateNodeAttribute(payload) {
     return {
         type: UPDATE_NODE_ATTRIBUTE,

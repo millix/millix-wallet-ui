@@ -32,14 +32,6 @@ class AppContainer extends Component {
     }
 
     componentDidMount() {
-        /*let scroll = $('body').getNiceScroll();
-         if (scroll.length === 0) {
-         scroll = $('body').niceScroll();
-         }
-         else {
-         scroll.resize();
-         }
-         setInterval(() => scroll.resize(), 500);*/
     }
 
     render() {

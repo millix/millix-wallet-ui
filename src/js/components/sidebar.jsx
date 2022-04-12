@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
-import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import API from '../api';
+import {changeLoaderState} from './loader';
 
 
 class Sidebar extends Component {
@@ -98,6 +98,13 @@ class Sidebar extends Component {
         });
     }
 
+    lockWallet() {
+        changeLoaderState(true);
+        this.props.lockWallet().then(data => {
+            changeLoaderState(false);
+        });
+    }
+
     render() {
         let props           = this.props;
         let defaultSelected = this.highlightSelected(props.location.pathname);
@@ -126,7 +133,9 @@ class Sidebar extends Component {
                            size={'lg'}
                            on_close={() => this.changeModalShow(false)}
                            heading={'logout'}
-                           on_accept={() => props.lockWallet()}
+                           on_accept={() => {
+                               this.lockWallet();
+                           }}
                            body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
                     <span>{format.date(this.state.date)} utc</span>

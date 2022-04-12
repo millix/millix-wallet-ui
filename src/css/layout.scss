@@ -164,7 +164,7 @@ body.nav-toggle .content {
 
 .content {
   background: $color-body-bg;
-  margin-top: $navbar-height;
+  padding-top: $navbar-height;
   margin-left: $sidebar-width;
   position: relative;
   transition: margin-left 0.3s ease-out;
@@ -209,7 +209,8 @@ body .section_subtitle {
 .unlock-container,
 .import_mnemonic_container,
 .create_wallet_container {
-  margin: 10rem auto 0;
+  padding: 10rem 0;
+  margin: auto;
 }
 
 .unlock-container {
