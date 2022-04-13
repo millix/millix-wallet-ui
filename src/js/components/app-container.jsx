@@ -24,6 +24,9 @@ import StatsView from './stats-view';
 import ReportIssueView from './report-issue-view';
 import FaqView from './faq-view';
 import AddressListView from './address-list-view';
+import MessageNewView from './msg-send-view';
+import MessageReceivedView from './msg-received-list-view';
+import MessageSentView from './msg-sent-list-view';
 
 
 class AppContainer extends Component {
@@ -61,6 +64,12 @@ class AppContainer extends Component {
                                                  component={PeerInfoView}/>
                     <UnlockedWalletRequiredRoute path="/config"
                                                  component={ConfigView}/>
+                    <UnlockedWalletRequiredRoute path="/message-new"
+                                                 component={MessageNewView}/>
+                    <UnlockedWalletRequiredRoute path="/message-received"
+                                                 component={MessageReceivedView}/>
+                    <UnlockedWalletRequiredRoute path="/message-sent"
+                                                 component={MessageSentView}/>
 
                     {/*<UnlockedWalletRequiredRoute path='/log'*/}
                     {/*                             component={EventLogView}/>*/}
