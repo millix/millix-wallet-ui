@@ -1,98 +1,72 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Button, Col, Form, Row} from 'react-bootstrap';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {MDBDataTable as DataTable} from 'mdbreact';
-import {addNewAddress, walletUpdateAddresses, walletUpdateBalance} from '../redux/actions/index';
-
-const styles = {
-    centered: {
-        display       : 'flex',
-        justifyContent: 'center'
-    },
-    left    : {
-        display       : 'flex',
-        justifyContent: 'left'
-    },
-    right   : {
-        display       : 'flex',
-        justifyContent: 'flex-end'
-    }
-};
+import API from '../api';
+import _ from 'lodash';
+import * as format from '../helper/format';
+import DatatableView from './utils/datatable-view';
 
 
 class MessageReceivedView extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            files_list: {
-                columns: [
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="file" size="1x"/>,
-                            ' subject'
-                        ],
-                        field: 'subject',
-                        width: 300
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="expand-arrows-alt"
-                                             size="1x"/>,
-                            ' address'
-                        ],
-                        field: 'address',
-                        width: 500
-                    },
-                    {
-                        label: [
-                            <FontAwesomeIcon icon="info" size="1x"/>,
-                            ' amount'
-                        ],
-                        field: 'amount',
-                        width: 50
-                    }
-                ],
-                rows   : []
-            }
+        this.datatable_reload_interval = undefined;
+        this.state                     = {
+            message_list              : [],
+            datatable_reload_timestamp: '',
+            datatable_loading         : false
         };
+    }
+
+    componentDidMount() {
+        this.reloadDatatable();
+        this.datatable_reload_interval = setInterval(() => this.reloadDatatable(), 60000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.datatable_reload_interval);
+    }
+
+    reloadDatatable() {
+        this.setState({
+            datatable_loading: true
+        });
+
+        //here
     }
 
     render() {
         return (
-            <div>
-                <div className={'panel panel-filled'}>
-                    <div className={'panel-heading'}>received messages</div>
-                    <hr className={'hrPanel'}/>
-                    <div className={'panel-body'}>
-                        <Row>
-                            <DataTable striped bordered small hover
-                                       info={false}
-                                       entries={10}
-                                       entriesOptions={[
-                                           10,
-                                           30,
-                                           50
-                                       ]}
-                                       data={this.state.files_list}/>
-                        </Row>
-                    </div>
+            <div className={'panel panel-filled'}>
+                <div className={'panel-heading bordered'}>messages received
+                </div>
+                <div className={'panel-body'}>
+                    <Row>
+                        <DatatableView
+                            reload_datatable={() => this.reloadDatatable()}
+                            datatable_reload_timestamp={this.state.datatable_reload_timestamp}
+                            value={this.state.message_list}
+                            sortField={'address_position'}
+                            sortOrder={1}
+                            resultColumn={[
+                                {
+                                    field : 'subject',
+                                    header: 'subject'
+                                },
+                                {
+                                    field : 'address',
+                                    header: 'address'
+                                },
+                                {
+                                    field : 'amount',
+                                    header: 'amount'
+                                }
+                            ]}/>
+                    </Row>
                 </div>
             </div>
         );
     }
 }
 
-
-export default connect(
-    state => ({
-        network: state.network,
-        wallet : state.wallet
-    }),
-    {
-        walletUpdateAddresses,
-        addNewAddress,
-        walletUpdateBalance
-    }
-)(withRouter(MessageReceivedView));
+export default withRouter(MessageReceivedView);
