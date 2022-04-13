@@ -74,14 +74,6 @@ export function removeWalletAddressVersion(payload) {
                             );
 }
 
-export function addWalletAddressVersion(payload) {
-    return (dispatch) => API.addWalletAddressVersion(payload)
-                            .then(payload => dispatch({
-                                type: ADD_WALLET_ADDRESS_VERSION,
-                                payload
-                            }));
-}
-
 export function unlockWallet(payload) {
     return {
         type: UNLOCK_WALLET,

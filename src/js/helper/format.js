@@ -14,7 +14,11 @@ export function fiat(amount) {
 }
 
 export function number(number) {
-    return number.toLocaleString('en-US');
+    if (number) {
+        number = number.toLocaleString('en-US');
+    }
+
+    return number;
 }
 
 export function date(timestamp) {

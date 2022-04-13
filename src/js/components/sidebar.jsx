@@ -72,6 +72,17 @@ class Sidebar extends Component {
         ) {
             result = true;
         }
+        else if (section === 'settings' &&
+                 (
+                     (defaultSelected === '/fee') ||
+                     (defaultSelected === '/network') ||
+                     (defaultSelected === '/connection') ||
+                     (defaultSelected === '/consensus') ||
+                     (defaultSelected === '/address-version')
+                 )
+        ) {
+            result = true;
+        }
         else if (section === 'ads' &&
                  (
                      (defaultSelected === '/ad-create') ||
@@ -201,17 +212,52 @@ class Sidebar extends Component {
                      </NavText>
                      </NavItem>
                      */}
-                    <NavItem key={'config'} eventKey="/config">
+
+                    <NavItem
+                        eventKey="settings"
+                        expanded={this.isExpanded('settings', defaultSelected)}
+                    >
                         <NavText>
-                            settings
+                            settings <FontAwesomeIcon className={'icon'}
+                                                      icon="chevron-down"
+                                                      size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
+                        <NavItem key={'fee'}
+                                 eventKey="/fee">
+                            <NavText>
+                                fees
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'network'} eventKey="/network">
+                            <NavText>
+                                network
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'connection'} eventKey="/connection">
+                            <NavText>
+                                connection
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'consensus'} eventKey="/consensus">
+                            <NavText>
+                                consensus
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'address-version'} eventKey="/address-version">
+                            <NavText>
+                                address version
+                            </NavText>
+                        </NavItem>
                     </NavItem>
+
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
                             actions
                         </NavText>
                     </NavItem>
-
 
                     <NavItem
                         eventKey="status"
