@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import API from '../api';
+import {Badge} from 'react-bootstrap';
 import {changeLoaderState} from './loader';
 
 
@@ -14,20 +15,21 @@ class Sidebar extends Component {
         super(props);
         let now    = Date.now();
         this.state = {
-            fileKeyExport      : 'export_' + now,
-            fileKeyImport      : 'import_' + now,
-            date               : new Date(),
-            modalShow          : false,
-            node_millix_version: ''
+            fileKeyExport                : 'export_' + now,
+            fileKeyImport                : 'import_' + now,
+            date                         : new Date(),
+            modalShow                    : false,
+            node_millix_version          : '',
+            node_millix_version_available: '',
+            application                  : ''
         };
+
+        this.setVersion = this.setVersion.bind(this);
     }
 
     componentDidMount() {
-        API.getNodeOsInfo().then(response => {
-            this.setState({
-                node_millix_version: response.node_millix_version
-            });
-        });
+        this.setVersion();
+        setInterval(this.setVersion, 5 * 60 * 1000);
 
         this.timerID = setInterval(
             () => this.tick(),
@@ -52,6 +54,38 @@ class Sidebar extends Component {
         }
 
         return defaultSelected;
+    }
+
+    getAvailableVersionLink() {
+        let link = null;
+        if (this.state.node_millix_version && this.state.node_millix_version !== this.state.node_millix_version_available) {
+            let download_url = 'https://tangled.com/download.html';
+            if (this.state.application === 'client') {
+                download_url = 'https://millix.org/client.html';
+            }
+
+            link = (
+                <React.Fragment>
+                    <a href={download_url} target={'_blank'} rel="noreferrer">
+                        <Badge className={'new_version_badge'}>new version available</Badge>
+                    </a>
+                </React.Fragment>
+            );
+        }
+
+        return link;
+    }
+
+    setVersion() {
+        API.getLatestMillixVersion().then(response => {
+            if (response.api_status === 'success') {
+                this.setState({
+                    node_millix_version_available: response.version_available,
+                    application                  : response.application,
+                    node_millix_version          : response.node_millix_version
+                });
+            }
+        });
     }
 
     isExpanded(section, defaultSelected) {
@@ -312,6 +346,7 @@ class Sidebar extends Component {
                 </SideNav.Nav>
                 <div className="nav-info">
                     <span>version {this.state.node_millix_version}</span>
+                    {this.getAvailableVersionLink()}
                 </div>
             </SideNav>
         </aside>);
