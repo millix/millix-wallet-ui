@@ -64,6 +64,7 @@ import moment from 'moment';
 import localforage from 'localforage';
 import Loader from './js/components/loader';
 
+
 faConfig.autoAddCss = false;
 library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faStream, faExchangeAlt, faCloudDownloadAlt, faSlidersH,

@@ -28,6 +28,7 @@ import ConfigNetwork from './config/network';
 import ConfigConnection from './config/connection';
 import ConfigConsensus from './config/consensus';
 import ConfigAddressVersion from './config/address-version';
+import ErrorModalRequestApi from './utils/error-handler-request-api';
 
 
 class AppContainer extends Component {
@@ -41,6 +42,7 @@ class AppContainer extends Component {
     render() {
         return <Provider store={this.props.store}>
             <Router>
+                <ErrorModalRequestApi/>
                 <Switch>
                     <Route path="/unlock/" component={UnlockWalletView}/>
                     <Route path="/manage-wallet/" component={ManageWalletView}/>
