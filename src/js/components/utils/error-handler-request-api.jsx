@@ -35,12 +35,19 @@ class ErrorModalRequestApi extends Component {
                     message = 'failed to request node. please restart and try again.';
                 }
 
-                this.showModal(message)
+                this.showModal(message);
             }
             else {
-                error.json().then(data => {
-                    this.showModal(data?.api_message)
-                });
+                try {
+                    const environment = require('../../../environment');
+                    if (environment.SHOW_API_ERROR_IN_MODAL) {
+                        error.json().then(data => {
+                            this.showModal(data?.api_message);
+                        });
+                    }
+                }
+                catch (ex) {
+                }
             }
         }
     }
