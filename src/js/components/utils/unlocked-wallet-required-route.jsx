@@ -20,28 +20,34 @@ const UnlockedWalletRequiredRoute = ({
         if (!rest.wallet.unlocked) {
             return;
         }
+
         let timeoutID;
         const getNodeStat = () => {
             timeoutID = setTimeout(() => {
-                API.getNodeStat().then(data => {
-                    rest.walletUpdateBalance({
-                        balance_stable                   : data.balance.stable,
-                        balance_pending                  : data.balance.unstable,
-                        transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
-                        transaction_count                : data.transaction.transaction_count || 0
-                    });
-                    rest.setBackLogSize(data.log.backlog_count);
-                    rest.setLogSize(data.log.log_count);
-                    rest.updateNetworkState({
-                        ...data.network,
-                        connections: data.network.peer_count
-                    });
-                })
-                   .catch(() => {
-                       getNodeStat();
+                API.getNodeStat()
+                   .then(data => {
+                       rest.walletUpdateBalance({
+                           balance_stable                   : data.balance.stable,
+                           balance_pending                  : data.balance.unstable,
+                           transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
+                           transaction_count                : data.transaction.transaction_count || 0
+                       });
+                       rest.setBackLogSize(data.log.backlog_count);
+                       rest.setLogSize(data.log.log_count);
+                       rest.updateNetworkState({
+                           ...data.network,
+                           connections: data.network.peer_count
+                       });
+                   })
+                   .catch(_ => _)
+                   .finally(() => {
+                       if (rest.wallet.unlocked) {
+                           getNodeStat();
+                       }
                    });
             }, 1000);
         };
+
         getNodeStat();
 
         let fetch_currency_pair_summary_timeout_id;
@@ -65,6 +71,7 @@ const UnlockedWalletRequiredRoute = ({
             clearTimeout(timeoutID);
             clearTimeout(fetch_currency_pair_summary_timeout_id);
         };
+
     }, [rest.wallet.unlocked]);
     return (<Route {...rest} render={props => (
         rest.wallet.unlocked ? (

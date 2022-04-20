@@ -59,8 +59,8 @@ const initialState = {
         size: 0
     },
     transactionDetails   : null,
-    node              : {},
-    notification      : {
+    node                 : {},
+    notification         : {
         volume: 0
     }
 };
@@ -74,6 +74,7 @@ function rootReducer(state = initialState, action) {
     }
 
     if (action.type === UNLOCK_WALLET) {
+        state = initialState;
         return Object.assign({}, state, {
             wallet: {
                 ...state.wallet,
@@ -84,6 +85,7 @@ function rootReducer(state = initialState, action) {
         });
     }
     else if (action.type === LOCK_WALLET) {
+        state = initialState;
         return Object.assign({}, state, {
             wallet: {
                 ...state.wallet,
