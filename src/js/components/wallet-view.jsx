@@ -5,13 +5,11 @@ import {Col, Row, Form, Table, Button, Badge} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import ErrorList from './utils/error-list-view';
-import HelpIconView from './utils/help-icon-view';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import BalanceView from './utils/balance-view';
 import * as validate from '../helper/validate';
 import * as text from '../helper/text';
-import {get_ui_error} from '../helper/text';
 
 
 class WalletView extends Component {
@@ -292,7 +290,7 @@ class WalletView extends Component {
                                                     {this.state.sending ?
                                                      <>
                                                          <div style={{
-                                                             float   : 'left',
+                                                             float      : 'left',
                                                              marginRight: 10
                                                          }}
                                                               className="loader-spin"/>
@@ -315,6 +313,7 @@ class WalletView extends Component {
 
 export default connect(
     state => ({
-        wallet: state.wallet,
-        config: state.config
+        wallet               : state.wallet,
+        config               : state.config,
+        currency_pair_summary: state.currency_pair_summary
     }))(withRouter(WalletView));

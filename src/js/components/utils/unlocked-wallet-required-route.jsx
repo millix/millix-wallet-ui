@@ -6,43 +6,72 @@ import {Col, Container} from 'react-bootstrap';
 import '../../../../node_modules/mohithg-switchery/switchery.css';
 import $ from 'jquery';
 import API from '../../api';
-import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance} from '../../redux/actions';
+import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance, updateCurrencyPairSummary} from '../../redux/actions';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import HelpIconView from './help-icon-view';
+import {CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS} from '../../../config.js';
+import APIExternal from '../../api/external';
 
 const UnlockedWalletRequiredRoute = ({
                                          component: Component,
                                          ...rest
                                      }) => {
+
     useEffect(() => {
         if (!rest.wallet.unlocked) {
             return;
         }
+
         let timeoutID;
         const getNodeStat = () => {
-            timeoutID = setTimeout(() => API.getNodeStat()
-                                            .then(data => {
-                                                rest.walletUpdateBalance({
-                                                    balance_stable                   : data.balance.stable,
-                                                    balance_pending                  : data.balance.unstable,
-                                                    transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
-                                                    transaction_count                : data.transaction.transaction_count || 0
-                                                });
-                                                rest.setBackLogSize(data.log.backlog_count);
-                                                rest.setLogSize(data.log.log_count);
-                                                rest.updateNetworkState({
-                                                    ...data.network,
-                                                    connections: data.network.peer_count
-                                                });
-                                                getNodeStat();
-                                            })
-                                            .catch(() => {
-                                                getNodeStat();
-                                            })
-                , 1000);
+            timeoutID = setTimeout(() => {
+                API.getNodeStat()
+                   .then(data => {
+                       rest.walletUpdateBalance({
+                           balance_stable                   : data.balance.stable,
+                           balance_pending                  : data.balance.unstable,
+                           transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
+                           transaction_count                : data.transaction.transaction_count || 0
+                       });
+                       rest.setBackLogSize(data.log.backlog_count);
+                       rest.setLogSize(data.log.log_count);
+                       rest.updateNetworkState({
+                           ...data.network,
+                           connections: data.network.peer_count
+                       });
+                   })
+                   .catch(_ => _)
+                   .finally(() => {
+                       if (rest.wallet.unlocked) {
+                           getNodeStat();
+                       }
+                   });
+            }, 1000);
         };
+
         getNodeStat();
-        return () => clearTimeout(timeoutID);
+
+        let fetch_currency_pair_summary_timeout_id;
+        const setCurrencyPairSummary = () => {
+            APIExternal.getCurrencyPairSummaryFiatleak().then(response => {
+                rest.updateCurrencyPairSummary({
+                    price : response.data.price,
+                    ticker: response.ticker,
+                    symbol: response.symbol
+                });
+            });
+            if (rest.wallet.unlocked) {
+                fetch_currency_pair_summary_timeout_id = setTimeout(() => {
+                    setCurrencyPairSummary();
+                }, CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS);
+            }
+        };
+        setCurrencyPairSummary();
+
+        return () => {
+            clearTimeout(timeoutID);
+            clearTimeout(fetch_currency_pair_summary_timeout_id);
+        };
+
     }, [rest.wallet.unlocked]);
     return (<Route {...rest} render={props => (
         rest.wallet.unlocked ? (
@@ -87,12 +116,14 @@ const UnlockedWalletRequiredRoute = ({
 
 export default connect(
     state => ({
-        clock : state.clock,
-        wallet: state.wallet,
-        node  : state.node
+        clock                : state.clock,
+        wallet               : state.wallet,
+        node                 : state.node,
+        currency_pair_summary: state.currency_pair_summary
     }), {
         walletUpdateBalance,
         updateNetworkState,
         setBackLogSize,
-        setLogSize
+        setLogSize,
+        updateCurrencyPairSummary
     })(UnlockedWalletRequiredRoute);

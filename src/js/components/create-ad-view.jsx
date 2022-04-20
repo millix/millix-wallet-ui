@@ -15,9 +15,9 @@ class CreateAdView extends Component {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state        = {
-            submitData: {},
-            error_list: [],
-            fields    : {
+            submitData   : {},
+            error_list   : [],
+            fields       : {
                 creative_name          : '',
                 category               : '',
                 headline               : '',
@@ -340,8 +340,7 @@ class CreateAdView extends Component {
                                 <Form.Control
                                     type="text"
                                     value={this.state.fields['headline']}
-                                    onChange={this.handleInputChange.bind(this, 'headline')}
-                                    placeholder=""/>
+                                    onChange={this.handleInputChange.bind(this, 'headline')}/>
                             </FormGroup>
 
                             <FormGroup controlId="deck"
@@ -352,8 +351,7 @@ class CreateAdView extends Component {
                                 <Form.Control
                                     type="text"
                                     value={this.state.fields['deck']}
-                                    onChange={this.handleInputChange.bind(this, 'deck')}
-                                    placeholder=""/>
+                                    onChange={this.handleInputChange.bind(this, 'deck')}/>
                             </FormGroup>
 
                             <FormGroup controlId="url" className={'form-group'}>
@@ -362,8 +360,7 @@ class CreateAdView extends Component {
                                 </Form.Label>
                                 <Form.Control type="text"
                                               value={this.state.fields['url']}
-                                              onChange={this.handleInputChange.bind(this, 'url')}
-                                              placeholder=""/>
+                                              onChange={this.handleInputChange.bind(this, 'url')}/>
                             </FormGroup>
 
                             <FormGroup className="ad-preview form-group"
@@ -507,7 +504,6 @@ class CreateAdView extends Component {
                              as="select"
                              ref={this.inputRef}
                              id="search_phrase"
-                             placeholder=""
                              options={this.state.searchphrases}
                              multiple
                              allowNew
@@ -562,7 +558,6 @@ class CreateAdView extends Component {
                                             this.budget.value = format.millix(this.state.fields['daily_budget_mlx'], false);
                                         }
                                     }}
-                                    placeholder=""
                                 />
                             </Form.Group>
 
@@ -596,7 +591,6 @@ class CreateAdView extends Component {
                                                 this.impression.value = format.millix(this.state.fields['bid_per_impressions_mlx'], false);
                                             }
                                         }}
-                                        placeholder=""
                                     />
                                     {/*<Col sm="3">
                                      <Button

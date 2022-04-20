@@ -1,66 +1,58 @@
 @import "variable";
 
 .volume-control {
-  position: relative;
-  top: 50%;
-  width: 400px;
-  height: 40px;
   display: flex;
-  flex-direction: row;
 
-  & > * {
-    position: relative;
-    flex: 1;
-  }
+  .icon {
+    width: 2rem;
 
-  svg {
-    position: relative;
-    transform: translateY(-50%);
-    color: $color-primary;
+    svg {
+      color: $color-primary;
+      max-height: 100%;
+      max-width: 100%;
+    }
   }
 
   .slider {
-    flex: 4;
+    position: relative;
+    margin-left: 0.5rem;
+    width: 100%;
+
+    .bar,
+    .thumb {
+      top: 50%;
+      position: absolute;
+    }
 
     .bar {
-      position: relative;
-      top: 0;
-      width: 100%;
-      height: 0.25rem;
-      background: rgba($color-primary, 0.7);
-      border-radius: 0.125rem;
+      background: $border-color;
       overflow: hidden;
+      transform: translateY(-50%);
+      height: 0.25rem;
+      width: 100%;
 
       .bottom-part {
-        position: relative;
-        width: 0;
+        background: $color-primary;
         height: 1rem;
-        background: $color-secondary;
+        width: 0;
       }
     }
 
     .thumb {
-      position: absolute;
-      top: 0.125rem;
-      left: 1.5%;
-      width: 1rem;
-      height: 1rem;
-      background: $color-secondary;
-      transform: translate(-50%, -50%);
+      background: $color-primary;
       border-radius: 50%;
+      transform: translate(-50%, -50%);
+      height: 1rem;
+      width: 1rem;
     }
 
     input[type=range] {
       position: absolute;
       top: 0;
       width: 100%;
-      height: 1.5rem;
-      transform: translateY(-50%);
+      height: 100%;
       opacity: 0;
       cursor: pointer;
     }
-
   }
-
 }
-

@@ -19,8 +19,8 @@ class UnlockWalletView extends Component {
     constructor(props) {
         super(props);
         this.private_key_exists_interval_id = undefined;
-        this.state                         = {
-            error_list       : [],
+        this.state                          = {
+            error_list        : [],
             private_key_exists: undefined, //ternary status: false -- doesn't
             // exists, true -- exist, undefined --
             // unknown. ajax didn't return a response yet
@@ -62,7 +62,7 @@ class UnlockWalletView extends Component {
                     message: 'millix_private_key.json not found'
                 });
                 this.setState({
-                    private_key_exists  : false,
+                    private_key_exists : false,
                     defaultTabActiveKey: 2,
                     error_list         : error_list
                 });

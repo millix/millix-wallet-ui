@@ -24,7 +24,8 @@ export function get_ui_error(api_message) {
                 error = <>your
                     transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>.
                     please try to send a smaller amount or aggregate manually by sending a smaller
-                    amounts to yourself. the max amount you can send is {format.millix(api_message.data.amount_max)}.</>;
+                    amounts to yourself or aggregate unspents on this <a onClick={() => this.props.history.push('/actions')}>page</a>.
+                    the max amount you can send is {format.millix(api_message.data.amount_max)}.</>;
                 break;
             case 'insufficient_balance':
                 error = <>your balance is lower than the amount you are trying to send. the max amount you can send

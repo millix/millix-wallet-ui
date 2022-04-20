@@ -44,6 +44,9 @@ class ModalView extends Component {
         if (this.isOnAcceptDefined()) {
             this.props.on_accept();
         }
+        if (this.props.prevent_close_after_accept) {
+            return;
+        }
         this.closeModal();
     }
 

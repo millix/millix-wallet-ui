@@ -3,11 +3,19 @@
 @mixin loader {
   -webkit-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
-  border: 3px solid #1E2033;
-  border-top: 3px solid $color-primary;
+  border: 0.25rem solid $border-color;
+  border-top: 0.25rem solid $color-primary;
   border-radius: 50%;
   height: 1.8rem;
   width: 1.8rem;
+}
+
+.btn {
+  .loader-spin {
+    margin-right: 0.3em;
+    height: 1.25rem;
+    width: 1.25rem;
+  }
 }
 
 .loader-spin {
@@ -21,18 +29,31 @@
   width: 1rem;
 }
 
-@-webkit-keyframes spin {
-  to {
-    border-top-color: $color-secondary;
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+.loader-container {
+  width: 100%;
+  height: 100vh;
+  background: #00000067;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loader-container .loader .circle {
+  animation: spin 1s linear infinite;
+  border: 0.5rem solid $border-color;
+  border-top: 0.5rem solid $color-primary;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
 }
 
 @keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
   to {
-    border-top-color: $color-secondary;
-    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }

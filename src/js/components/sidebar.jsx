@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
-import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
 import API from '../api';
+import {Badge} from 'react-bootstrap';
+import {changeLoaderState} from './loader';
 
 
 class Sidebar extends Component {
@@ -14,20 +15,21 @@ class Sidebar extends Component {
         super(props);
         let now    = Date.now();
         this.state = {
-            fileKeyExport      : 'export_' + now,
-            fileKeyImport      : 'import_' + now,
-            date               : new Date(),
-            modalShow          : false,
-            node_millix_version: ''
+            fileKeyExport                : 'export_' + now,
+            fileKeyImport                : 'import_' + now,
+            date                         : new Date(),
+            modalShow                    : false,
+            node_millix_version          : '',
+            node_millix_version_available: '',
+            application                  : ''
         };
+
+        this.setVersion = this.setVersion.bind(this);
     }
 
     componentDidMount() {
-        API.getNodeOsInfo().then(response => {
-            this.setState({
-                node_millix_version: response.node_millix_version
-            });
-        });
+        this.setVersion();
+        setInterval(this.setVersion, 5 * 60 * 1000);
 
         this.timerID = setInterval(
             () => this.tick(),
@@ -54,6 +56,38 @@ class Sidebar extends Component {
         return defaultSelected;
     }
 
+    getAvailableVersionLink() {
+        let link = null;
+        if (this.state.node_millix_version && this.state.node_millix_version !== this.state.node_millix_version_available) {
+            let download_url = 'https://tangled.com/download.html';
+            if (this.state.application === 'client') {
+                download_url = 'https://millix.org/client.html';
+            }
+
+            link = (
+                <React.Fragment>
+                    <a href={download_url} target={'_blank'} rel="noreferrer">
+                        <Badge className={'new_version_badge'}>new version available</Badge>
+                    </a>
+                </React.Fragment>
+            );
+        }
+
+        return link;
+    }
+
+    setVersion() {
+        API.getLatestMillixVersion().then(response => {
+            if (response.api_status === 'success') {
+                this.setState({
+                    node_millix_version_available: response.version_available,
+                    application                  : response.application,
+                    node_millix_version          : response.node_millix_version
+                });
+            }
+        });
+    }
+
     isExpanded(section, defaultSelected) {
         let result = false;
         if (section === 'transaction' &&
@@ -68,6 +102,17 @@ class Sidebar extends Component {
                  (
                      (defaultSelected === '/status-summary') ||
                      (defaultSelected === '/peers')
+                 )
+        ) {
+            result = true;
+        }
+        else if (section === 'config' &&
+                 (
+                     (defaultSelected === '/config/general') ||
+                     (defaultSelected === '/config/network') ||
+                     (defaultSelected === '/config/connection') ||
+                     (defaultSelected === '/config/consensus') ||
+                     (defaultSelected === '/config/address-version')
                  )
         ) {
             result = true;
@@ -95,6 +140,13 @@ class Sidebar extends Component {
     changeModalShow(value = true) {
         this.setState({
             modalShow: value
+        });
+    }
+
+    lockWallet() {
+        changeLoaderState(true);
+        this.props.lockWallet().then(data => {
+            changeLoaderState(false);
         });
     }
 
@@ -126,7 +178,9 @@ class Sidebar extends Component {
                            size={'lg'}
                            on_close={() => this.changeModalShow(false)}
                            heading={'logout'}
-                           on_accept={() => props.lockWallet()}
+                           on_accept={() => {
+                               this.lockWallet();
+                           }}
                            body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
                     <span>{format.date(this.state.date)} utc</span>
@@ -192,17 +246,52 @@ class Sidebar extends Component {
                      </NavText>
                      </NavItem>
                      */}
-                    <NavItem key={'config'} eventKey="/config">
+
+                    <NavItem
+                        eventKey="config"
+                        expanded={this.isExpanded('config', defaultSelected)}
+                    >
                         <NavText>
-                            settings
+                            settings <FontAwesomeIcon className={'icon'}
+                                                      icon="chevron-down"
+                                                      size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
+                        <NavItem key={'config-general'}
+                                 eventKey="/config/general">
+                            <NavText>
+                                general
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'config-network'} eventKey="/config/network">
+                            <NavText>
+                                network
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'config-connection'} eventKey="/config/connection">
+                            <NavText>
+                                connection
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'config-consensus'} eventKey="/config/consensus">
+                            <NavText>
+                                consensus
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'config-address-version'} eventKey="/config/address-version">
+                            <NavText>
+                                address version
+                            </NavText>
+                        </NavItem>
                     </NavItem>
+
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
                             actions
                         </NavText>
                     </NavItem>
-
 
                     <NavItem
                         eventKey="status"
@@ -228,8 +317,8 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
-                    <NavItem eventKey="help">
 
+                    <NavItem eventKey="help">
                         <NavText>
                             help <FontAwesomeIcon className={'icon'}
                                                   icon="chevron-down"
@@ -249,6 +338,7 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
+
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
                             logout
@@ -257,6 +347,7 @@ class Sidebar extends Component {
                 </SideNav.Nav>
                 <div className="nav-info">
                     <span>version {this.state.node_millix_version}</span>
+                    {this.getAvailableVersionLink()}
                 </div>
             </SideNav>
         </aside>);
