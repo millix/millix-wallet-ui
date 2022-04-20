@@ -58,7 +58,7 @@ class HelpIconView extends Component {
                         if you node is private you can use port forwarding on
                         your router to make your node public. you can edit your
                         node's network configuration <a className={''}
-                                                        onClick={() => this.props.history.push('/config')}>here</a>
+                                                        onClick={() => this.props.history.push('/config/network')}>here</a>
                     </li>
                 </ul>
             },
@@ -66,17 +66,16 @@ class HelpIconView extends Component {
                 'title': 'transaction maximum input number',
                 'body' : <ul>
                     <li>
-                        the millix protocol limits each transaction to be funded
-                        by a maximum of 128 inputs
+                        the millix protocol limits each transaction to be funded by a maximum of 128 inputs
                     </li>
                     <li>
-                        you can resolve this situation by aggregating your
-                        unspent outputs manually
-                        before you send a large amount
+                        you can resolve this situation by aggregating your unspents manually before you send a large amount
                     </li>
                     <li>
-                        you can aggregate your unspent outputs manually
-                        by sending transactions to yourself
+                        you can aggregate your unspents manually by sending transactions to yourself
+                    </li>
+                    <li>
+                        you can aggregate your unspents on this <a className={''} onClick={() => this.props.history.push('/actions')}>page</a>
                     </li>
                 </ul>
             },
@@ -166,7 +165,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'key_identifier'      : {
+            'key_identifier'              : {
                 'title': 'key identifier',
                 'body' : <ul>
                     <li>
@@ -177,6 +176,36 @@ class HelpIconView extends Component {
                     </li>
                     <li>
                         wallet and all the addresses are associated with the key identifier
+                    </li>
+                </ul>
+            },
+            'full_node'                   : {
+                'title': 'full node',
+                'body' : <ul>
+                    <li>
+                        it is not required to send and receive transactions or receive payments from advertisers
+                    </li>
+                    <li>
+                        it is recommended for devices with good bandwidth availability as it strengthens the millix network
+                    </li>
+                    <li>
+                        it increases your ability and efficiency to earn fees from the millix network
+                    </li>
+                </ul>
+            },
+            'transaction_fee_default'     : {
+                'title': 'default fee',
+                'body' : <ul>
+                    <li>
+                        default fee you are willing to pay to send transaction
+                    </li>
+                </ul>
+            },
+            'transaction_fee_proxy'       : {
+                'title': 'minimum proxy fee',
+                'body' : <ul>
+                    <li>
+                        minimum fee your node will accept to verify transaction if it is chosen as proxy
                     </li>
                 </ul>
             }

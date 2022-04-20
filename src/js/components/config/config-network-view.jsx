@@ -10,7 +10,7 @@ import * as validate from '../../helper/validate';
 import * as format from '../../helper/format';
 
 
-class Network extends Component {
+class ConfigNetworkView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -214,4 +214,4 @@ export default connect(
     }),
     {
         walletUpdateConfig
-    })(withRouter(Network));
+    })(withRouter(ConfigNetworkView));

@@ -21,8 +21,11 @@ body .section_subtitle > .fab {
 .btn,
 .form-control,
 .input-group-addon {
-  padding: 0.5em 1em;
+  align-items: center;
+  justify-content: center;
+  display: inline-flex;
   font-size: 1em;
+  padding: 0.5em 1em;
 }
 
 .input-group-btn {

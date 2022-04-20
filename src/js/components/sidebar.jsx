@@ -106,13 +106,13 @@ class Sidebar extends Component {
         ) {
             result = true;
         }
-        else if (section === 'settings' &&
+        else if (section === 'config' &&
                  (
-                     (defaultSelected === '/fee') ||
-                     (defaultSelected === '/network') ||
-                     (defaultSelected === '/connection') ||
-                     (defaultSelected === '/consensus') ||
-                     (defaultSelected === '/address-version')
+                     (defaultSelected === '/config/general') ||
+                     (defaultSelected === '/config/network') ||
+                     (defaultSelected === '/config/connection') ||
+                     (defaultSelected === '/config/consensus') ||
+                     (defaultSelected === '/config/address-version')
                  )
         ) {
             result = true;
@@ -248,8 +248,8 @@ class Sidebar extends Component {
                      */}
 
                     <NavItem
-                        eventKey="settings"
-                        expanded={this.isExpanded('settings', defaultSelected)}
+                        eventKey="config"
+                        expanded={this.isExpanded('config', defaultSelected)}
                     >
                         <NavText>
                             settings <FontAwesomeIcon className={'icon'}
@@ -259,28 +259,28 @@ class Sidebar extends Component {
                                              icon="chevron-up"
                                              size="1x"/>
                         </NavText>
-                        <NavItem key={'fee'}
-                                 eventKey="/fee">
+                        <NavItem key={'config-general'}
+                                 eventKey="/config/general">
                             <NavText>
-                                fees
+                                general
                             </NavText>
                         </NavItem>
-                        <NavItem key={'network'} eventKey="/network">
+                        <NavItem key={'config-network'} eventKey="/config/network">
                             <NavText>
                                 network
                             </NavText>
                         </NavItem>
-                        <NavItem key={'connection'} eventKey="/connection">
+                        <NavItem key={'config-connection'} eventKey="/config/connection">
                             <NavText>
                                 connection
                             </NavText>
                         </NavItem>
-                        <NavItem key={'consensus'} eventKey="/consensus">
+                        <NavItem key={'config-consensus'} eventKey="/config/consensus">
                             <NavText>
                                 consensus
                             </NavText>
                         </NavItem>
-                        <NavItem key={'address-version'} eventKey="/address-version">
+                        <NavItem key={'config-address-version'} eventKey="/config/address-version">
                             <NavText>
                                 address version
                             </NavText>
@@ -317,8 +317,8 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
-                    <NavItem eventKey="help">
 
+                    <NavItem eventKey="help">
                         <NavText>
                             help <FontAwesomeIcon className={'icon'}
                                                   icon="chevron-down"
@@ -338,6 +338,7 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
+
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
                             logout

@@ -12,7 +12,7 @@ import {bool_label} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 
 
-class AddressVersion extends Component {
+class ConfigAddressVersionView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -219,4 +219,4 @@ export default connect(
     {
         walletUpdateConfig,
         removeWalletAddressVersion
-    })(withRouter(AddressVersion));
+    })(withRouter(ConfigAddressVersionView));

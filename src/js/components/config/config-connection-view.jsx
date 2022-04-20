@@ -8,10 +8,9 @@ import ErrorList from '../utils/error-list-view';
 import * as validate from '../../helper/validate';
 import API from '../../api';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
-import {string_alphanumeric} from '../../helper/validate';
 
 
-class Connection extends Component {
+class ConfigConnectionView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -139,7 +138,7 @@ class Connection extends Component {
         else {
             let configuration_data = this.prepareApiConfigData(this.state.connection_data[config_name]);
             configuration_data.push(node_id);
-            
+
             API.updateNodeConfigValue(config_name, configuration_data).then(() => {
                 this.showModal(config_name, false);
                 this.loadConfig(config_name);
@@ -234,4 +233,4 @@ export default connect(
     state => ({
         config: state.config
     }),
-    {})(withRouter(Connection));
+    {})(withRouter(ConfigConnectionView));

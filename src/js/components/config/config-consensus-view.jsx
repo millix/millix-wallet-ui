@@ -9,7 +9,7 @@ import ErrorList from '../utils/error-list-view';
 import * as format from '../../helper/format';
 
 
-class Consensus extends Component {
+class ConfigConsensusView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -198,4 +198,4 @@ export default connect(
     }),
     {
         walletUpdateConfig
-    })(withRouter(Consensus));
+    })(withRouter(ConfigConsensusView));

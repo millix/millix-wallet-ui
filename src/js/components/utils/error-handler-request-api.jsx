@@ -28,16 +28,28 @@ class ErrorModalRequestApi extends Component {
 
     show(error) {
         if (!this.state.modalShow && this.state.showAfterDate < new Date()) {
-            let message = error.message;
-            if (error.message === 'Failed to fetch') {
-                message = 'failed to request node. please restart and try again.';
-            }
+            if (error?.message) {
+                let message = error.message;
 
-            this.setState({
-                modalShow: true,
-                message  : message
-            });
+                if (error?.message === 'Failed to fetch') {
+                    message = 'failed to request node. please restart and try again.';
+                }
+
+                this.showModal(message)
+            }
+            else {
+                error.json().then(data => {
+                    this.showModal(data?.api_message)
+                });
+            }
         }
+    }
+
+    showModal(message) {
+        this.setState({
+            modalShow: true,
+            message  : message
+        });
     }
 
     close() {

@@ -1,9 +1,12 @@
 import moment from 'moment';
 
 export function millix(amount, append_name = true) {
-    let result = amount.toLocaleString('en-US');
-    if (append_name) {
-        result += ' millix';
+    let result = '';
+    if (amount) {
+        result = amount.toLocaleString('en-US');
+        if (append_name) {
+            result += ' millix';
+        }
     }
 
     return result;

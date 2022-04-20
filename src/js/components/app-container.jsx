@@ -23,11 +23,11 @@ import StatsView from './stats-view';
 import ReportIssueView from './report-issue-view';
 import FaqView from './faq-view';
 import AddressListView from './address-list-view';
-import ConfigFee from './config/fee';
-import ConfigNetwork from './config/network';
-import ConfigConnection from './config/connection';
-import ConfigConsensus from './config/consensus';
-import ConfigAddressVersion from './config/address-version';
+import ConfigGeneralView from './config/config-general-view';
+import ConfigNetwork from './config/config-network-view';
+import ConfigConnection from './config/config-connection-view';
+import ConfigConsensus from './config/config-consensus-view';
+import ConfigAddressVersion from './config/config-address-version-view';
 import ErrorModalRequestApi from './utils/error-handler-request-api';
 
 
@@ -57,15 +57,15 @@ class AppContainer extends Component {
                                                  component={PeerListView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"
                                                  component={PeerInfoView}/>
-                    <UnlockedWalletRequiredRoute path="/fee"
-                                                 component={ConfigFee}/>
-                    <UnlockedWalletRequiredRoute path="/network"
+                    <UnlockedWalletRequiredRoute path="/config/general"
+                                                 component={ConfigGeneralView}/>
+                    <UnlockedWalletRequiredRoute path="/config/network"
                                                  component={ConfigNetwork}/>
-                    <UnlockedWalletRequiredRoute path="/connection"
+                    <UnlockedWalletRequiredRoute path="/config/connection"
                                                  component={ConfigConnection}/>
-                    <UnlockedWalletRequiredRoute path="/consensus"
+                    <UnlockedWalletRequiredRoute path="/config/consensus"
                                                  component={ConfigConsensus}/>
-                    <UnlockedWalletRequiredRoute path="/address-version"
+                    <UnlockedWalletRequiredRoute path="/config/address-version"
                                                  component={ConfigAddressVersion}/>
                     <UnlockedWalletRequiredRoute path="/actions"
                                                  component={ActionView}/>

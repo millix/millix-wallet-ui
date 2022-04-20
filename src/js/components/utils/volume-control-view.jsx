@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 
 export default (props) => {
-
     const [maskProps, setMaskProps]                                 = useState({'scaleX': '0'});
     const [muteIndicatorProps, setMuteIndicatorProps]               = useState({
         'scaleX'    : '1',
@@ -61,6 +60,7 @@ export default (props) => {
             });
         }
     };
+
     const toggleMuteIndicator = () => {
         if (isMute) {
             setMuteIndicatorProps({
@@ -79,6 +79,7 @@ export default (props) => {
             });
         }
     };
+
     const toggleSpeakerColor  = () => {
         if (isMute) {
             setMaskProps({'scaleX': '0'});
@@ -117,10 +118,23 @@ export default (props) => {
         }
     }, [props.initialVolume]);
 
+    const handleSpeakerClick = () => {
+        const currentValue = parseInt(sliderRef.current.value);
+        let newValue = 0;
+        if (currentValue === 0)
+        {
+            newValue = 50;
+        }
+
+        sliderRef.current.value = newValue;
+        updateVolume(newValue);
+    };
+
     return (
         <div className="volume-control">
-            <div className="icon">
-                <svg width="90px" height="1.3rem" viewBox="0 0 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+            <div className="icon" onClick={handleSpeakerClick}>
+                <svg viewBox="0 0 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                     xmlnsXlink="http://www.w3.org/1999/xlink">
                     <defs>
                         <clipPath id="speaker-mask" transform={`scale(${maskProps.scaleX})`}>
                             <rect fill="#36C9FF" x="-1" y="-1" width="51" height="71"/>
