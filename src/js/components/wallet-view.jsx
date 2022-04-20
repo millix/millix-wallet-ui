@@ -313,6 +313,7 @@ class WalletView extends Component {
 
 export default connect(
     state => ({
-        wallet: state.wallet,
-        config: state.config
+        wallet               : state.wallet,
+        config               : state.config,
+        currency_pair_summary: state.currency_pair_summary
     }))(withRouter(WalletView));

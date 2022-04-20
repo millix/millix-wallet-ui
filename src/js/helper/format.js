@@ -13,7 +13,10 @@ export function millix(amount, append_name = true) {
 }
 
 export function fiat(amount) {
-    return amount.toLocaleString('en-US');
+    return get_fixed_value({
+        value      : amount,
+        format_zero: true
+    });
 }
 
 export function number(number) {
@@ -58,4 +61,42 @@ export function transaction_status_label(status) {
     }
 
     return label;
+}
+
+function get_fixed_value({
+                             value = 0,
+                             float_part_length = 8,
+                             format = true,
+                             get_float = false,
+                             format_zero = false,
+                             trailing_zero = true
+                         }) {
+    if (!value && value !== 0) {
+        value = 0;
+    }
+
+    if (value === 0 && format_zero === false) {
+        if (get_float) {
+            return value;
+        }
+
+        return value.toString();
+    }
+
+    value = parseFloat(parseFloat(value).toFixed(float_part_length));
+
+    if (get_float) {
+        return value;
+    }
+    else {
+        let options = {
+            maximumFractionDigits: float_part_length,
+            useGrouping          : format
+        };
+        if (trailing_zero) {
+            options['minimumFractionDigits'] = float_part_length;
+        }
+
+        return value.toLocaleString('en-US', options);
+    }
 }

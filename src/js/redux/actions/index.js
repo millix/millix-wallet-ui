@@ -1,6 +1,5 @@
 import {
     ADD_LOG_EVENT,
-    ADD_WALLET_ADDRESS_VERSION,
     ADD_WALLET_CONFIG,
     CLEAR_TRANSACTION_DETAILS,
     LOCK_WALLET,
@@ -11,7 +10,6 @@ import {
     UPDATE_NETWORK_CONNECTIONS,
     UPDATE_NETWORK_STATE,
     UPDATE_NODE_ATTRIBUTE,
-    UPDATE_NOTIFICATION_VOLUME,
     UPDATE_TRANSACTION_DETAILS,
     UPDATE_WALLET_ADDRESS_VERSION,
     UPDATE_WALLET_BALANCE,
@@ -20,7 +18,9 @@ import {
     UPDATE_WALLET_NOTIFICATION,
     UPDATE_WALLET_TRANSACTIONS,
     WALLET_READY,
-    WALLET_VERSION_AVAILABLE
+    WALLET_VERSION_AVAILABLE,
+    UPDATE_CURRENCY_PAIR_SUMMARY,
+    UPDATE_NOTIFICATION_VOLUME
 } from '../constants/action-types';
 import API from '../../api/index';
 import async from 'async';
@@ -216,6 +216,13 @@ export function updateClock(clock) {
 
 export function getNodeAttribute(nodeID) {//removeWalletAddressVersion(payload) {
     return {};
+}
+
+export function updateCurrencyPairSummary(payload) {
+    return {
+        type: UPDATE_CURRENCY_PAIR_SUMMARY,
+        payload
+    };
 }
 
 export function updateNotificationVolume(volume) {
