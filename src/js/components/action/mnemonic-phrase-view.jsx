@@ -61,7 +61,7 @@ class MnemonicPhraseView extends Component {
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>backup</div>
                 <div className={'panel-body'}>
-                    <p>mnemonic phrase is a unique string that allows you to access your wallet. if you loose your mnemonic phrase you
+                    <p>mnemonic phrase is a unique string that allows you to access your wallet. if you lose your mnemonic phrase you
                         will not be able to access this wallet or any funds it contains. we recommend you to write these words down and
                         keep them in a safe place. avoid saving your mnemonic phrase in a computer or online service and do not take a
                         screenshot of it. millix_private_key.json contains your wallet mnemonic phrase.</p>

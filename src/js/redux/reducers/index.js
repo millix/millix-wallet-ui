@@ -74,7 +74,7 @@ function rootReducer(state = initialState, action) {
     }
 
     if (action.type === UNLOCK_WALLET) {
-        state = initialState;
+        // state = initialState; // todo: it cause empty config on login. use getNodeConfig() to populate
         return Object.assign({}, state, {
             wallet: {
                 ...state.wallet,

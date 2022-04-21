@@ -32,7 +32,7 @@ class ErrorModalRequestApi extends Component {
                 let message = error.message;
 
                 if (error?.message === 'Failed to fetch') {
-                    message = 'failed to request node. please restart and try again.';
+                    message = 'a critical service is not responding. please close this application completely and reopen it to try again. if your issue persists click help on the left navigation to get assistance.';
                 }
 
                 this.showModal(message);
