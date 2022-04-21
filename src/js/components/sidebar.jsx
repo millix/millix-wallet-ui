@@ -194,6 +194,12 @@ class Sidebar extends Component {
                         </NavText>
                     </NavItem>
 
+                    <NavItem key={'trade'}>
+                        <NavText onClick={() => window.open('https://millix.com', '_blank').focus()}>
+                            trade
+                        </NavText>
+                    </NavItem>
+
                     <NavItem key={'address-list'} eventKey="/address-list">
                         <NavText>
                             addresses
@@ -247,6 +253,37 @@ class Sidebar extends Component {
                      </NavItem>
                      */}
 
+                    <NavItem key={'actions'} eventKey="/actions">
+                        <NavText>
+                            actions
+                        </NavText>
+                    </NavItem>
+
+                    <NavItem
+                        eventKey="status"
+                        expanded={this.isExpanded('status', defaultSelected)}
+                    >
+                        <NavText>
+                            status <FontAwesomeIcon className={'icon'}
+                                                    icon="chevron-down"
+                                                    size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
+                        </NavText>
+                        <NavItem key={'status-summary'}
+                                 eventKey="/status-summary">
+                            <NavText>
+                                summary
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'peers'} eventKey="/peers">
+                            <NavText>
+                                peers
+                            </NavText>
+                        </NavItem>
+                    </NavItem>
+
                     <NavItem
                         eventKey="config"
                         expanded={this.isExpanded('config', defaultSelected)}
@@ -283,37 +320,6 @@ class Sidebar extends Component {
                         <NavItem key={'config-address-version'} eventKey="/config/address-version">
                             <NavText>
                                 address version
-                            </NavText>
-                        </NavItem>
-                    </NavItem>
-
-                    <NavItem key={'actions'} eventKey="/actions">
-                        <NavText>
-                            actions
-                        </NavText>
-                    </NavItem>
-
-                    <NavItem
-                        eventKey="status"
-                        expanded={this.isExpanded('status', defaultSelected)}
-                    >
-                        <NavText>
-                            status <FontAwesomeIcon className={'icon'}
-                                                    icon="chevron-down"
-                                                    size="1x"/>
-                            <FontAwesomeIcon className={'icon hidden'}
-                                             icon="chevron-up"
-                                             size="1x"/>
-                        </NavText>
-                        <NavItem key={'status-summary'}
-                                 eventKey="/status-summary">
-                            <NavText>
-                                summary
-                            </NavText>
-                        </NavItem>
-                        <NavItem key={'peers'} eventKey="/peers">
-                            <NavText>
-                                peers
                             </NavText>
                         </NavItem>
                     </NavItem>

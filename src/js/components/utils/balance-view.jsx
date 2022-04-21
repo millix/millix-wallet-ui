@@ -24,20 +24,14 @@ class BalanceView extends Component {
     }
 
     render() {
-        let stable_fiat               = '';
-        let stable_fiat_toggle_button = '';
-        if (convert.is_currency_pair_summary_available()) {
-            stable_fiat_toggle_button = <div className="toggle_button_container" ref={this.toggleButtonRef}>
-                <FontAwesomeIcon
-                    className="toggle_button"
-                    onClick={() => this.handleClick()}
-                    icon="chevron-down"
-                    size="1x"/>
-            </div>;
+        let balance_stable_millix   = this.props.stable;
 
+        let stable_fiat               = '';
+        if (convert.is_currency_pair_summary_available()) {
             stable_fiat = <div ref={this.balanceStableFiatRef} className={'stable_fiat'}>
                 <span className="text-primary symbol">{store.getState().currency_pair_summary.symbol}</span>
-                <span>{convert.fiat(this.props.stable, false)}</span>
+                <span>{convert.fiat(balance_stable_millix, false)}</span>
+                <HelpIconView help_item_name={'buy_and_sell'}/>
             </div>;
         }
 
@@ -47,9 +41,8 @@ class BalanceView extends Component {
                     <div className={'balance_container'}>
                         {svg.millix_logo()}
                         <div className={'stable_millix'}>
-                            <span>{format.millix(this.props.stable, false)}</span>
+                            <span>{format.millix(balance_stable_millix, false)}</span>
                         </div>
-                        {stable_fiat_toggle_button}
                     </div>
                     {stable_fiat}
 

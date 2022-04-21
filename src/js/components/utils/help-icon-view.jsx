@@ -208,6 +208,15 @@ class HelpIconView extends Component {
                         minimum fee your node will accept to verify transaction if it is chosen as proxy
                     </li>
                 </ul>
+            },
+            'buy_and_sell'                : {
+                'title': 'buy & sell millix',
+                'body' : <ul>
+                    <li>
+                        go to <a href="" onClick={() => window.open('https://millix.com', '_blank').focus()}>millix.com</a> and trade millix for
+                        bitcoin with zero fees
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;

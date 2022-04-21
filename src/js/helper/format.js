@@ -13,10 +13,16 @@ export function millix(amount, append_name = true) {
 }
 
 export function fiat(amount) {
-    return get_fixed_value({
+    const param = {
         value      : amount,
         format_zero: true
-    });
+    };
+
+    if (amount > 1) {
+        param.float_part_length = 2;
+    }
+
+    return get_fixed_value(param);
 }
 
 export function number(number) {
