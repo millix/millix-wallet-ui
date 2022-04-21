@@ -21,11 +21,10 @@ export function get_ui_error(api_message) {
 
         switch (api_error_name) {
             case 'transaction_input_max_error':
-                error = <>your
-                    transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/>.
-                    please try to send a smaller amount or aggregate manually by sending a smaller
-                    amounts to yourself or aggregate unspents on this <a onClick={() => this.props.history.push('/actions')}>page</a>.
-                    the max amount you can send is {format.millix(api_message.data.amount_max)}.</>;
+                error = <>
+                    your transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/> please try to send a smaller
+                    amount or click <a className={''} onClick={() => this.props.history.push('/actions')}>here</a> to use the balance aggregation tool to
+                    optimize your balance. the max amount you can send is {format.millix(api_message.data.amount_max)}.</>;
                 break;
             case 'insufficient_balance':
                 error = <>your balance is lower than the amount you are trying to send. the max amount you can send
@@ -47,7 +46,7 @@ export function get_ui_error(api_message) {
                 error = <>cannot aggregate the unspent deposits. the transaction value is too small</>;
                 break;
             default:
-                error = <>your transaction could not be sent: ({api_message?.error?.error || api_message?.error || api_message || 'undefined behaviour'})</>
+                error = <>your transaction could not be sent: ({api_message?.error?.error || api_message?.error || api_message || 'undefined behaviour'})</>;
                 break;
         }
     }
