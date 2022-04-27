@@ -45,15 +45,6 @@ class BalanceView extends Component {
                         </div>
                     </div>
                     {stable_fiat}
-
-                    <div className={'balance_container'}>
-                        <div>
-                            <div className={'pending'}>
-                                <span>{format.millix(this.props.pending, false)}</span>
-                                <HelpIconView help_item_name={'pending_balance'}/>
-                            </div>
-                        </div>
-                    </div>
                     <hr className={'w-100'}/>
                     <div
                         className={'primary_address'}>
