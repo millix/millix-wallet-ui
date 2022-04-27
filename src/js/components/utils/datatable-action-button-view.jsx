@@ -32,7 +32,7 @@ class DatatableActionButtonView extends Component {
         return (
             <Button
                 variant="outline-default"
-                className={'btn-xs icon_only ms-auto'}
+                className={'btn-xs icon_only'}
                 title={title}
                 onClick={() => this.onClickHandler()}>
                 <FontAwesomeIcon

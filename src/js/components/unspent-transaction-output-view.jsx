@@ -1,14 +1,11 @@
-import React, {useRef, Component} from 'react';
-import {withRouter, Link} from 'react-router-dom';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Row} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import * as format from '../helper/format';
-import * as text from '../helper/text';
-import ModalView from './utils/modal-view';
-import _ from 'lodash';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
 
 

@@ -8,6 +8,7 @@ import ErrorList from '../utils/error-list-view';
 import ModalView from '../utils/modal-view';
 import * as validate from '../../helper/validate';
 import * as format from '../../helper/format';
+import HelpIconView from '../utils/help-icon-view';
 
 
 class ConfigNetworkView extends Component {
@@ -59,19 +60,19 @@ class ConfigNetworkView extends Component {
         });
 
         const error_list = [];
-        validate.required('network port', this.node_port.value, error_list);
-        validate.required('server bind', this.node_host.value, error_list);
-        validate.required('rpc port', this.node_port_api.value, error_list);
+        validate.required('node port', this.node_port.value, error_list);
+        validate.required('node ip', this.node_host.value, error_list);
+        validate.required('api port', this.node_port_api.value, error_list);
         validate.required('max connections in', this.node_connection_inbound_max.value, error_list);
         validate.required('max connections out', this.node_connection_outbound_max.value, error_list);
-        validate.required('nodes', this.node_initial_list.value, error_list);
+        validate.required('initial peer list', this.node_initial_list.value, error_list);
         let network_config = {
-            NODE_PORT                   : validate.integerPositive('network port', this.node_port.value, error_list, false),
-            NODE_HOST                   : validate.ip('server bind', this.node_host.value, error_list),
-            NODE_PORT_API               : validate.integerPositive('rpc port', this.node_port_api.value, error_list, false),
+            NODE_PORT                   : validate.integerPositive('node port', this.node_port.value, error_list, false),
+            NODE_HOST                   : validate.ip('node ip', this.node_host.value, error_list),
+            NODE_PORT_API               : validate.integerPositive('api port', this.node_port_api.value, error_list, false),
             NODE_CONNECTION_INBOUND_MAX : validate.integerPositive('max connections in', this.node_connection_inbound_max.value, error_list, false),
             NODE_CONNECTION_OUTBOUND_MAX: validate.integerPositive('max connections out', this.node_connection_outbound_max.value, error_list, false),
-            NODE_INITIAL_LIST           : validate.json('nodes', this.node_initial_list.value, error_list)
+            NODE_INITIAL_LIST           : validate.json('initial peer list', this.node_initial_list.value, error_list)
         };
 
         if (error_list.length === 0) {
@@ -126,7 +127,16 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>network port</label>
+                                        <label>node ip<HelpIconView help_item_name={'node_ip'}/></label>
+                                        <Form.Control
+                                            type="text"
+                                            ref={(c) => this.node_host = c}
+                                            />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="form-group">
+                                        <label>node port</label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_port = c}
@@ -137,19 +147,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>server bind</label>
-                                        <Form.Control
-                                            type="text"
-                                            ref={(c) => this.node_host = c}
-                                            onChange={(e) => {
-                                                return validate.handleInputChangeIpAddress(e);
-                                            }}/>
-
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group className="form-group">
-                                        <label>rpc port</label>
+                                        <label>api port<HelpIconView help_item_name={'api_port'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_port_api = c}
@@ -160,7 +158,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>max connections in</label>
+                                        <label>max connections in<HelpIconView help_item_name={'max_connections_in'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_connection_inbound_max = c}
@@ -171,7 +169,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>max connections out</label>
+                                        <label>max connections out<HelpIconView help_item_name={'max_connections_out'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_connection_outbound_max = c}
@@ -182,7 +180,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>nodes</label>
+                                        <label>initial peer list<HelpIconView help_item_name={'initial_peer_list'}/></label>
                                         <Form.Control as="textarea" rows={5}
                                                       ref={(c) => this.node_initial_list = c}/>
                                     </Form.Group>

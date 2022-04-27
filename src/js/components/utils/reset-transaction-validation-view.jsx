@@ -7,6 +7,7 @@ import * as text from '../../helper/text';
 import ModalView from './modal-view';
 import _ from 'lodash';
 import API from '../../api';
+import {changeLoaderState} from '../loader';
 
 
 class ResetTransactionValidationView extends Component {
@@ -25,7 +26,9 @@ class ResetTransactionValidationView extends Component {
     }
 
     revalidateTransaction(transaction_id) {
+        changeLoaderState(true);
         API.resetTransactionValidationByID(transaction_id).then(response => {
+            changeLoaderState(false);
             if (typeof response.api_status === 'string') {
                 this.toggleResultModal(transaction_id, true);
             }

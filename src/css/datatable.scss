@@ -122,5 +122,14 @@
 }
 
 .datatable_action_column {
+  text-align: right;
   width: 1rem;
+
+  > * {
+    margin: 0 0 0 0.3rem;
+
+    &:first-child {
+      margin-left: auto;
+    }
+  }
 }

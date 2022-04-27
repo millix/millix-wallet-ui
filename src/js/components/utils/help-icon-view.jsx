@@ -217,6 +217,52 @@ class HelpIconView extends Component {
                         bitcoin with zero fees
                     </li>
                 </ul>
+            },
+            'node_ip'                     : {
+                'title': 'node ip',
+                'body' : <ul>
+                    <li>
+                        ip your node is listening to receive connections from other peers in the network
+                    </li>
+                </ul>
+            },
+            'api_port'                    : {
+                'title': 'api port',
+                'body' : <ul>
+                    <li>
+                        port your node is listening to receive API requests
+                    </li>
+                    <li>
+                        API can be used for integration with external applications
+                    </li>
+                </ul>
+            },
+            'max_connections_in'          : {
+                'title': 'max connections in',
+                'body' : <ul>
+                    <li>
+                        maximum number of connections your node accepts from other (public or private) peers in the network
+                    </li>
+                </ul>
+            },
+            'max_connections_out'         : {
+                'title': 'max connections out',
+                'body' : <ul>
+                    <li>
+                        maximum number of connections your node will try to establish with public nodes in the network
+                    </li>
+                </ul>
+            },
+            'initial_peer_list'           : {
+                'title': 'initial peer list',
+                'body' : <ul>
+                    <li>
+                        it is list of peers to which your node will connect first
+                    </li>
+                    <li>
+                        peer list is not limited to initial peer list
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;

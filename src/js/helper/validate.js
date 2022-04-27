@@ -58,7 +58,10 @@ export function ip(field_name, value, error_list) {
     let value_escaped   = [];
     let result_ip_octet = value.split('.');
 
-    if (result_ip_octet.length !== 4) {
+    if (value === 'localhost') {
+        value_escaped = [value];
+    }
+    else if (result_ip_octet.length !== 4) {
         error_list.push({
             name   : get_error_name('ip_octet_number', field_name),
             message: `${field_name} must be a valid ip address`
@@ -168,18 +171,6 @@ export function handleInputChangeAlphanumericString(e, length = false) {
     if (length !== false) {
         value = value.slice(0, length);
     }
-
-    e.target.value = value;
-}
-
-export function handleInputChangeIpAddress(e) {
-    if (e.target.value.length === 0) {
-        return;
-    }
-
-    const ip_max_length = 15;
-    let value           = e.target.value.replace(/[^0-9.]/g, '');
-    value               = value.slice(0, ip_max_length);
 
     e.target.value = value;
 }
