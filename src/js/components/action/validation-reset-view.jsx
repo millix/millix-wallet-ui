@@ -6,6 +6,7 @@ import ModalView from '../utils/modal-view';
 import * as text from '../../helper/text';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../../api';
+import {changeLoaderState} from '../loader';
 
 
 class ValidationResetView extends Component {
@@ -17,7 +18,9 @@ class ValidationResetView extends Component {
     }
 
     resetTransactionValidation() {
+        changeLoaderState(true);
         API.resetTransactionValidation().then(_ => {
+            changeLoaderState(false);
             this.props.history.push('/unspent-transaction-output-list/pending');
         });
     }
