@@ -130,10 +130,7 @@ class ConfigNetworkView extends Component {
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_host = c}
-                                            onChange={(e) => {
-                                                return validate.handleInputChangeIpAddress(e);
-                                            }}/>
-
+                                            />
                                     </Form.Group>
                                 </Col>
                                 <Col>
