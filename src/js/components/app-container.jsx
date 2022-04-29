@@ -11,8 +11,8 @@ import UnspentTransactionOutputView from './unspent-transaction-output-view';
 import TransactionDetails from './transaction-details-view';
 import PeerListView from './peer-list-view';
 import PeerInfoView from './peer-info-view';
-import CreateAdView from './create-ad-view';
-import ListAdView from './list-ad-view';
+import AdvertisementFormView from './advertisement/advertisement-form-view';
+import AdvertisementListView from './advertisement/advertisement-list-view';
 /*
  import EventLogView from './event-log-view';
  */
@@ -49,10 +49,10 @@ class AppContainer extends Component {
                     <Route path="/new-wallet/" component={NewWalletView}/>
                     <Route path="/import-wallet/" component={ImportWalletView}/>
 
-                    <UnlockedWalletRequiredRoute path="/advertisement-create/"
-                                                 component={CreateAdView}/>
+                    <UnlockedWalletRequiredRoute path="/advertisement-form/"
+                                                 component={AdvertisementFormView}/>
                     <UnlockedWalletRequiredRoute path="/advertisement-list/"
-                                                 component={ListAdView}/>
+                                                 component={AdvertisementListView}/>
                     <UnlockedWalletRequiredRoute path="/peers"
                                                  component={PeerListView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"

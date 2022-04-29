@@ -29,13 +29,7 @@ class UnlockWalletView extends Component {
     }
 
     componentDidMount() {
-        this.private_key_exists_interval_id = setInterval(() => {
-            this.isPrivateKeyExist();
-        }, 500);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.private_key_exists_interval_id);
+        this.isPrivateKeyExist();
     }
 
     activateTab(eventKey) {
@@ -67,10 +61,12 @@ class UnlockWalletView extends Component {
                     error_list         : error_list
                 });
             }
-            clearInterval(this.private_key_exists_interval_id);
+        }).catch(_ => {
+            setTimeout(() => {
+                this.isPrivateKeyExist();
+            }, 500);
         });
     }
-
 
     render() {
         let props = this.props;

@@ -24,7 +24,7 @@ class DatatableActionButtonView extends Component {
         if (this.props.icon) {
             icon = this.props.icon;
         }
-        let title = 'details';
+        let title = '';
         if (this.props.title) {
             title = this.props.title;
         }
