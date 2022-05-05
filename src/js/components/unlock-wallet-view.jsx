@@ -68,7 +68,7 @@ class UnlockWalletView extends Component {
                 });
             }
             clearInterval(this.private_key_exists_interval_id);
-        });
+        }).catch(() => setTimeout(() => this.isPrivateKeyExist(), 1000));
     }
 
 
