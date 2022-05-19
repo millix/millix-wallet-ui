@@ -98,8 +98,8 @@ class AdvertisementFormView extends Component {
     }
 
     loadAdvertisementCategoryList() {
-        API.getAdvertisementCategoryList().then(data => {
-            let result_option = data.map(d => ({
+        API.getAdvertisementCategoryList().then(response => {
+            let result_option = response.map(d => ({
                 'value': d.advertisement_category_guid,
                 'label': d.advertisement_category
             }));
@@ -158,15 +158,15 @@ class AdvertisementFormView extends Component {
 
         if (form_data.url && form_data.deck && form_data.headline) {
             result = <div className="preview-holder" aria-readonly="true">
-                <div className="ads-slider">
+                <div className="advertisement-slider">
                         <span>
-                            <a id="advertisement_headline"
+                            <a className="advertisement_headline"
                                href={form_data.url}
                                title={form_data.deck}>{form_data.headline}</a>
                         </span>
                     <span>
                     {(form_data.url || form_data.deck) && (
-                        <a id="advertisement_deck"
+                        <a className="advertisement_deck"
                            href={this.getDomain(form_data.url)}
                            title={form_data.deck}>{form_data.deck} - {form_data.url}</a>)}</span>
                 </div>
@@ -275,7 +275,7 @@ class AdvertisementFormView extends Component {
                                               ref={(c) => this.result_field_reference.advertisement_url = c}/>
                             </FormGroup>
 
-                            <FormGroup className="ad-preview form-group"
+                            <FormGroup className="advertisement-preview form-group"
                                        controlId="preview">
                                 <Form.Label>
                                     preview

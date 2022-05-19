@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Row, Col, Button} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
-import moment from 'moment';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import DatatableHeaderView from './utils/datatable-header-view';
 
 
 class PeerListView extends Component {

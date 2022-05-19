@@ -106,6 +106,14 @@ class Sidebar extends Component {
         ) {
             result = true;
         }
+        else if (section === 'advertisement' &&
+                 (
+                     (defaultSelected === '/advertisement-list') ||
+                     (defaultSelected === '/advertisement-deposit-list')
+                 )
+        ) {
+            result = true;
+        }
         else if (section === 'config' &&
                  (
                      (defaultSelected === '/config/general') ||
@@ -238,12 +246,32 @@ class Sidebar extends Component {
                         </NavItem>
                     </NavItem>
 
-                    <NavItem key={'advertisement-list'}
-                             eventKey="/advertisement-list">
+                    <NavItem  
+                        expanded={this.isExpanded('advertisement', defaultSelected)}
+                        eventKey="advertisement"
+                    >
                         <NavText>
-                            advertisements
+                            advertisements <FontAwesomeIcon className={'icon'}
+                                                          icon="chevron-down"
+                                                          size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
+                        <NavItem key={'advertisement-list'}
+                                 eventKey="/advertisement-list">
+                            <NavText>
+                                list
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'advertisement-deposit-list'}
+                                 eventKey="/advertisement-deposit-list">
+                            <NavText>
+                                deposits
+                            </NavText>
+                        </NavItem>
                     </NavItem>
+
 
                     {/*
                      <NavItem key={'log'} eventKey="/log">

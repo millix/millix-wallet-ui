@@ -131,38 +131,34 @@ class AdvertisementListView extends Component {
             return this.loadAdvertisementTypeList();
         })
             .then(() => {
-                API.getAdvertisementList().then(data => {
-                    if (typeof data.api_status != 'undefined' && data.api_status === 'success') {
-                        let advertisement_list = [];
-                        if (typeof data.advertisement_list != 'undefined') {
-                            data.advertisement_list.forEach((item, idx) => {
-                                advertisement_list.push({
-                                    idx                        : item.advertisement_id,
-                                    advertisement_guid         : item.advertisement_guid,
-                                    advertisement_type_guid    : item.advertisement_type_guid,
-                                    advertisement_type         : this.getAdvertisementType(item),
-                                    advertisement_category_guid: item.advertisement_category_guid,
-                                    advertisement_category     : this.getAdvertisementCategory(item),
-                                    advertisement_name         : item.advertisement_name,
-                                    advertisement_url          : item.advertisement_url,
-                                    protocol_address_funding   : item.protocol_address_funding,
-                                    budget_daily_usd           : format.fiat(item.budget_daily_usd),
-                                    budget_daily_mlx           : format.millix(item.budget_daily_mlx, false),
-                                    bid_impression_usd         : format.fiat(item.bid_impression_usd),
-                                    bid_impression_mlx         : format.millix(item.bid_impression_mlx, false),
-                                    expiration                 : item.expiration,
-                                    status                     : this.getStatusLabel(item.status),
-                                    action                     : this.getActionButton(item),
-                                    create_date                : format.date(item.create_date)
-                                });
-                            });
-                            this.setState({
-                                advertisement_list        : advertisement_list,
-                                datatable_reload_timestamp: new Date(),
-                                datatable_loading         : false
-                            });
-                        }
-                    }
+                API.getAdvertisementList().then(response => {
+                    let advertisement_list = [];
+                    response.advertisement_list?.forEach((item, idx) => {
+                        advertisement_list.push({
+                            idx                        : item.advertisement_id,
+                            advertisement_guid         : item.advertisement_guid,
+                            advertisement_type_guid    : item.advertisement_type_guid,
+                            advertisement_type         : this.getAdvertisementType(item),
+                            advertisement_category_guid: item.advertisement_category_guid,
+                            advertisement_category     : this.getAdvertisementCategory(item),
+                            advertisement_name         : item.advertisement_name,
+                            advertisement_url          : item.advertisement_url,
+                            protocol_address_funding   : item.protocol_address_funding,
+                            budget_daily_usd           : format.fiat(item.budget_daily_usd),
+                            budget_daily_mlx           : format.millix(item.budget_daily_mlx, false),
+                            bid_impression_usd         : format.fiat(item.bid_impression_usd),
+                            bid_impression_mlx         : format.millix(item.bid_impression_mlx, false),
+                            expiration                 : item.expiration,
+                            status                     : this.getStatusLabel(item.status),
+                            action                     : this.getActionButton(item),
+                            create_date                : format.date(item.create_date)
+                        });
+                    });
+                    this.setState({
+                        advertisement_list        : advertisement_list,
+                        datatable_reload_timestamp: new Date(),
+                        datatable_loading         : false
+                    });
                 });
             });
     }
@@ -183,12 +179,12 @@ class AdvertisementListView extends Component {
                 </div>
                 <div className={'panel-body'}>
                     <div className={'form-group'}>
-                        the tangled ad platform allows anyone to create an
+                        the tangled advertisement platform allows anyone to create an
                         advertisement without approvals or permission. when
-                        your ad is created it will appear to other tangled
+                        your advertisement is created it will appear to other tangled
                         browser users. the amount that you choose to pay for
-                        the ad to appear is paid directly to the consumer
-                        that views the ad.
+                        the advertisement to appear is paid directly to the consumer
+                        that views the advertisement.
                         at the moment you can not edit advertisements. you
                         can pause existing and create a new one instead.
                     </div>

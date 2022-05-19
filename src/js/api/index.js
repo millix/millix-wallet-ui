@@ -69,7 +69,11 @@ class API {
                 showErrorModalRequestApi(error);
 
                 return Promise.reject(error);
-            });
+            })
+            .catch(_ => Promise.reject({
+                api_status : 'fail',
+                api_message: `request error`
+            })); // in case of failed request (e.g. connection refused) it prevents app from crash
     }
 
     setNodeID(nodeID) {
@@ -105,6 +109,12 @@ class API {
 
     getAdvertisementTypeList() {
         return this.fetchApiTangled('/jbUwv8IG6XeYMqCq');
+    }
+
+    listAdsLedgerDetails(from_unix_date) {
+        return this.fetchApiTangled('/B1Gg7nMljx0yX9z9',{
+            p0: from_unix_date,
+        });
     }
 
     toggleAdvertisementStatus(advertisement_guid) {

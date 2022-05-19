@@ -13,8 +13,8 @@ import ResetTransactionValidationView from './utils/reset-transaction-validation
 class TransactionHistoryView extends Component {
     constructor(props) {
         super(props);
-        this.transactionHistoryUpdateHandler = undefined;
-        this.state                           = {
+        this.updaterHandler = undefined;
+        this.state          = {
             transaction_list          : [],
             datatable_reload_timestamp: '',
             datatable_loading         : false
@@ -23,11 +23,11 @@ class TransactionHistoryView extends Component {
 
     componentDidMount() {
         this.reloadDatatable();
-        this.transactionHistoryUpdateHandler = setInterval(() => this.reloadDatatable, 60000);
+        this.updaterHandler = setInterval(() => this.reloadDatatable, 60000);
     }
 
     componentWillUnmount() {
-        clearTimeout(this.transactionHistoryUpdateHandler);
+        clearInterval(this.updaterHandler);
     }
 
     reloadDatatable() {
