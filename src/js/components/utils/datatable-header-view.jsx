@@ -43,6 +43,19 @@ class DatatableHeaderView extends Component {
 
         return (
             <div className={'datatable_action_row'}>
+                {this.props.allow_export && (
+                    <>
+                        <Col>
+                            <Button variant="outline-primary"
+                                    size={'sm'}
+                                    onClick={() => this.props.datatable_reference.exportCSV({selectionOnly: false})}
+                            >
+                                csv
+                            </Button>
+                        </Col>
+                    </>
+                )}
+
                 {action_button.on_click && (
                     <>
                         <Col>
@@ -57,9 +70,13 @@ class DatatableHeaderView extends Component {
                             </Button>
 
                         </Col>
-                        <hr/>
                     </>
                 )}
+
+                {(this.props.allow_export || action_button.on_click)  && (
+                    <hr/>
+                )}
+
                 <Col xs={12} md={4}>
                     {typeof (this.props.reload_datatable) === 'function' && (
                         <Button variant="outline-primary"
@@ -102,7 +119,9 @@ DatatableHeaderView.propTypes = {
     datatable_reload_timestamp: PropTypes.any,
     action_button             : PropTypes.any,
     reload_datatable          : PropTypes.func,
-    on_global_search_change   : PropTypes.func
+    on_global_search_change   : PropTypes.func,
+    datatable_reference       : PropTypes.any,
+    allow_export              : PropTypes.bool
 };
 
 export default withRouter(DatatableHeaderView);

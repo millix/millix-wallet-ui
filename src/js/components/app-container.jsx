@@ -29,6 +29,7 @@ import ConfigConnection from './config/config-connection-view';
 import ConfigConsensus from './config/config-consensus-view';
 import ConfigAddressVersion from './config/config-address-version-view';
 import ErrorModalRequestApi from './utils/error-handler-request-api';
+import EventsLogView from './event-log-view';
 
 
 class AppContainer extends Component {
@@ -55,6 +56,8 @@ class AppContainer extends Component {
                                                  component={AdvertisementListView}/>
                     <UnlockedWalletRequiredRoute path="/peers"
                                                  component={PeerListView}/>
+                    <UnlockedWalletRequiredRoute path="/event-log"
+                                                 component={EventsLogView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"
                                                  component={PeerInfoView}/>
                     <UnlockedWalletRequiredRoute path="/config/general"

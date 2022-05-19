@@ -241,6 +241,12 @@ class API {
         return this.fetchApiMillix('/BPZZ0l2nTfMSmmpl');
     }
 
+    getEventLogList(limit = 1000) {
+        return this.fetchApiMillix('/PZ7x3HVHVstLNYf0', {
+            'p0': limit
+        });
+    }
+
     getNodeConfigValueByName(name) {
         return this.fetchApiMillix(`/2wYLWQfWBa6GLPYs`, {
             p0: name
