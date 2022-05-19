@@ -54,7 +54,7 @@ class EventsLogView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
-                        event logs
+                        event log
                     </div>
                     <div className={'panel-body'}>
                         <DatatableView
