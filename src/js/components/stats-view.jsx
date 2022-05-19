@@ -131,7 +131,10 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        backlog size
+                                        <a className={''}
+                                           onClick={() => props.history.push('/backlog')}>
+                                            backlog size
+                                        </a>
                                     </td>
                                     <td>
                                         {format.number(props.backlog.size)}

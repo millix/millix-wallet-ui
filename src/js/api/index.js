@@ -326,6 +326,14 @@ class API {
         });
     }
 
+    backlogList() {
+        return this.fetchApiMillix('/0df01ae7dd51cec4');
+    }
+
+    backlogReset() {
+        return this.fetchApiMillix('/epOW5kdvb12QdgsV');
+    }
+
     getNodeAttributes(nodeID) {
         return this.fetchApiMillix(`/AgsSNTSA0RHmWUkp`, {
             p0: nodeID

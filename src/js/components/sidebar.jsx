@@ -101,7 +101,8 @@ class Sidebar extends Component {
         else if (section === 'status' &&
                  (
                      (defaultSelected === '/status-summary') ||
-                     (defaultSelected === '/peers')
+                     (defaultSelected === '/peers') ||
+                     (defaultSelected === '/backlog')
                  )
         ) {
             result = true;
@@ -246,7 +247,7 @@ class Sidebar extends Component {
                         </NavItem>
                     </NavItem>
 
-                    <NavItem  
+                    <NavItem
                         expanded={this.isExpanded('advertisement', defaultSelected)}
                         eventKey="advertisement"
                     >
@@ -271,15 +272,6 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
-
-
-                    {/*
-                     <NavItem key={'log'} eventKey="/log">
-                     <NavText>
-                     logs
-                     </NavText>
-                     </NavItem>
-                     */}
 
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
@@ -308,6 +300,11 @@ class Sidebar extends Component {
                         <NavItem key={'peers'} eventKey="/peers">
                             <NavText>
                                 peers
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'backlog'} eventKey="/backlog">
+                            <NavText>
+                                backlog
                             </NavText>
                         </NavItem>
                         <NavItem key={'event-log'} eventKey="/event-log">

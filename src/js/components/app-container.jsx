@@ -20,6 +20,7 @@ import ActionView from './action-view';
 import NewWalletView from './new-wallet-view';
 import ManageWalletView from './manage-wallet-view';
 import StatsView from './stats-view';
+import BacklogView from './backlog-view';
 import ReportIssueView from './report-issue-view';
 import FaqView from './faq-view';
 import AddressListView from './address-list-view';
@@ -77,6 +78,8 @@ class AppContainer extends Component {
                                                  component={ActionView}/>
                     <UnlockedWalletRequiredRoute path="/status-summary"
                                                  component={StatsView}/>
+                    <UnlockedWalletRequiredRoute path="/backlog"
+                                                 component={BacklogView}/>
 
                     <UnlockedWalletRequiredRoute path="/report-issue"
                                                  component={ReportIssueView}/>
