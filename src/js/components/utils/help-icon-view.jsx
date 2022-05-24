@@ -196,17 +196,14 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'full_storage_sync'           : {
-                'title': 'full storage sync',
+            'full_storage'           : {
+                'title': 'full storage',
                 'body' : <ul>
                     <li>
-                        i dont know how exactly describe this
+                        it defines whether your node save files related to every transaction or related only to your transactions
                     </li>
                     <li>
-                        i dont know how exactly describe this
-                    </li>
-                    <li>
-                        i dont know how exactly describe this
+                        it is not required to send and receive transactions or receive payments
                     </li>
                 </ul>
             },

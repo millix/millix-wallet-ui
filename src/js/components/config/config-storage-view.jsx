@@ -107,7 +107,7 @@ class ConfigStorageView extends Component {
                                 </Form.Group>
 
                                 <Form.Group className="form-group">
-                                    <label>full storage sync<HelpIconView help_item_name={'full_storage_sync'}/></label>
+                                    <label>full storage<HelpIconView help_item_name={'full_storage'}/></label>
                                     <Form.Select
                                         as="select"
                                         ref={(c) => this.mode_storage_sync_full = c}
