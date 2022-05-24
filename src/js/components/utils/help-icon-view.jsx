@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {Route, withRouter} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {OverlayTrigger, Popover} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {updateNetworkState} from '../../redux/actions';
 
 
 class HelpIconView extends Component {
@@ -15,6 +17,7 @@ class HelpIconView extends Component {
     }
 
     getHelpItem(help_item_name) {
+        const props       = this.props;
         const result_help = {
             'pending_balance'             : {
                 'title': 'pending balance',
@@ -193,6 +196,20 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
+            'full_storage_sync'           : {
+                'title': 'full storage sync',
+                'body' : <ul>
+                    <li>
+                        i dont know how exactly describe this
+                    </li>
+                    <li>
+                        i dont know how exactly describe this
+                    </li>
+                    <li>
+                        i dont know how exactly describe this
+                    </li>
+                </ul>
+            },
             'transaction_fee_default'     : {
                 'title': 'default fee',
                 'body' : <ul>
@@ -263,6 +280,46 @@ class HelpIconView extends Component {
                         peer list is not limited to initial peer list
                     </li>
                 </ul>
+            },
+            'verified_sender'             : {
+                'title': 'verified sender',
+                'body' : <ul>
+                    <li>
+                        anyone with a domain name can send a verified message on the tangled network
+                    </li>
+                    <li>
+                        this allows the recipient of your message to trust your identity
+                    </li>
+                    <li>
+                        to become verified modify the DNS for your domain name with a TXT entry
+                    </li>
+                    <li>
+                        name the TXT entry @
+                    </li>
+                    <li>
+                        place the following in the TXT value: tangled={props.wallet.address_key_identifier}
+                    </li>
+                    <li>
+                        DNS changes can take some time to take effect
+                    </li>
+                    <li>
+                        to compose a message as a verified sender type your domain name (yourdomain.com) in the verified sender field
+                    </li>
+                </ul>
+            },
+            'message_payment' : {
+                'title': 'message payment',
+                'body' : <ul>
+                    <li>
+                        tangled messages are like other millix transactions and contain the message as associated data
+                    </li>
+                    <li>
+                        like a normal transaction, each message requires a payment
+                    </li>
+                    <li>
+                        recipients are able to filter messages based on the amount sent with the message
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;
@@ -313,4 +370,9 @@ HelpIconView.propTypes = {
     help_item_name: PropTypes.any
 };
 
-export default withRouter(HelpIconView);
+export default connect(
+    state => ({
+        wallet: state.wallet
+    }), {
+        updateNetworkState
+    })(withRouter(HelpIconView));

@@ -6,7 +6,7 @@ import {
     UPDATE_WALLET_TRANSACTIONS, WALLET_READY, UPDATE_WALLET_ADDRESS_VERSION,
     GET_NODE_ATTRIBUTES, UPDATE_WALLET_BALANCE,
     WALLET_VERSION_AVAILABLE, UPDATE_WALLET_NOTIFICATION, UPDATE_NODE_ATTRIBUTE,
-    UPDATE_NOTIFICATION_VOLUME, UPDATE_CURRENCY_PAIR_SUMMARY
+    UPDATE_NOTIFICATION_VOLUME, UPDATE_CURRENCY_PAIR_SUMMARY, UPDATE_MESSAGE_STAT
 } from '../constants/action-types';
 import config from '../../../config.js';
 import _ from 'lodash';
@@ -62,7 +62,8 @@ const initialState = {
     node                 : {},
     notification         : {
         volume: 0
-    }
+    },
+    message_stat         : {}
 };
 
 function rootReducer(state = initialState, action) {
@@ -281,6 +282,14 @@ function rootReducer(state = initialState, action) {
     else if (action.type === UPDATE_NOTIFICATION_VOLUME) {
         return Object.assign({}, state, {
             notification: {
+                ...action.payload
+            }
+        });
+    }
+    else if (action.type === UPDATE_MESSAGE_STAT) {
+        console.log('message_stat assign');
+        return Object.assign({}, state, {
+            message_stat: {
                 ...action.payload
             }
         });

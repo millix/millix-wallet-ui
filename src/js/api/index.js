@@ -46,7 +46,7 @@ class API {
             let param_string = '';
             if (result_param) {
                 const param_array = [];
-                Object.keys(result_param).forEach(function(param_key, index) {
+                Object.keys(result_param).forEach(function(param_key) {
                     let value = result_param[param_key];
                     if (_.isArray(value) || typeof (value) === 'object') {
                         value = encodeURIComponent(JSON.stringify(value));
@@ -112,8 +112,8 @@ class API {
     }
 
     listAdsLedgerDetails(from_unix_date) {
-        return this.fetchApiTangled('/B1Gg7nMljx0yX9z9',{
-            p0: from_unix_date,
+        return this.fetchApiTangled('/B1Gg7nMljx0yX9z9', {
+            p0: from_unix_date
         });
     }
 
@@ -147,9 +147,44 @@ class API {
         });
     }
 
-    sendTransaction(transactionOutputPayload) {
-        return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
+    sendTransaction(transactionOutputPayload, withData = false) {
+        if (withData) {
+            return this.sendTransactionWithData(transactionOutputPayload);
+        }
+        else {
+            return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
+                p0: JSON.stringify(transactionOutputPayload)
+            });
+        }
+    }
+
+    sendTransactionWithData(transactionOutputPayload) {
+        return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, {
             p0: JSON.stringify(transactionOutputPayload)
+        });
+    }
+
+    listTransactionWithDataSent(addressKeyIdentifier) {
+        return this.fetchApiMillix(`/F7APEv5JfCY1siyz`, {
+            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: addressKeyIdentifier,
+            p11: 'Adl87cz8kC190Nqc'
+        });
+    }
+    getStatsTransactionWithDataReceived(addressKeyIdentifier, dateBegin) {
+        return this.fetchApiMillix(`/wWo8DCcoXVlpczoP`, {
+            p0 : dateBegin,
+            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: addressKeyIdentifier,
+            p11: 'Adl87cz8kC190Nqc'
+        });
+    }
+
+    listTransactionWithDataReceived(addressKeyIdentifier) {
+        return this.fetchApiMillix(`/Mu7VpxzfYyQimf3V`, {
+            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: addressKeyIdentifier,
+            p11: 'Adl87cz8kC190Nqc'
         });
     }
 
@@ -347,7 +382,7 @@ class API {
     resetTransactionValidationByID(transaction_id = null) {
         let payload = [];
         if (typeof transaction_id === 'object') {
-            transaction_id.forEach((item, idx) => {
+            transaction_id.forEach((item) => {
                 if (typeof item.transaction_id !== 'undefined') {
                     payload.push(item.transaction_id);
                 }
@@ -363,6 +398,13 @@ class API {
             },
             'POST'
         );
+    }
+
+    isDNSVerified(dns, addressKeyIdentified) {
+        return this.fetchApiMillix('/DjwvDZ4bGUzKxOHW', {
+            p0: dns,
+            p1: addressKeyIdentified
+        });
     }
 }
 

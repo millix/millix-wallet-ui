@@ -31,6 +31,7 @@ class DatatableActionButtonView extends Component {
 
         return (
             <Button
+                disabled={this.props.disabled}
                 variant="outline-default"
                 className={'btn-xs icon_only'}
                 title={title}
