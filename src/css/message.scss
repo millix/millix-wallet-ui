@@ -1,0 +1,30 @@
+@import './variable';
+
+.message_subject_action_container {
+  display: flex;
+  align-items: center;
+
+  .message_subject_date {
+    margin-left: 1rem;
+    font-size: 1rem;
+    color: $color-body-font;
+  }
+
+  .btn {
+    margin-left: 1rem;
+  }
+}
+
+.message_view_text {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.message_datatable_row_date {
+  display: inline-flex;
+  align-items: center;
+
+  > .btn {
+    margin-left: 0.3rem;
+  }
+}

@@ -6,10 +6,11 @@ import {Col, Container} from 'react-bootstrap';
 import '../../../../node_modules/mohithg-switchery/switchery.css';
 import $ from 'jquery';
 import API from '../../api';
-import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance, updateCurrencyPairSummary} from '../../redux/actions';
+import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance, updateCurrencyPairSummary, updateMessageStat} from '../../redux/actions';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS} from '../../../config.js';
 import APIExternal from '../../api/external';
+import moment from 'moment';
 
 const UnlockedWalletRequiredRoute = ({
                                          component: Component,
@@ -67,8 +68,28 @@ const UnlockedWalletRequiredRoute = ({
         };
         setCurrencyPairSummary();
 
+        let messageStatTimeoutID;
+        const getMessageStat = (timeout) => {
+            messageStatTimeoutID = setTimeout(() => {
+                const transactionDateBegin = moment().subtract(24, 'hours').unix();
+                API.getStatsTransactionWithDataReceived(rest.wallet.address_key_identifier, transactionDateBegin)
+                   .then(data => {
+                       rest.updateMessageStat({count_received: data.count});
+                   })
+                   .catch(_ => _)
+                   .finally(() => {
+                       if (rest.wallet.unlocked) {
+                           getMessageStat();
+                       }
+                   });
+            }, timeout || 30000);
+        };
+
+        getMessageStat(1000);
+
         return () => {
             clearTimeout(timeoutID);
+            clearTimeout(messageStatTimeoutID);
             clearTimeout(fetch_currency_pair_summary_timeout_id);
         };
 
@@ -125,5 +146,6 @@ export default connect(
         updateNetworkState,
         setBackLogSize,
         setLogSize,
-        updateCurrencyPairSummary
+        updateCurrencyPairSummary,
+        updateMessageStat
     })(UnlockedWalletRequiredRoute);

@@ -1,5 +1,6 @@
 import {escape_url_param} from '../helper/security';
 import {showErrorModalRequestApi} from '../components/utils/error-handler-request-api';
+import _ from 'lodash';
 
 
 class API {
@@ -49,8 +50,13 @@ class API {
             let param_string = '';
             if (result_param) {
                 const param_array = [];
-                Object.keys(result_param).forEach(function(param_key, index) {
-                    param_array.push(param_key + '=' + result_param[param_key]);
+                Object.keys(result_param).forEach(function(param_key) {
+                    let value = result_param[param_key];
+                    if (_.isArray(value) || typeof (value) === 'object') {
+                        value = encodeURIComponent(JSON.stringify(value));
+                    }
+
+                    param_array.push(param_key + '=' + value);
                 });
                 if (param_array.length > 0) {
                     param_string = '?' + param_array.join('&');
@@ -67,7 +73,11 @@ class API {
                 showErrorModalRequestApi(error);
 
                 return Promise.reject(error);
-            });
+            })
+            .catch(_ => Promise.reject({
+                api_status : 'fail',
+                api_message: `request error`
+            })); // in case of failed request (e.g. connection refused) it prevents app from crash
     }
 
     setNodeID(nodeID) {
@@ -89,39 +99,49 @@ class API {
         return API.HOST_TANGLED_API;
     }
 
-    listCategories() {
+    getAdvertisementCategoryList() {
         return this.fetchApiTangled('/dAjjWCtPW1JbYwf6');
     }
 
-    listLanguages() {
+    getAdvertisementLanguageList() {
         return this.fetchApiTangled('/wDqnBLvXY6FGUSfc');
-
     }
 
-    listAds() {
+    getAdvertisementList() {
         return this.fetchApiTangled('/aerijOtODMtkHo6i');
     }
 
-    listAdTypes() {
+    getAdvertisementTypeList() {
         return this.fetchApiTangled('/jbUwv8IG6XeYMqCq');
-
     }
 
-    toggleAdStatus(advertisement_guid) {
-        return this.fetchApiTangled(`/C7neErVANMWXWuse`, {
-            p0: encodeURIComponent(JSON.stringify({advertisement_guid: advertisement_guid}))
+    listAdsLedgerDetails(from_unix_date) {
+        return this.fetchApiTangled('/B1Gg7nMljx0yX9z9', {
+            p0: from_unix_date
         });
     }
 
-    resetAd(advertisementGUID) {
+    toggleAdvertisementStatus(advertisement_guid) {
+        return this.fetchApiTangled(`/C7neErVANMWXWuse`, {
+            p0: {advertisement_guid: advertisement_guid}
+        });
+    }
+
+    resetAdvertisement(advertisementGUID) {
         return this.fetchApiTangled(`/pKZdzEZrrdPA1jtl`, {
             p0: advertisementGUID
         });
     }
 
-    submitAdForm(formData) {
+    getAdvertisementById(advertisement_id) {
+        return this.fetchApiTangled('/ae60ccb743cd3c79', {
+            p0: advertisement_id
+        });
+    }
+
+    upsertAdvertisement(formData) {
         return this.fetchApiTangled(`/scWZ0yhuk5hHLd8s`, {
-            p0: encodeURIComponent(JSON.stringify(formData))
+            p0: formData
         });
     }
 
@@ -131,9 +151,44 @@ class API {
         });
     }
 
-    sendTransaction(transactionOutputPayload) {
-        return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
+    sendTransaction(transactionOutputPayload, withData = false) {
+        if (withData) {
+            return this.sendTransactionWithData(transactionOutputPayload);
+        }
+        else {
+            return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
+                p0: JSON.stringify(transactionOutputPayload)
+            });
+        }
+    }
+
+    sendTransactionWithData(transactionOutputPayload) {
+        return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, {
             p0: JSON.stringify(transactionOutputPayload)
+        });
+    }
+
+    listTransactionWithDataSent(addressKeyIdentifier) {
+        return this.fetchApiMillix(`/F7APEv5JfCY1siyz`, {
+            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: addressKeyIdentifier,
+            p11: 'Adl87cz8kC190Nqc'
+        });
+    }
+    getStatsTransactionWithDataReceived(addressKeyIdentifier, dateBegin) {
+        return this.fetchApiMillix(`/wWo8DCcoXVlpczoP`, {
+            p0 : dateBegin,
+            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: addressKeyIdentifier,
+            p11: 'Adl87cz8kC190Nqc'
+        });
+    }
+
+    listTransactionWithDataReceived(addressKeyIdentifier) {
+        return this.fetchApiMillix(`/Mu7VpxzfYyQimf3V`, {
+            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: addressKeyIdentifier,
+            p11: 'Adl87cz8kC190Nqc'
         });
     }
 
@@ -235,6 +290,12 @@ class API {
         return this.fetchApiMillix('/BPZZ0l2nTfMSmmpl');
     }
 
+    getEventLogList(limit = 1000) {
+        return this.fetchApiMillix('/PZ7x3HVHVstLNYf0', {
+            'p0': limit
+        });
+    }
+
     getNodeConfigValueByName(name) {
         return this.fetchApiMillix(`/2wYLWQfWBa6GLPYs`, {
             p0: name
@@ -304,6 +365,14 @@ class API {
         });
     }
 
+    backlogList() {
+        return this.fetchApiMillix('/0df01ae7dd51cec4');
+    }
+
+    backlogReset() {
+        return this.fetchApiMillix('/epOW5kdvb12QdgsV');
+    }
+
     getNodeAttributes(nodeID) {
         return this.fetchApiMillix(`/AgsSNTSA0RHmWUkp`, {
             p0: nodeID
@@ -317,7 +386,7 @@ class API {
     resetTransactionValidationByID(transaction_id = null) {
         let payload = [];
         if (typeof transaction_id === 'object') {
-            transaction_id.forEach((item, idx) => {
+            transaction_id.forEach((item) => {
                 if (typeof item.transaction_id !== 'undefined') {
                     payload.push(item.transaction_id);
                 }
@@ -333,6 +402,13 @@ class API {
             },
             'POST'
         );
+    }
+
+    isDNSVerified(dns, addressKeyIdentified) {
+        return this.fetchApiMillix('/DjwvDZ4bGUzKxOHW', {
+            p0: dns,
+            p1: addressKeyIdentified
+        });
     }
 }
 

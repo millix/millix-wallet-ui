@@ -48,6 +48,10 @@ class DatatableView extends Component {
                 item.sortable = true;
             }
 
+            if (typeof (item.class_name) === 'undefined') {
+                item.class_name = '';
+            }
+
             if (typeof (item.format) !== 'undefined' && item.format === 'amount') {
                 item.body = (rowData) => this.bodyTemplateAmount(rowData, item.field);
             }
@@ -61,6 +65,7 @@ class DatatableView extends Component {
                 key={index}
                 field={item.field}
                 header={item.header}
+                className={item.class_name}
                 // filter={item.filter}
                 // filterField={item.field}
                 // filterElement={this.filterTemplateMultiSelect}
@@ -206,8 +211,13 @@ class DatatableView extends Component {
                     datatable_reload_timestamp={this.props.datatable_reload_timestamp}
                     action_button={this.props.action_button}
                     on_global_search_change={(e) => this.on_global_search_change(e)}
+                    datatable_reference={this.datatable_reference}
+                    allow_export={this.props.allow_export}
                 />
                 <DataTable value={this.props.value}
+                           ref={(el) => {
+                               this.datatable_reference = el;
+                           }}
                            paginator
                            paginatorTemplate={this.getPaginatorTemplate()}
                            first={this.state.first}
@@ -246,7 +256,8 @@ DatatableView.propTypes = {
     loading                   : PropTypes.bool,
     datatable_reload_timestamp: PropTypes.any,
     reload_datatable          : PropTypes.func,
-    action_button             : PropTypes.any
+    action_button             : PropTypes.any,
+    allow_export              : PropTypes.bool
 };
 
 

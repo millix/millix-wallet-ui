@@ -7,6 +7,7 @@ import {
     SET_LOG_SIZE,
     UNLOCK_WALLET,
     UPDATE_CLOCK,
+    UPDATE_MESSAGE_STAT,
     UPDATE_NETWORK_CONNECTIONS,
     UPDATE_NETWORK_STATE,
     UPDATE_NODE_ATTRIBUTE,
@@ -234,4 +235,11 @@ export function updateNotificationVolume(volume) {
             });
         });
     };
+}
+
+export function updateMessageStat(payload) {
+    return {
+        type: UPDATE_MESSAGE_STAT,
+        payload
+    }
 }

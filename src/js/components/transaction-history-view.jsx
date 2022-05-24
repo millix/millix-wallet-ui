@@ -8,13 +8,14 @@ import * as format from '../helper/format';
 import API from '../api';
 import * as text from '../helper/text';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
+import {bool_label} from '../helper/format';
 
 
 class TransactionHistoryView extends Component {
     constructor(props) {
         super(props);
-        this.transactionHistoryUpdateHandler = undefined;
-        this.state                           = {
+        this.updaterHandler = undefined;
+        this.state          = {
             transaction_list          : [],
             datatable_reload_timestamp: '',
             datatable_loading         : false
@@ -23,11 +24,11 @@ class TransactionHistoryView extends Component {
 
     componentDidMount() {
         this.reloadDatatable();
-        this.transactionHistoryUpdateHandler = setInterval(() => this.reloadDatatable, 60000);
+        this.updaterHandler = setInterval(() => this.reloadDatatable, 60000);
     }
 
     componentWillUnmount() {
-        clearTimeout(this.transactionHistoryUpdateHandler);
+        clearInterval(this.updaterHandler);
     }
 
     reloadDatatable() {
@@ -43,6 +44,7 @@ class TransactionHistoryView extends Component {
                 txid       : transaction.transaction_id,
                 stable_date: format.date(transaction.stable_date),
                 parent_date: format.date(transaction.parent_date),
+                double_spend: bool_label(transaction.is_double_spend),
                 action     : <>
                     <DatatableActionButtonView
                         history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
@@ -102,6 +104,9 @@ class TransactionHistoryView extends Component {
                                     },
                                     {
                                         field: 'stable_date'
+                                    },
+                                    {
+                                        field: 'double_spend'
                                     }
                                 ]}/>
                         </Row>

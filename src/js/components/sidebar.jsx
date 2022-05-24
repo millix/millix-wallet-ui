@@ -101,7 +101,16 @@ class Sidebar extends Component {
         else if (section === 'status' &&
                  (
                      (defaultSelected === '/status-summary') ||
-                     (defaultSelected === '/peers')
+                     (defaultSelected === '/peers') ||
+                     (defaultSelected === '/backlog')
+                 )
+        ) {
+            result = true;
+        }
+        else if (section === 'advertisement' &&
+                 (
+                     (defaultSelected === '/advertisement-list') ||
+                     (defaultSelected === '/advertisement-deposit-list')
                  )
         ) {
             result = true;
@@ -112,7 +121,8 @@ class Sidebar extends Component {
                      (defaultSelected === '/config/network') ||
                      (defaultSelected === '/config/connection') ||
                      (defaultSelected === '/config/consensus') ||
-                     (defaultSelected === '/config/address-version')
+                     (defaultSelected === '/config/address-version') ||
+                     (defaultSelected === '/config/config-storage')
                  )
         ) {
             result = true;
@@ -133,6 +143,15 @@ class Sidebar extends Component {
         ) {
             result = true;
         }
+        else if (section === 'message' &&
+                 (
+                     (defaultSelected === '/message-compose') ||
+                     (defaultSelected === '/message-sent') ||
+                     (defaultSelected === '/message-inbox')
+                 )
+        ) {
+            result = true;
+        }
 
         return result;
     }
@@ -148,6 +167,15 @@ class Sidebar extends Component {
         this.props.lockWallet().then(data => {
             changeLoaderState(false);
         });
+    }
+
+    getMessageCountBadge() {
+        let message_count_badge = '';
+        if (this.props.message_stat.count_received > 0) {
+            message_count_badge = <Badge pill bg="primary" className={'message_inbox_count_badge'}>{this.props.message_stat.count_received}</Badge>;
+        }
+
+        return message_count_badge;
     }
 
     render() {
@@ -238,21 +266,64 @@ class Sidebar extends Component {
                         </NavItem>
                     </NavItem>
 
-                    <NavItem key={'advertisement-list'}
-                             eventKey="/advertisement-list">
+                    <NavItem
+                        expanded={this.isExpanded('advertisement', defaultSelected)}
+                        eventKey="advertisement"
+                    >
                         <NavText>
-                            advertisements
+                            advertisements <FontAwesomeIcon className={'icon'}
+                                                            icon="chevron-down"
+                                                            size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
                         </NavText>
+                        <NavItem key={'advertisement-list'}
+                                 eventKey="/advertisement-list">
+                            <NavText>
+                                list
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'advertisement-deposit-list'}
+                                 eventKey="/advertisement-deposit-list">
+                            <NavText>
+                                deposits
+                            </NavText>
+                        </NavItem>
                     </NavItem>
 
-                    {/*
-                     <NavItem key={'log'} eventKey="/log">
-                     <NavText>
-                     logs
-                     </NavText>
-                     </NavItem>
-                     */}
-
+                    <NavItem
+                        eventKey="message"
+                        expanded={this.isExpanded('message', defaultSelected)}
+                        className={'messageParent'}
+                    >
+                        <NavText>
+                            messages{this.getMessageCountBadge()} <FontAwesomeIcon className={'icon'}
+                                                      icon="chevron-down"
+                                                      size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
+                        </NavText>
+                        <NavItem key={'message-compose'}
+                                 eventKey="/message-compose">
+                            <NavText>
+                                compose
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'message-inbox'}
+                                 eventKey={'/message-inbox'}>
+                            <NavText>
+                                inbox{this.getMessageCountBadge()}
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'message-sent'}
+                                 eventKey="/message-sent">
+                            <NavText>
+                                sent
+                            </NavText>
+                        </NavItem>
+                    </NavItem>
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
                             actions
@@ -280,6 +351,16 @@ class Sidebar extends Component {
                         <NavItem key={'peers'} eventKey="/peers">
                             <NavText>
                                 peers
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'backlog'} eventKey="/backlog">
+                            <NavText>
+                                backlog
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'event-log'} eventKey="/event-log">
+                            <NavText>
+                                event log
                             </NavText>
                         </NavItem>
                     </NavItem>
@@ -320,6 +401,11 @@ class Sidebar extends Component {
                         <NavItem key={'config-address-version'} eventKey="/config/address-version">
                             <NavText>
                                 address version
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'config-storage'} eventKey="/config/storage">
+                            <NavText>
+                                storage
                             </NavText>
                         </NavItem>
                     </NavItem>

@@ -24,13 +24,14 @@ class DatatableActionButtonView extends Component {
         if (this.props.icon) {
             icon = this.props.icon;
         }
-        let title = 'details';
+        let title = '';
         if (this.props.title) {
             title = this.props.title;
         }
 
         return (
             <Button
+                disabled={this.props.disabled}
                 variant="outline-default"
                 className={'btn-xs icon_only'}
                 title={title}

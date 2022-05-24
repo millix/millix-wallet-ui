@@ -87,7 +87,7 @@ export function ip(field_name, value, error_list) {
 
 export function string_alphanumeric(field_name, value, error_list, length) {
     let value_escaped = value.toString().trim();
-    let is_string = /^[a-zA-Z0-9]+$/.test(value_escaped);
+    let is_string     = /^[a-zA-Z0-9]+$/.test(value_escaped);
 
     if (!is_string) {
         error_list.push({
@@ -177,4 +177,24 @@ export function handleInputChangeAlphanumericString(e, length = false) {
 
 export function handleAmountInputChange(e) {
     handleInputChangeInteger(e, false, 'millix');
+}
+
+export function handleInputChangeDNSString(e) {
+    if (e.target.value.length === 0) {
+        return;
+    }
+
+    e.target.value = e.target.value.replace(/[^a-z0-9\\.-]/g, '');
+}
+
+export function domain_name(field_name, domain_name, error_list) {
+    const match = new RegExp('^([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$', 'gi');
+    if (domain_name && !match.test(domain_name)) {
+        error_list.push({
+            name   : get_error_name('dns_invalid', field_name),
+            message: `${field_name} must be a valid domain name`
+        });
+        return null;
+    }
+    return domain_name;
 }
