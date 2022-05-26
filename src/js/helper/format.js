@@ -15,7 +15,7 @@ export function millix(amount, append_name = true) {
 export function fiat(amount) {
     const param = {
         value      : amount,
-        format_zero: true
+        format_zero: false
     };
 
     if (amount > 1) {
