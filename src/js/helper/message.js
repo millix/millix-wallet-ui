@@ -53,7 +53,7 @@ export function datatable_format(data) {
                         icon={'reply'}/>
                     <DatatableActionButtonView
                         history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
-                        history_state={[transaction]}
+                        history_state={{}}
                         icon={'th-list'}/>
                 </>;
 
