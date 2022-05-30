@@ -66,10 +66,6 @@ class EventsLogView extends Component {
                             sortOrder={1}
                             resultColumn={[
                                 {
-                                    field : 'idx',
-                                    header: 'id'
-                                },
-                                {
                                     field : 'timestamp',
                                     header: 'date'
                                 },

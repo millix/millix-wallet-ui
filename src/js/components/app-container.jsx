@@ -58,7 +58,7 @@ class AppContainer extends Component {
                                                  component={AdvertisementFormView}/>
                     <UnlockedWalletRequiredRoute path="/advertisement-list"
                                                  component={AdvertisementListView}/>
-                    <UnlockedWalletRequiredRoute path="/advertisement-deposit-list"
+                    <UnlockedWalletRequiredRoute path="/advertisement-received-list"
                                                  component={AdvertisementConsumerSettlementLedgerView}/>
                     <UnlockedWalletRequiredRoute path="/peers"
                                                  component={PeerListView}/>

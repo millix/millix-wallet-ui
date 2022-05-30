@@ -29,12 +29,14 @@ class AdvertisementPreview extends Component {
                 <div className="advertisement-slider">
                     <span>
                         <a className="advertisement_headline"
+                           style={{pointerEvents: this.props.disable_link ? 'none' : ''}}
                            href={this.props.url ? this.props.url : ''}
                            title={this.props.deck ? this.props.deck : ''}>{this.props.headline ? this.props.headline : ''}</a>
                     </span>
                     <span>
                         {(this.props.url || this.props.deck) && (
                             <a className="advertisement_deck"
+                               style={{pointerEvents: this.props.disable_link ? 'none' : ''}}
                                href={this.props.url ? this.getDomain(this.props.url) : ''}
                                title={this.props.deck ? this.props.deck : ''}>{this.props.deck ? this.props.deck : ''} - {this.props.url ? this.props.url : ''}</a>)}
                     </span>
