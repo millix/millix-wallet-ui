@@ -11,6 +11,7 @@ import API from '../../api';
 import ErrorList from './../utils/error-list-view';
 import Transaction from '../../common/transaction';
 import HelpIconView from '../utils/help-icon-view';
+import ReactChipInput from 'react-chip-input';
 
 
 class MessageComposeView extends Component {
@@ -22,28 +23,32 @@ class MessageComposeView extends Component {
         let message_body = '';
         if (propsState.message) {
             let reply_to_message_body = propsState.message;
-            message_body = `\n\n______________________________\nOn ${propsState.date} ${address_value} wrote:\n\n${reply_to_message_body}`;
+            message_body              = `\n\n______________________________\nOn ${propsState.date} ${address_value} wrote:\n\n${reply_to_message_body}`;
         }
 
         this.state = {
-            dns_valid              : false,
-            fee_input_locked       : true,
-            error_list             : [],
-            modal_show_confirmation: false,
-            modal_show_send_result : false,
-            modal_body_send_result : [],
-            address_base           : '',
-            address_version        : '',
-            address_key_identifier : '',
-            amount                 : '',
-            fee                    : '',
-            destination_address    : address_value || '',
-            subject                : propsState.subject ? this.getReplySubjectText(propsState.subject) : '',
-            message                : message_body,
-            txid                   : propsState.txid
+            dns_valid               : false,
+            fee_input_locked        : true,
+            error_list              : [],
+            modal_show_confirmation : false,
+            modal_show_send_result  : false,
+            modal_body_send_result  : [],
+            address_base            : '',
+            address_version         : '',
+            address_key_identifier  : '',
+            amount                  : '',
+            fee                     : '',
+            destination_address_list: address_value ? [address_value] : [],
+            subject                 : propsState.subject ? this.getReplySubjectText(propsState.subject) : '',
+            message                 : message_body,
+            txid                    : propsState.txid
         };
 
         this.send = this.send.bind(this);
+    }
+
+    componentDidMount() {
+        this.amount.value = format.millix(10000, false);
     }
 
     componentWillUnmount() {
@@ -105,12 +110,12 @@ class MessageComposeView extends Component {
             return;
         }
         const transaction_param = {
-            address: validate.required('address', this.destination_address.value, error_list),
-            amount : validate.amount('amount', this.amount.value, error_list),
-            fee    : validate.amount('fee', this.fee.value, error_list),
-            subject: this.subject.value,
-            message: this.message.value,
-            dns    : validate.domain_name('verified sender', this.dns.value, error_list)
+            addresses: validate.required('address', this.state.destination_address_list, error_list),
+            amount   : validate.amount('amount', this.amount.value, error_list),
+            fee      : validate.amount('fee', this.fee.value, error_list),
+            subject  : this.subject.value,
+            message  : this.message.value,
+            dns      : validate.domain_name('verified sender', this.dns.value, error_list)
         };
 
         if (error_list.length === 0) {
@@ -148,10 +153,9 @@ class MessageComposeView extends Component {
     }
 
     clearSendForm() {
-        this.destination_address.value = '';
-        this.amount.value              = '';
-        this.subject.value             = '';
-        this.message.value             = '';
+        this.amount.value  = '';
+        this.subject.value = '';
+        this.message.value = '';
 
         if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
             this.fee.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
@@ -174,14 +178,12 @@ class MessageComposeView extends Component {
                 subject: this.state.subject,
                 message: this.state.message
             },
-            transaction_output_list     : [
-                {
-                    address_base          : this.state.address_base,
-                    address_version       : this.state.address_version,
-                    address_key_identifier: this.state.address_key_identifier,
-                    amount                : this.state.amount
-                }
-            ],
+            transaction_output_list     : this.state.address_list.map(address => ({
+                address_base          : address.address_base,
+                address_version       : address.address_version,
+                address_key_identifier: address.address_key_identifier,
+                amount                : this.state.amount
+            })),
             transaction_output_fee      : {
                 fee_type: 'transaction_fee_default',
                 amount  : this.state.fee
@@ -209,6 +211,30 @@ class MessageComposeView extends Component {
         });
     }
 
+    addDestinationAddress(value) {
+        const chips = this.state.destination_address_list.slice();
+        value.split(/\n| /).forEach(address => {
+            if(chips.includes(address.trim())){
+                this.setState({error_list: [
+                        {
+                            name   : 'recipient_already_exist',
+                            message: `recipients must contain only unique addresses. multiple entries of address ${address.trim()}`
+                        }
+                    ]})
+                return;
+            }
+            chips.push(address.trim());
+        });
+
+        this.setState({destination_address_list: chips});
+    };
+
+    removeDestinationAddress(index) {
+        const chips = this.state.destination_address_list.slice();
+        chips.splice(index, 1);
+        this.setState({destination_address_list: chips});
+    };
+
     render() {
         return (
             <div>
@@ -225,17 +251,28 @@ class MessageComposeView extends Component {
                                 <ErrorList
                                     error_list={this.state.error_list}/>
                                 <Row>
+                                    <Col>
+                                        <Form.Group className="form-group" role="form">
+                                            <label>recipients</label>
+                                            <ReactChipInput
+                                                ref={ref => {
+                                                    if (ref && !ref.state.focused && ref.formControlRef.current.value !== '') {
+                                                        this.addDestinationAddress(ref.formControlRef.current.value);
+                                                        ref.formControlRef.current.value = '';
+                                                    }
+                                                    if (!this.chipInputAddress) {
+                                                        ref.formControlRef.current.placeholder = 'recipients'
+                                                        this.chipInputAddress = ref;
+                                                    }
+                                                }}
+                                                classes="chip_input form-control"
+                                                chips={this.state.destination_address_list}
+                                                onSubmit={value => this.addDestinationAddress(value)}
+                                                onRemove={index => this.removeDestinationAddress(index)}
+                                            />
+                                        </Form.Group>
+                                    </Col>
                                     <Form>
-                                        <Col>
-                                            <Form.Group className="form-group">
-                                                <label>to</label>
-                                                <Form.Control type="text"
-                                                              value={this.state.destination_address}
-                                                              onChange={c => this.setState({destination_address: c.target.value})}
-                                                              placeholder="address"
-                                                              ref={c => this.destination_address = c}/>
-                                            </Form.Group>
-                                        </Col>
                                         <Col>
                                             <Form.Group className="form-group">
                                                 <label>subject</label>
@@ -266,7 +303,6 @@ class MessageComposeView extends Component {
                                                               placeholder="amount"
                                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                                               ref={c => this.amount = c}
-                                                              value={format.millix(10000, false)}
                                                               onChange={validate.handleAmountInputChange.bind(this)}/>
                                             </Form.Group>
                                         </Col>

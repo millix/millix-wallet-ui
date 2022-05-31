@@ -9,7 +9,6 @@ import {
     UPDATE_NOTIFICATION_VOLUME, UPDATE_CURRENCY_PAIR_SUMMARY, UPDATE_MESSAGE_STAT
 } from '../constants/action-types';
 import config from '../../../config.js';
-import _ from 'lodash';
 
 const initialState = {
     network              : {
@@ -287,7 +286,6 @@ function rootReducer(state = initialState, action) {
         });
     }
     else if (action.type === UPDATE_MESSAGE_STAT) {
-        console.log('message_stat assign');
         return Object.assign({}, state, {
             message_stat: {
                 ...action.payload

@@ -23,7 +23,6 @@ body .section_subtitle > .fab {
 .form-control,
 .input-group-addon {
   align-items: center;
-  justify-content: center;
   display: inline-flex;
   font-size: 1em;
   padding: 0.5em 1em;
@@ -117,4 +116,44 @@ label {
 
 .btn-outline-default:disabled {
   color: $border-color;
+}
+
+.chip_input {
+  box-shadow: none;
+
+  &.styles_chip-input__3aumB {
+    padding: 0;
+
+    > div > div {
+      padding: 0 !important;
+      margin: 0 0.1rem;
+
+      .styles_chip__i-PT7,
+      .styles_chip__i-PT7:hover,
+      .styles_chip__i-PT7:focus,
+      .styles_chip__i-PT7:active {
+        align-items: center;
+        background: $color-bg-layer-2;
+        border: 1px solid $color-tab-hover;
+        display: inline-flex;
+        font-size: 1rem;
+        padding: 0 0.7rem 0 1rem;
+      }
+    }
+  }
+
+  .no-gutters {
+    --bs-gutter-x: "1.rem";
+  }
+
+  svg {
+    fill: $color-body-font;
+    padding-left: 0.2rem;
+  }
+
+  .custom-form-control > input {
+    background-color: transparent;
+    padding: 0;
+    margin: 0 0.2rem;
+  }
 }

@@ -175,7 +175,7 @@ class AdvertisementListView extends Component {
     render() {
         return (<div>
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>advertisements
+                <div className={'panel-heading bordered'}>advertisements list
                 </div>
                 <div className={'panel-body'}>
                     <div className={'form-group'}>

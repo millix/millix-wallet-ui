@@ -1,42 +1,42 @@
 import API from '../api';
 import * as text from '../helper/text';
+import async from 'async';
 
 
 class Transaction {
 
     verifyAddress(transactionParams) {
-        let stateData = null;
         return new Promise((resolve, reject) => {
-            API.verifyAddress(transactionParams.address)
-               .then(data => {
-                   if (!data.is_valid) {
-                       stateData = {
-                           name   : 'address_invalid',
-                           message: 'valid address is required'
-                       };
-                       reject(stateData);
-                   }
-                   else {
-                       const {
-                                 address_base          : destinationAddress,
-                                 address_key_identifier: destinationAddressIdentifier,
-                                 address_version       : destinationAddressVersion
-                             } = data;
+            const verifiedAddresses = [];
+            async.eachSeries(transactionParams.addresses, (address, callback) => {
+                API.verifyAddress(address)
+                   .then(data => {
+                       if (!data.is_valid) {
+                           callback({
+                               name   : 'address_invalid',
+                               message: 'valid address is required'
+                           });
+                       }
+                       else {
+                           verifiedAddresses.push(data);
+                           callback();
+                       }
+                   });
+            }, (err) => {
+                if (err) {
+                    return reject(err);
+                }
 
-                       stateData = {
-                           error_list            : [],
-                           address_base          : destinationAddress,
-                           address_version       : destinationAddressVersion,
-                           address_key_identifier: destinationAddressIdentifier,
-                           amount                : transactionParams.amount,
-                           fee                   : transactionParams.fee,
-                           subject               : transactionParams.subject,
-                           message               : transactionParams.message,
-                           dns                   : transactionParams.dns
-                       };
-                       resolve(stateData);
-                   }
-               });
+                resolve({
+                    error_list  : [],
+                    address_list: verifiedAddresses,
+                    amount      : transactionParams.amount,
+                    fee         : transactionParams.fee,
+                    subject     : transactionParams.subject,
+                    message     : transactionParams.message,
+                    dns         : transactionParams.dns
+                });
+            });
         });
     }
 
@@ -96,13 +96,14 @@ class Transaction {
         });
 
         return {
-            sending               : false,
-            fee_input_locked      : true,
-            amount                : '',
-            subject               : '',
-            message               : '',
-            destination_address   : '',
-            modal_body_send_result: this.getModalBodySuccessResult(transaction.transaction_id)
+            sending                 : false,
+            fee_input_locked        : true,
+            amount                  : '',
+            subject                 : '',
+            message                 : '',
+            destination_address_list: [],
+            address_verified_list   : [],
+            modal_body_send_result  : this.getModalBodySuccessResult(transaction.transaction_id)
         };
     }
 }

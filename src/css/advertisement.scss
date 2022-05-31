@@ -32,3 +32,31 @@
     font-size: 14px;
   }
 }
+
+.hidden_data_search_column {
+  display: none;
+}
+
+.advertisement_consumer_settlement_ledger_list {
+  .p-datatable .p-datatable-tbody > tr > td.advertisement_preview_datatable_column {
+    padding: 1rem;
+    max-width: 50rem;
+  }
+
+  .advertisement-slider {
+    padding: 0;
+    display: contents;
+    background-color: transparent;
+  }
+
+  .advertisement-preview {
+    overflow: hidden;
+    margin: 0;
+    line-height: 1rem;
+    max-width: none;
+  }
+
+  a {
+    color: $color-body-font !important;
+  }
+}

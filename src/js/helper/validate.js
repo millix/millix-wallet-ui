@@ -1,4 +1,5 @@
 import * as format from './format';
+import _ from 'lodash';
 
 export function required(field_name, value, error_list) {
     if (typeof value === 'string') {
@@ -6,6 +7,12 @@ export function required(field_name, value, error_list) {
     }
 
     if (!value) {
+        error_list.push({
+            name   : get_error_name('required', field_name),
+            message: `${field_name} is required`
+        });
+    }
+    else if (_.isArray(value) && _.isEmpty(value)) {
         error_list.push({
             name   : get_error_name('required', field_name),
             message: `${field_name} is required`
