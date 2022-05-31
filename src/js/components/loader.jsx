@@ -29,7 +29,7 @@ class Loader extends React.Component {
 
     componentWillMount() {
         loaderState.subscribe(result => {
-            this.setState({loading: result ? true : false});
+            this.setState({loading: !!result});
         });
     }
 

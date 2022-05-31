@@ -4,16 +4,16 @@ class APIExternal {
     getCurrencyPairSummaryFiatleak(ticker = 'usd') {
         return fetch(APIExternal.FIATLEAK_API + '/currency/pair/price/mlx/' + ticker)
             .then((response) => response.json())
-            .then(result_json => {
-                result_json.ticker = ticker;
+            .then(resultJson => {
+                resultJson.ticker = ticker;
 
                 let symbol = '';
                 if (ticker === 'usd') {
                     symbol = '$';
                 }
-                result_json.symbol = symbol;
+                resultJson.symbol = symbol;
 
-                return result_json;
+                return resultJson;
             }).catch();
     }
 }

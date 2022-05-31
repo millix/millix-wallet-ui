@@ -1,3 +1,3 @@
-export function escape_url_param(string) {
+export function escapeUrlParam(string) {
     return encodeURIComponent(string);
 }

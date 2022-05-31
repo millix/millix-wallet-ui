@@ -31,24 +31,24 @@ class AdvertisementListView extends Component {
         return label;
     }
 
-    toggleAdvertisementStatus(advertisement_guid) {
-        API.toggleAdvertisementStatus(advertisement_guid).then(data => {
+    toggleAdvertisementStatus(advertisementGUID) {
+        API.toggleAdvertisementStatus(advertisementGUID).then(data => {
             if (typeof data.api_status != 'undefined' && data.api_status === 'success') {
                 this.reloadDatatable();
             }
         });
     }
 
-    resetAdvertisement(advertisement_guid) {
-        API.resetAdvertisement(advertisement_guid).then(_ => _);
+    resetAdvertisement(advertisementGUID) {
+        API.resetAdvertisement(advertisementGUID).then(_ => _);
     }
 
     getActionButton(item) {
-        let toggle_status_icon  = 'play';
-        let toggle_status_title = 'activate';
+        let toggleStatusIcon  = 'play';
+        let toggleStatusTitle = 'activate';
         if (item.status === 1) {
-            toggle_status_icon  = 'pause';
-            toggle_status_title = 'deactivate';
+            toggleStatusIcon  = 'pause';
+            toggleStatusTitle = 'deactivate';
         }
 
         return <>
@@ -59,8 +59,8 @@ class AdvertisementListView extends Component {
                 callback_args={item}
             />
             <DatatableActionButtonView
-                icon={toggle_status_icon}
-                title={toggle_status_title}
+                icon={toggleStatusIcon}
+                title={toggleStatusTitle}
                 callback={() => this.toggleAdvertisementStatus(item.advertisement_guid)}
                 callback_args={item.advertisement_guid}
             />
@@ -132,9 +132,9 @@ class AdvertisementListView extends Component {
         })
             .then(() => {
                 API.getAdvertisementList().then(response => {
-                    let advertisement_list = [];
+                    let advertisementList = [];
                     response.advertisement_list?.forEach((item, idx) => {
-                        advertisement_list.push({
+                        advertisementList.push({
                             idx                        : item.advertisement_id,
                             advertisement_guid         : item.advertisement_guid,
                             advertisement_type_guid    : item.advertisement_type_guid,
@@ -155,7 +155,7 @@ class AdvertisementListView extends Component {
                         });
                     });
                     this.setState({
-                        advertisement_list        : advertisement_list,
+                        advertisement_list        : advertisementList,
                         datatable_reload_timestamp: new Date(),
                         datatable_loading         : false
                     });

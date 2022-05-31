@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Col, Row, Form} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 
 const WalletCreateInfoView = (props) => {
-    let info_label = 'your wallet has been successfully created.';
+    let infoLabel = 'your wallet has been successfully created.';
     if (props.processName === 'import') {
-        info_label = 'your wallet has been successfully imported.';
+        infoLabel = 'your wallet has been successfully imported.';
     }
 
     return (
         <div className={'wallet-create-password'}>
-            <div className={'center mb-3'}>{info_label}</div>
+            <div className={'center mb-3'}>{infoLabel}</div>
             <Form.Group className={'form-group'}>
                 <label>wallet id</label>
                 <Form.Control type="text"

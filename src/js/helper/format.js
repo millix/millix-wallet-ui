@@ -1,10 +1,10 @@
 import moment from 'moment';
 
-export function millix(amount, append_name = true) {
+export function millix(amount, appendName = true) {
     let result = amount;
     if (amount) {
         result = amount.toLocaleString('en-US');
-        if (append_name) {
+        if (appendName) {
             result += ' millix';
         }
     }
@@ -22,7 +22,7 @@ export function fiat(amount) {
         param.float_part_length = 2;
     }
 
-    return get_fixed_value(param);
+    return getFixedValue(param);
 }
 
 export function number(number) {
@@ -46,61 +46,61 @@ export function date(timestamp) {
     return result;
 }
 
-export function status_label(status) {
+export function statusLabel(status) {
     return status ? 'active' : 'inactive';
 }
 
-export function bool_label(value) {
+export function boolLabel(value) {
     return value ? 'yes' : 'no';
 }
 
-export function transaction_status_label(status) {
-    const result_status = {
+export function transactionStatusLabel(status) {
+    const resultStatus = {
         1: 'pending hibernation',
         2: 'hibernated',
         3: 'invalid'
     };
 
     let label = '';
-    if (status && Object.keys(result_status).includes(status.toString())) {
-        label = result_status[status];
+    if (status && Object.keys(resultStatus).includes(status.toString())) {
+        label = resultStatus[status];
     }
 
     return label;
 }
 
-function get_fixed_value({
-                             value = 0,
-                             float_part_length = 8,
-                             format = true,
-                             get_float = false,
-                             format_zero = false,
-                             trailing_zero = true
-                         }) {
+function getFixedValue({
+                           value = 0,
+                           float_part_length: floatPartLength = 8,
+                           format = true,
+                           get_float    : getFloat = false,
+                           format_zero  : formatZero = false,
+                           trailing_zero: trailingZero = true
+                       }) {
     if (!value && value !== 0) {
         value = 0;
     }
 
-    if (value === 0 && format_zero === false) {
-        if (get_float) {
+    if (value === 0 && formatZero === false) {
+        if (getFloat) {
             return value;
         }
 
         return value.toString();
     }
 
-    value = parseFloat(parseFloat(value).toFixed(float_part_length));
+    value = parseFloat(parseFloat(value).toFixed(floatPartLength));
 
-    if (get_float) {
+    if (getFloat) {
         return value;
     }
     else {
         let options = {
-            maximumFractionDigits: float_part_length,
+            maximumFractionDigits: floatPartLength,
             useGrouping          : format
         };
-        if (trailing_zero) {
-            options['minimumFractionDigits'] = float_part_length;
+        if (trailingZero) {
+            options['minimumFractionDigits'] = floatPartLength;
         }
 
         return value.toLocaleString('en-US', options);

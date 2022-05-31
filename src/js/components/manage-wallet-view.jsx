@@ -34,7 +34,7 @@ class ManageWalletView extends Component {
                 <div className="container-center lg">
                     <Row>
                         <Col sm={6} style={{textAlign: 'right'}}>
-                            <Button variant='outline-primary'
+                            <Button variant="outline-primary"
                                     onClick={() => this.props.history.push('/new-wallet/')}>
                                 <FontAwesomeIcon icon="wallet" size="8x"
                                                  style={{
@@ -44,7 +44,7 @@ class ManageWalletView extends Component {
                             </Button>
                         </Col>
                         <Col sm={6}>
-                            <Button variant='outline-primary'
+                            <Button variant="outline-primary"
                                     onClick={() => this.props.history.push('/import-wallet/')}>
                                 <FontAwesomeIcon icon="key" size="6x"
                                                  style={{

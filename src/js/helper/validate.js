@@ -1,139 +1,139 @@
 import * as format from './format';
 import _ from 'lodash';
 
-export function required(field_name, value, error_list) {
+export function required(fieldName, value, errorList) {
     if (typeof value === 'string') {
         value = value.trim();
     }
 
     if (!value) {
-        error_list.push({
-            name   : get_error_name('required', field_name),
-            message: `${field_name} is required`
+        errorList.push({
+            name   : getErrorName('required', fieldName),
+            message: `${fieldName} is required`
         });
     }
     else if (_.isArray(value) && _.isEmpty(value)) {
-        error_list.push({
-            name   : get_error_name('required', field_name),
-            message: `${field_name} is required`
+        errorList.push({
+            name   : getErrorName('required', fieldName),
+            message: `${fieldName} is required`
         });
     }
 
     return value;
 }
 
-export function amount(field_name, value, error_list, allow_zero = false) {
-    const value_escaped = integerPositive(field_name, value, error_list, allow_zero);
-    if (format.millix(value_escaped, false) !== value) {
-        error_list.push({
-            name   : get_error_name('amount_format_is_wrong', field_name),
-            message: `${field_name} must be a valid amount`
+export function amount(fieldName, value, errorList, allow_zero = false) {
+    const valueEscaped = integerPositive(fieldName, value, errorList, allow_zero);
+    if (format.millix(valueEscaped, false) !== value) {
+        errorList.push({
+            name   : getErrorName('amount_format_is_wrong', fieldName),
+            message: `${fieldName} must be a valid amount`
         });
 
     }
 
-    return value_escaped;
+    return valueEscaped;
 }
 
-export function integerPositive(field_name, value, error_list, allow_zero = false) {
-    let value_escaped = value.toString().trim();
-    value_escaped     = parseInt(value_escaped.replace(/\D/g, ''));
+export function integerPositive(fieldName, value, errorList, allowZero = false) {
+    let valueEscaped = value.toString().trim();
+    valueEscaped     = parseInt(valueEscaped.replace(/\D/g, ''));
 
-    if (!Number.isInteger(value_escaped)) {
-        error_list.push({
-            name   : get_error_name('value_is_not_integer', field_name),
-            message: `${field_name} must be a number`
+    if (!Number.isInteger(valueEscaped)) {
+        errorList.push({
+            name   : getErrorName('value_is_not_integer', fieldName),
+            message: `${fieldName} must be a number`
         });
     }
-    else if (!allow_zero && value_escaped <= 0) {
-        error_list.push({
-            name   : get_error_name('value_is_lt_zero', field_name),
-            message: `${field_name} must be bigger than 0`
+    else if (!allowZero && valueEscaped <= 0) {
+        errorList.push({
+            name   : getErrorName('value_is_lt_zero', fieldName),
+            message: `${fieldName} must be bigger than 0`
         });
     }
-    else if (allow_zero && value_escaped < 0) {
-        error_list.push({
-            name   : get_error_name('value_is_lte_zero', field_name),
-            message: `${field_name} must be bigger than or equal to 0`
+    else if (allowZero && valueEscaped < 0) {
+        errorList.push({
+            name   : getErrorName('value_is_lte_zero', fieldName),
+            message: `${fieldName} must be bigger than or equal to 0`
         });
     }
 
-    return value_escaped;
+    return valueEscaped;
 }
 
-export function ip(field_name, value, error_list) {
-    let value_escaped   = [];
-    let result_ip_octet = value.split('.');
+export function ip(fieldName, value, errorList) {
+    let valueEscaped  = [];
+    let resultIpOctet = value.split('.');
 
     if (value === 'localhost') {
-        value_escaped = [value];
+        valueEscaped = [value];
     }
-    else if (result_ip_octet.length !== 4) {
-        error_list.push({
-            name   : get_error_name('ip_octet_number', field_name),
-            message: `${field_name} must be a valid ip address`
+    else if (resultIpOctet.length !== 4) {
+        errorList.push({
+            name   : getErrorName('ip_octet_number', fieldName),
+            message: `${fieldName} must be a valid ip address`
         });
     }
     else {
-        result_ip_octet.forEach(element => {
-            const element_number = Number(element);
-            if (isNaN(element_number) || element_number > 255 || element_number < 0 || element === '') {
-                error_list.push({
-                    name   : get_error_name('ip_octet_wrong', field_name),
-                    message: `${field_name} must be a valid ip address`
+        resultIpOctet.forEach(element => {
+            const elementNumber = Number(element);
+            if (isNaN(elementNumber) || elementNumber > 255 || elementNumber < 0 || element === '') {
+                errorList.push({
+                    name   : getErrorName('ip_octet_wrong', fieldName),
+                    message: `${fieldName} must be a valid ip address`
                 });
 
                 return false;
             }
-            value_escaped.push(element_number);
+            valueEscaped.push(elementNumber);
         });
     }
 
-    return value_escaped.join('.');
+    return valueEscaped.join('.');
 }
 
-export function string_alphanumeric(field_name, value, error_list, length) {
-    let value_escaped = value.toString().trim();
-    let is_string     = /^[a-zA-Z0-9]+$/.test(value_escaped);
+export function string_alphanumeric(fieldName, value, errorList, length) {
+    let valueEscaped = value.toString().trim();
+    let isString     = /^[a-zA-Z0-9]+$/.test(valueEscaped);
 
-    if (!is_string) {
-        error_list.push({
-            name   : get_error_name('value_is_not_alphanumeric_string', field_name),
-            message: `${field_name} must be alphanumeric string`
+    if (!isString) {
+        errorList.push({
+            name   : getErrorName('value_is_not_alphanumeric_string', fieldName),
+            message: `${fieldName} must be alphanumeric string`
         });
     }
 
-    if (value_escaped.length > length) {
-        error_list.push({
-            name   : get_error_name('max_length_exceeded', field_name),
-            message: `${field_name} max length is ${length} `
+    if (valueEscaped.length > length) {
+        errorList.push({
+            name   : getErrorName('max_length_exceeded', fieldName),
+            message: `${fieldName} max length is ${length} `
         });
     }
 
-    return value_escaped;
+    return valueEscaped;
 }
 
-export function json(field_name, value, error_list) {
+export function json(fieldName, value, errorList) {
     let result = value;
 
     try {
         result = JSON.parse(value);
     }
     catch (e) {
-        error_list.push({
-            name   : get_error_name('json_error', field_name),
-            message: `${field_name} should contain valid json`
+        errorList.push({
+            name   : getErrorName('json_error', fieldName),
+            message: `${fieldName} should contain valid json`
         });
     }
 
     return result;
 }
 
-function get_error_name(prefix, field_name) {
-    return `${prefix}_${field_name.replaceAll(' ', '_')}`;
+function getErrorName(prefix, fieldName) {
+    return `${prefix}_${fieldName.replaceAll(' ', '_')}`;
 }
 
-export function handleInputChangeInteger(e, allow_negative = true, formatter = 'number') {
+export function handleInputChangeInteger(e, allowNegative = true, formatter = 'number') {
     if (e.target.value.length === 0) {
         return;
     }
@@ -141,7 +141,7 @@ export function handleInputChangeInteger(e, allow_negative = true, formatter = '
     let cursorStart = e.target.selectionStart,
         cursorEnd   = e.target.selectionEnd;
     let amount      = e.target.value.replace(/[,.]/g, '');
-    if (!allow_negative) {
+    if (!allowNegative) {
         amount = amount.replace(/-/g, '');
     }
 
@@ -194,14 +194,14 @@ export function handleInputChangeDNSString(e) {
     e.target.value = e.target.value.replace(/[^a-z0-9\\.-]/g, '');
 }
 
-export function domain_name(field_name, domain_name, error_list) {
+export function domainName(fieldName, domainName, errorList) {
     const match = new RegExp('^([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$', 'gi');
-    if (domain_name && !match.test(domain_name)) {
-        error_list.push({
-            name   : get_error_name('dns_invalid', field_name),
-            message: `${field_name} must be a valid domain name`
+    if (domainName && !match.test(domainName)) {
+        errorList.push({
+            name   : getErrorName('dns_invalid', fieldName),
+            message: `${fieldName} must be a valid domain name`
         });
         return null;
     }
-    return domain_name;
+    return domainName;
 }

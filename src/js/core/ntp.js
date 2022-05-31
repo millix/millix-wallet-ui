@@ -1,9 +1,9 @@
-let ntp         = {
-    offset: 0,
+let ntp = {
+    offset     : 0,
     initialized: false
 };
 
-let initialize  = () => {
+let initialize = () => {
     const now = new Date();
     console.log('[millix-node] current system time', now);
     ntp.initialized = true;

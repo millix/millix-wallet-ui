@@ -12,8 +12,8 @@ import ModalView from './utils/modal-view';
 class BacklogView extends Component {
     constructor(props) {
         super(props);
-        this.update_handler = null;
-        this.state          = {
+        this.updateHandler = null;
+        this.state         = {
             backlog_list              : [],
             datatable_loading         : false,
             datatable_reload_timestamp: new Date(),
@@ -52,11 +52,11 @@ class BacklogView extends Component {
 
     componentDidMount() {
         this.loadBacklogList();
-        this.update_handler = setInterval(() => this.loadBacklogList(), 10000);
+        this.updateHandler = setInterval(() => this.loadBacklogList(), 10000);
     }
 
     componentWillUnmount() {
-        clearTimeout(this.update_handler);
+        clearTimeout(this.updateHandler);
     }
 
     render() {
@@ -71,7 +71,7 @@ class BacklogView extends Component {
                                <div>
                                    continuing will force your node to reset backlog.
                                </div>
-                               {text.get_confirmation_modal_question()}
+                               {text.getConfirmationModalQuestion()}
                            </div>}/>
                 <div className={'panel-heading bordered'}>
                     backlog

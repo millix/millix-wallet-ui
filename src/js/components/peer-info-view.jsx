@@ -24,16 +24,16 @@ class PeerInfoView extends Component {
 
     getNodeAttribute(nodeID) {
         API.getNodeAttributes(nodeID)
-           .then(result_attribute => {
-               let node_about = {};
-               let job_list   = [];
-               let shard_list = [];
+           .then(resultAttribute => {
+               let nodeAbout = {};
+               let jobList   = [];
+               let shardList = [];
 
-               result_attribute.forEach(attribute => {
+               resultAttribute.forEach(attribute => {
                    if (attribute.attribute_type === 'job_list') {
-                       job_list = attribute.value.map((input, idx) => ({
+                       jobList = attribute.value.map((input) => ({
                            job_name: input.job_name,
-                           status  : format.status_label(input.status)
+                           status  : format.statusLabel(input.status)
                        }));
                    }
 
@@ -43,27 +43,27 @@ class PeerInfoView extends Component {
                                if (Number.isInteger(entry.update_date)) {
                                    entry.update_date = format.date(entry.update_date);
                                }
-                               entry.is_required = format.bool_label(entry.is_required);
-                               shard_list.push(entry);
+                               entry.is_required = format.boolLabel(entry.is_required);
+                               shardList.push(entry);
                            });
                        }
                    }
                    else if (attribute.value instanceof Object) {
                        for (let [key, value] of Object.entries(attribute.value)) {
-                           let attribute_type_label = key.replaceAll('_', ' ');
+                           let attributeTypeLabel = key.replaceAll('_', ' ');
 
-                           if (attribute_type_label.includes('date')) {
+                           if (attributeTypeLabel.includes('date')) {
                                value = format.date(value);
                            }
-                           if (attribute_type_label.includes('fee')) {
+                           if (attributeTypeLabel.includes('fee')) {
                                value = format.millix(value);
                            }
                            else if (Number.isInteger(value)) {
                                value = format.number(value);
                            }
 
-                           node_about[key] = {
-                               label: attribute_type_label,
+                           nodeAbout[key] = {
+                               label: attributeTypeLabel,
                                value: value
                            };
                        }
@@ -75,7 +75,7 @@ class PeerInfoView extends Component {
                            value = format.number(value);
                        }
 
-                       node_about[attribute.attribute_type] = {
+                       nodeAbout[attribute.attribute_type] = {
                            label: attribute_type_label,
                            value: value
                        };
@@ -83,10 +83,10 @@ class PeerInfoView extends Component {
                });
 
                this.setState({
-                   result_attribute,
-                   node_about,
-                   shard_list,
-                   job_list
+                   result_attribute: resultAttribute,
+                   node_about      : nodeAbout,
+                   shard_list      : shardList,
+                   job_list        : jobList
                });
            }).catch((e) => {
             console.error(e);
@@ -94,7 +94,7 @@ class PeerInfoView extends Component {
     }
 
     render() {
-        const node_about_order = [
+        const nodeAboutOrder = [
             'address_default',
             'node_public_key',
 
@@ -122,7 +122,7 @@ class PeerInfoView extends Component {
                     <div className={'panel-body'}>
                         <Table striped bordered hover className={'mb-0'}>
                             <tbody>
-                            {node_about_order.map(type => {
+                            {nodeAboutOrder.map(type => {
                                 if (typeof (this.state.node_about[type]) === 'undefined') {
                                     return false;
                                 }

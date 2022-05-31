@@ -6,7 +6,6 @@ import * as convert from '../../helper/convert';
 import {withRouter} from 'react-router-dom';
 import * as svg from '../../helper/svg';
 import store from '../../redux/store';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 class BalanceView extends Component {
@@ -24,13 +23,13 @@ class BalanceView extends Component {
     }
 
     render() {
-        let balance_stable_millix   = this.props.stable;
+        let balanceStableMillix = this.props.stable;
 
-        let stable_fiat               = '';
-        if (convert.is_currency_pair_summary_available()) {
-            stable_fiat = <div ref={this.balanceStableFiatRef} className={'stable_fiat'}>
+        let stableFiat = '';
+        if (convert.isCurrencyPairSummaryAvailable()) {
+            stableFiat = <div ref={this.balanceStableFiatRef} className={'stable_fiat'}>
                 <span className="text-primary symbol">{store.getState().currency_pair_summary.symbol}</span>
-                <span>{convert.fiat(balance_stable_millix, false)}</span>
+                <span>{convert.fiat(balanceStableMillix, false)}</span>
                 <HelpIconView help_item_name={'buy_and_sell'}/>
             </div>;
         }
@@ -39,12 +38,12 @@ class BalanceView extends Component {
             <div className={'panel panel-filled'}>
                 <div className={'panel-body balance_panel'}>
                     <div className={'balance_container'}>
-                        {svg.millix_logo()}
+                        {svg.millixLogo()}
                         <div className={'stable_millix'}>
-                            <span>{format.millix(balance_stable_millix, false)}</span>
+                            <span>{format.millix(balanceStableMillix, false)}</span>
                         </div>
                     </div>
-                    {stable_fiat}
+                    {stableFiat}
                     <hr className={'w-100'}/>
                     <div
                         className={'primary_address'}>

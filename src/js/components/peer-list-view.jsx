@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Row, Col, Button} from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';

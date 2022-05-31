@@ -4,8 +4,8 @@ import DatatableActionButtonView from '../components/utils/datatable-action-butt
 import {Spinner} from 'react-bootstrap';
 import React from 'react';
 
-export function datatable_format(data) {
-    const message_list = [];
+export function datatableFormat(data) {
+    const messageList = [];
     data.forEach((transaction) => {
         transaction?.transaction_output_attribute.forEach(attribute => {
             if (attribute?.value) {
@@ -17,13 +17,13 @@ export function datatable_format(data) {
                 const message  = !_.isNil(outputAttributeValue.file_data[fileHash]) ? outputAttributeValue.file_data[fileHash] : {};
 
                 const {
-                          message_subject,
-                          message_body,
-                          action_disabled
+                          message_subject: messageSubject,
+                          message_body   : messageBody,
+                          action_disabled: actionDisabled
                       } = getMessageSubjectAndBody(message, transaction, outputAttributeValue.file_list, fileHash);
 
-                message.subject = message_subject;
-                message.message = message_body;
+                message.subject = messageSubject;
+                message.message = messageBody;
 
                 const newRow = {
                     date        : format.date(transaction.transaction_date),
@@ -38,16 +38,16 @@ export function datatable_format(data) {
                     sent        : false
                 };
 
-                let view_button = <DatatableActionButtonView
-                    disabled={action_disabled}
+                let viewButton = <DatatableActionButtonView
+                    disabled={actionDisabled}
                     history_path={'/message-view/' + encodeURIComponent(transaction.transaction_id)}
                     history_state={{...newRow}}
                     icon={'eye'}/>;
 
                 newRow['action'] = <>
-                    {view_button}
+                    {viewButton}
                     <DatatableActionButtonView
-                        disabled={action_disabled}
+                        disabled={actionDisabled}
                         history_path={'/message-compose/' + encodeURIComponent(transaction.transaction_id)}
                         history_state={{...newRow}}
                         icon={'reply'}/>
@@ -58,69 +58,69 @@ export function datatable_format(data) {
                 </>;
 
 
-                newRow.date = <div className={'message_datatable_row_date'}>{newRow.date}{view_button}</div>;
+                newRow.date = <div className={'message_datatable_row_date'}>{newRow.date}{viewButton}</div>;
 
-                newRow.subject = get_subject_html(newRow);
-                message_list.push(newRow);
+                newRow.subject = getSubjectHtml(newRow);
+                messageList.push(newRow);
             }
         });
     });
 
-    return message_list;
+    return messageList;
 }
 
-function getMessageSubjectAndBody(message, transaction, file_list, fileHash) {
-    let message_subject = message.subject;
-    let message_body    = message.message;
-    let action_disabled = false;
+function getMessageSubjectAndBody(message, transaction, fileList, fileHash) {
+    let messageSubject = message.subject;
+    let messageBody    = message.message;
+    let actionDisabled = false;
 
-    let spinner_message = '';
+    let spinnerMessage = '';
     if (!transaction.is_stable) {
-        action_disabled = true;
-        spinner_message = 'waiting for message transaction to validate';
+        actionDisabled = true;
+        spinnerMessage = 'waiting for message transaction to validate';
     }
-    else if (file_list.length > 0 && !fileHash) {
-        action_disabled = true;
-        spinner_message = 'waiting for message data to arrive';
+    else if (fileList.length > 0 && !fileHash) {
+        actionDisabled = true;
+        spinnerMessage = 'waiting for message data to arrive';
     }
 
-    if (spinner_message) {
-        message_subject = <>
+    if (spinnerMessage) {
+        messageSubject = <>
             <Spinner size={'sm'} animation="border" role="status">
                 <span className="visually-hidden">loading...</span>
             </Spinner>
             <span className="ms-2">
-                <i>{spinner_message}</i>
+                <i>{spinnerMessage}</i>
             </span>
         </>;
-        message_body    = <>
+        messageBody    = <>
             <Spinner size={'sm'} animation="border" role="status">
                 <span className="visually-hidden">loading...</span>
             </Spinner>
             <span className="ms-2">
-                <i>{spinner_message}</i>
+                <i>{spinnerMessage}</i>
             </span>
         </>;
     }
 
     return {
-        message_subject,
-        message_body,
-        action_disabled
+        message_subject: messageSubject,
+        message_body   : messageBody,
+        action_disabled: actionDisabled
     };
 }
 
-export function get_subject_html(data) {
-    let message_subject = '';
+export function getSubjectHtml(data) {
+    let messageSubject = '';
     if (!data) {
-        message_subject = 'send message';
+        messageSubject = 'send message';
     }
     else if (!data.subject) {
-        message_subject = <i>no subject</i>;
+        messageSubject = <i>no subject</i>;
     }
     else if (data.subject) {
-        message_subject = data.subject;
+        messageSubject = data.subject;
     }
 
-    return message_subject;
+    return messageSubject;
 }

@@ -2,33 +2,33 @@ import React from 'react';
 import HelpIconView from '../components/utils/help-icon-view';
 import * as format from './format';
 
-export function get_confirmation_modal_question() {
+export function getConfirmationModalQuestion() {
     return <div>are you sure you want to proceed?</div>;
 }
 
-export function get_ui_error(api_message) {
-    let error          = '';
-    let api_error_name = 'unknown';
+export function getUiError(apiMessage) {
+    let error        = '';
+    let apiErrorName = 'unknown';
 
-    if (typeof (api_message) === 'object') {
-        let result_error = api_message.error;
-        if (typeof (result_error?.error) !== 'undefined') {
-            api_error_name = result_error.error;
+    if (typeof (apiMessage) === 'object') {
+        let resultError = apiMessage.error;
+        if (typeof (resultError?.error) !== 'undefined') {
+            apiErrorName = resultError.error;
         }
         else {
-            api_error_name = result_error;
+            apiErrorName = resultError;
         }
 
-        switch (api_error_name) {
+        switch (apiErrorName) {
             case 'transaction_input_max_error':
                 error = <>
                     your transaction tried to use too many outputs<HelpIconView help_item_name={'transaction_max_input_number'}/> please try to send a smaller
                     amount or click <a className={''} onClick={() => this.props.history.push('/actions')}>here</a> to use the balance aggregation tool to
-                    optimize your balance. the max amount you can send is {format.millix(api_message.data.amount_max)}.</>;
+                    optimize your balance. the max amount you can send is {format.millix(apiMessage.data.amount_max)}.</>;
                 break;
             case 'insufficient_balance':
                 error = <>your balance is lower than the amount you are trying to send. the max amount you can send
-                    is {format.millix(api_message.data.balance_stable)}.</>;
+                    is {format.millix(apiMessage.data.balance_stable)}.</>;
                 break;
             case 'transaction_send_interrupt':
                 error = <>transaction has been canceled.</>;
@@ -46,12 +46,12 @@ export function get_ui_error(api_message) {
                 error = <>cannot aggregate the unspent deposits. the transaction value is too small</>;
                 break;
             default:
-                error = <>your transaction could not be sent: ({api_message?.error?.error || api_message?.error || api_message || 'undefined behaviour'})</>;
+                error = <>your transaction could not be sent: ({apiMessage?.error?.error || apiMessage?.error || apiMessage || 'undefined behaviour'})</>;
                 break;
         }
     }
-    else if (typeof (api_message) === 'string') {
-        const match = /unexpected generic api error: \((?<message>.*)\)/.exec(api_message);
+    else if (typeof (apiMessage) === 'string') {
+        const match = /unexpected generic api error: \((?<message>.*)\)/.exec(apiMessage);
         error       = `your transaction could not be sent: (${match.groups.message})`;
     }
 

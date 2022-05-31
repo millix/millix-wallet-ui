@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col, Form, Row} from 'react-bootstrap';
-import {Route, withRouter} from 'react-router-dom';
+import {Button, Col, Form} from 'react-bootstrap';
+import {withRouter} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import moment from 'moment';
-import HelpIconView from './help-icon-view';
 
 
 class DatatableHeaderView extends Component {
@@ -16,7 +15,7 @@ class DatatableHeaderView extends Component {
     }
 
     render() {
-        let action_button = {
+        let actionButton = {
             icon    : 'plus-circle',
             label   : 'create',
             on_click: false,
@@ -25,19 +24,19 @@ class DatatableHeaderView extends Component {
 
         if (this.props.action_button) {
             if (typeof (this.props.action_button.on_click) === 'function') {
-                action_button.on_click = this.props.action_button.on_click;
+                actionButton.on_click = this.props.action_button.on_click;
             }
 
             if (this.props.action_button.icon) {
-                action_button.icon = this.props.action_button.icon;
+                actionButton.icon = this.props.action_button.icon;
             }
 
             if (this.props.action_button.label) {
-                action_button.label = this.props.action_button.label;
+                actionButton.label = this.props.action_button.label;
             }
 
             if (this.props.action_button.args) {
-                action_button.args = this.props.action_button.args;
+                actionButton.args = this.props.action_button.args;
             }
         }
 
@@ -56,24 +55,24 @@ class DatatableHeaderView extends Component {
                     </>
                 )}
 
-                {action_button.on_click && (
+                {actionButton.on_click && (
                     <>
                         <Col>
                             <Button variant="outline-primary"
                                     size={'sm'}
                                     className={'datatable_action_button'}
-                                    onClick={() => action_button.on_click(this.props, action_button.args)}>
+                                    onClick={() => actionButton.on_click(this.props, actionButton.args)}>
                                 <FontAwesomeIcon
-                                    icon={action_button.icon}
+                                    icon={actionButton.icon}
                                     size="1x"/>
-                                {action_button.label}
+                                {actionButton.label}
                             </Button>
 
                         </Col>
                     </>
                 )}
 
-                {(this.props.allow_export || action_button.on_click)  && (
+                {(this.props.allow_export || actionButton.on_click) && (
                     <hr/>
                 )}
 

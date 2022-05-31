@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button} from 'react-bootstrap';
 import {Link, withRouter} from 'react-router-dom';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import * as text from '../../helper/text';
 import ModalView from './modal-view';
 import _ from 'lodash';
@@ -25,41 +23,41 @@ class ResetTransactionValidationView extends Component {
         this.props.onRef(this);
     }
 
-    revalidateTransaction(transaction_id) {
+    revalidateTransaction(transactionID) {
         changeLoaderState(true);
-        API.resetTransactionValidationByID(transaction_id).then(response => {
+        API.resetTransactionValidationByID(transactionID).then(response => {
             changeLoaderState(false);
             if (typeof response.api_status === 'string') {
-                this.toggleResultModal(transaction_id, true);
+                this.toggleResultModal(transactionID, true);
             }
         });
     }
 
-    toggleResultModal(transaction_id, status = true) {
+    toggleResultModal(transactionID, status = true) {
         this.setState({
             confirmation_modal_show: false,
             result_modal_show      : status,
-            reset_transaction_id   : status ? transaction_id : ''
+            reset_transaction_id   : status ? transactionID : ''
         });
     }
 
-    toggleConfirmationModal(transaction_id, status = true) {
+    toggleConfirmationModal(transactionID, status = true) {
         this.setState({
             confirmation_modal_show: status,
             result_modal_show      : false,
-            reset_transaction_id   : transaction_id
+            reset_transaction_id   : transactionID
         });
     }
 
     render() {
-        const confirmation_modal_body_all_pending = <>
+        const confirmationModalBodyAllPending = <>
             <div>continuing will force your node to revalidate all your pending transactions</div>
-            {text.get_confirmation_modal_question()}
+            {text.getConfirmationModalQuestion()}
         </>;
-        const confirmation_modal_body_single      = <>
+        const confirmationModalBodySingle     = <>
             <div>continuing will force your node to revalidate transaction</div>
             <div>{this.state.reset_transaction_id}</div>
-            {text.get_confirmation_modal_question()}
+            {text.getConfirmationModalQuestion()}
         </>;
 
         return (
@@ -70,7 +68,7 @@ class ResetTransactionValidationView extends Component {
                     heading={'reset transaction validation'}
                     on_close={() => this.toggleConfirmationModal(this.state.reset_transaction_id, false)}
                     on_accept={() => this.revalidateTransaction(this.state.reset_transaction_id)}
-                    body={_.isArray(this.state.reset_transaction_id) ? confirmation_modal_body_all_pending : confirmation_modal_body_single}
+                    body={_.isArray(this.state.reset_transaction_id) ? confirmationModalBodyAllPending : confirmationModalBodySingle}
                 />
                 <ModalView show={this.state.result_modal_show}
                            size={'lg'}

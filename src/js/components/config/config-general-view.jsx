@@ -27,8 +27,8 @@ class ConfigGeneralView extends Component {
     }
 
     populateForm() {
-        this.transaction_fee_proxy_input.value   = format.millix(this.props.config.TRANSACTION_FEE_PROXY, false);
-        this.transaction_fee_default_input.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
+        this.transactionFeeProxyInput.value   = format.millix(this.props.config.TRANSACTION_FEE_PROXY, false);
+        this.transactionFeeDefaultInput.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
     }
 
     changeModalShowSaveResult(value = true) {
@@ -46,19 +46,19 @@ class ConfigGeneralView extends Component {
             error_list: []
         });
 
-        const error_list = [];
-        let config       = {
-            TRANSACTION_FEE_PROXY  : validate.amount('transaction fee proxy', this.transaction_fee_proxy_input.value, error_list),
-            TRANSACTION_FEE_DEFAULT: validate.amount('transaction fee default', this.transaction_fee_default_input.value, error_list),
+        const errorList = [];
+        let config      = {
+            TRANSACTION_FEE_PROXY  : validate.amount('transaction fee proxy', this.transactionFeeProxyInput.value, errorList),
+            TRANSACTION_FEE_DEFAULT: validate.amount('transaction fee default', this.transactionFeeDefaultInput.value, errorList)
         };
-        if (error_list.length === 0) {
+        if (errorList.length === 0) {
             this.props.walletUpdateConfig(config).then(() => {
                 this.setState({
                     sending: false
                 });
                 this.changeModalShowSaveResult();
             }).catch(() => {
-                error_list.push({
+                errorList.push({
                     name   : 'save_error',
                     message: 'error while saving occurred, please try again later'
                 });
@@ -67,7 +67,7 @@ class ConfigGeneralView extends Component {
         else {
             this.setState({
                 sending   : false,
-                error_list: error_list
+                error_list: errorList
             });
         }
     }
@@ -96,7 +96,7 @@ class ConfigGeneralView extends Component {
                                     <label>minimum proxy fee<HelpIconView help_item_name={'transaction_fee_proxy'}/></label>
                                     <Form.Control
                                         type="text"
-                                        ref={(c) => this.transaction_fee_proxy_input = c}
+                                        ref={(c) => this.transactionFeeProxyInput = c}
                                         onChange={(e) => {
                                             return validate.handleInputChangeInteger(e, false, 'millix');
                                         }}
@@ -107,7 +107,7 @@ class ConfigGeneralView extends Component {
                                     <label>default fee<HelpIconView help_item_name={'transaction_fee_default'}/></label>
                                     <Form.Control
                                         type="text"
-                                        ref={(c) => this.transaction_fee_default_input = c}
+                                        ref={(c) => this.transactionFeeDefaultInput = c}
                                         onChange={(e) => {
                                             return validate.handleInputChangeInteger(e, false, 'millix');
                                         }}

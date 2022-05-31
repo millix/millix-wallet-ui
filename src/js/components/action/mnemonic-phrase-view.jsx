@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Form, Row} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import ModalView from '../utils/modal-view';
 import API from '../../api';
 import MnemonicView from '../utils/mnemonic-view';
@@ -11,8 +11,8 @@ class MnemonicPhraseView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalShowMnemonic: false,
-            mnemonic         : []
+            modal_show_mnemonic: false,
+            mnemonic           : []
         };
     }
 
@@ -44,13 +44,13 @@ class MnemonicPhraseView extends Component {
 
     changeModalShowMnemonic(value = true) {
         this.setState({
-            modalShowMnemonic: value
+            modal_show_mnemonic: value
         });
     }
 
     render() {
         return <>
-            <ModalView show={this.state.modalShowMnemonic}
+            <ModalView show={this.state.modal_show_mnemonic}
                        size={'xl'}
                        heading={'mnemonic phrase'}
                        on_close={() => this.changeModalShowMnemonic(false)}

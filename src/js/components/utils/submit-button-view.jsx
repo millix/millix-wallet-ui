@@ -10,9 +10,9 @@ class SubmitButtonView extends Component {
     constructor(props) {
         super(props);
 
-        let confirmation_modal_enabled = false;
+        let confirmationModalEnabled = false;
         if (props.confirmation_modal_heading) {
-            confirmation_modal_enabled = true;
+            confirmationModalEnabled = true;
         }
 
         this.state = {
@@ -20,7 +20,7 @@ class SubmitButtonView extends Component {
             sending                   : false,
             disabled                  : !!props.force_disabled,
             modal_show                : false,
-            confirmation_modal_enabled: confirmation_modal_enabled
+            confirmation_modal_enabled: confirmationModalEnabled
         };
     }
 
@@ -117,9 +117,9 @@ class SubmitButtonView extends Component {
     }
 
     render() {
-        let confirmation_modal = '';
+        let confirmationModal = '';
         if (this.state.confirmation_modal_enabled) {
-            confirmation_modal = <ModalView
+            confirmationModal = <ModalView
                 show={this.state.modal_show}
                 size={'lg'}
                 heading={this.props.confirmation_modal_heading}
@@ -130,7 +130,7 @@ class SubmitButtonView extends Component {
 
         return (
             <>
-                {confirmation_modal}
+                {confirmationModal}
                 <Button
                     variant="outline-primary"
                     onClick={() => this.handleOnClick()}

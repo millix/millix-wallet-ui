@@ -23,7 +23,7 @@ class EventsLogView extends Component {
     }
 
     componentWillUnmount() {
-        clearTimeout(this.update_handler);
+        clearTimeout(this.updateHandler);
     }
 
     loadEventLogToState() {
@@ -43,8 +43,8 @@ class EventsLogView extends Component {
                     }
                 });
 
-                clearTimeout(this.update_handler);
-                this.update_handler = setTimeout(() => this.loadEventLogToState(), 20 * 1000);
+                clearTimeout(this.updateHandler);
+                this.updateHandler = setTimeout(() => this.loadEventLogToState(), 20 * 1000);
             }
         });
     }

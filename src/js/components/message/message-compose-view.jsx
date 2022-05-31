@@ -17,13 +17,13 @@ import ReactChipInput from 'react-chip-input';
 class MessageComposeView extends Component {
     constructor(props) {
         super(props);
-        const propsState    = props.location.state || {};
-        const address_value = propsState.sent ? propsState.address_to : propsState.address_from;
+        const propsState   = props.location.state || {};
+        const addressValue = propsState.sent ? propsState.address_to : propsState.address_from;
 
-        let message_body = '';
+        let messageBody = '';
         if (propsState.message) {
-            let reply_to_message_body = propsState.message;
-            message_body              = `\n\n______________________________\nOn ${propsState.date} ${address_value} wrote:\n\n${reply_to_message_body}`;
+            let replyToMessageBody = propsState.message;
+            messageBody            = `\n\n______________________________\nOn ${propsState.date} ${addressValue} wrote:\n\n${replyToMessageBody}`;
         }
 
         this.state = {
@@ -38,9 +38,9 @@ class MessageComposeView extends Component {
             address_key_identifier  : '',
             amount                  : '',
             fee                     : '',
-            destination_address_list: address_value ? [address_value] : [],
+            destination_address_list: addressValue ? [addressValue] : [],
             subject                 : propsState.subject ? this.getReplySubjectText(propsState.subject) : '',
-            message                 : message_body,
+            message                 : messageBody,
             txid                    : propsState.txid
         };
 
@@ -64,8 +64,8 @@ class MessageComposeView extends Component {
         return subject;
     }
 
-    verifySenderDomainName(domain_name, error_list) {
-        if (!domain_name) {
+    verifySenderDomainName(domainName, errorList) {
+        if (!domainName) {
             return Promise.resolve(true);
         }
 
@@ -74,17 +74,17 @@ class MessageComposeView extends Component {
             message: `verified sender must be a valid domain name`
         };
 
-        domain_name = validate.domain_name('domain_name', domain_name, []);
-        if (domain_name === null) {
-            error_list.push(error);
+        domainName = validate.domainName('domain_name', domainName, []);
+        if (domainName === null) {
+            errorList.push(error);
 
             return Promise.resolve(false);
         }
         else {
-            return API.isDNSVerified(domain_name, this.props.wallet.address_key_identifier)
+            return API.isDNSVerified(domainName, this.props.wallet.address_key_identifier)
                       .then(data => {
                           if (!data.is_address_verified) {
-                              error_list.push({
+                              errorList.push({
                                   name   : 'verified_sender_not_valid',
                                   message: <>domain name verification failed. click<HelpIconView help_item_name={'verified_sender'}/> for instructions</>
                               });
@@ -93,7 +93,7 @@ class MessageComposeView extends Component {
                           return data.is_address_verified;
                       })
                       .catch(() => {
-                          error_list.push(error);
+                          errorList.push(error);
 
                           return false;
                       });
@@ -101,7 +101,7 @@ class MessageComposeView extends Component {
     }
 
     send() {
-        let error_list = [];
+        let errorList = [];
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
             this.setState({
@@ -109,30 +109,30 @@ class MessageComposeView extends Component {
             });
             return;
         }
-        const transaction_param = {
-            addresses: validate.required('address', this.state.destination_address_list, error_list),
-            amount   : validate.amount('amount', this.amount.value, error_list),
-            fee      : validate.amount('fee', this.fee.value, error_list),
+        const transactionParam = {
+            addresses: validate.required('address', this.state.destination_address_list, errorList),
+            amount   : validate.amount('amount', this.amount.value, errorList),
+            fee      : validate.amount('fee', this.fee.value, errorList),
             subject  : this.subject.value,
             message  : this.message.value,
-            dns      : validate.domain_name('verified sender', this.dns.value, error_list)
+            dns      : validate.domainName('verified sender', this.dns.value, errorList)
         };
 
-        if (error_list.length === 0) {
-            this.verifySenderDomainName(transaction_param.dns, error_list).then(_ => {
-                if (error_list.length === 0) {
-                    Transaction.verifyAddress(transaction_param).then((data) => {
+        if (errorList.length === 0) {
+            this.verifySenderDomainName(transactionParam.dns, errorList).then(_ => {
+                if (errorList.length === 0) {
+                    Transaction.verifyAddress(transactionParam).then((data) => {
                         this.setState(data);
                         this.changeModalShowConfirmation();
                     }).catch((error) => {
-                        error_list.push(error);
+                        errorList.push(error);
                     });
                 }
             });
         }
 
         this.setState({
-            error_list: error_list
+            error_list: errorList
         });
     }
 
@@ -140,8 +140,8 @@ class MessageComposeView extends Component {
         this.setState({
             sending: true
         });
-        let transaction_output_payload = this.prepareTransactionOutputPayload();
-        Transaction.sendTransaction(transaction_output_payload, true).then((data) => {
+        let transactionOutputPayload = this.prepareTransactionOutputPayload();
+        Transaction.sendTransaction(transactionOutputPayload, true).then((data) => {
             this.clearSendForm();
             this.changeModalShowConfirmation(false);
             this.changeModalShowSendResult();
@@ -214,13 +214,15 @@ class MessageComposeView extends Component {
     addDestinationAddress(value) {
         const chips = this.state.destination_address_list.slice();
         value.split(/\n| /).forEach(address => {
-            if(chips.includes(address.trim())){
-                this.setState({error_list: [
+            if (chips.includes(address.trim())) {
+                this.setState({
+                    error_list: [
                         {
                             name   : 'recipient_already_exist',
                             message: `recipients must contain only unique addresses. multiple entries of address ${address.trim()}`
                         }
-                    ]})
+                    ]
+                });
                 return;
             }
             chips.push(address.trim());
@@ -261,8 +263,8 @@ class MessageComposeView extends Component {
                                                         ref.formControlRef.current.value = '';
                                                     }
                                                     if (!this.chipInputAddress) {
-                                                        ref.formControlRef.current.placeholder = 'recipients'
-                                                        this.chipInputAddress = ref;
+                                                        ref.formControlRef.current.placeholder = 'recipients';
+                                                        this.chipInputAddress                  = ref;
                                                     }
                                                 }}
                                                 classes="chip_input form-control"
@@ -360,7 +362,7 @@ class MessageComposeView extends Component {
                                                 body={<div>
                                                     <div>you are about to send a message and {format.millix(this.state.amount)} to</div>
                                                     <div>{this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}</div>
-                                                    {text.get_confirmation_modal_question()}
+                                                    {text.getConfirmationModalQuestion()}
                                                 </div>}/>
                                             <ModalView
                                                 show={this.state.modal_show_send_result}

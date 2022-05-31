@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Route, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {OverlayTrigger, Popover} from 'react-bootstrap';
 import {connect} from 'react-redux';
@@ -16,9 +16,9 @@ class HelpIconView extends Component {
         };
     }
 
-    getHelpItem(help_item_name) {
-        const props       = this.props;
-        const result_help = {
+    getHelpItem(helpItemName) {
+        const props      = this.props;
+        const resultHelp = {
             'pending_balance'             : {
                 'title': 'pending balance',
                 'body' : <ul>
@@ -196,7 +196,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'full_storage'           : {
+            'full_storage'                : {
                 'title': 'full storage',
                 'body' : <ul>
                     <li>
@@ -304,7 +304,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'message_payment' : {
+            'message_payment'             : {
                 'title': 'message payment',
                 'body' : <ul>
                     <li>
@@ -319,17 +319,17 @@ class HelpIconView extends Component {
                 </ul>
             }
         };
-        let help_item     = false;
-        if (Object.keys(result_help).includes(help_item_name)) {
-            help_item = result_help[help_item_name];
+        let helpItem     = false;
+        if (Object.keys(resultHelp).includes(helpItemName)) {
+            helpItem = resultHelp[helpItemName];
         }
 
-        return help_item;
+        return helpItem;
     }
 
     render() {
-        const help_item = this.getHelpItem(this.props.help_item_name);
-        if (!help_item) {
+        const helpItem = this.getHelpItem(this.props.help_item_name);
+        if (!helpItem) {
             return '';
         }
 
@@ -337,10 +337,10 @@ class HelpIconView extends Component {
             <Popover id="popover-basic">
                 <Popover.Header>
                     <div className={'page_subtitle'}>
-                        {help_item.title}
+                        {helpItem.title}
                     </div>
                 </Popover.Header>
-                <Popover.Body>{help_item.body}</Popover.Body>
+                <Popover.Body>{helpItem.body}</Popover.Body>
             </Popover>
         );
 

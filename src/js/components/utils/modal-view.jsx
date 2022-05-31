@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Modal} from 'react-bootstrap';
-import {Route, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 
 class ModalView extends Component {
@@ -51,10 +51,10 @@ class ModalView extends Component {
     }
 
     render() {
-        let accept_button = '';
+        let acceptButton = '';
         if (this.isOnAcceptDefined()) {
-            accept_button = <Button variant="outline-primary"
-                                    onClick={() => this.accept()}>
+            acceptButton = <Button variant="outline-primary"
+                                   onClick={() => this.accept()}>
                 continue
             </Button>;
         }
@@ -70,7 +70,7 @@ class ModalView extends Component {
                     </Modal.Header>
                     <Modal.Body>{this.props.body}</Modal.Body>
                     <Modal.Footer>
-                        {accept_button}
+                        {acceptButton}
                         <Button variant="outline-default"
                                 onClick={() => this.cancel()}>
                             close

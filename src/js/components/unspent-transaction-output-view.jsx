@@ -26,20 +26,20 @@ class UnspentTransactionOutputView extends Component {
     }
 
     componentDidMount() {
-        const stable_value_new = this.getStableFromUrl();
+        const stableValueNew = this.getStableFromUrl();
         this.setState({
-            stable: stable_value_new
+            stable: stableValueNew
         }, this.reloadDatatable);
 
         this.updaterHandler = setInterval(() => this.reloadDatatable(), 60000);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const stable_value_new     = this.getStableFromUrl();
-        const stable_value_current = this.state.stable;
-        if (stable_value_new !== stable_value_current || this.props.wallet.address_key_identifier !== prevProps.wallet.address_key_identifier) {
+        const stableValueNew     = this.getStableFromUrl();
+        const stableValueCurrent = this.state.stable;
+        if (stableValueNew !== stableValueCurrent || this.props.wallet.address_key_identifier !== prevProps.wallet.address_key_identifier) {
             this.setState({
-                stable: stable_value_new
+                stable: stableValueNew
             }, this.reloadDatatable);
         }
     }
@@ -49,13 +49,13 @@ class UnspentTransactionOutputView extends Component {
     }
 
     getStableFromUrl() {
-        const stable_filter  = this.props.location.pathname.split('/').pop();
-        let stable_value_new = 1;
-        if (stable_filter === 'pending') {
-            stable_value_new = 0;
+        const stableFilter = this.props.location.pathname.split('/').pop();
+        let stableValueNew = 1;
+        if (stableFilter === 'pending') {
+            stableValueNew = 0;
         }
 
-        return stable_value_new;
+        return stableValueNew;
     }
 
     reloadDatatable() {

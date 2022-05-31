@@ -8,7 +8,7 @@ import ModalView from '../utils/modal-view';
 import ErrorList from '../utils/error-list-view';
 import API from '../../api/index';
 import * as validate from '../../helper/validate';
-import {bool_label} from '../../helper/format';
+import {boolLabel} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 
 
@@ -40,21 +40,21 @@ class ConfigAddressVersionView extends Component {
             error_list: []
         });
 
-        let error_list = [];
-        validate.required('version', this.address_version_name.value, error_list);
-        validate.required('regex pattern', this.address_version_regex.value, error_list);
+        let errorList = [];
+        validate.required('version', this.addressVersionName.value, errorList);
+        validate.required('regex pattern', this.addressVersionRegex.value, errorList);
 
-        if (error_list.length > 0) {
+        if (errorList.length > 0) {
             this.setState({
-                error_list: error_list
+                error_list: errorList
             });
         }
         else {
             const data = {
-                version        : this.address_version_name.value,
+                version        : this.addressVersionName.value,
                 is_main_network: this.props.config.MODE_TEST_NETWORK ? 0 : 1,
-                regex_pattern  : this.address_version_regex.value,
-                is_default     : this.address_is_default.value
+                regex_pattern  : this.addressVersionRegex.value,
+                is_default     : this.addressIsDefault.value
             };
 
             API.addWalletAddressVersion(data)
@@ -101,7 +101,7 @@ class ConfigAddressVersionView extends Component {
             address_version_list      : data.map((input) => ({
                 version        : input.version,
                 regex_pattern  : input.regex_pattern,
-                default_address: bool_label(input.is_default),
+                default_address: boolLabel(input.is_default),
                 action         : <DatatableActionButtonView
                     icon={'trash'}
                     callback={() => this.removeFromConfigList(input)}
@@ -119,13 +119,13 @@ class ConfigAddressVersionView extends Component {
                     <label>default address</label>
                     <Form.Select
                         as="select"
-                        ref={(c) => this.address_is_default = c}
+                        ref={(c) => this.addressIsDefault = c}
                     >
                         <option value={1} key={1}>
-                            {bool_label(1)}
+                            {boolLabel(1)}
                         </option>
                         <option value={0} key={0}>
-                            {bool_label(0)}
+                            {boolLabel(0)}
                         </option>
                     </Form.Select>
                 </Form.Group>
@@ -136,7 +136,7 @@ class ConfigAddressVersionView extends Component {
                     <label>version</label>
                     <Form.Control
                         type="text"
-                        ref={(c) => this.address_version_name = c}
+                        ref={(c) => this.addressVersionName = c}
                         onChange={(e) => {
                             return validate.handleInputChangeAlphanumericString(e, 4);
                         }}
@@ -153,7 +153,7 @@ class ConfigAddressVersionView extends Component {
                         <Col>
                             <Form.Control
                                 type="text"
-                                ref={(c) => this.address_version_regex = c}
+                                ref={(c) => this.addressVersionRegex = c}
                             />
                         </Col>
                     </Row>

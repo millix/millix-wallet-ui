@@ -47,7 +47,7 @@ class MessageView extends Component {
     }
 
     verifyDNS(dns, addressKeyIdentifier) {
-        dns = validate.domain_name('dns', dns, []);
+        dns = validate.domainName('dns', dns, []);
         if (dns === null) {
             this.setState({
                 dnsValidated: false,
@@ -74,14 +74,14 @@ class MessageView extends Component {
     render() {
         const data = this.props.location.state;
 
-        let sender_verified = '';
+        let senderVerified = '';
         if (this.state.dns) {
             let className = '';
             let icon      = '';
             if (this.state.dnsValidated) {
-                className       = 'text-success';
-                icon            = 'check-circle';
-                sender_verified = <div className={className + ' labeled form-group'}>
+                className      = 'text-success';
+                icon           = 'check-circle';
+                senderVerified = <div className={className + ' labeled form-group'}>
                     <FontAwesomeIcon
                         icon={icon}
                         size="1x"/>
@@ -90,7 +90,7 @@ class MessageView extends Component {
             }
         }
 
-        let message_subject = helper_message.get_subject_html(data);
+        let messageSubject = helper_message.getSubjectHtml(data);
 
         return (
             <div>
@@ -98,7 +98,7 @@ class MessageView extends Component {
                     <Col md={12}>
                         <div className={'panel panel-filled'}>
                             <div className={'panel-heading bordered d-flex'}>
-                                {message_subject}
+                                {messageSubject}
 
                                 <div className={'ms-auto message_subject_action_container'}>
                                     <div className={'text-end message_subject_date'}>
@@ -136,7 +136,7 @@ class MessageView extends Component {
                                                                 <td>
                                                                 </td>
                                                                 <td>
-                                                                    {sender_verified}
+                                                                    {senderVerified}
                                                                 </td>
                                                             </tr>
                                                             <tr>

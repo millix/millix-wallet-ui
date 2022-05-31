@@ -6,7 +6,7 @@ import {Col, Container} from 'react-bootstrap';
 import '../../../../node_modules/mohithg-switchery/switchery.css';
 import $ from 'jquery';
 import API from '../../api';
-import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance, updateCurrencyPairSummary, updateMessageStat} from '../../redux/actions';
+import {setBackLogSize, setLogSize, updateCurrencyPairSummary, updateMessageStat, updateNetworkState, walletUpdateBalance} from '../../redux/actions';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS} from '../../../config.js';
 import APIExternal from '../../api/external';
@@ -51,7 +51,7 @@ const UnlockedWalletRequiredRoute = ({
 
         getNodeStat();
 
-        let fetch_currency_pair_summary_timeout_id;
+        let fetchCurrencyPairSummaryTimeoutID;
         const setCurrencyPairSummary = () => {
             APIExternal.getCurrencyPairSummaryFiatleak().then(response => {
                 rest.updateCurrencyPairSummary({
@@ -61,7 +61,7 @@ const UnlockedWalletRequiredRoute = ({
                 });
             });
             if (rest.wallet.unlocked) {
-                fetch_currency_pair_summary_timeout_id = setTimeout(() => {
+                fetchCurrencyPairSummaryTimeoutID = setTimeout(() => {
                     setCurrencyPairSummary();
                 }, CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS);
             }
@@ -90,7 +90,7 @@ const UnlockedWalletRequiredRoute = ({
         return () => {
             clearTimeout(timeoutID);
             clearTimeout(messageStatTimeoutID);
-            clearTimeout(fetch_currency_pair_summary_timeout_id);
+            clearTimeout(fetchCurrencyPairSummaryTimeoutID);
         };
 
     }, [rest.wallet.unlocked]);

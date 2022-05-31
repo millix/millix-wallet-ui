@@ -37,8 +37,8 @@ class DatatableView extends Component {
     }
 
     generateResultColumn() {
-        const result_global_search_field = [];
-        const result_column              = [];
+        const resultGlobalSearchField = [];
+        const resultColumn            = [];
         this.props.resultColumn.forEach((item, index) => {
             if (typeof (item.header) === 'undefined') {
                 item.header = item.field.replaceAll('_', ' ');
@@ -60,8 +60,8 @@ class DatatableView extends Component {
                 item.filter = true;
             }
 
-            result_global_search_field.push(item.field);
-            result_column.push(<Column
+            resultGlobalSearchField.push(item.field);
+            resultColumn.push(<Column
                 key={index}
                 field={item.field}
                 header={item.header}
@@ -76,7 +76,7 @@ class DatatableView extends Component {
         });
 
         if (this.props.showActionColumn) {
-            result_column.push(<Column
+            resultColumn.push(<Column
                 key={'action'}
                 className={'datatable_action_column'}
                 field={'action'}
@@ -85,8 +85,8 @@ class DatatableView extends Component {
         }
 
         this.setState({
-            'result_column'             : result_column,
-            'result_global_search_field': result_global_search_field
+            'result_column'             : resultColumn,
+            'result_global_search_field': resultGlobalSearchField
         });
     }
 
@@ -169,7 +169,7 @@ class DatatableView extends Component {
                     value={options.value} options={dropdownOptions}
                     onChange={options.onChange} className={'align-middle'}/>
                     records
-                . total records {options.totalRecords}.</div>;
+                    . total records {options.totalRecords}.</div>;
             }
         };
     }
@@ -192,7 +192,7 @@ class DatatableView extends Component {
     //     return <div className="px-3 pt-0 pb-3 text-center font-bold">Customized Buttons</div>;
     // }
 
-    on_global_search_change(e) {
+    onGlobalSearchChange(e) {
         const value                   = e.target.value;
         let result_filter             = {...this.state.result_filter};
         result_filter['global'].value = value;
@@ -210,7 +210,7 @@ class DatatableView extends Component {
                     reload_datatable={this.props.reload_datatable}
                     datatable_reload_timestamp={this.props.datatable_reload_timestamp}
                     action_button={this.props.action_button}
-                    on_global_search_change={(e) => this.on_global_search_change(e)}
+                    on_global_search_change={(e) => this.onGlobalSearchChange(e)}
                     datatable_reference={this.datatable_reference}
                     allow_export={this.props.allow_export}
                 />

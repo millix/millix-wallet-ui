@@ -18,8 +18,8 @@ const styles = {
 class UnlockWalletView extends Component {
     constructor(props) {
         super(props);
-        this.private_key_exists_interval_id = undefined;
-        this.state                          = {
+        this.privateKeyExistsIntervalID = undefined;
+        this.state                      = {
             error_list        : [],
             private_key_exists: undefined, //ternary status: false -- doesn't
             // exists, true -- exist, undefined --
@@ -50,15 +50,15 @@ class UnlockWalletView extends Component {
                 }
             }
             else {
-                let error_list = [];
-                error_list.push({
+                let errorList = [];
+                errorList.push({
                     name   : 'auth_error',
                     message: 'millix_private_key.json not found'
                 });
                 this.setState({
                     private_key_exists : false,
                     defaultTabActiveKey: 2,
-                    error_list         : error_list
+                    error_list         : errorList
                 });
             }
         }).catch(_ => {
@@ -86,7 +86,7 @@ class UnlockWalletView extends Component {
         let passphraseRef;
 
         const walletUnlockWithPassword = (password) => {
-            const error_list = [];
+            const errorList = [];
             API.newSession(password)
                .then(data => {
                    if (data.api_status !== 'success') {
@@ -97,13 +97,13 @@ class UnlockWalletView extends Component {
                }).catch(_ => {
                 props.walletReady({authenticationError: true});
 
-                error_list.push({
+                errorList.push({
                     name   : 'auth_error_name',
                     message: 'there was a problem authenticating your key file. please make sure you are using correct password'
                 });
 
                 this.setState({
-                    error_list: error_list
+                    error_list: errorList
                 });
             });
         };

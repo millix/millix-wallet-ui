@@ -12,7 +12,7 @@ import * as validate from '../../helper/validate';
 
 
 class AdvertisementFormView extends Component {
-    result_field_reference = {};
+    resultFieldReference = {};
 
     constructor(props) {
         super(props);
@@ -32,9 +32,9 @@ class AdvertisementFormView extends Component {
         this.loadAdvertisementCategoryList();
 
         if (this.props.history.location.state) {
-            const advertisement_guid = this.props.history.location.state[0].advertisement_guid;
+            const advertisementGUID = this.props.history.location.state[0].advertisement_guid;
 
-            API.getAdvertisementById(advertisement_guid).then(data => {
+            API.getAdvertisementById(advertisementGUID).then(data => {
                 let fields = {
                     advertisement_name: data.advertisement.advertisement_name,
                     category          : data.advertisement.advertisement_category_guid,
@@ -46,7 +46,7 @@ class AdvertisementFormView extends Component {
                 };
 
                 this.setState({
-                    advertisement_guid: advertisement_guid,
+                    advertisement_guid: advertisementGUID,
                     fields            : fields,
                     title             : 'edit advertisement',
                     advertisement     : data.advertisement
@@ -60,56 +60,56 @@ class AdvertisementFormView extends Component {
     }
 
     populateForm(advertisement = {}) {
-        this.result_field_reference.advertisement_name.value = advertisement?.advertisement_name;
-        this.result_field_reference.category.value           = advertisement?.advertisement_category_guid;
-        this.result_field_reference.headline.value           = advertisement?.advertisement_headline?.value;
-        this.result_field_reference.deck.value               = advertisement?.advertisement_deck?.value;
-        this.result_field_reference.advertisement_url.value  = advertisement?.advertisement_url;
-        this.result_field_reference.budget_daily_mlx.value   = format.millix(advertisement?.budget_daily_mlx, false);
-        this.result_field_reference.bid_impression_mlx.value = format.millix(advertisement?.bid_impression_mlx, false);
+        this.resultFieldReference.advertisement_name.value = advertisement?.advertisement_name;
+        this.resultFieldReference.category.value           = advertisement?.advertisement_category_guid;
+        this.resultFieldReference.headline.value           = advertisement?.advertisement_headline?.value;
+        this.resultFieldReference.deck.value               = advertisement?.advertisement_deck?.value;
+        this.resultFieldReference.advertisement_url.value  = advertisement?.advertisement_url;
+        this.resultFieldReference.budget_daily_mlx.value   = format.millix(advertisement?.budget_daily_mlx, false);
+        this.resultFieldReference.bid_impression_mlx.value = format.millix(advertisement?.bid_impression_mlx, false);
     }
 
     getFormData() {
-        const error_list = [];
-        let form_data    = {};
-        if (Object.keys(this.result_field_reference).length > 0) {
-            form_data = {
-                advertisement_name         : validate.required('name', this.result_field_reference.advertisement_name.value, error_list),
-                advertisement_category_guid: this.result_field_reference.category.value,
-                headline                   : validate.required('headline', this.result_field_reference.headline.value, error_list),
-                deck                       : validate.required('deck', this.result_field_reference.deck.value, error_list),
-                url                        : validate.required('url', this.result_field_reference.advertisement_url.value, error_list),
-                budget_daily_mlx           : validate.amount('daily budget', this.result_field_reference.budget_daily_mlx.value, error_list),
-                bid_impression_mlx         : validate.amount('bid per impression', this.result_field_reference.bid_impression_mlx.value, error_list),
+        const errorList = [];
+        let formData    = {};
+        if (Object.keys(this.resultFieldReference).length > 0) {
+            formData = {
+                advertisement_name         : validate.required('name', this.resultFieldReference.advertisement_name.value, errorList),
+                advertisement_category_guid: this.resultFieldReference.category.value,
+                headline                   : validate.required('headline', this.resultFieldReference.headline.value, errorList),
+                deck                       : validate.required('deck', this.resultFieldReference.deck.value, errorList),
+                url                        : validate.required('url', this.resultFieldReference.advertisement_url.value, errorList),
+                budget_daily_mlx           : validate.amount('daily budget', this.resultFieldReference.budget_daily_mlx.value, errorList),
+                bid_impression_mlx         : validate.amount('bid per impression', this.resultFieldReference.bid_impression_mlx.value, errorList),
                 advertisement_guid         : this.state.advertisement_guid,
                 head_line_attribute_guid   : this.state.advertisement.advertisement_headline?.guid,
                 deck_attribute_guid        : this.state.advertisement.advertisement_deck?.guid
             };
 
-            if (form_data.bid_impression_mlx > form_data.budget_daily_mlx) {
-                error_list.push('bid per impression cannot exceed the daily budget');
+            if (formData.bid_impression_mlx > formData.budget_daily_mlx) {
+                errorList.push('bid per impression cannot exceed the daily budget');
             }
         }
 
         return {
-            form_data,
-            error_list
+            form_data : formData,
+            error_list: errorList
         };
     }
 
     loadAdvertisementCategoryList() {
         API.getAdvertisementCategoryList().then(response => {
-            let result_option = response.map(d => ({
+            let resultOption = response.map(d => ({
                 'value': d.advertisement_category_guid,
                 'label': d.advertisement_category
             }));
-            result_option     = _.orderBy(result_option, ['label'], ['asc']);
-            if (this.result_field_reference.category) {
-                this.result_field_reference.category.value = result_option[0].value;
+            resultOption     = _.orderBy(resultOption, ['label'], ['asc']);
+            if (this.resultFieldReference.category) {
+                this.resultFieldReference.category.value = resultOption[0].value;
             }
 
             this.setState({
-                advertisement_category_list: result_option
+                advertisement_category_list: resultOption
             });
         });
     }
@@ -119,16 +119,16 @@ class AdvertisementFormView extends Component {
             error_list: []
         });
         const {
-                  form_data,
-                  error_list
+                  form_data : formData,
+                  error_list: errorList
               } = this.getFormData();
 
-        if (error_list.length === 0) {
-            this.handleSaveResponse(API.upsertAdvertisement(form_data));
+        if (errorList.length === 0) {
+            this.handleSaveResponse(API.upsertAdvertisement(formData));
         }
 
         this.setState({
-            error_list: error_list
+            error_list: errorList
         });
     }
 
@@ -139,11 +139,11 @@ class AdvertisementFormView extends Component {
                 this.props.history.push('/advertisement-list');
             }
             else {
-                let error_list = [];
-                error_list.push(data.api_message);
+                let errorList = [];
+                errorList.push(data.api_message);
 
                 this.setState({
-                    error_list: error_list
+                    error_list: errorList
                 });
             }
         });
@@ -152,23 +152,22 @@ class AdvertisementFormView extends Component {
     getAdvertisementPreview() {
         let result = '';
         const {
-                  form_data,
-                  error_list
+                  form_data: formData
               }    = this.getFormData();
 
-        if (form_data.url && form_data.deck && form_data.headline) {
+        if (formData.url && formData.deck && formData.headline) {
             result = <div className="preview-holder" aria-readonly="true">
                 <div className="advertisement-slider">
                         <span>
                             <a className="advertisement_headline"
-                               href={form_data.url}
-                               title={form_data.deck}>{form_data.headline}</a>
+                               href={formData.url}
+                               title={formData.deck}>{formData.headline}</a>
                         </span>
                     <span>
-                    {(form_data.url || form_data.deck) && (
+                    {(formData.url || formData.deck) && (
                         <a className="advertisement_deck"
-                           href={this.getDomain(form_data.url)}
-                           title={form_data.deck}>{form_data.deck} - {form_data.url}</a>)}</span>
+                           href={this.getDomain(formData.url)}
+                           title={formData.deck}>{formData.deck} - {formData.url}</a>)}</span>
                 </div>
             </div>;
         }
@@ -228,7 +227,7 @@ class AdvertisementFormView extends Component {
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    ref={(c) => this.result_field_reference.advertisement_name = c}/>
+                                    ref={(c) => this.resultFieldReference.advertisement_name = c}/>
                             </FormGroup>
 
                             <FormGroup controlId="category"
@@ -238,7 +237,7 @@ class AdvertisementFormView extends Component {
                                 </Form.Label>
                                 <Form.Control
                                     as="select"
-                                    ref={(c) => this.result_field_reference.category = c}
+                                    ref={(c) => this.resultFieldReference.category = c}
                                 >
                                     {this.state.advertisement_category_list.map((res, i) => (
                                         <option key={i}
@@ -254,7 +253,7 @@ class AdvertisementFormView extends Component {
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    ref={(c) => this.result_field_reference.headline = c}/>
+                                    ref={(c) => this.resultFieldReference.headline = c}/>
                             </FormGroup>
 
                             <FormGroup controlId="deck"
@@ -264,7 +263,7 @@ class AdvertisementFormView extends Component {
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    ref={(c) => this.result_field_reference.deck = c}/>
+                                    ref={(c) => this.resultFieldReference.deck = c}/>
                             </FormGroup>
 
                             <FormGroup controlId="url" className={'form-group'}>
@@ -272,7 +271,7 @@ class AdvertisementFormView extends Component {
                                     url
                                 </Form.Label>
                                 <Form.Control type="text"
-                                              ref={(c) => this.result_field_reference.advertisement_url = c}/>
+                                              ref={(c) => this.resultFieldReference.advertisement_url = c}/>
                             </FormGroup>
 
                             <FormGroup className="advertisement-preview form-group"
@@ -315,7 +314,7 @@ class AdvertisementFormView extends Component {
                                 <Form.Control
                                     type="text"
                                     onChange={validate.handleAmountInputChange.bind(this)}
-                                    ref={(c) => this.result_field_reference.budget_daily_mlx = c}
+                                    ref={(c) => this.resultFieldReference.budget_daily_mlx = c}
                                 />
                             </Form.Group>
 
@@ -328,7 +327,7 @@ class AdvertisementFormView extends Component {
                                     type="text"
                                     className="col-sm-12"
                                     onChange={validate.handleAmountInputChange.bind(this)}
-                                    ref={(c) => this.result_field_reference.bid_impression_mlx = c}
+                                    ref={(c) => this.resultFieldReference.bid_impression_mlx = c}
                                 />
                             </Form.Group>
                             <div className={'text-center'}>

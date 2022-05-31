@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Col, FormControl, Row, InputGroup, Form} from 'react-bootstrap';
+import {Col, Form, FormControl, InputGroup, Row} from 'react-bootstrap';
 
 const MnemonicConfirmView = (props) => {
     const inputList                             = [];
@@ -23,15 +23,15 @@ const MnemonicConfirmView = (props) => {
         props.onChange(isValid(mnemonic), mnemonic);
     };
 
-    let info_label = 'reproduce the mnemonic phrase from the previous step.';
+    let infoLabel = 'reproduce the mnemonic phrase from the previous step.';
     if (props.processName === 'import') {
-        info_label = 'enter the mnemonic phrase from the wallet you want to use.';
+        infoLabel = 'enter the mnemonic phrase from the wallet you want to use.';
     }
 
     return (
         <div className={'mnemonic'}>
             <div className={'center mb-3'}>
-                <span>{info_label}</span>
+                <span>{infoLabel}</span>
             </div>
 
             <Form.Group className="form-group">

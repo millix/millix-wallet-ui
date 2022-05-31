@@ -7,15 +7,15 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import config from '../../config';
 import DatatableView from './utils/datatable-view';
 import * as format from '../helper/format';
+import {boolLabel} from '../helper/format';
 import HelpIconView from './utils/help-icon-view';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
-import {bool_label} from '../helper/format';
 import API from '../api';
 import ErrorList from './utils/error-list-view';
 
 
 class TransactionDetailsView extends Component {
-    transaction_id;
+    transactionID;
 
     constructor(props) {
         super(props);
@@ -29,7 +29,7 @@ class TransactionDetailsView extends Component {
     }
 
     componentDidMount() {
-        this.transaction_id = decodeURIComponent(this.props.match.params.transaction_id);
+        this.transactionID = decodeURIComponent(this.props.match.params.transaction_id);
         this.reloadTransactionDetail();
     }
 
@@ -38,7 +38,7 @@ class TransactionDetailsView extends Component {
     }
 
     reloadTransactionDetail() {
-        API.getTransaction(this.transaction_id, config.GENESIS_SHARD_ID)
+        API.getTransaction(this.transactionID, config.GENESIS_SHARD_ID)
            .then(transaction => {
                if (transaction.transaction_id) {
                    this.setState({
@@ -76,52 +76,52 @@ class TransactionDetailsView extends Component {
     }
 
     isDoubleSpend(transaction) {
-        let is_double_spend = false;
+        let isDoubleSpend = false;
         Object.keys(transaction.transaction_input_list).forEach(key => {
             if (transaction.transaction_input_list[key].is_double_spend !== 0) {
-                is_double_spend = true;
+                isDoubleSpend = true;
             }
         });
         Object.keys(transaction.transaction_output_list).forEach(key => {
             if (transaction.transaction_output_list[key].is_double_spend !== 0) {
-                is_double_spend = true;
+                isDoubleSpend = true;
             }
         });
 
-        return is_double_spend;
+        return isDoubleSpend;
     }
 
-    getIsDoubleSpendLabel(is_double_spend) {
-        let is_double_spend_label = bool_label(is_double_spend);
-        if (is_double_spend) {
-            is_double_spend_label = <span className={'text-danger'}>{is_double_spend_label}</span>;
+    getIsDoubleSpendLabel(isDoubleSpend) {
+        let isDoubleSpendLabel = boolLabel(isDoubleSpend);
+        if (isDoubleSpend) {
+            isDoubleSpendLabel = <span className={'text-danger'}>{isDoubleSpendLabel}</span>;
         }
 
-        return is_double_spend_label;
+        return isDoubleSpendLabel;
     }
 
     render() {
-        let {transaction}           = this.state;
-        let stable_value            = '';
-        let is_double_spend_label   = '';
-        let transaction_output_list = [];
-        let transaction_input_list  = [];
+        let {transaction}         = this.state;
+        let stableValue           = '';
+        let isDoubleSpendLabel    = '';
+        let transactionOutputList = [];
+        let transactionInputList  = [];
         if (transaction) {
             if (transaction.transaction_output_list) {
-                transaction_output_list = transaction.transaction_output_list.map((output, idx) => ({
+                transactionOutputList = transaction.transaction_output_list.map((output, idx) => ({
                     address          : output.address,
                     output_position  : output.output_position,
                     amount           : output.amount,
                     is_double_spend  : this.getIsDoubleSpendLabel(output.is_double_spend),
                     double_spend_date: format.date(output.double_spend_date),
-                    is_stable        : format.bool_label(output.is_stable),
+                    is_stable        : format.boolLabel(output.is_stable),
                     stable_date      : format.date(output.stable_date),
-                    status           : format.transaction_status_label(output.status)
+                    status           : format.transactionStatusLabel(output.status)
                 }));
             }
 
             if (transaction.transaction_input_list) {
-                transaction_input_list = transaction.transaction_input_list.map((input, idx) => ({
+                transactionInputList = transaction.transaction_input_list.map((input) => ({
                     address                : input.address,
                     input_position         : input.input_position,
                     output_transaction_id  : input.output_transaction_id,
@@ -129,19 +129,19 @@ class TransactionDetailsView extends Component {
                     output_transaction_date: format.date(input.output_transaction_date),
                     is_double_spend        : this.getIsDoubleSpendLabel(input.is_double_spend),
                     double_spend_date      : format.date(input.double_spend_date),
-                    is_stable              : format.bool_label(input.is_stable),
+                    is_stable              : format.boolLabel(input.is_stable),
                     stable_date            : format.date(input.stable_date),
-                    status                 : format.transaction_status_label(input.status),
+                    status                 : format.transactionStatusLabel(input.status),
                     action                 : this.getTransactionInputOutputLink(input)
                 }));
             }
 
-            stable_value = format.bool_label(transaction.is_stable);
+            stableValue = format.boolLabel(transaction.is_stable);
             if (transaction.stable_date) {
-                stable_value += ` (${format.date(transaction.stable_date)})`;
+                stableValue += ` (${format.date(transaction.stable_date)})`;
             }
 
-            is_double_spend_label = this.getIsDoubleSpendLabel(this.isDoubleSpend(transaction));
+            isDoubleSpendLabel = this.getIsDoubleSpendLabel(this.isDoubleSpend(transaction));
         }
 
         return (
@@ -214,7 +214,7 @@ class TransactionDetailsView extends Component {
                                             stable
                                         </td>
                                         <td>
-                                            {stable_value}
+                                            {stableValue}
                                         </td>
                                     </tr>
                                     <tr>
@@ -223,7 +223,7 @@ class TransactionDetailsView extends Component {
                                             help_item_name={'transaction_status'}/>
                                         </td>
                                         <td>
-                                            {format.transaction_status_label(transaction.status)}
+                                            {format.transactionStatusLabel(transaction.status)}
                                         </td>
                                     </tr>
 
@@ -248,7 +248,7 @@ class TransactionDetailsView extends Component {
                                             double spend
                                         </td>
                                         <td>
-                                            {is_double_spend_label}
+                                            {isDoubleSpendLabel}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -260,7 +260,7 @@ class TransactionDetailsView extends Component {
                                         help_item_name={'transaction_input'}/>
                                     </div>
                                     <DatatableView
-                                        value={transaction_input_list}
+                                        value={transactionInputList}
                                         sortField={'input_position'}
                                         sortOrder={1}
                                         showActionColumn={true}
@@ -300,7 +300,7 @@ class TransactionDetailsView extends Component {
                                     help_item_name={'transaction_output'}/>
                                 </div>
                                 <DatatableView
-                                    value={transaction_output_list}
+                                    value={transactionOutputList}
                                     sortField={'output_position'}
                                     sortOrder={1}
                                     resultColumn={[

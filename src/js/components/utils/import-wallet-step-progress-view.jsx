@@ -1,28 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useStepProgress, StepProgress, StepProgressBar, Step} from 'react-stepz';
+import {Step, StepProgress, StepProgressBar, useStepProgress} from 'react-stepz';
 import 'react-stepz/dist/index.css';
 
 const ImportWalletStepProgressView = (props) => {
-    const {stepForward, stepBackwards, getProps} = useStepProgress({
-        steps: [
+    const {
+              stepForward,
+              stepBackwards,
+              getProps
+          } = useStepProgress({
+        steps       : [
             {
-                label: 'wallet recover phrase',
+                label   : 'wallet recover phrase',
                 subtitle: '25%',
-                name: 'wallet recover phrase'
+                name    : 'wallet recover phrase'
             },
             {
-                label: 'wallet password',
+                label   : 'wallet password',
                 subtitle: '50%',
-                name: 'wallet password'
+                name    : 'wallet password'
             },
             {
-                label: 'finish',
+                label   : 'finish',
                 subtitle: '100%',
-                name: 'finish'
+                name    : 'finish'
             }
         ],
-        startingStep: 0,
+        startingStep: 0
     });
 
     props.stepBackwards(stepBackwards);
@@ -30,7 +34,7 @@ const ImportWalletStepProgressView = (props) => {
 
     return (
         <StepProgress {...getProps}>
-            <StepProgressBar />
+            <StepProgressBar/>
             <Step step={1}>
             </Step>
             <Step step={2}>
@@ -42,7 +46,7 @@ const ImportWalletStepProgressView = (props) => {
 };
 
 ImportWalletStepProgressView.propTypes = {
-    stepForward: PropTypes.func.isRequired,
+    stepForward  : PropTypes.func.isRequired,
     stepBackwards: PropTypes.func.isRequired
 };
 

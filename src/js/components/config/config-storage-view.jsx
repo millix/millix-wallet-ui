@@ -5,7 +5,7 @@ import * as validate from '../../helper/validate';
 import ModalView from '../utils/modal-view';
 import ErrorList from '../utils/error-list-view';
 import HelpIconView from '../utils/help-icon-view';
-import {bool_label} from '../../helper/format';
+import {boolLabel} from '../../helper/format';
 import {connect} from 'react-redux';
 import {walletUpdateConfig} from '../../redux/actions';
 
@@ -26,8 +26,8 @@ class ConfigStorageView extends Component {
     }
 
     populateForm() {
-        this.mode_node_sync_full.value    = !!JSON.parse(this.props.config.MODE_NODE_SYNC_FULL) ? 1 : 0;
-        this.mode_storage_sync_full.value = !!JSON.parse(this.props.config.MODE_STORAGE_SYNC_FULL) ? 1 : 0;
+        this.modeNodeSyncFull.value    = !!JSON.parse(this.props.config.MODE_NODE_SYNC_FULL) ? 1 : 0;
+        this.modeStorageSyncFull.value = !!JSON.parse(this.props.config.MODE_STORAGE_SYNC_FULL) ? 1 : 0;
     }
 
     changeModalShowSaveResult(value = true) {
@@ -45,19 +45,19 @@ class ConfigStorageView extends Component {
             error_list: []
         });
 
-        const error_list = [];
-        let config       = {
-            MODE_NODE_SYNC_FULL   : validate.integerPositive('full node', this.mode_node_sync_full.value, error_list, true),
-            MODE_STORAGE_SYNC_FULL: validate.integerPositive('full storage sync', this.mode_storage_sync_full.value, error_list, true)
+        const errorList = [];
+        let config      = {
+            MODE_NODE_SYNC_FULL   : validate.integerPositive('full node', this.modeNodeSyncFull.value, errorList, true),
+            MODE_STORAGE_SYNC_FULL: validate.integerPositive('full storage sync', this.modeStorageSyncFull.value, errorList, true)
         };
-        if (error_list.length === 0) {
+        if (errorList.length === 0) {
             this.props.walletUpdateConfig(config).then(() => {
                 this.setState({
                     sending: false
                 });
                 this.changeModalShowSaveResult();
             }).catch(() => {
-                error_list.push({
+                errorList.push({
                     name   : 'save_error',
                     message: 'error while saving occurred, please try again later'
                 });
@@ -66,7 +66,7 @@ class ConfigStorageView extends Component {
         else {
             this.setState({
                 sending   : false,
-                error_list: error_list
+                error_list: errorList
             });
         }
     }
@@ -95,13 +95,13 @@ class ConfigStorageView extends Component {
                                     <label>full node<HelpIconView help_item_name={'full_node'}/></label>
                                     <Form.Select
                                         as="select"
-                                        ref={(c) => this.mode_node_sync_full = c}
+                                        ref={(c) => this.modeNodeSyncFull = c}
                                     >
                                         <option value={1} key={1}>
-                                            {bool_label(1)}
+                                            {boolLabel(1)}
                                         </option>
                                         <option value={0} key={0}>
-                                            {bool_label(0)}
+                                            {boolLabel(0)}
                                         </option>
                                     </Form.Select>
                                 </Form.Group>
@@ -110,13 +110,13 @@ class ConfigStorageView extends Component {
                                     <label>full storage<HelpIconView help_item_name={'full_storage'}/></label>
                                     <Form.Select
                                         as="select"
-                                        ref={(c) => this.mode_storage_sync_full = c}
+                                        ref={(c) => this.modeStorageSyncFull = c}
                                     >
                                         <option value={1} key={1}>
-                                            {bool_label(1)}
+                                            {boolLabel(1)}
                                         </option>
                                         <option value={0} key={0}>
-                                            {bool_label(0)}
+                                            {boolLabel(0)}
                                         </option>
                                     </Form.Select>
                                 </Form.Group>

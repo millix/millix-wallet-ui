@@ -2,12 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 import {Button, Col, Container, Row} from 'react-bootstrap';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import WalletCreatePasswordView from './utils/wallet-create-password-view';
 import MnemonicView from './utils/mnemonic-view';
 import MnemonicConfirmView from './utils/mnemonic-confirm-view';
-import NewWalletStepProgressView from './utils/new-wallet-step-progress-view';
 import WalletCreateInfoView from './utils/wallet-create-info-view';
 import {unlockWallet} from '../redux/actions';
 
@@ -61,7 +59,7 @@ class NewWalletView extends Component {
     }
 
     getStepName() {
-        const result_step = [
+        const resultStep = [
             {
                 label: 'create password'
             },
@@ -76,7 +74,7 @@ class NewWalletView extends Component {
             }
         ];
 
-        return result_step[this.state.status - 1].label;
+        return resultStep[this.state.status - 1].label;
     }
 
     createWalletNextStep() {
@@ -121,19 +119,19 @@ class NewWalletView extends Component {
             return <Redirect to={{pathname: '/'}}/>;
         }
 
-        const {status}             = this.state;
-        const next_button_disabled = !this.state.password_valid ||
-                                     (this.state.status === STATUS.NEW_WALLET_MNEMONIC && !this.state.mnemonic) ||
-                                     (this.state.status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && !this.state.mnemonic_is_confirmed);
+        const {status}           = this.state;
+        const nextButtonDisabled = !this.state.password_valid ||
+                                   (this.state.status === STATUS.NEW_WALLET_MNEMONIC && !this.state.mnemonic) ||
+                                   (this.state.status === STATUS.NEW_WALLET_CONFIRM_MNEMONIC && !this.state.mnemonic_is_confirmed);
 
-        let back_button = <Button variant="outline-primary" onClick={() => {
+        let backButton = <Button variant="outline-primary" onClick={() => {
             this.props.history.replace('/unlock-wallet/');
         }}>
             back
         </Button>;
         if (this.state.status !== STATUS.NEW_WALLET_PASSWORD &&
             this.state.status !== STATUS.NEW_WALLET_CREATED) {
-            back_button = <Button
+            backButton = <Button
                 variant="outline-default"
                 onClick={() => this.createWalletPrevStep()}>back</Button>;
         }
@@ -175,10 +173,10 @@ class NewWalletView extends Component {
                                     <div
                                         className={'d-flex justify-content-center'}>
                                         <div className={'me-2'}>
-                                            {back_button}
+                                            {backButton}
                                         </div>
                                         <Button variant="outline-primary"
-                                                disabled={next_button_disabled}
+                                                disabled={nextButtonDisabled}
                                                 onClick={() => this.createWalletNextStep()}>continue</Button>
                                     </div>
                                 </Col>

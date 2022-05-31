@@ -36,12 +36,12 @@ class ConfigNetworkView extends Component {
     }
 
     populateForm() {
-        this.node_port.value                    = this.props.config.NODE_PORT;
-        this.node_host.value                    = this.props.config.NODE_HOST;
-        this.node_port_api.value                = this.props.config.NODE_PORT_API;
-        this.node_connection_inbound_max.value  = format.number(this.props.config.NODE_CONNECTION_INBOUND_MAX);
-        this.node_connection_outbound_max.value = format.number(this.props.config.NODE_CONNECTION_OUTBOUND_MAX);
-        this.node_initial_list.value            = JSON.stringify(this.props.config.NODE_INITIAL_LIST);
+        this.nodePort.value                  = this.props.config.NODE_PORT;
+        this.nodeHost.value                  = this.props.config.NODE_HOST;
+        this.nodePortApi.value               = this.props.config.NODE_PORT_API;
+        this.nodeConnectionInboundMax.value  = format.number(this.props.config.NODE_CONNECTION_INBOUND_MAX);
+        this.nodeConnectionOutboundMax.value = format.number(this.props.config.NODE_CONNECTION_OUTBOUND_MAX);
+        this.nodeInitialList.value           = JSON.stringify(this.props.config.NODE_INITIAL_LIST);
     }
 
     changeModalShowSaveResult(value = true) {
@@ -59,30 +59,30 @@ class ConfigNetworkView extends Component {
             error_list: []
         });
 
-        const error_list = [];
-        validate.required('node port', this.node_port.value, error_list);
-        validate.required('node ip', this.node_host.value, error_list);
-        validate.required('api port', this.node_port_api.value, error_list);
-        validate.required('max connections in', this.node_connection_inbound_max.value, error_list);
-        validate.required('max connections out', this.node_connection_outbound_max.value, error_list);
-        validate.required('initial peer list', this.node_initial_list.value, error_list);
-        let network_config = {
-            NODE_PORT                   : validate.integerPositive('node port', this.node_port.value, error_list, false),
-            NODE_HOST                   : validate.ip('node ip', this.node_host.value, error_list),
-            NODE_PORT_API               : validate.integerPositive('api port', this.node_port_api.value, error_list, false),
-            NODE_CONNECTION_INBOUND_MAX : validate.integerPositive('max connections in', this.node_connection_inbound_max.value, error_list, false),
-            NODE_CONNECTION_OUTBOUND_MAX: validate.integerPositive('max connections out', this.node_connection_outbound_max.value, error_list, false),
-            NODE_INITIAL_LIST           : validate.json('initial peer list', this.node_initial_list.value, error_list)
+        const errorList = [];
+        validate.required('node port', this.nodePort.value, errorList);
+        validate.required('node ip', this.nodeHost.value, errorList);
+        validate.required('api port', this.nodePortApi.value, errorList);
+        validate.required('max connections in', this.nodeConnectionInboundMax.value, errorList);
+        validate.required('max connections out', this.nodeConnectionOutboundMax.value, errorList);
+        validate.required('initial peer list', this.nodeInitialList.value, errorList);
+        let networkConfig = {
+            NODE_PORT                   : validate.integerPositive('node port', this.nodePort.value, errorList, false),
+            NODE_HOST                   : validate.ip('node ip', this.nodeHost.value, errorList),
+            NODE_PORT_API               : validate.integerPositive('api port', this.nodePortApi.value, errorList, false),
+            NODE_CONNECTION_INBOUND_MAX : validate.integerPositive('max connections in', this.nodeConnectionInboundMax.value, errorList, false),
+            NODE_CONNECTION_OUTBOUND_MAX: validate.integerPositive('max connections out', this.nodeConnectionOutboundMax.value, errorList, false),
+            NODE_INITIAL_LIST           : validate.json('initial peer list', this.nodeInitialList.value, errorList)
         };
 
-        if (error_list.length === 0) {
-            this.props.walletUpdateConfig(network_config).then(() => {
+        if (errorList.length === 0) {
+            this.props.walletUpdateConfig(networkConfig).then(() => {
                 this.setState({
                     sending: false
                 });
                 this.changeModalShowSaveResult();
             }).catch(() => {
-                error_list.push({
+                errorList.push({
                     name   : 'save_error',
                     message: 'error while saving occurred, please try again later'
                 });
@@ -91,7 +91,7 @@ class ConfigNetworkView extends Component {
         else {
             this.setState({
                 sending   : false,
-                error_list: error_list
+                error_list: errorList
             });
         }
     }
@@ -130,8 +130,8 @@ class ConfigNetworkView extends Component {
                                         <label>node ip<HelpIconView help_item_name={'node_ip'}/></label>
                                         <Form.Control
                                             type="text"
-                                            ref={(c) => this.node_host = c}
-                                            />
+                                            ref={(c) => this.nodeHost = c}
+                                        />
                                     </Form.Group>
                                 </Col>
                                 <Col>
@@ -139,7 +139,7 @@ class ConfigNetworkView extends Component {
                                         <label>node port</label>
                                         <Form.Control
                                             type="text"
-                                            ref={(c) => this.node_port = c}
+                                            ref={(c) => this.nodePort = c}
                                             onChange={(e) => {
                                                 return validate.handleInputChangeInteger(e, false, false);
                                             }}/>
@@ -150,7 +150,7 @@ class ConfigNetworkView extends Component {
                                         <label>api port<HelpIconView help_item_name={'api_port'}/></label>
                                         <Form.Control
                                             type="text"
-                                            ref={(c) => this.node_port_api = c}
+                                            ref={(c) => this.nodePortApi = c}
                                             onChange={(e) => {
                                                 return validate.handleInputChangeInteger(e, false, false);
                                             }}/>
@@ -161,7 +161,7 @@ class ConfigNetworkView extends Component {
                                         <label>max connections in<HelpIconView help_item_name={'max_connections_in'}/></label>
                                         <Form.Control
                                             type="text"
-                                            ref={(c) => this.node_connection_inbound_max = c}
+                                            ref={(c) => this.nodeConnectionInboundMax = c}
                                             onChange={(e) => {
                                                 return validate.handleInputChangeInteger(e, false);
                                             }}/>
@@ -172,7 +172,7 @@ class ConfigNetworkView extends Component {
                                         <label>max connections out<HelpIconView help_item_name={'max_connections_out'}/></label>
                                         <Form.Control
                                             type="text"
-                                            ref={(c) => this.node_connection_outbound_max = c}
+                                            ref={(c) => this.nodeConnectionOutboundMax = c}
                                             onChange={(e) => {
                                                 return validate.handleInputChangeInteger(e, false);
                                             }}/>
@@ -182,7 +182,7 @@ class ConfigNetworkView extends Component {
                                     <Form.Group className="form-group">
                                         <label>initial peer list<HelpIconView help_item_name={'initial_peer_list'}/></label>
                                         <Form.Control as="textarea" rows={5}
-                                                      ref={(c) => this.node_initial_list = c}/>
+                                                      ref={(c) => this.nodeInitialList = c}/>
                                     </Form.Group>
                                 </Col>
                                 <Col>

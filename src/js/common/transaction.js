@@ -40,9 +40,9 @@ class Transaction {
         });
     }
 
-    sendTransaction(transaction_output_payload, with_data = false) {
+    sendTransaction(transactionOutputPayload, withData = false) {
         return new Promise((resolve, reject) => {
-            API.sendTransaction(transaction_output_payload, with_data).then(data => {
+            API.sendTransaction(transactionOutputPayload, withData).then(data => {
                 if (data.api_status === 'fail') {
                     return Promise.reject(data);
                 }
@@ -55,36 +55,36 @@ class Transaction {
         });
     }
 
-    getModalBodySuccessResult(transaction_id) {
+    getModalBodySuccessResult(transactionID) {
         return <div>
             <div>
                 transaction id
             </div>
             <div>
-                {transaction_id}
+                {transactionID}
             </div>
         </div>;
     }
 
     handleErrorResponse(e) {
         let sendTransactionErrorMessage;
-        let error_list = [];
+        let errorList = [];
         if (e !== 'validation_error') {
             if (e && e.api_message) {
-                sendTransactionErrorMessage = text.get_ui_error(e.api_message);
+                sendTransactionErrorMessage = text.getUiError(e.api_message);
             }
             else {
                 sendTransactionErrorMessage = `your transaction could not be sent: (${e?.api_message?.error.error || e?.api_message?.error || e?.message || e?.api_message || e || 'undefined behaviour'})`;
             }
 
-            error_list.push({
+            errorList.push({
                 name   : 'sendTransactionError',
                 message: sendTransactionErrorMessage
             });
         }
 
         return {
-            error_list: error_list,
+            error_list: errorList,
             sending   : false,
             canceling : false
         };

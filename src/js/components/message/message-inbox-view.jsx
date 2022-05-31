@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Row, Spinner} from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import API from '../../api';
 import * as helper_message from '../../helper/message';
 import DatatableView from './../utils/datatable-view';
@@ -10,8 +10,8 @@ import {connect} from 'react-redux';
 class MessageInboxView extends Component {
     constructor(props) {
         super(props);
-        this.datatable_reload_interval = undefined;
-        this.state                     = {
+        this.datatableReloadInterval = undefined;
+        this.state                   = {
             message_list              : [],
             datatable_reload_timestamp: '',
             datatable_loading         : false
@@ -20,11 +20,11 @@ class MessageInboxView extends Component {
 
     componentDidMount() {
         this.reloadDatatable();
-        this.datatable_reload_interval = setInterval(() => this.reloadDatatable(), 60000);
+        this.datatableReloadInterval = setInterval(() => this.reloadDatatable(), 60000);
     }
 
     componentWillUnmount() {
-        clearInterval(this.datatable_reload_interval);
+        clearInterval(this.datatableReloadInterval);
     }
 
     reloadDatatable() {
@@ -33,10 +33,10 @@ class MessageInboxView extends Component {
         });
 
         return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier).then(data => {
-            const message_list = helper_message.datatable_format(data);
+            const messageList = helper_message.datatableFormat(data);
 
             this.setState({
-                message_list              : message_list,
+                message_list              : messageList,
                 datatable_reload_timestamp: new Date(),
                 datatable_loading         : false
             });

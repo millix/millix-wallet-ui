@@ -42,7 +42,7 @@ export default (props) => {
         thumbRef.current.style.left       = Math.floor(progress) + 'px';
     };
 
-    const toggleWaves         = () => {
+    const toggleWaves = () => {
         if (isMute) {
             setWaveProps({
                 'scaleX'    : '0',
@@ -80,7 +80,7 @@ export default (props) => {
         }
     };
 
-    const toggleSpeakerColor  = () => {
+    const toggleSpeakerColor = () => {
         if (isMute) {
             setMaskProps({'scaleX': '0'});
         }
@@ -120,9 +120,8 @@ export default (props) => {
 
     const handleSpeakerClick = () => {
         const currentValue = parseInt(sliderRef.current.value);
-        let newValue = 0;
-        if (currentValue === 0)
-        {
+        let newValue       = 0;
+        if (currentValue === 0) {
             newValue = 50;
         }
 

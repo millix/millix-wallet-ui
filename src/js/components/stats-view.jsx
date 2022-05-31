@@ -14,15 +14,15 @@ class StatsView extends Component {
     }
 
     render() {
-        let is_public = '';
+        let isPublic = '';
         if (this.props.network.node_is_public === 'unknown') {
-            is_public = 'analyzing your network connection';
+            isPublic = 'analyzing your network connection';
         }
         else if (this.props.network.node_is_public === true) {
-            is_public = 'your node is public';
+            isPublic = 'your node is public';
         }
         else {
-            is_public = 'your node is not public and is unlikely to receive transaction fees. use port forwarding on your router to make your node public.';
+            isPublic = 'your node is not public and is unlikely to receive transaction fees. use port forwarding on your router to make your node public.';
         }
 
         const props = this.props;
@@ -75,7 +75,7 @@ class StatsView extends Component {
                                         help_item_name={'network_state'}/>
                                     </td>
                                     <td>
-                                        {is_public}
+                                        {isPublic}
                                     </td>
                                 </tr>
                                 <tr>

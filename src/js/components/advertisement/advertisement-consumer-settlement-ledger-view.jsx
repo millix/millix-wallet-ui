@@ -36,35 +36,35 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
         });
 
         return API.listAdsLedgerDetails(moment().subtract(24, 'hours').unix()).then(response => {
-            const ledger_list     = [];
-            let total_paid_amount = 0;
-            response.ledger_list?.forEach(item_ledger => {
-                total_paid_amount += item_ledger.deposit;
-                ledger_list.push({
-                    payment_date          : format.date(item_ledger.payment_date),
-                    presentation_date     : format.date(item_ledger.presentation_date),
-                    amount                : format.millix(item_ledger.deposit),
-                    preview               : this.advertisementPreview(item_ledger),
-                    advertisement_url     : item_ledger.advertisement_url,
-                    advertisement_headline: item_ledger.advertisement_headline,
-                    advertisement_deck    : item_ledger.advertisement_deck,
+            const ledgerList    = [];
+            let totalPaidAmount = 0;
+            response.ledger_list?.forEach(itemLedger => {
+                totalPaidAmount += itemLedger.deposit;
+                ledgerList.push({
+                    payment_date          : format.date(itemLedger.payment_date),
+                    presentation_date     : format.date(itemLedger.presentation_date),
+                    amount                : format.millix(itemLedger.deposit),
+                    preview               : this.advertisementPreview(itemLedger),
+                    advertisement_url     : itemLedger.advertisement_url,
+                    advertisement_headline: itemLedger.advertisement_headline,
+                    advertisement_deck    : itemLedger.advertisement_deck,
                     action                : <>
                         <DatatableActionButtonView
-                            history_path={'/transaction/' + encodeURIComponent(item_ledger.protocol_transaction_id)}
+                            history_path={'/transaction/' + encodeURIComponent(itemLedger.protocol_transaction_id)}
                             history_state={{}}
                             icon={'th-list'}/>
                         <DatatableActionButtonView
-                            callback={(callback_args) => this.openAdvertisementLink(callback_args)}
-                            callback_args={item_ledger.advertisement_url}
+                            callback={(data) => this.openAdvertisementLink(data)}
+                            callback_args={itemLedger.advertisement_url}
                             icon={'link'}/></>
                 });
             });
 
             this.setState({
-                ledger_list               : ledger_list,
+                ledger_list               : ledgerList,
                 datatable_reload_timestamp: new Date(),
                 datatable_loading         : false,
-                total_paid_amount         : total_paid_amount
+                total_paid_amount         : totalPaidAmount
             });
         });
     }
@@ -73,13 +73,13 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
         window.open(data.callback_args, '_blank');
     }
 
-    advertisementPreview(item_ledger) {
+    advertisementPreview(itemLedger) {
         return (<>
             <AdvertisementPreview
                 disable_link={true}
-                url={item_ledger.advertisement_url}
-                headline={item_ledger.advertisement_headline}
-                deck={item_ledger.advertisement_deck}>
+                url={itemLedger.advertisement_url}
+                headline={itemLedger.advertisement_headline}
+                deck={itemLedger.advertisement_deck}>
             </AdvertisementPreview>
         </>);
     }
@@ -111,7 +111,7 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
                             showActionColumn={true}
                             resultColumn={[
                                 {
-                                    field: 'preview',
+                                    field     : 'preview',
                                     class_name: 'advertisement_preview_datatable_column'
                                 },
                                 {

@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {withRouter, Link} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import * as format from '../helper/format';
+import {boolLabel} from '../helper/format';
 import API from '../api';
 import * as text from '../helper/text';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
-import {bool_label} from '../helper/format';
 
 
 class TransactionHistoryView extends Component {
@@ -38,14 +38,14 @@ class TransactionHistoryView extends Component {
 
         return API.getTransactionHistory(this.props.wallet.address_key_identifier).then(data => {
             const rows = data.map((transaction, idx) => ({
-                idx        : data.length - idx,
-                date       : format.date(transaction.transaction_date),
-                amount     : transaction.amount,
-                txid       : transaction.transaction_id,
-                stable_date: format.date(transaction.stable_date),
-                parent_date: format.date(transaction.parent_date),
-                double_spend: bool_label(transaction.is_double_spend),
-                action     : <>
+                idx         : data.length - idx,
+                date        : format.date(transaction.transaction_date),
+                amount      : transaction.amount,
+                txid        : transaction.transaction_id,
+                stable_date : format.date(transaction.stable_date),
+                parent_date : format.date(transaction.parent_date),
+                double_spend: boolLabel(transaction.is_double_spend),
+                action      : <>
                     <DatatableActionButtonView
                         history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
                         history_state={[transaction]}
@@ -68,10 +68,10 @@ class TransactionHistoryView extends Component {
     }
 
     render() {
-        const confirmation_modal_body_single = <>
+        const confirmationModalBodySingle = <>
             <div>continuing will force your node to revalidate transaction</div>
             <div>{this.state.reset_transaction_id}</div>
-            {text.get_confirmation_modal_question()}
+            {text.getConfirmationModalQuestion()}
         </>;
 
         return (

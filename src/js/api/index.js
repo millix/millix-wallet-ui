@@ -1,4 +1,4 @@
-import {escape_url_param} from '../helper/security';
+import {escapeUrlParam} from '../helper/security';
 import {showErrorModalRequestApi} from '../components/utils/error-handler-request-api';
 import _ from 'lodash';
 
@@ -21,45 +21,45 @@ class API {
         }
     }
 
-    fetchApiTangled(url, result_param = {}, method = 'GET') {
-        const absolute_url = this.getTangledApiURL() + url;
+    fetchApiTangled(url, resultParam = {}, method = 'GET') {
+        const absoluteUrl = this.getTangledApiURL() + url;
 
-        return this.fetchApi(absolute_url, result_param, method);
+        return this.fetchApi(absoluteUrl, resultParam, method);
     }
 
-    fetchApiMillix(url, result_param = {}, method = 'GET') {
+    fetchApiMillix(url, resultParam = {}, method = 'GET') {
         try {
-            const absolute_url = this.getAuthenticatedMillixApiURL() + url;
-            return this.fetchApi(absolute_url, result_param, method);
+            const absoluteUrl = this.getAuthenticatedMillixApiURL() + url;
+            return this.fetchApi(absoluteUrl, resultParam, method);
         }
         catch (e) {
             return Promise.reject(e);
         }
     }
 
-    fetchApi(url, result_param = {}, method = 'GET') {
+    fetchApi(url, resultParam = {}, method = 'GET') {
         let data = {};
         if (method === 'POST') {
             data = {
                 method : method,
                 headers: {'Content-Type': 'application/json'},
-                body   : JSON.stringify(result_param)
+                body   : JSON.stringify(resultParam)
             };
         }
         else {
             let param_string = '';
-            if (result_param) {
-                const param_array = [];
-                Object.keys(result_param).forEach(function(param_key) {
-                    let value = result_param[param_key];
+            if (resultParam) {
+                const paramArray = [];
+                Object.keys(resultParam).forEach(function(paramKey) {
+                    let value = resultParam[paramKey];
                     if (_.isArray(value) || typeof (value) === 'object') {
                         value = encodeURIComponent(JSON.stringify(value));
                     }
 
-                    param_array.push(param_key + '=' + value);
+                    paramArray.push(paramKey + '=' + value);
                 });
-                if (param_array.length > 0) {
-                    param_string = '?' + param_array.join('&');
+                if (paramArray.length > 0) {
+                    param_string = '?' + paramArray.join('&');
                 }
                 url += param_string;
             }
@@ -115,15 +115,15 @@ class API {
         return this.fetchApiTangled('/jbUwv8IG6XeYMqCq');
     }
 
-    listAdsLedgerDetails(from_unix_date) {
+    listAdsLedgerDetails(fromUnixDate) {
         return this.fetchApiTangled('/B1Gg7nMljx0yX9z9', {
-            p0: from_unix_date
+            p0: fromUnixDate
         });
     }
 
-    toggleAdvertisementStatus(advertisement_guid) {
+    toggleAdvertisementStatus(advertisementGUID) {
         return this.fetchApiTangled(`/C7neErVANMWXWuse`, {
-            p0: {advertisement_guid: advertisement_guid}
+            p0: {advertisement_guid: advertisementGUID}
         });
     }
 
@@ -133,9 +133,9 @@ class API {
         });
     }
 
-    getAdvertisementById(advertisement_id) {
+    getAdvertisementById(advertisementID) {
         return this.fetchApiTangled('/ae60ccb743cd3c79', {
-            p0: advertisement_id
+            p0: advertisementID
         });
     }
 
@@ -175,6 +175,7 @@ class API {
             p11: 'Adl87cz8kC190Nqc'
         });
     }
+
     getStatsTransactionWithDataReceived(addressKeyIdentifier, dateBegin) {
         return this.fetchApiMillix(`/wWo8DCcoXVlpczoP`, {
             p0 : dateBegin,
@@ -255,8 +256,8 @@ class API {
     }
 
     newSessionWithPhrase(password, mnemonicPhrase) {
-        password       = escape_url_param(password);
-        mnemonicPhrase = escape_url_param(mnemonicPhrase);
+        password       = escapeUrlParam(password);
+        mnemonicPhrase = escapeUrlParam(mnemonicPhrase);
         return this.fetchApiMillix(`/GktuwZlVP39gty6v`, {
             p0: password,
             p1: mnemonicPhrase
@@ -264,7 +265,7 @@ class API {
     }
 
     newSession(password) {
-        password = escape_url_param(password);
+        password = escapeUrlParam(password);
         return this.fetchApiMillix(`/PMW9LXqUv7vXLpbA`, {
             p0: password
         });
@@ -383,17 +384,17 @@ class API {
         return this.fetchApiMillix('/QISzUVake29059bi');
     }
 
-    resetTransactionValidationByID(transaction_id = null) {
+    resetTransactionValidationByID(transactionID = null) {
         let payload = [];
-        if (typeof transaction_id === 'object') {
-            transaction_id.forEach((item) => {
+        if (typeof transactionID === 'object') {
+            transactionID.forEach((item) => {
                 if (typeof item.transaction_id !== 'undefined') {
                     payload.push(item.transaction_id);
                 }
             });
         }
         else {
-            payload.push(transaction_id);
+            payload.push(transactionID);
         }
 
         return this.fetchApiMillix('/P2LMh8NsUTkpWAH3',

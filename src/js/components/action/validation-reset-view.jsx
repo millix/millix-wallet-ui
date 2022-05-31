@@ -54,7 +54,7 @@ class ValidationResetView extends Component {
                                take some time depending on how many
                                transactions you have.
                            </div>
-                           {text.get_confirmation_modal_question()}
+                           {text.getConfirmationModalQuestion()}
                        </div>}/>
             <ModalView show={this.state.modalShowResult}
                        size={'lg'}

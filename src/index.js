@@ -2,57 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './js/components/app-container';
 import store from './js/redux/store';
-import {unlockWallet, updateClock, addWalletConfig, updateNodeAttribute, updateWalletAddressVersion, updateNotificationVolume} from './js/redux/actions';
+import {addWalletConfig, unlockWallet, updateClock, updateNodeAttribute, updateNotificationVolume, updateWalletAddressVersion} from './js/redux/actions';
 import reportWebVitals from './reportWebVitals';
 import {config as faConfig, library} from '@fortawesome/fontawesome-svg-core';
-import {
-    faArrowCircleLeft,
-    faBook,
-    faClock,
-    faRedo,
-    faCloudDownloadAlt,
-    faCompressArrowsAlt,
-    faExchangeAlt,
-    faFingerprint,
-    faHeartbeat,
-    faHome,
-    faKey,
-    faMicrochip,
-    faPlus,
-    faPowerOff,
-    faSignOutAlt,
-    faSlidersH,
-    faStream,
-    faTrash,
-    faUndo,
-    faUndoAlt,
-    faUserClock,
-    faWallet,
-    faLock,
-    faLockOpen,
-    faTimes,
-    faEye,
-    faList,
-    faBars,
-    faChevronDown,
-    faChevronUp,
-    faSignInAlt,
-    faFileImport,
-    faPencilAlt,
-    faSync,
-    faPlusCircle,
-    faPlay,
-    faPause,
-    faQuestionCircle,
-    faThList,
-    faEllipsisV,
-    faRotateLeft,
-    faCheckCircle,
-    faCodeMerge,
-    faReply,
-    faEnvelope,
-    faLink
-} from '@fortawesome/free-solid-svg-icons';
+import {faArrowCircleLeft, faBars, faBook, faCheckCircle, faChevronDown, faChevronUp, faClock, faCloudDownloadAlt, faCodeMerge, faCompressArrowsAlt, faEllipsisV, faEnvelope, faExchangeAlt, faEye, faFileImport, faFingerprint, faHeartbeat, faHome, faKey, faLink, faList, faLock, faLockOpen, faMicrochip, faPause, faPencilAlt, faPlay, faPlus, faPlusCircle, faPowerOff, faQuestionCircle, faRedo, faReply, faRotateLeft, faSignInAlt, faSignOutAlt, faSlidersH, faStream, faSync, faThList, faTimes, faTrash, faUndo, faUndoAlt, faUserClock, faWallet} from '@fortawesome/free-solid-svg-icons';
 import './css/bootstrap/bootstrap.scss';
 
 import 'primereact/resources/themes/bootstrap4-dark-purple/theme.css';

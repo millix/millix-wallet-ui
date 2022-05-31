@@ -22,7 +22,7 @@ class ConfigConnectionView extends Component {
             error_list     : []
         };
 
-        this.connection_config_names = [
+        this.connectionConfigNames = [
             'NODE_CONNECTION_STATIC',
             'NODE_CONNECTION_OUTBOUND_WHITELIST',
             'NODE_CONNECTION_INBOUND_WHITELIST'
@@ -33,37 +33,37 @@ class ConfigConnectionView extends Component {
         this.loadConfig();
     }
 
-    showDatatableLoading(connection_data, config_name = false, show_loader = true) {
-        if (config_name) {
-            connection_data['loading_' + config_name] = show_loader;
+    showDatatableLoading(connectionData, configName = false, showLoader = true) {
+        if (configName) {
+            connectionData['loading_' + configName] = showLoader;
         }
         else {
-            this.connection_config_names.forEach((element) => {
-                connection_data['loading_' + element] = show_loader;
+            this.connectionConfigNames.forEach((element) => {
+                connectionData['loading_' + element] = showLoader;
             });
         }
-        connection_data['loading_' + config_name] = show_loader;
+        connectionData['loading_' + configName] = showLoader;
         this.setState({
-            connection_data
+            connection_data: connectionData
         });
     }
 
-    loadConfig(config_name) {
-        const connection_data = this.state.connection_data;
-        this.showDatatableLoading(connection_data, config_name);
+    loadConfig(configName) {
+        const connectionData = this.state.connection_data;
+        this.showDatatableLoading(connectionData, configName);
 
-        if (config_name) {
-            API.getNodeConfigValueByName(config_name).then((data) => {
-                connection_data[data.config_name] = [];
-                this.updateData(connection_data, data);
+        if (configName) {
+            API.getNodeConfigValueByName(configName).then((data) => {
+                connectionData[data.config_name] = [];
+                this.updateData(connectionData, data);
             });
         }
         else {
             API.getNodeConfig().then((data) => {
-                connection_data[data.config_name] = [];
+                connectionData[data.config_name] = [];
                 data.forEach(element => {
-                    if (this.connection_config_names.includes(element.config_name)) {
-                        this.updateData(connection_data, element);
+                    if (this.connectionConfigNames.includes(element.config_name)) {
+                        this.updateData(connectionData, element);
                     }
                 });
             });
@@ -76,9 +76,9 @@ class ConfigConnectionView extends Component {
         });
     }
 
-    updateData(connection_data, element) {
+    updateData(connectionData, element) {
         JSON.parse(element.value).forEach(el => {
-            connection_data[element.config_name].push({
+            connectionData[element.config_name].push({
                 node_id: el,
                 action : (<DatatableActionButtonView
                     icon={'trash'}
@@ -90,58 +90,58 @@ class ConfigConnectionView extends Component {
                 />)
             });
         });
-        connection_data['reload_timestamp_' + element.config_name] = new Date();
-        this.showDatatableLoading(connection_data, element.config_name, false);
+        connectionData['reload_timestamp_' + element.config_name] = new Date();
+        this.showDatatableLoading(connectionData, element.config_name, false);
 
         this.setState({
-            connection_data
+            connection_data: connectionData
         });
     }
 
-    removeConnection(config_name, value) {
-        let result_config = [];
-        this.state.connection_data[config_name].forEach(element => {
+    removeConnection(configName, value) {
+        let resultConfig = [];
+        this.state.connection_data[configName].forEach(element => {
             if (element.node_id !== value) {
-                result_config.push(element);
+                resultConfig.push(element);
             }
         });
-        API.updateNodeConfigValue(config_name, this.prepareApiConfigData(result_config)).then(() => {
+        API.updateNodeConfigValue(configName, this.prepareApiConfigData(resultConfig)).then(() => {
             this.setState({
                 connection_data: {
                     ...this.state.connection_data,
-                    [config_name]: result_config
+                    [configName]: resultConfig
                 }
             });
         });
     }
 
-    showModal(config_name, show = true) {
-        let connection_data                    = this.state.connection_data;
-        connection_data['show_' + config_name] = show;
+    showModal(configName, show = true) {
+        let connectionData                   = this.state.connection_data;
+        connectionData['show_' + configName] = show;
         this.setState({
-            connection_data: {...connection_data}
+            connection_data: {...connectionData}
         });
         this.clearErrorList();
     }
 
-    saveConfig(config_name) {
+    saveConfig(configName) {
         this.clearErrorList();
-        let error_list = [];
-        validate.required('node id', this[config_name].value, error_list);
-        const node_id = validate.string_alphanumeric('node id', this[config_name].value, error_list, 34);
+        let errorList = [];
+        validate.required('node id', this[configName].value, errorList);
+        const nodeID = validate.string_alphanumeric('node id', this[configName].value, errorList, 34);
 
-        if (error_list.length > 0) {
+        if (errorList.length > 0) {
             this.setState({
-                error_list
+                error_list: errorList
             });
         }
         else {
-            let configuration_data = this.prepareApiConfigData(this.state.connection_data[config_name]);
-            configuration_data.push(node_id);
+            let configurationData = this.prepareApiConfigData(this.state.connection_data[configName]);
+            configurationData.push(nodeID);
 
-            API.updateNodeConfigValue(config_name, configuration_data).then(() => {
-                this.showModal(config_name, false);
-                this.loadConfig(config_name);
+            API.updateNodeConfigValue(configName, configurationData).then(() => {
+                this.showModal(configName, false);
+                this.loadConfig(configName);
             }).catch((e) => {
                 this.setState({
                     error_list: [
@@ -155,26 +155,26 @@ class ConfigConnectionView extends Component {
         }
     }
 
-    prepareApiConfigData(config_data) {
-        let configuration_data = [];
+    prepareApiConfigData(configData) {
+        let configurationData = [];
 
-        config_data.forEach(element => {
-            configuration_data.push(element.node_id);
+        configData.forEach(element => {
+            configurationData.push(element.node_id);
         });
 
-        return configuration_data;
+        return configurationData;
     }
 
-    getConnectionDatatable(connection_name, config_name) {
+    getConnectionDatatable(connectionName, configName) {
         return (
             <div className={'panel panel-filled'}>
                 <ModalView
-                    show={this.state.connection_data['show_' + config_name]}
+                    show={this.state.connection_data['show_' + configName]}
                     size={'lg'}
                     prevent_close_after_accept={true}
-                    on_close={() => this.showModal(config_name, false)}
-                    on_accept={() => this.saveConfig(config_name)}
-                    heading={`add ${connection_name}`}
+                    on_close={() => this.showModal(configName, false)}
+                    on_accept={() => this.saveConfig(configName)}
+                    heading={`add ${connectionName}`}
                     body={
                         <Form>
                             <ErrorList
@@ -182,7 +182,7 @@ class ConfigConnectionView extends Component {
                             <Form.Control
                                 type="text"
                                 placeholder="node id"
-                                ref={(c) => this[config_name] = c}
+                                ref={(c) => this[configName] = c}
                                 onChange={(e) => {
                                     return validate.handleInputChangeAlphanumericString(e, 34);
                                 }}
@@ -190,21 +190,21 @@ class ConfigConnectionView extends Component {
                         </Form>
                     }/>
                 <div className={'panel-heading bordered'}>
-                    {connection_name} whitelist
+                    {connectionName} whitelist
                 </div>
                 <div className={'panel-body'}>
                     <Col>
                         <DatatableView
                             reload_datatable={() => {
-                                this.loadConfig(config_name);
+                                this.loadConfig(configName);
                             }}
-                            loading={this.state.connection_data['loading_' + config_name]}
-                            datatable_reload_timestamp={this.state.connection_data['reload_timestamp_' + config_name]}
+                            loading={this.state.connection_data['loading_' + configName]}
+                            datatable_reload_timestamp={this.state.connection_data['reload_timestamp_' + configName]}
                             action_button={{
-                                label   : `add ${connection_name}`,
-                                on_click: () => this.showModal(config_name)
+                                label   : `add ${connectionName}`,
+                                on_click: () => this.showModal(configName)
                             }}
-                            value={this.state.connection_data[config_name]}
+                            value={this.state.connection_data[configName]}
                             sortOrder={1}
                             showActionColumn={true}
                             resultColumn={[

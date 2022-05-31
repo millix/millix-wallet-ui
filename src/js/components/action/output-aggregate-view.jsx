@@ -93,11 +93,11 @@ class OutputAggregateView extends Component {
                   })
                   .catch((e) => {
                       if (e && e.api_message) {
-                          const error_message = text.get_ui_error(e.api_message);
+                          const errorMessage = text.getUiError(e.api_message);
 
                           errorList.push({
                               name   : 'sendTransactionError',
-                              message: error_message
+                              message: errorMessage
                           });
                           this.aggregateOnComplete(errorList, []);
                       }
@@ -180,7 +180,7 @@ class OutputAggregateView extends Component {
                             confirmation_modal_heading={'unspent aggregation'}
                             confirmation_modal_body={<>
                                 <div>you are about to aggregate {format.number(this.state.aggregationTransactionOutputCount)} unspents.</div>
-                                {text.get_confirmation_modal_question()}
+                                {text.getConfirmationModalQuestion()}
                             </>}
                         />
                     </div>

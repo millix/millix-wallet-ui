@@ -299,8 +299,8 @@ class Sidebar extends Component {
                     >
                         <NavText>
                             messages{this.getMessageCountBadge()} <FontAwesomeIcon className={'icon'}
-                                                      icon="chevron-down"
-                                                      size="1x"/>
+                                                                                   icon="chevron-down"
+                                                                                   size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
                                              icon="chevron-up"
                                              size="1x"/>

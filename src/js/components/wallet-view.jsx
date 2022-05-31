@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Col, Row, Form, Button} from 'react-bootstrap';
+import {Button, Col, Form, Row} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import ErrorList from './utils/error-list-view';
@@ -39,7 +39,7 @@ class WalletView extends Component {
     }
 
     send() {
-        let error_list = [];
+        let errorList = [];
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
             this.setState({
@@ -48,23 +48,23 @@ class WalletView extends Component {
             return;
         }
 
-        const transaction_params = {
-            address: validate.required('address', this.destinationAddress.value, error_list),
-            amount : validate.amount('amount', this.amount.value, error_list),
-            fee    : validate.amount('fee', this.fee.value, error_list)
+        const transactionParams = {
+            address: validate.required('address', this.destinationAddress.value, errorList),
+            amount : validate.amount('amount', this.amount.value, errorList),
+            fee    : validate.amount('fee', this.fee.value, errorList)
         };
 
-        if (error_list.length === 0) {
-            Transaction.verifyAddress(transaction_params).then((data) => {
+        if (errorList.length === 0) {
+            Transaction.verifyAddress(transactionParams).then((data) => {
                 this.setState(data);
-                this.changeModalShowConfirmation()
+                this.changeModalShowConfirmation();
             }).catch((error) => {
-                error_list.push(error);
+                errorList.push(error);
             });
         }
 
         this.setState({
-            error_list: error_list
+            error_list: errorList
         });
     }
 
@@ -72,8 +72,8 @@ class WalletView extends Component {
         this.setState({
             sending: true
         });
-        let transaction_output_payload = this.prepareTransactionOutputPayload();
-        Transaction.sendTransaction(transaction_output_payload).then((data) => {
+        let transactionOutputPayload = this.prepareTransactionOutputPayload();
+        Transaction.sendTransaction(transactionOutputPayload).then((data) => {
             this.clearSendForm();
             this.changeModalShowConfirmation(false);
             this.changeModalShowSendResult();
@@ -205,7 +205,7 @@ class WalletView extends Component {
                                                 body={<div>
                                                     <div>you are about to send {format.millix(this.state.amount)} to</div>
                                                     <div>{this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}</div>
-                                                    {text.get_confirmation_modal_question()}
+                                                    {text.getConfirmationModalQuestion()}
                                                 </div>}/>
 
                                             <ModalView
