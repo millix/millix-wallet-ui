@@ -49,15 +49,17 @@ class WalletView extends Component {
         }
 
         const transaction_params = {
-            address: validate.required('address', this.destinationAddress.value, error_list),
-            amount : validate.amount('amount', this.amount.value, error_list),
-            fee    : validate.amount('fee', this.fee.value, error_list)
+            addresses: [validate.required('address', this.destinationAddress.value, error_list)],
+            amount   : validate.amount('amount', this.amount.value, error_list),
+            fee      : validate.amount('fee', this.fee.value, error_list)
         };
 
         if (error_list.length === 0) {
             Transaction.verifyAddress(transaction_params).then((data) => {
-                this.setState(data);
-                this.changeModalShowConfirmation()
+                const addressList = data.address_list;
+                delete data['address_list'];
+                this.setState({...data, ...addressList[0]});
+                this.changeModalShowConfirmation();
             }).catch((error) => {
                 error_list.push(error);
             });
