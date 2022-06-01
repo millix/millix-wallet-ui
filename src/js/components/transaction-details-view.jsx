@@ -29,8 +29,19 @@ class TransactionDetailsView extends Component {
     }
 
     componentDidMount() {
+        this.updateTransaction();
+    }
+
+    updateTransaction(){
         this.transaction_id = decodeURIComponent(this.props.match.params.transaction_id);
         this.reloadTransactionDetail();
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        const newTransactionID = decodeURIComponent(nextProps.match.params.transaction_id);
+        if(this.transaction_id !== newTransactionID){
+            this.updateTransaction();
+        }
     }
 
     componentWillUnmount() {
