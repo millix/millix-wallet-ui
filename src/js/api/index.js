@@ -158,14 +158,14 @@ class API {
         else {
             return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
                 p0: JSON.stringify(transactionOutputPayload)
-            });
+            }, 'POST');
         }
     }
 
     sendTransactionWithData(transactionOutputPayload) {
         return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, {
             p0: JSON.stringify(transactionOutputPayload)
-        });
+        }, 'POST');
     }
 
     listTransactionWithDataSent(addressKeyIdentifier) {
