@@ -138,7 +138,8 @@ class Sidebar extends Component {
         else if (section === 'help' &&
                  (
                      (defaultSelected === '/faq') ||
-                     (defaultSelected === '/report-issue')
+                     (defaultSelected === '/report-issue') ||
+                     (defaultSelected === '/system-info')
                  )
         ) {
             result = true;
@@ -426,7 +427,12 @@ class Sidebar extends Component {
                         </NavItem>
                         <NavItem key={'report-issue'} eventKey="/report-issue">
                             <NavText>
-                                report problem
+                                report issue
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'system-info'} eventKey="/system-info">
+                            <NavText>
+                                system info
                             </NavText>
                         </NavItem>
                     </NavItem>

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Row, Table} from 'react-bootstrap';
+import {Col, Row} from 'react-bootstrap';
 import {connect} from 'react-redux';
+import {DISCORD_URL} from '../../../config.js';
 
 
 class FaqView extends Component {
@@ -43,7 +44,7 @@ class FaqView extends Component {
                                     if you haven't find an answer on faq page or
                                     in other site sections you are always
                                     welcome to ask a question on <a
-                                    href={'https://discord.gg/HgZqav7v66'}
+                                    href={DISCORD_URL}
                                     target={'_blank'}>discord</a>
                                 </div>
                             </div>
@@ -71,7 +72,7 @@ class FaqView extends Component {
                                     if you haven't find an answer on faq page or
                                     in other site sections you are always
                                     welcome to ask a question on <a
-                                    href={'https://discord.gg/HgZqav7v66'}
+                                    href={DISCORD_URL}
                                     target={'_blank'}>discord</a>
                                 </div>
                             </div>
