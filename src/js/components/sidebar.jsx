@@ -435,6 +435,11 @@ class Sidebar extends Component {
                                 system info
                             </NavText>
                         </NavItem>
+                        <NavItem key={'system-info'} eventKey="/system-info">
+                            <NavText>
+                                system info
+                            </NavText>
+                        </NavItem>
                     </NavItem>
 
                     <NavItem key={'lock'} eventKey="lock">
