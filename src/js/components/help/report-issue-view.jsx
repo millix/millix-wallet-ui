@@ -26,7 +26,7 @@ class ReportIssueView extends Component {
 
     setReportMessage(node_os_info) {
         this.setState({
-            message: `node:
+            message: `\n\nnode:
     node id - ${this.props.network.node_id};
     key identifier - ${this.props.wallet.address_key_identifier}
     build - ${node_os_info.node_millix_version}
@@ -62,7 +62,7 @@ hardware:
                                 </p>
                                 <MessageComposeForm
                                     message={this.state.message}
-                                    subject={'issue report:'}
+                                    subject={`${this.props.wallet.address_key_identifier} issue report`}
                                     destination_address={REPORT_ISSUE_ADDRESS}
                                 />
                             </div>

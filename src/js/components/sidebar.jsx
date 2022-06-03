@@ -427,7 +427,7 @@ class Sidebar extends Component {
                         </NavItem>
                         <NavItem key={'report-issue'} eventKey="/report-issue">
                             <NavText>
-                                report problem
+                                report issue
                             </NavText>
                         </NavItem>
                         <NavItem key={'system-info'} eventKey="/system-info">

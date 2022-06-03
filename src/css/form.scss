@@ -121,12 +121,9 @@ label {
 .chip_input {
   box-shadow: none !important;
 
-  > div {
-    width: 100%;
-  }
-
   &.styles_chip-input__3aumB {
     padding: 0;
+    border: $input-border-width solid $input-border-color;
 
     > div > div {
       padding: 0 !important;
@@ -147,6 +144,14 @@ label {
         padding: 0 0.7rem 0 1rem;
       }
     }
+  }
+
+  &.styles_shadow-primary__2LDux {
+    box-shadow: none;
+  }
+
+  > div {
+    width: 100%;
   }
 
   .no-gutters {
