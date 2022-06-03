@@ -122,6 +122,10 @@ label {
 .chip_input {
   box-shadow: none !important;
 
+  > div {
+    width: 100%;
+  }
+
   &.styles_chip-input__3aumB {
     padding: 0;
     border: $input-border-width solid $input-border-color;
