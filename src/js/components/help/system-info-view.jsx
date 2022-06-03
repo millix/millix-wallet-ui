@@ -2,18 +2,18 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Table} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import {updateNetworkState} from '../redux/actions';
+import {updateNetworkState} from '../../redux/actions';
 import os from 'os';
-import API from '../api';
-import * as format from '../helper/format';
-import HelpIconView from './utils/help-icon-view';
+import API from '../../api';
+import * as format from '../../helper/format';
+import HelpIconView from './../utils/help-icon-view';
 
 
-class ReportIssueView extends Component {
+class SystemInfoView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nodeOsInfo    : {
+            node_os_info  : {
                 arch                  : '',
                 memory                : {
                     free       : '',
@@ -39,7 +39,7 @@ class ReportIssueView extends Component {
     componentDidMount() {
         API.getNodeOsInfo().then(response => {
             this.setState({
-                nodeOsInfo: response
+                node_os_info: response
             });
         });
     }
@@ -50,30 +50,11 @@ class ReportIssueView extends Component {
         return (<Col md="12">
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
-                    report problem
+                    system info
                 </div>
                 <div className={'panel-body'}>
                     <Row>
                         <Col>
-                            <div className={'section_subtitle'}>
-                                instructions
-                            </div>
-                            <div className={'form-group'}>
-                                <div>to report about a problem please follow
-                                    these steps:
-                                </div>
-                                <ul>
-                                    <li>describe current behavior</li>
-                                    <li>describe expected behavior</li>
-                                    <li>add information provided on this page
-                                    </li>
-                                    <li>send it to us on <a
-                                        href={'https://discord.com/invite/nb5uaKq4yX'}
-                                        target={'_blank'}>discord</a></li>
-                                </ul>
-                            </div>
-                            <hr/>
-
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
@@ -115,7 +96,7 @@ class ReportIssueView extends Component {
                                                 build
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.node_millix_version}
+                                                {this.state.node_os_info.node_millix_version}
                                             </td>
                                         </tr>
                                         <tr>
@@ -123,7 +104,7 @@ class ReportIssueView extends Component {
                                                 build date
                                             </td>
                                             <td>
-                                                {format.date(this.state.nodeOsInfo.node_millix_build_date)}
+                                                {format.date(this.state.node_os_info.node_millix_build_date)}
                                             </td>
                                         </tr>
                                         <tr>
@@ -151,7 +132,7 @@ class ReportIssueView extends Component {
                                                 platform
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.platform}
+                                                {this.state.node_os_info.platform}
                                             </td>
                                         </tr>
                                         <tr>
@@ -159,7 +140,7 @@ class ReportIssueView extends Component {
                                                 type
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.type}
+                                                {this.state.node_os_info.type}
                                             </td>
                                         </tr>
                                         <tr>
@@ -167,15 +148,13 @@ class ReportIssueView extends Component {
                                                 release
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.release}
+                                                {this.state.node_os_info.release}
                                             </td>
                                         </tr>
                                         </tbody>
                                     </Table>
                                 </Col>
                             </Row>
-
-
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
@@ -189,7 +168,7 @@ class ReportIssueView extends Component {
                                                 architecture
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.arch}
+                                                {this.state.node_os_info.arch}
                                             </td>
                                         </tr>
                                         <tr>
@@ -197,7 +176,7 @@ class ReportIssueView extends Component {
                                                 memory total
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.memory.total}
+                                                {this.state.node_os_info.memory.total}
                                             </td>
                                         </tr>
                                         <tr>
@@ -205,7 +184,7 @@ class ReportIssueView extends Component {
                                                 memory free
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.memory.free} ({this.state.nodeOsInfo.memory.freePercent})
+                                                {this.state.node_os_info.memory.free} ({this.state.node_os_info.memory.freePercent})
                                             </td>
                                         </tr>
                                         <tr>
@@ -213,7 +192,7 @@ class ReportIssueView extends Component {
                                                 cpu
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.cpu.model}
+                                                {this.state.node_os_info.cpu.model}
                                             </td>
                                         </tr>
                                         <tr>
@@ -221,7 +200,7 @@ class ReportIssueView extends Component {
                                                 cpu load average
                                             </td>
                                             <td>
-                                                {this.state.nodeOsInfo.cpu.loadavg.join(' ')}
+                                                {this.state.node_os_info.cpu.loadavg.join(' ')}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -239,13 +218,9 @@ class ReportIssueView extends Component {
 
 export default connect(
     state => ({
-        clock  : state.clock,
-        config : state.config,
-        log    : state.log,
         network: state.network,
         wallet : state.wallet,
-        backlog: state.backlog,
         node   : state.node
     }), {
         updateNetworkState
-    })(withRouter(ReportIssueView));
+    })(withRouter(SystemInfoView));

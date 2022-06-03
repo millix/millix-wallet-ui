@@ -121,6 +121,10 @@ label {
 .chip_input {
   box-shadow: none !important;
 
+  > div {
+    width: 100%;
+  }
+
   &.styles_chip-input__3aumB {
     padding: 0;
 
@@ -132,10 +136,13 @@ label {
       .styles_chip__i-PT7:hover,
       .styles_chip__i-PT7:focus,
       .styles_chip__i-PT7:active {
+        margin-left: 0.5rem;
         align-items: center;
         background: $color-bg-layer-2;
         border: 1px solid $color-tab-hover;
+        border-radius: 1rem;
         display: inline-flex;
+        height: 2rem;
         font-size: 1rem;
         padding: 0 0.7rem 0 1rem;
       }

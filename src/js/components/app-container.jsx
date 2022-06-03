@@ -18,8 +18,9 @@ import NewWalletView from './new-wallet-view';
 import ManageWalletView from './manage-wallet-view';
 import StatsView from './stats-view';
 import BacklogView from './backlog-view';
-import ReportIssueView from './report-issue-view';
-import FaqView from './faq-view';
+import ReportIssueView from './help/report-issue-view';
+import FaqView from './help/faq-view';
+import SystemInfoView from './help/system-info-view';
 import AddressListView from './address-list-view';
 import MessageComposeView from './message/message-compose-view';
 import MessageInboxView from './message/message-inbox-view';
@@ -105,6 +106,8 @@ class AppContainer extends Component {
                                                  component={TransactionHistoryView}/>
                     <UnlockedWalletRequiredRoute path="/faq"
                                                  component={FaqView}/>
+                    <UnlockedWalletRequiredRoute path="/system-info"
+                                                 component={SystemInfoView}/>
                     <UnlockedWalletRequiredRoute
                         path="/unspent-transaction-output-list/:state"
                         component={UnspentTransactionOutputView}/>
