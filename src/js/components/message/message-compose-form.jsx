@@ -60,7 +60,12 @@ class MessageComposeForm extends Component {
     }
 
     componentDidMount() {
-        this.amount.value = format.millix(10000, false);
+        let amount_default = 10000;
+        if (this.props.amount) {
+            amount_default = this.props.amount;
+        }
+        this.amount.value = format.millix(amount_default, false);
+
         if (this.props.message) {
             this.populateFormFromProps();
         }
@@ -255,13 +260,17 @@ class MessageComposeForm extends Component {
         this.setState({destination_address_list: chips});
     };
 
+    getFieldClassname(field) {
+        return this.props.hidden_field_list?.includes(field) ? 'd-none' : '';
+    }
+
     render() {
         return (
             <>
                 <ErrorList
                     error_list={this.state.error_list}/>
                 <Row>
-                    <Col>
+                    <Col className={this.getFieldClassname('address')}>
                         <Form.Group className="form-group" role="form">
                             <label>recipients</label>
                             <ReactChipInput
@@ -283,7 +292,7 @@ class MessageComposeForm extends Component {
                         </Form.Group>
                     </Col>
                     <Form>
-                        <Col>
+                        <Col className={this.getFieldClassname('subject')}>
                             <Form.Group className="form-group">
                                 <label>subject</label>
                                 <Form.Control type="text"
@@ -295,7 +304,7 @@ class MessageComposeForm extends Component {
                         </Col>
                         <Col>
                             <Form.Group className="form-group">
-                                <label>message</label>
+                                <label>{this.props.input_label_message ? this.props.input_label_message : 'message'}</label>
                                 <Form.Control as="textarea" rows={10}
                                               value={this.state.message}
                                               onChange={c => this.setState({message: c.target.value})}
@@ -306,7 +315,7 @@ class MessageComposeForm extends Component {
                                               }}/>
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col className={this.getFieldClassname('amount')}>
                             <Form.Group className="form-group">
                                 <label>payment<HelpIconView help_item_name={'message_payment'}/></label>
                                 <Form.Control type="text"
@@ -316,7 +325,7 @@ class MessageComposeForm extends Component {
                                               onChange={validate.handleAmountInputChange.bind(this)}/>
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col className={this.getFieldClassname('fee')}>
                             <Form.Group className="form-group"
                                         as={Row}>
                                 <label>fee</label>
@@ -344,7 +353,7 @@ class MessageComposeForm extends Component {
                                 </Col>
                             </Form.Group>
                         </Col>
-                        <Col>
+                        <Col className={this.getFieldClassname('verified_sender')}>
                             <Form.Group className="form-group"
                                         as={Row}>
                                 <label>verified sender (optional)<HelpIconView help_item_name={'verified_sender'}/></label>

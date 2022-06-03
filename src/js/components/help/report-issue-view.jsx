@@ -26,7 +26,7 @@ class ReportIssueView extends Component {
 
     setReportMessage(node_os_info) {
         this.setState({
-            message: `\n\nnode:
+            message: `\n\n-----------------------------\n\nnode:
     node id - ${this.props.network.node_id};
     key identifier - ${this.props.wallet.address_key_identifier}
     build - ${node_os_info.node_millix_version}
@@ -56,14 +56,16 @@ hardware:
                             <div className={'panel-heading bordered'}>report issue</div>
                             <div className={'panel-body'}>
                                 <p>
-                                    to report about an issue please describe it in the message below.
-                                    it already contain your system info for your convenience.
-                                    if you can't send us a message for any reason please send it to us on <a href={DISCORD_URL} target={'_blank'} rel="noreferrer">discord</a>
+                                    report your issue on <a href={DISCORD_URL} target={'_blank'} rel="noreferrer">discord</a> (free but slower response) or
+                                    send a message directly to the development team by describing your issue in the field below (2,000 millix).
                                 </p>
                                 <MessageComposeForm
                                     message={this.state.message}
                                     subject={`${this.props.wallet.address_key_identifier} issue report`}
                                     destination_address={REPORT_ISSUE_ADDRESS}
+                                    amount={1000}
+                                    input_label_message={'describe your issue'}
+                                    hidden_field_list={['address', 'subject', 'amount', 'fee', 'verified_sender']}
                                 />
                             </div>
                         </div>
