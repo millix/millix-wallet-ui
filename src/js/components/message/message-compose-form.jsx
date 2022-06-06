@@ -11,6 +11,7 @@ import API from '../../api';
 import ErrorList from './../utils/error-list-view';
 import Transaction from '../../common/transaction';
 import HelpIconView from '../utils/help-icon-view';
+import {changeLoaderState} from '../loader';
 import ReactChipInput from 'react-chip-input';
 
 
@@ -28,6 +29,7 @@ class MessageComposeForm extends Component {
 
         this.state = {
             dns_valid               : false,
+            dns_validating          : false,
             fee_input_locked        : true,
             error_list              : [],
             modal_show_confirmation : false,
@@ -48,6 +50,7 @@ class MessageComposeForm extends Component {
     }
 
     componentWillUnmount() {
+        clearTimeout(this.checkDNSHandler);
         if (this.state.sending) {
             API.interruptTransaction().then(_ => _);
         }
@@ -86,8 +89,11 @@ class MessageComposeForm extends Component {
         return subject;
     }
 
-    verifySenderDomainName(domain_name, error_list) {
+    verifySenderDomainName(domain_name, error_list = []) {
         if (!domain_name) {
+            this.setState({
+                dns_valid: true
+            });
             return Promise.resolve(true);
         }
 
@@ -158,7 +164,34 @@ class MessageComposeForm extends Component {
         });
     }
 
+    validateDns(e) {
+        const error_list = [];
+        validate.handleInputChangeDNSString(e);
+        this.setState({
+            dns_valid     : false,
+            dns_validating: true,
+            error_list    : error_list
+        });
+        clearTimeout(this.checkDNSHandler);
+        this.checkDNSHandler = setTimeout(() => {
+            this.verifySenderDomainName(e.target.value, error_list).then((result) => {
+                this.setState({
+                    error_list    : error_list,
+                    dns_valid     : result,
+                    dns_validating: false
+                });
+            }).catch(() => {
+                this.setState({
+                    error_list    : error_list,
+                    dns_validating: false,
+                    dns_valid     : false
+                });
+            });
+        }, 500);
+    }
+
     sendTransaction() {
+        changeLoaderState(true);
         this.setState({
             sending: true
         });
@@ -168,17 +201,19 @@ class MessageComposeForm extends Component {
             this.changeModalShowConfirmation(false);
             this.changeModalShowSendResult();
             this.setState(data);
+            changeLoaderState(false);
         }).catch((error) => {
             this.changeModalShowConfirmation(false);
             this.setState(error);
+            changeLoaderState(false);
         });
     }
 
     clearSendForm() {
         this.destination_address_list = [];
-        this.amount.value              = '';
-        this.subject.value             = '';
-        this.message.value             = '';
+        this.amount.value             = '';
+        this.subject.value            = '';
+        this.message.value            = '';
 
         if (this.props.config.TRANSACTION_FEE_DEFAULT !== undefined) {
             this.fee.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
@@ -269,7 +304,7 @@ class MessageComposeForm extends Component {
             <>
                 <ErrorList
                     error_list={this.state.error_list}/>
-                <Row>
+                <Row className={'message_compose'}>
                     <Col className={this.getFieldClassname('address')}>
                         <Form.Group className="form-group" role="form">
                             <label>recipients</label>
@@ -347,8 +382,7 @@ class MessageComposeForm extends Component {
                                         type="button"
                                         onClick={() => this.setState({fee_input_locked: !this.state.fee_input_locked})}>
                                         <FontAwesomeIcon
-                                            icon={this.state.fee_input_locked ? 'lock' : 'lock-open'}
-                                            size="sm"/>
+                                            icon={this.state.fee_input_locked ? 'lock' : 'lock-open'}/>
                                     </button>
                                 </Col>
                             </Form.Group>
@@ -362,10 +396,25 @@ class MessageComposeForm extends Component {
                                                   placeholder="domain name"
                                                   pattern="^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$"
                                                   ref={c => this.dns = c}
-                                                  onChange={e => {
-                                                      validate.handleInputChangeDNSString(e);
-                                                  }}/>
+                                                  onChange={e => this.validateDns(e)}/>
+                                    {this.state.dns_validating ?
+                                     <button
+                                         className="btn btn-outline-input-group-addon loader icon_only"
+                                         type="button"
+                                         disabled={true}>
+                                         <div className="loader-spin"/>
+                                     </button>
+                                                               : ''}
                                 </Col>
+                                {this.state.dns_valid && this.dns?.value !== '' ?
+                                 <div className={'text-success labeled verified_sender_mark'}>
+                                     <FontAwesomeIcon
+                                         icon={'check-circle'}
+                                         size="1x"/>
+                                     <span>{this.dns.value}</span>
+                                 </div>
+                                                                                : ''}
+
                             </Form.Group>
                         </Col>
                         <Col
@@ -390,15 +439,14 @@ class MessageComposeForm extends Component {
                             <Form.Group as={Row}>
                                 <Button
                                     variant="outline-primary"
+                                    style={{
+                                        zIndex: 99999
+                                    }}
                                     onClick={() => this.send()}
-                                    disabled={this.state.canceling}>
+                                    disabled={this.state.canceling || this.state.dns_validating}>
                                     {this.state.sending ?
                                      <>
-                                         <div style={{
-                                             float      : 'left',
-                                             marginRight: 10
-                                         }}
-                                              className="loader-spin"/>
+                                         <div className="loader-spin"/>
                                          {this.state.canceling ? 'canceling' : 'cancel transaction'}
                                      </> : <>send</>}
                                 </Button>
