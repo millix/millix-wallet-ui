@@ -48,7 +48,6 @@ hardware:
 
     render() {
         return (
-
             <div>
                 <Row>
                     <Col md={12}>
@@ -65,7 +64,13 @@ hardware:
                                     destination_address={REPORT_ISSUE_ADDRESS}
                                     amount={1000}
                                     input_label_message={'describe your issue'}
-                                    hidden_field_list={['address', 'subject', 'amount', 'fee', 'verified_sender']}
+                                    hidden_field_list={[
+                                        'address',
+                                        'subject',
+                                        'amount',
+                                        'fee',
+                                        'verified_sender'
+                                    ]}
                                 />
                             </div>
                         </div>
