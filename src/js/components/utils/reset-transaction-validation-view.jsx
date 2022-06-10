@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button} from 'react-bootstrap';
 import {Link, withRouter} from 'react-router-dom';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import * as text from '../../helper/text';
 import ModalView from './modal-view';
 import _ from 'lodash';
@@ -19,6 +17,15 @@ class ResetTransactionValidationView extends Component {
             result_modal_show      : false,
             reset_transaction_id   : ''
         };
+    }
+
+    reloadAndClose() {
+        this.setState({
+            result_modal_show: false
+        });
+        if(this.props.reloadDatatable){
+            this.props.reloadDatatable();
+        }
     }
 
     componentDidMount() {
@@ -80,7 +87,8 @@ class ResetTransactionValidationView extends Component {
                                <div>validation has been reset for
                                    transaction {this.state.reset_transaction_id}
                                    <div>
-                                       click <Link to={'/unspent-transaction-output-list/pending'}>here</Link> to see all your pending transactions
+                                       click <Link to={'/unspent-transaction-output-list/pending'} onClick={() => this.reloadAndClose()}>here</Link> to see all
+                                       your pending transactions
                                    </div>
                                </div>
                            ) : (
