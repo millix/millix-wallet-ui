@@ -1,6 +1,6 @@
 import API from '../api';
-import * as text from '../helper/text';
 import async from 'async';
+import UserInterfaceError from '../components/utils/user-interface-error';
 
 
 class Transaction {
@@ -71,7 +71,7 @@ class Transaction {
         let error_list = [];
         if (e !== 'validation_error') {
             if (e && e.api_message) {
-                sendTransactionErrorMessage = text.get_ui_error(e.api_message);
+                sendTransactionErrorMessage = <UserInterfaceError api_message={e.api_message}/>;
             }
             else {
                 sendTransactionErrorMessage = `your transaction could not be sent: (${e?.api_message?.error.error || e?.api_message?.error || e?.message || e?.api_message || e || 'undefined behaviour'})`;

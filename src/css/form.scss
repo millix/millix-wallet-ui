@@ -96,6 +96,7 @@ label {
   }
 }
 
+.btn-xs:not(.icon_only),
 .btn:not(.icon_only) {
   > .svg-inline--fa {
     margin-right: 0.3em;

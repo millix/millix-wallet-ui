@@ -190,8 +190,7 @@ class WalletView extends Component {
                                                         type="button"
                                                         onClick={() => this.setState({fee_input_locked: !this.state.fee_input_locked})}>
                                                         <FontAwesomeIcon
-                                                            icon={this.state.fee_input_locked ? 'lock' : 'lock-open'}
-                                                            size="sm"/>
+                                                            icon={this.state.fee_input_locked ? 'lock' : 'lock-open'}/>
                                                     </button>
                                                 </Col>
                                             </Form.Group>
@@ -219,15 +218,12 @@ class WalletView extends Component {
                                             <Form.Group as={Row}>
                                                 <Button
                                                     variant="outline-primary"
+                                                    className={'btn_loader'}
                                                     onClick={() => this.send()}
                                                     disabled={this.state.canceling}>
                                                     {this.state.sending ?
                                                      <>
-                                                         <div style={{
-                                                             float      : 'left',
-                                                             marginRight: 10
-                                                         }}
-                                                              className="loader-spin"/>
+                                                         <div className="loader-spin"/>
                                                          {this.state.canceling ? 'canceling' : 'cancel transaction'}
                                                      </> : <>send</>}
                                                 </Button>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Row, Spinner} from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import API from '../../api';
 import DatatableView from './../utils/datatable-view';
 import * as helper_message from '../../helper/message';
@@ -79,6 +79,10 @@ class MessageSentView extends Component {
                                 {
                                     field: 'date',
                                     class_name: 'w-10'
+                                },
+                                {
+                                    field: 'raw_date',
+                                    class_name: 'hidden_data_search_column'
                                 },
                                 {
                                     field: 'subject'

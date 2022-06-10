@@ -8,6 +8,7 @@ import ErrorList from '../utils/error-list-view';
 import * as validate from '../../helper/validate';
 import API from '../../api';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
+import _ from 'lodash';
 
 
 class ConfigConnectionView extends Component {
@@ -77,7 +78,10 @@ class ConfigConnectionView extends Component {
     }
 
     updateData(connection_data, element) {
-        JSON.parse(element.value).forEach(el => {
+        if(!_.isArray(element.value)){
+            element.value = JSON.parse(element.value);
+        }
+        element.value.forEach(el => {
             connection_data[element.config_name].push({
                 node_id: el,
                 action : (<DatatableActionButtonView
