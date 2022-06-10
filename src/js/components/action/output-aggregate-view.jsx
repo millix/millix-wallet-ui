@@ -9,6 +9,7 @@ import * as text from '../../helper/text';
 import API from '../../api';
 import HelpIconView from '../utils/help-icon-view';
 import SubmitButtonView from '../utils/submit-button-view';
+import UserInterfaceError from '../utils/user-interface-error';
 
 
 class OutputAggregateView extends Component {
@@ -93,7 +94,7 @@ class OutputAggregateView extends Component {
                   })
                   .catch((e) => {
                       if (e && e.api_message) {
-                          const error_message = text.get_ui_error(e.api_message);
+                          const error_message = <UserInterfaceError api_message={e.api_message}/>;
 
                           errorList.push({
                               name   : 'sendTransactionError',
