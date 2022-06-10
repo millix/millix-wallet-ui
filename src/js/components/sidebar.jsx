@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import SideNav, {NavItem, NavText} from '@trendmicro/react-sidenav';
 import {connect} from 'react-redux';
 import {lockWallet} from '../redux/actions/index';
@@ -11,21 +11,28 @@ import {changeLoaderState} from './loader';
 
 
 class Sidebar extends Component {
+    date  = Date.now();
+
     constructor(props) {
         super(props);
         let now    = Date.now();
         this.state = {
             fileKeyExport                : 'export_' + now,
             fileKeyImport                : 'import_' + now,
-            date                         : new Date(),
             modalShow                    : false,
             node_millix_version          : '',
             node_millix_version_available: '',
             application                  : '',
-            ignore_is_expanded           : false
+            ignore_is_expanded           : ''
         };
 
         this.setVersion = this.setVersion.bind(this);
+
+        this.props.history.listen((location, action) => {
+            this.setState({
+                ignore_is_expanded: ''
+            });
+        });
     }
 
     componentDidMount() {
@@ -43,9 +50,7 @@ class Sidebar extends Component {
     }
 
     tick() {
-        this.setState({
-            date: new Date()
-        });
+        this.date = new Date();
     }
 
     highlightSelected(defaultSelected) {
@@ -91,71 +96,43 @@ class Sidebar extends Component {
 
     isExpanded(section, defaultSelected) {
         let result = false;
-        if (!this.state.ignore_is_expanded) {
-            if (section === 'transaction' &&
-                (
-                    (defaultSelected === '/transaction-list') ||
-                    (defaultSelected === '/unspent-transaction-output-list/pending') ||
-                    (defaultSelected === '/unspent-transaction-output-list/stable')
-                )
-            ) {
-                result = true;
-            }
-            else if (section === 'status' &&
-                     (
-                         (defaultSelected === '/status-summary') ||
-                         (defaultSelected === '/peers') ||
-                         (defaultSelected === '/backlog')
-                     )
-            ) {
-                result = true;
-            }
-            else if (section === 'advertisement' &&
-                     (
-                         (defaultSelected === '/advertisement-list') ||
-                         (defaultSelected === '/advertisement-received-list')
-                     )
-            ) {
-                result = true;
-            }
-            else if (section === 'config' &&
-                     (
-                         (defaultSelected === '/config/general') ||
-                         (defaultSelected === '/config/network') ||
-                         (defaultSelected === '/config/connection') ||
-                         (defaultSelected === '/config/consensus') ||
-                         (defaultSelected === '/config/address-version') ||
-                         (defaultSelected === '/config/config-storage')
-                     )
-            ) {
-                result = true;
-            }
-            else if (section === 'ads' &&
-                     (
-                         (defaultSelected === '/ad-create') ||
-                         (defaultSelected === '/ad-list')
-                     )
-            ) {
-                result = true;
-            }
-            else if (section === 'help' &&
-                     (
-                         (defaultSelected === '/faq') ||
-                         (defaultSelected === '/report-issue') ||
-                         (defaultSelected === '/system-info')
-                     )
-            ) {
-                result = true;
-            }
-            else if (section === 'message' &&
-                     (
-                         (defaultSelected === '/message-compose') ||
-                         (defaultSelected === '/message-sent') ||
-                         (defaultSelected === '/message-inbox')
-                     )
-            ) {
-                result = true;
-            }
+        if (!this.state.ignore_is_expanded || this.state.ignore_is_expanded !== defaultSelected) {
+            const section_list = {
+                transaction: [
+                    '/transaction-list',
+                    '/unspent-transaction-output-list/pending',
+                    '/unspent-transaction-output-list/stable'
+                ],
+                status: [
+                    '/status-summary',
+                    '/peers',
+                    '/backlog'
+                ],
+                advertisement: [
+                    '/advertisement-list',
+                    '/advertisement-received-list',
+                ],
+                config: [
+                    '/config/general',
+                    '/config/network',
+                    '/config/connection',
+                    '/config/consensus',
+                    '/config/address-version',
+                    '/config/storage',
+                ],
+                help: [
+                    '/faq',
+                    '/report-issue',
+                    '/system-info'
+                ],
+                message: [
+                    '/message-compose',
+                    '/message-sent',
+                    '/message-inbox',
+                ],
+            };
+
+            result = section_list[section].includes(defaultSelected);
         }
 
         return result;
@@ -183,10 +160,11 @@ class Sidebar extends Component {
         return message_count_badge;
     }
 
-    toggleParentNavigationItem(navigation_id, defaultSelected) {
+    toggleParentNavigationItem(navigation_id) {
+        let defaultSelected = this.highlightSelected(this.props.location.pathname);
         if (this.isExpanded(navigation_id, defaultSelected)) {
             this.setState({
-                ignore_is_expanded: true
+                ignore_is_expanded: defaultSelected
             });
         }
     }
@@ -224,7 +202,7 @@ class Sidebar extends Component {
                            }}
                            body={<div>are you sure you want to logout?</div>}/>
                 <div className="nav-utc_clock">
-                    <span>{format.date(this.state.date)} utc</span>
+                    <span>{format.date(this.date)} utc</span>
                 </div>
                 <SideNav.Nav
                     selected={defaultSelected}
@@ -251,7 +229,7 @@ class Sidebar extends Component {
                         eventKey="transaction"
                         expanded={this.isExpanded('transaction', defaultSelected)}
                         id="transaction"
-                        onClick={() => this.toggleParentNavigationItem('transaction', defaultSelected)}
+                        onClick={() => this.toggleParentNavigationItem('transaction')}
                     >
                         <NavText>
                             transactions <FontAwesomeIcon className={'icon'}
@@ -285,7 +263,7 @@ class Sidebar extends Component {
                         expanded={this.isExpanded('advertisement', defaultSelected)}
                         eventKey="advertisement"
                         id="advertisement"
-                        onClick={() => this.toggleParentNavigationItem('advertisement', defaultSelected)}
+                        onClick={() => this.toggleParentNavigationItem('advertisement')}
 
                     >
                         <NavText>
@@ -315,8 +293,7 @@ class Sidebar extends Component {
                         expanded={this.isExpanded('message', defaultSelected)}
                         className={'messageParent'}
                         id="message"
-                        onClick={() => this.toggleParentNavigationItem('message', defaultSelected)}
-
+                        onClick={() => this.toggleParentNavigationItem('message')}
                     >
                         <NavText>
                             messages{this.getMessageCountBadge()} <FontAwesomeIcon className={'icon'}
@@ -355,7 +332,7 @@ class Sidebar extends Component {
                         eventKey="status"
                         expanded={this.isExpanded('status', defaultSelected)}
                         id="status"
-                        onClick={() => this.toggleParentNavigationItem('status', defaultSelected)}
+                        onClick={() => this.toggleParentNavigationItem('status')}
                     >
                         <NavText>
                             status <FontAwesomeIcon className={'icon'}
@@ -392,7 +369,7 @@ class Sidebar extends Component {
                         eventKey="config"
                         expanded={this.isExpanded('config', defaultSelected)}
                         id="config"
-                        onClick={() => this.toggleParentNavigationItem('config', defaultSelected)}
+                        onClick={() => this.toggleParentNavigationItem('config')}
                     >
                         <NavText>
                             settings <FontAwesomeIcon className={'icon'}
