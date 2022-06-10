@@ -13,6 +13,7 @@
 .btn-outline-input-group-addon.loader {
   opacity: 1;
   padding: 0.5em 0.8em;
+
   .loader-spin {
     margin-right: 0;
   }
@@ -24,10 +25,12 @@
   }
 }
 
-.btn.loader {
+.btn.btn_loader {
+  display: inline-flex;
+
   .loader-spin {
-    height: 1.25rem;
-    width: 1.25rem;
+    height: 1.3rem;
+    width: 1.3rem;
   }
 }
 
