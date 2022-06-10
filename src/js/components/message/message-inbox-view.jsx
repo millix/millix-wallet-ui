@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Row, Spinner} from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import API from '../../api';
 import * as helper_message from '../../helper/message';
 import DatatableView from './../utils/datatable-view';
@@ -80,6 +80,10 @@ class MessageInboxView extends Component {
                                     {
                                         field     : 'date',
                                         class_name: 'w-10'
+                                    },
+                                    {
+                                        field     : 'raw_date',
+                                        class_name: 'hidden_data_search_column'
                                     },
                                     {
                                         field: 'subject'

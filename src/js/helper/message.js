@@ -27,6 +27,7 @@ export function datatable_format(data) {
 
                 const newRow = {
                     date        : format.date(transaction.transaction_date),
+                    raw_date    : format.date(transaction.transaction_date),
                     txid        : transaction.transaction_id,
                     txid_parent : outputAttributeValue.parent_transaction_id,
                     dns         : outputAttributeValue.dns,
