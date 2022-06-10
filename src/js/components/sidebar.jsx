@@ -27,12 +27,6 @@ class Sidebar extends Component {
         };
 
         this.setVersion = this.setVersion.bind(this);
-
-        this.props.history.listen((location, action) => {
-            this.setState({
-                ignore_is_expanded: ''
-            });
-        });
     }
 
     componentDidMount() {
@@ -43,6 +37,12 @@ class Sidebar extends Component {
             () => this.tick(),
             1000
         );
+
+        this.props.history.listen((location, action) => {
+            this.setState({
+                ignore_is_expanded: ''
+            });
+        });
     }
 
     componentWillUnmount() {
