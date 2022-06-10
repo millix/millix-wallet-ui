@@ -27,6 +27,12 @@ class Sidebar extends Component {
         };
 
         this.setVersion = this.setVersion.bind(this);
+
+        this.props.history.listen((location, action) => {
+            this.setState({
+                ignore_is_expanded: ''
+            });
+        });
     }
 
     componentDidMount() {
