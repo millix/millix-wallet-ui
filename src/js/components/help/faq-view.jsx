@@ -65,7 +65,7 @@ class FaqView extends Component {
                                 </ul>
                                 <div>
                                     you may find answers on tangled.com <a
-                                    href={'https://tangled.com/browser-overview.html'}
+                                    href={'https://tangled.com/browser'}
                                     target={'_blank'}>overview</a> page
                                 </div>
                                 <div>

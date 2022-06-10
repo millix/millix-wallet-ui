@@ -60,7 +60,7 @@ class Sidebar extends Component {
     getAvailableVersionLink() {
         let link = null;
         if (this.state.node_millix_version && this.state.node_millix_version !== this.state.node_millix_version_available) {
-            let download_url = 'https://tangled.com/download.html';
+            let download_url = 'https://tangled.com/browser/download.php';
             if (this.state.application === 'client') {
                 download_url = 'https://millix.org/client.html';
             }
