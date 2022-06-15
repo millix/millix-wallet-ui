@@ -32,7 +32,7 @@ class MessageInboxView extends Component {
             datatable_loading: true
         });
 
-        return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier).then(data => {
+        return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, 'tangled_messenger').then(data => {
             const message_list = helper_message.datatable_format(data);
 
             this.setState({

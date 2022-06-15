@@ -130,6 +130,9 @@ class Sidebar extends Component {
                     '/message-sent',
                     '/message-inbox',
                 ],
+                nft: [
+                    '/nft-create'
+                ],
             };
 
             result = section_list[section].includes(defaultSelected);
@@ -287,7 +290,28 @@ class Sidebar extends Component {
                             </NavText>
                         </NavItem>
                     </NavItem>
-
+                    <NavItem
+                        eventKey="nft"
+                        expanded={this.isExpanded('nft', defaultSelected)}
+                        className={'nftParent'}
+                        id="nft"
+                        onClick={() => this.toggleParentNavigationItem('nft')}
+                    >
+                        <NavText>
+                            nft <FontAwesomeIcon className={'icon'}
+                                                                                   icon="chevron-down"
+                                                                                   size="1x"/>
+                            <FontAwesomeIcon className={'icon hidden'}
+                                             icon="chevron-up"
+                                             size="1x"/>
+                        </NavText>
+                        <NavItem key={'nft-create'}
+                                 eventKey="/nft-create">
+                            <NavText>
+                                create
+                            </NavText>
+                        </NavItem>
+                    </NavItem>
                     <NavItem
                         eventKey="message"
                         expanded={this.isExpanded('message', defaultSelected)}

@@ -27,22 +27,20 @@ class Transaction {
                     return reject(err);
                 }
 
-                resolve({
+                const data = {
+                    ...transactionParams,
                     error_list  : [],
-                    address_list: verifiedAddresses,
-                    amount      : transactionParams.amount,
-                    fee         : transactionParams.fee,
-                    subject     : transactionParams.subject,
-                    message     : transactionParams.message,
-                    dns         : transactionParams.dns
-                });
+                    address_list: verifiedAddresses
+                };
+                delete data['addresses'];
+                resolve(data);
             });
         });
     }
 
-    sendTransaction(transaction_output_payload, with_data = false) {
+    sendTransaction(transactionOutputPayload, withData = false, isBinary = false) {
         return new Promise((resolve, reject) => {
-            API.sendTransaction(transaction_output_payload, with_data).then(data => {
+            API.sendTransaction(transactionOutputPayload, withData, isBinary).then(data => {
                 if (data.api_status === 'fail') {
                     return Promise.reject(data);
                 }
@@ -101,6 +99,7 @@ class Transaction {
             amount                  : '',
             subject                 : '',
             message                 : '',
+            image                   : null,
             destination_address_list: [],
             address_verified_list   : [],
             modal_body_send_result  : this.getModalBodySuccessResult(transaction.transaction_id)

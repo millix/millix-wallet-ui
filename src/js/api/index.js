@@ -27,31 +27,48 @@ class API {
         return this.fetchApi(absolute_url, result_param, method);
     }
 
-    fetchApiMillix(url, result_param = {}, method = 'GET') {
+    fetchApiMillix(url, result_param = {}, method = 'GET', isMultipart = undefined) {
         try {
             const absolute_url = this.getAuthenticatedMillixApiURL() + url;
-            return this.fetchApi(absolute_url, result_param, method);
+            return this.fetchApi(absolute_url, result_param, method, isMultipart);
         }
         catch (e) {
             return Promise.reject(e);
         }
     }
 
-    fetchApi(url, result_param = {}, method = 'GET') {
+    fetchApi(url, resultParam = {}, method = 'GET', isMultipart = undefined) {
         let data = {};
         if (method === 'POST') {
-            data = {
-                method : method,
-                headers: {'Content-Type': 'application/json'},
-                body   : JSON.stringify(result_param)
-            };
+            if (!isMultipart) {
+                data = {
+                    method : method,
+                    headers: {'Content-Type': 'application/json'},
+                    body   : JSON.stringify(resultParam)
+                };
+            }
+            else {
+                const formData = new FormData();
+                _.each(_.keys(resultParam), key => {
+                    if (resultParam[key] instanceof File) {
+                        formData.append(key, resultParam[key]);
+                        return;
+                    }
+
+                    formData.append(key, JSON.stringify(resultParam[key]));
+                });
+                data = {
+                    method: method,
+                    body  : formData
+                };
+            }
         }
         else {
             let param_string = '';
-            if (result_param) {
+            if (resultParam) {
                 const param_array = [];
-                Object.keys(result_param).forEach(function(param_key) {
-                    let value = result_param[param_key];
+                Object.keys(resultParam).forEach(function(param_key) {
+                    let value = resultParam[param_key];
                     if (_.isArray(value) || typeof (value) === 'object') {
                         value = encodeURIComponent(JSON.stringify(value));
                     }
@@ -151,9 +168,9 @@ class API {
         });
     }
 
-    sendTransaction(transactionOutputPayload, withData = false) {
+    sendTransaction(transactionOutputPayload, withData = false, isBinary = false) {
         if (withData) {
-            return this.sendTransactionWithData(transactionOutputPayload);
+            return this.sendTransactionWithData(transactionOutputPayload, isBinary);
         }
         else {
             return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
@@ -162,17 +179,30 @@ class API {
         }
     }
 
-    sendTransactionWithData(transactionOutputPayload) {
-        return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, {
-            p0: transactionOutputPayload
-        }, 'POST');
+    sendTransactionWithData(transactionOutputPayload, isBinary = false) {
+        let data;
+        if (isBinary) {
+            const transactionData = transactionOutputPayload.transaction_data;
+            delete transactionOutputPayload['transaction_data'];
+            data = {
+                p0: transactionOutputPayload,
+                p1: transactionData
+            };
+        }
+        else {
+            data = {
+                p0: transactionOutputPayload
+            };
+        }
+        return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, data, 'POST', isBinary);
     }
 
-    listTransactionWithDataSent(addressKeyIdentifier) {
+    listTransactionWithDataSent(addressKeyIdentifier, dataType) {
         return this.fetchApiMillix(`/F7APEv5JfCY1siyz`, {
             p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
             p10: addressKeyIdentifier,
-            p11: 'Adl87cz8kC190Nqc'
+            p11: 'Adl87cz8kC190Nqc',
+            p12: dataType
         });
     }
 
@@ -185,11 +215,12 @@ class API {
         });
     }
 
-    listTransactionWithDataReceived(addressKeyIdentifier) {
+    listTransactionWithDataReceived(addressKeyIdentifier, dataType) {
         return this.fetchApiMillix(`/Mu7VpxzfYyQimf3V`, {
             p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
             p10: addressKeyIdentifier,
-            p11: 'Adl87cz8kC190Nqc'
+            p11: 'Adl87cz8kC190Nqc',
+            p12: dataType
         });
     }
 
