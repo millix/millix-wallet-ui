@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Row} from 'react-bootstrap';
+import {Button, Col, Row, Card} from 'react-bootstrap';
 import API from '../../api';
 import PhotoAlbum from 'react-photo-album';
 import {connect} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import api from '../../api';
-import async from 'async';
+import {millix} from '../../helper/format';
+import * as svg from '../../helper/svg';
+import * as format from '../../helper/format';
 
 
 class NftCollectionView extends Component {
@@ -51,12 +53,45 @@ class NftCollectionView extends Component {
                 nft_list                  : data.map(row => ({
                     src   : `${api.getAuthenticatedMillixApiURL()}/Mh9QifTIESw5t1fa?p0=${row.transaction_id}&p1=${row.address_key_identifier_to}&p2=Adl87cz8kC190Nqc&p3=${row.transaction_output_attribute[0].value.file_list[0].hash}`,
                     width : 4,
-                    height: 3
+                    height: 3,
+                    hash  : row.transaction_output_attribute[0].value.file_list[0].hash,
+                    amount: row.amount
                 })),
                 datatable_reload_timestamp: new Date(),
                 datatable_loading         : false
             });
         });
+    }
+
+    renderNftImage({
+                       imageProps,
+                       photo
+                   }) {
+        const {
+                  src,
+                  alt,
+                  srcSet,
+                  sizes,
+                  ...restImageProps
+              } = imageProps;
+        return (<Card {...sizes} className={'nft-card'}>
+            <Card.Img variant="top" src={src} alt={alt} {...(srcSet ? {
+                srcSet,
+                sizes
+            } : null)} {...restImageProps} />
+            <Card.Body>
+                <Card.Title style={{width: `calc(${sizes} - 4vw)`}}>{photo.hash}</Card.Title>
+                <Card.Text>
+                    <div className={'nft-value-container'}>
+                        {svg.millix_logo()}
+                        <div className={'millix-value'}>
+                            <span>{format.millix(photo.amount, false)}</span>
+                        </div>
+                    </div>
+                </Card.Text>
+                <Button variant="primary">transfer</Button>
+            </Card.Body>
+        </Card>);
     }
 
     render() {
@@ -94,7 +129,7 @@ class NftCollectionView extends Component {
                         </Row>
                         <Row style={{marginTop: 10}}>
                             <Col>
-                                <PhotoAlbum layout="masonry" photos={this.state.nft_list}/>
+                                <PhotoAlbum layout="masonry" renderPhoto={this.renderNftImage.bind(this)} photos={this.state.nft_list}/>
                             </Col>
                         </Row>
                     </div>
