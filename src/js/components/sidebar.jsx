@@ -311,6 +311,12 @@ class Sidebar extends Component {
                                 create
                             </NavText>
                         </NavItem>
+                        <NavItem key={'nft-collection'}
+                                 eventKey="/nft-collection">
+                            <NavText>
+                                collection
+                            </NavText>
+                        </NavItem>
                     </NavItem>
                     <NavItem
                         eventKey="message"

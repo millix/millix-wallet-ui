@@ -36,6 +36,7 @@ import ErrorModalRequestApi from './utils/error-handler-request-api';
 import AdvertisementConsumerSettlementLedgerView from './advertisement/advertisement-consumer-settlement-ledger-view';
 import EventsLogView from './event-log-view';
 import NftCreateView from './nft/nft-create-view';
+import NftCollectionView from './nft/nft-collection-view';
 
 
 class AppContainer extends Component {
@@ -70,6 +71,8 @@ class AppContainer extends Component {
                                                  component={PeerInfoView}/>
                     <UnlockedWalletRequiredRoute path="/nft-create"
                                                  component={NftCreateView}/>
+                    <UnlockedWalletRequiredRoute path="/nft-collection"
+                                                 component={NftCollectionView}/>
                     <UnlockedWalletRequiredRoute path="/message-compose"
                                                  component={MessageComposeView}/>
                     <UnlockedWalletRequiredRoute path="/message-view"
