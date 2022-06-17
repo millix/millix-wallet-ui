@@ -134,6 +134,7 @@ class SubmitButtonView extends Component {
                 {confirmation_modal}
                 <Button
                     variant="outline-primary"
+                    className={'btn_loader'}
                     onClick={() => this.handleOnClick()}
                     disabled={this.state.disabled}>
                     {this.getLabel()}
