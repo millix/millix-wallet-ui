@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import DatatableView from './utils/datatable-view';
 import API from '../api';
+import Translation from '../common/translation';
 
 
 class EventsLogView extends Component {
@@ -53,9 +54,7 @@ class EventsLogView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>
-                        event log
-                    </div>
+                    <div className={'panel-heading bordered'}>{Translation.getPhrase('3eb332ead')}</div>
                     <div className={'panel-body'}>
                         <DatatableView
                             reload_datatable={() => this.loadEventLogToState()}
@@ -67,15 +66,15 @@ class EventsLogView extends Component {
                             resultColumn={[
                                 {
                                     field : 'timestamp',
-                                    header: 'date'
+                                    header: Translation.getPhrase('0ed0bab27')
                                 },
                                 {
                                     field : 'type',
-                                    header: 'type'
+                                    header: Translation.getPhrase('607744dc0')
                                 },
                                 {
                                     field : 'content',
-                                    header: 'content'
+                                    header: Translation.getPhrase('b20e6ad48')
                                 }
                             ]}/>
                     </div>

@@ -2,25 +2,17 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 import {Button, Col, Container, Row} from 'react-bootstrap';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import WalletCreatePasswordView from './utils/wallet-create-password-view';
 import MnemonicConfirmView from './utils/mnemonic-confirm-view';
-import ImportWalletStepProgressView from './utils/import-wallet-step-progress-view';
 import WalletCreateInfoView from './utils/wallet-create-info-view';
 import {unlockWallet} from '../redux/actions';
+import Translation from '../common/translation';
 
 const STATUS = {
     NEW_WALLET_MNEMONIC: 1,
     NEW_WALLET_PASSWORD: 2,
     NEW_WALLET_CREATED : 3
-};
-
-const styles = {
-    centered: {
-        display       : 'flex',
-        justifyContent: 'center'
-    }
 };
 
 
@@ -94,13 +86,13 @@ class ImportWalletView extends Component {
     getStepName() {
         const result_step = [
             {
-                label: 'import mnemonic phrase'
+                label: Translation.getPhrase('3f1cc1619')
             },
             {
-                label: 'password'
+                label: Translation.getPhrase('da19aabd1')
             },
             {
-                label: 'finish'
+                label: Translation.getPhrase('3f1cc1619')
             }
         ];
 
@@ -133,13 +125,16 @@ class ImportWalletView extends Component {
                 <>
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
-                            import wallet
+                            {Translation.getPhrase('e976f2315')}
                         </div>
                         <div className={'panel-body'}>
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
-                                        step {this.state.status} of {Object.keys(STATUS).length}. {this.getStepName()}
+                                        {Translation.getPhrase('432a43d26', {
+                                            status       : this.state.status,
+                                            status_length: Object.keys(STATUS).length
+                                        })} {this.getStepName()}
                                     </div>
                                     <div>
                                         {status === STATUS.NEW_WALLET_MNEMONIC && (
@@ -170,7 +165,7 @@ class ImportWalletView extends Component {
                                         </div>
                                         <Button variant="outline-primary"
                                                 disabled={next_button_disabled}
-                                                onClick={() => this.createWalletNextStep()}>continue</Button>
+                                                onClick={() => this.createWalletNextStep()}>{Translation.getPhrase('92a871b62')}</Button>
                                     </div>
                                 </Col>
                             </Row>

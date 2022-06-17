@@ -8,6 +8,7 @@ import * as format from '../helper/format';
 import API from '../api';
 import {Badge} from 'react-bootstrap';
 import {changeLoaderState} from './loader';
+import Translation from '../common/translation';
 
 
 class Sidebar extends Component {
@@ -73,7 +74,7 @@ class Sidebar extends Component {
             link = (
                 <React.Fragment>
                     <a href={download_url} target={'_blank'} rel="noreferrer">
-                        <Badge className={'new_version_badge'}>new version available</Badge>
+                        <Badge className={'new_version_badge'}>{Translation.getPhrase('e4a6a00d9')}</Badge>
                     </a>
                 </React.Fragment>
             );
@@ -196,11 +197,11 @@ class Sidebar extends Component {
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
                            on_close={() => this.changeModalShow(false)}
-                           heading={'logout'}
+                           heading={Translation.getPhrase('1eacc1ecb')}
                            on_accept={() => {
                                this.lockWallet();
                            }}
-                           body={<div>are you sure you want to logout?</div>}/>
+                           body={<div>{Translation.getPhrase('9beb3bbfe')}</div>}/>
                 <div className="nav-utc_clock">
                     <span>{format.date(this.date)} utc</span>
                 </div>
@@ -209,19 +210,19 @@ class Sidebar extends Component {
                 >
                     <NavItem key={'wallet'} eventKey="/wallet">
                         <NavText>
-                            home
+                            {Translation.getPhrase('6e649a063')}
                         </NavText>
                     </NavItem>
 
                     <NavItem key={'trade'}>
                         <NavText onClick={() => window.open('https://millix.com', '_blank').focus()}>
-                            trade
+                            {Translation.getPhrase('14539e6a9')}
                         </NavText>
                     </NavItem>
 
                     <NavItem key={'address-list'} eventKey="/address-list">
                         <NavText>
-                            addresses
+                            {Translation.getPhrase('e37fc47fd')}
                         </NavText>
                     </NavItem>
 
@@ -232,7 +233,7 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('transaction')}
                     >
                         <NavText>
-                            transactions <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('81af00358')} <FontAwesomeIcon className={'icon'}
                                                           icon="chevron-down"
                                                           size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
@@ -242,19 +243,19 @@ class Sidebar extends Component {
                         <NavItem key={'transaction-list'}
                                  eventKey="/transaction-list">
                             <NavText>
-                                all
+                                {Translation.getPhrase('62cf00f4c')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'unspent-transaction-output-list-stable'}
                                  eventKey={'/unspent-transaction-output-list/stable'}>
                             <NavText>
-                                stable unspents
+                                {Translation.getPhrase('a363c2282')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'unspent-transaction-output-list-pending'}
                                  eventKey="/unspent-transaction-output-list/pending">
                             <NavText>
-                                pending unspents
+                                {Translation.getPhrase('6b35a982d')}
                             </NavText>
                         </NavItem>
                     </NavItem>
@@ -267,7 +268,7 @@ class Sidebar extends Component {
 
                     >
                         <NavText>
-                            advertisements <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('b4c4bc1af')} <FontAwesomeIcon className={'icon'}
                                                             icon="chevron-down"
                                                             size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
@@ -277,13 +278,13 @@ class Sidebar extends Component {
                         <NavItem key={'advertisement-list'}
                                  eventKey="/advertisement-list">
                             <NavText>
-                                list
+                                {Translation.getPhrase('95b4575bd')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'advertisement-received-list'}
                                  eventKey="/advertisement-received-list">
                             <NavText>
-                                received
+                                {Translation.getPhrase('4c1eaa743')}
                             </NavText>
                         </NavItem>
                     </NavItem>
@@ -296,7 +297,7 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('message')}
                     >
                         <NavText>
-                            messages{this.getMessageCountBadge()} <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('f5f535670')}{this.getMessageCountBadge()} <FontAwesomeIcon className={'icon'}
                                                                                    icon="chevron-down"
                                                                                    size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
@@ -306,25 +307,25 @@ class Sidebar extends Component {
                         <NavItem key={'message-compose'}
                                  eventKey="/message-compose">
                             <NavText>
-                                compose
+                                {Translation.getPhrase('9850ea52f')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'message-inbox'}
                                  eventKey={'/message-inbox'}>
                             <NavText>
-                                inbox{this.getMessageCountBadge()}
+                                {Translation.getPhrase('c6320dad7')}{this.getMessageCountBadge()}
                             </NavText>
                         </NavItem>
                         <NavItem key={'message-sent'}
                                  eventKey="/message-sent">
                             <NavText>
-                                sent
+                                {Translation.getPhrase('fa7ef6bb8')}
                             </NavText>
                         </NavItem>
                     </NavItem>
                     <NavItem key={'actions'} eventKey="/actions">
                         <NavText>
-                            actions
+                            {Translation.getPhrase('6714945be')}
                         </NavText>
                     </NavItem>
 
@@ -335,7 +336,7 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('status')}
                     >
                         <NavText>
-                            status <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('657f2e9d7')} <FontAwesomeIcon className={'icon'}
                                                     icon="chevron-down"
                                                     size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
@@ -345,22 +346,22 @@ class Sidebar extends Component {
                         <NavItem key={'status-summary'}
                                  eventKey="/status-summary">
                             <NavText>
-                                summary
+                                {Translation.getPhrase('5003fdb1b')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'peers'} eventKey="/peers">
                             <NavText>
-                                peers
+                                {Translation.getPhrase('bacb9a402')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'backlog'} eventKey="/backlog">
                             <NavText>
-                                backlog
+                                {Translation.getPhrase('696f4f784')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'event-log'} eventKey="/event-log">
                             <NavText>
-                                event log
+                                {Translation.getPhrase('72f996828')}
                             </NavText>
                         </NavItem>
                     </NavItem>
@@ -372,7 +373,7 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('config')}
                     >
                         <NavText>
-                            settings <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('508a453d7')} <FontAwesomeIcon className={'icon'}
                                                       icon="chevron-down"
                                                       size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
@@ -382,39 +383,39 @@ class Sidebar extends Component {
                         <NavItem key={'config-general'}
                                  eventKey="/config/general">
                             <NavText>
-                                general
+                                {Translation.getPhrase('22918aaff')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'config-network'} eventKey="/config/network">
                             <NavText>
-                                network
+                                {Translation.getPhrase('0260ebda0')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'config-connection'} eventKey="/config/connection">
                             <NavText>
-                                connection
+                                {Translation.getPhrase('7b46fa297')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'config-consensus'} eventKey="/config/consensus">
                             <NavText>
-                                consensus
+                                {Translation.getPhrase('f5762863c')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'config-address-version'} eventKey="/config/address-version">
                             <NavText>
-                                address version
+                                {Translation.getPhrase('560869642')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'config-storage'} eventKey="/config/storage">
                             <NavText>
-                                storage
+                                {Translation.getPhrase('6faf1e039')}
                             </NavText>
                         </NavItem>
                     </NavItem>
 
                     <NavItem eventKey="help">
                         <NavText>
-                            help <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('b7ae09c4b')} <FontAwesomeIcon className={'icon'}
                                                   icon="chevron-down"
                                                   size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
@@ -423,17 +424,17 @@ class Sidebar extends Component {
                         </NavText>
                         <NavItem key={'faq'} eventKey="/faq">
                             <NavText>
-                                frequent questions
+                                {Translation.getPhrase('7697f394c')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'report-issue'} eventKey="/report-issue">
                             <NavText>
-                                report issue
+                                {Translation.getPhrase('eee2f4a78')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'system-info'} eventKey="/system-info">
                             <NavText>
-                                system info
+                                {Translation.getPhrase('8f9df8a04')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'system-info'} eventKey="/system-info">
@@ -445,12 +446,12 @@ class Sidebar extends Component {
 
                     <NavItem key={'lock'} eventKey="lock">
                         <NavText>
-                            logout
+                            {Translation.getPhrase('53c1d7458')}
                         </NavText>
                     </NavItem>
                 </SideNav.Nav>
                 <div className="nav-info">
-                    <span>version {this.state.node_millix_version}</span>
+                    <span>{Translation.getPhrase('6e1f4a9bd')} {this.state.node_millix_version}</span>
                     {this.getAvailableVersionLink()}
                 </div>
             </SideNav>

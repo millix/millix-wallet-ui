@@ -8,6 +8,7 @@ import HelpIconView from '../utils/help-icon-view';
 import {bool_label} from '../../helper/format';
 import {connect} from 'react-redux';
 import {walletUpdateConfig} from '../../redux/actions';
+import Translation from '../../common/translation';
 
 
 class ConfigStorageView extends Component {
@@ -47,8 +48,8 @@ class ConfigStorageView extends Component {
 
         const error_list = [];
         let config       = {
-            MODE_NODE_SYNC_FULL   : validate.integerPositive('full node', this.mode_node_sync_full.value, error_list, true),
-            MODE_STORAGE_SYNC_FULL: validate.integerPositive('full storage sync', this.mode_storage_sync_full.value, error_list, true)
+            MODE_NODE_SYNC_FULL   : validate.integerPositive(Translation.getPhrase('75bd6a579'), this.mode_node_sync_full.value, error_list, true),
+            MODE_STORAGE_SYNC_FULL: validate.integerPositive(Translation.getPhrase('184520f26'), this.mode_storage_sync_full.value, error_list, true)
         };
         if (error_list.length === 0) {
             this.props.walletUpdateConfig(config).then(() => {
@@ -59,7 +60,7 @@ class ConfigStorageView extends Component {
             }).catch(() => {
                 error_list.push({
                     name   : 'save_error',
-                    message: 'error while saving occurred, please try again later'
+                    message: Translation.getPhrase('b037567e4')
                 });
             });
         }
@@ -79,20 +80,18 @@ class ConfigStorageView extends Component {
                         show={this.state.modal_show_save_result}
                         size={'lg'}
                         on_close={() => this.changeModalShowSaveResult(false)}
-                        heading={'success'}
+                        heading={Translation.getPhrase('4dae761ef')}
                         body={
-                            <div>
-                                successfully saved
-                            </div>
+                            <div>{Translation.getPhrase('159a3c824')}</div>
                         }/>
                     <div className={'panel panel-filled'}>
-                        <div className={'panel-heading bordered'}>storage</div>
+                        <div className={'panel-heading bordered'}>{Translation.getPhrase('24ab03c96')}</div>
                         <div className={'panel-body'}>
                             <Form>
                                 <ErrorList
                                     error_list={this.state.error_list}/>
                                 <Form.Group className="form-group">
-                                    <label>full node<HelpIconView help_item_name={'full_node'}/></label>
+                                    <label>{Translation.getPhrase('75bd6a579')}<HelpIconView help_item_name={'full_node'}/></label>
                                     <Form.Select
                                         as="select"
                                         ref={(c) => this.mode_node_sync_full = c}
@@ -107,7 +106,7 @@ class ConfigStorageView extends Component {
                                 </Form.Group>
 
                                 <Form.Group className="form-group">
-                                    <label>full storage<HelpIconView help_item_name={'full_storage'}/></label>
+                                    <label>{Translation.getPhrase('e07c91976')}<HelpIconView help_item_name={'full_storage'}/></label>
                                     <Form.Select
                                         as="select"
                                         ref={(c) => this.mode_storage_sync_full = c}
@@ -126,7 +125,7 @@ class ConfigStorageView extends Component {
                                         variant="outline-primary"
                                         onClick={() => this.save()}
                                         disabled={this.state.sending}>
-                                        {this.state.sending ? <>{'saving'}</> : <>continue</>}
+                                        {this.state.sending ? <>{Translation.getPhrase('15cc5bad2')}</> : <>{Translation.getPhrase('3dedae695')}</>}
                                     </Button>
                                 </Form.Group>
                             </Form>

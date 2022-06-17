@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Button, Col, Form, Row} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import ModalView from '../utils/modal-view';
 import API from '../../api';
 import MnemonicView from '../utils/mnemonic-view';
+import Translation from '../../common/translation';
 
 
 class MnemonicPhraseView extends Component {
@@ -52,26 +53,23 @@ class MnemonicPhraseView extends Component {
         return <>
             <ModalView show={this.state.modalShowMnemonic}
                        size={'xl'}
-                       heading={'mnemonic phrase'}
+                       heading={Translation.getPhrase('ee9c80bf2')}
                        on_close={() => this.changeModalShowMnemonic(false)}
                        body={
                            <MnemonicView mnemonic={this.state.mnemonic}/>
                        }/>
 
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>backup</div>
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('d436cb960')}</div>
                 <div className={'panel-body'}>
-                    <p>mnemonic phrase is a unique string that allows you to access your wallet. if you lose your mnemonic phrase you
-                        will not be able to access this wallet or any funds it contains. we recommend you to write these words down and
-                        keep them in a safe place. avoid saving your mnemonic phrase in a computer or online service and do not take a
-                        screenshot of it. millix_private_key.json contains your wallet mnemonic phrase.</p>
+                    <p>{Translation.getPhrase('5e6660d19')}</p>
                     <div className={'text-center form-group'}>
                         <Button variant="outline-primary"
                                 className={'btn btn-w-md btn-accent'}
                                 onClick={() => {
                                     this.exportPrivateKey();
                                 }}>
-                            save millix_private_key.json
+                            {Translation.getPhrase('ffc200ff0')}
                         </Button>
                         <a style={{display: 'none'}}
                            download="millix_private_key.json"
@@ -84,7 +82,7 @@ class MnemonicPhraseView extends Component {
                                 className={'btn btn-w-md btn-accent'}
                                 onClick={() => {
                                     this.showMnemonicPhraseModal();
-                                }}>show mnemonic phrase
+                                }}>{Translation.getPhrase('038474cb2')}
                         </Button>
                     </div>
                 </div>

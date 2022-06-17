@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {updateNotificationVolume} from '../../redux/actions';
 import VolumeControl from '../utils/volume-control-view';
+import Translation from '../../common/translation';
 
 
 class ConfigAudioView extends Component {
@@ -19,11 +20,9 @@ class ConfigAudioView extends Component {
 
     render() {
         return <div className={'panel panel-filled'}>
-            <div className={'panel-heading bordered'}>volume</div>
+            <div className={'panel-heading bordered'}>{Translation.getPhrase('ea50eb5ca')}</div>
             <div className={'panel-body'}>
-                <label>
-                    transaction notification volume
-                </label>
+                <label>{Translation.getPhrase('683d96ac6')}</label>
                 <VolumeControl initialVolume={this.state.initialVolume}
                                onVolumeChange={volume => this.props.updateNotificationVolume(volume)}/>
             </div>

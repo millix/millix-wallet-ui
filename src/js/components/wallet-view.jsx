@@ -11,6 +11,7 @@ import BalanceView from './utils/balance-view';
 import * as validate from '../helper/validate';
 import * as text from '../helper/text';
 import Transaction from '../common/transaction';
+import Translation from '../common/translation';
 
 
 class WalletView extends Component {
@@ -49,9 +50,9 @@ class WalletView extends Component {
         }
 
         const transaction_params = {
-            addresses: [validate.required('address', this.destinationAddress.value, error_list)],
-            amount   : validate.amount('amount', this.amount.value, error_list),
-            fee      : validate.amount('fee', this.fee.value, error_list)
+            addresses: [validate.required(Translation.getPhrase('c9861d7c2'), this.destinationAddress.value, error_list)],
+            amount   : validate.amount(Translation.getPhrase('cdfa46e99'), this.amount.value, error_list),
+            fee      : validate.amount(Translation.getPhrase('3ae48ceb8'), this.fee.value, error_list)
         };
 
         if (error_list.length === 0) {
@@ -144,7 +145,7 @@ class WalletView extends Component {
                             primary_address={this.props.wallet.address}
                         />
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>send</div>
+                            <div className={'panel-heading bordered'}>{Translation.getPhrase('2c2a681e8')}</div>
                             <div className={'panel-body'}>
                                 <ErrorList
                                     error_list={this.state.error_list}/>
@@ -152,17 +153,17 @@ class WalletView extends Component {
                                     <Form>
                                         <Col>
                                             <Form.Group className="form-group">
-                                                <label>address</label>
+                                                <label>{Translation.getPhrase('c9861d7c2')}</label>
                                                 <Form.Control type="text"
-                                                              placeholder="address"
+                                                              placeholder={Translation.getPhrase('c9861d7c2')}
                                                               ref={c => this.destinationAddress = c}/>
                                             </Form.Group>
                                         </Col>
                                         <Col>
                                             <Form.Group className="form-group">
-                                                <label>amount</label>
+                                                <label>{Translation.getPhrase('cdfa46e99')}</label>
                                                 <Form.Control type="text"
-                                                              placeholder="amount"
+                                                              placeholder={Translation.getPhrase('cdfa46e99')}
                                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                                               ref={c => this.amount = c}
                                                               onChange={validate.handleAmountInputChange.bind(this)}/>
@@ -171,10 +172,10 @@ class WalletView extends Component {
                                         <Col>
                                             <Form.Group className="form-group"
                                                         as={Row}>
-                                                <label>fee</label>
+                                                <label>{Translation.getPhrase('5d5997bf3')}</label>
                                                 <Col className={'input-group'}>
                                                     <Form.Control type="text"
-                                                                  placeholder="fee"
+                                                                  placeholder={Translation.getPhrase('5d5997bf3')}
                                                                   pattern="[0-9]+([,][0-9]{1,2})?"
                                                                   ref={c => {
                                                                       this.fee = c;
@@ -200,11 +201,11 @@ class WalletView extends Component {
                                             <ModalView
                                                 show={this.state.modal_show_confirmation}
                                                 size={'lg'}
-                                                heading={'send confirmation'}
+                                                heading={Translation.getPhrase('d469333b4')}
                                                 on_accept={() => this.sendTransaction()}
                                                 on_close={() => this.cancelSendTransaction()}
                                                 body={<div>
-                                                    <div>you are about to send {format.millix(this.state.amount)} to</div>
+                                                    <div>{Translation.getPhrase('6183562eb', {millix_amount: format.millix(this.state.amount)})}</div>
                                                     <div>{this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}</div>
                                                     {text.get_confirmation_modal_question()}
                                                 </div>}/>
@@ -213,7 +214,7 @@ class WalletView extends Component {
                                                 show={this.state.modal_show_send_result}
                                                 size={'lg'}
                                                 on_close={() => this.changeModalShowSendResult(false)}
-                                                heading={'payment has been sent'}
+                                                heading={Translation.getPhrase('54bb1b342')}
                                                 body={this.state.modal_body_send_result}/>
                                             <Form.Group as={Row}>
                                                 <Button
@@ -224,8 +225,8 @@ class WalletView extends Component {
                                                     {this.state.sending ?
                                                      <>
                                                          <div className="loader-spin"/>
-                                                         {this.state.canceling ? 'canceling' : 'cancel transaction'}
-                                                     </> : <>send</>}
+                                                         {this.state.canceling ? Translation.getPhrase('20b672040') : Translation.getPhrase('607120b8a')}
+                                                     </> : <>{Translation.getPhrase('2c2a681e8')}</>}
                                                 </Button>
                                             </Form.Group>
                                         </Col>

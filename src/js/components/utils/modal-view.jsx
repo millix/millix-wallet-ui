@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Modal} from 'react-bootstrap';
-import {Route, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
+import Translation from '../../common/translation';
 
 
 class ModalView extends Component {
@@ -55,7 +56,7 @@ class ModalView extends Component {
         if (this.isOnAcceptDefined()) {
             accept_button = <Button variant="outline-primary"
                                     onClick={() => this.accept()}>
-                continue
+                {Translation.getPhrase('ec17636ae')}
             </Button>;
         }
 
@@ -73,7 +74,7 @@ class ModalView extends Component {
                         {accept_button}
                         <Button variant="outline-default"
                                 onClick={() => this.cancel()}>
-                            close
+                            {Translation.getPhrase('6c5d868b8')}
                         </Button>
                     </Modal.Footer>
                 </Modal>

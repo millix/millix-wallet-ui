@@ -9,6 +9,7 @@ import API from '../api';
 import * as text from '../helper/text';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
 import {bool_label} from '../helper/format';
+import Translation from '../common/translation';
 
 
 class TransactionHistoryView extends Component {
@@ -52,7 +53,7 @@ class TransactionHistoryView extends Component {
                         icon={'eye'}/>
                     <DatatableActionButtonView
                         icon={'rotate-left'}
-                        title={'reset validation'}
+                        title={Translation.getPhrase('620cf43e3')}
                         callback={() => this.resetTransactionValidationRef.toggleConfirmationModal(transaction.transaction_id)}
                         callback_args={transaction.transaction_id}
                     />
@@ -69,7 +70,7 @@ class TransactionHistoryView extends Component {
 
     render() {
         const confirmation_modal_body_single = <>
-            <div>continuing will force your node to revalidate transaction</div>
+            <div>{Translation.getPhrase('1b7bf87b5')}</div>
             <div>{this.state.reset_transaction_id}</div>
             {text.get_confirmation_modal_question()}
         </>;
@@ -78,7 +79,7 @@ class TransactionHistoryView extends Component {
             <div>
                 <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance}/>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>transactions</div>
+                    <div className={'panel-heading bordered'}>{Translation.getPhrase('bb2017424')}</div>
                     <div className={'panel-body'}>
                         <Row id={'txhistory'}>
                             <DatatableView
@@ -92,21 +93,24 @@ class TransactionHistoryView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        field: 'date'
+                                        field: 'date',
+                                        header: Translation.getPhrase('cd55d1db8')
                                     },
                                     {
                                         field : 'amount',
-                                        format: 'amount'
+                                        header: Translation.getPhrase('0a4e9992e')
                                     },
                                     {
                                         field : 'txid',
-                                        header: 'transaction id'
+                                        header: Translation.getPhrase('da26d66d6')
                                     },
                                     {
-                                        field: 'stable_date'
+                                        field: 'stable_date',
+                                        header: Translation.getPhrase('634fdbe34')
                                     },
                                     {
-                                        field: 'double_spend'
+                                        field: 'double_spend',
+                                        header: Translation.getPhrase('d8654c020')
                                     }
                                 ]}/>
                         </Row>

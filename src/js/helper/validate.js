@@ -1,5 +1,6 @@
 import * as format from './format';
 import _ from 'lodash';
+import Translation from '../common/translation';
 
 export function required(field_name, value, error_list) {
     if (typeof value === 'string') {
@@ -9,13 +10,13 @@ export function required(field_name, value, error_list) {
     if (!value) {
         error_list.push({
             name   : get_error_name('required', field_name),
-            message: `${field_name} is required`
+            message: `${field_name} ${Translation.getPhrase('e1787ec8a')}`
         });
     }
     else if (_.isArray(value) && _.isEmpty(value)) {
         error_list.push({
             name   : get_error_name('required', field_name),
-            message: `${field_name} is required`
+            message: `${field_name} ${Translation.getPhrase('e1787ec8a')}`
         });
     }
 
@@ -27,7 +28,7 @@ export function amount(field_name, value, error_list, allow_zero = false) {
     if (format.millix(value_escaped, false) !== value) {
         error_list.push({
             name   : get_error_name('amount_format_is_wrong', field_name),
-            message: `${field_name} must be a valid amount`
+            message: `${field_name} ${Translation.getPhrase('8704a6404')}`
         });
 
     }
@@ -42,19 +43,19 @@ export function integerPositive(field_name, value, error_list, allow_zero = fals
     if (!Number.isInteger(value_escaped)) {
         error_list.push({
             name   : get_error_name('value_is_not_integer', field_name),
-            message: `${field_name} must be a number`
+            message: `${field_name} ${Translation.getPhrase('9efbcbf8f')}`
         });
     }
     else if (!allow_zero && value_escaped <= 0) {
         error_list.push({
             name   : get_error_name('value_is_lt_zero', field_name),
-            message: `${field_name} must be bigger than 0`
+            message: `${field_name} ${Translation.getPhrase('020c0fa2c')}`
         });
     }
     else if (allow_zero && value_escaped < 0) {
         error_list.push({
             name   : get_error_name('value_is_lte_zero', field_name),
-            message: `${field_name} must be bigger than or equal to 0`
+            message: `${field_name} ${Translation.getPhrase('ed23a3bf1')}`
         });
     }
 
@@ -71,7 +72,7 @@ export function ip(field_name, value, error_list) {
     else if (result_ip_octet.length !== 4) {
         error_list.push({
             name   : get_error_name('ip_octet_number', field_name),
-            message: `${field_name} must be a valid ip address`
+            message: `${field_name} ${Translation.getPhrase('c07a618ad')}`
         });
     }
     else {
@@ -80,7 +81,7 @@ export function ip(field_name, value, error_list) {
             if (isNaN(element_number) || element_number > 255 || element_number < 0 || element === '') {
                 error_list.push({
                     name   : get_error_name('ip_octet_wrong', field_name),
-                    message: `${field_name} must be a valid ip address`
+                    message: `${field_name} ${Translation.getPhrase('37372b72f')}`
                 });
 
                 return false;
@@ -99,14 +100,14 @@ export function string_alphanumeric(field_name, value, error_list, length) {
     if (!is_string) {
         error_list.push({
             name   : get_error_name('value_is_not_alphanumeric_string', field_name),
-            message: `${field_name} must be alphanumeric string`
+            message: `${field_name} ${Translation.getPhrase('891fa1a8b')}`
         });
     }
 
     if (value_escaped.length > length) {
         error_list.push({
             name   : get_error_name('max_length_exceeded', field_name),
-            message: `${field_name} max length is ${length} `
+            message: `${field_name} ${Translation.getPhrase('cdd550227')} ${length} `
         });
     }
 
@@ -122,7 +123,7 @@ export function json(field_name, value, error_list) {
     catch (e) {
         error_list.push({
             name   : get_error_name('json_error', field_name),
-            message: `${field_name} should contain valid json`
+            message: `${field_name} ${Translation.getPhrase('3719db17c')}`
         });
     }
 
@@ -199,7 +200,7 @@ export function domain_name(field_name, domain_name, error_list) {
     if (domain_name && !match.test(domain_name)) {
         error_list.push({
             name   : get_error_name('dns_invalid', field_name),
-            message: `${field_name} must be a valid domain name`
+            message: `${field_name} ${Translation.getPhrase('0ccc5cddf')}`
         });
         return null;
     }
