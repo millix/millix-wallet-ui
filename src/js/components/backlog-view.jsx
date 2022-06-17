@@ -7,6 +7,7 @@ import DatatableView from './utils/datatable-view';
 import API from '../api';
 import * as text from '../helper/text';
 import ModalView from './utils/modal-view';
+import Translation from '../common/translation';
 
 
 class BacklogView extends Component {
@@ -64,12 +65,12 @@ class BacklogView extends Component {
             <div className={'panel panel-filled'}>
                 <ModalView show={this.state.modal_show}
                            size={'lg'}
-                           heading={'reset backlog'}
+                           heading={Translation.getPhrase('7f29a26ec')}
                            on_close={() => this.showModal(false)}
                            on_accept={() => this.backlogReset()}
                            body={<div>
                                <div>
-                                   continuing will force your node to reset backlog.
+                                   {Translation.getPhrase('934f82a39')}
                                </div>
                                {text.get_confirmation_modal_question()}
                            </div>}/>
@@ -78,13 +79,13 @@ class BacklogView extends Component {
                 </div>
                 <div className={'panel-body'}>
                     <div className={'form-group'}>
-                        <span>backlog size is calculated from items with key "transaction". this page display every backlog size item, so count will not match.</span>
+                        <span>{Translation.getPhrase('6b3a1f19e')}</span>
                     </div>
                     <DatatableView
                         reload_datatable={() => this.loadBacklogList()}
                         datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                         action_button={{
-                            label   : 'reset backlog',
+                            label   : Translation.getPhrase('470eb2a5c'),
                             on_click: () => this.showModal()
                         }}
                         value={this.state.backlog_list}
@@ -94,14 +95,15 @@ class BacklogView extends Component {
                         resultColumn={[
                             {
                                 field : 'datetime',
-                                header: 'datetime'
+                                header: Translation.getPhrase('7686cc658')
                             },
                             {
-                                field: 'job_group_name'
+                                field: 'job_group_name',
+                                header: Translation.getPhrase('ff85d7685')
                             },
                             {
                                 field : 'timestamp',
-                                header: 'timestamp'
+                                header: Translation.getPhrase('bc29e8203')
                             },
                             {
                                 field: 'arr_keys'

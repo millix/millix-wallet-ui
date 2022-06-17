@@ -13,6 +13,7 @@ import Transaction from '../../common/transaction';
 import HelpIconView from '../utils/help-icon-view';
 import {changeLoaderState} from '../loader';
 import ReactChipInput from 'react-chip-input';
+import Translation from '../../common/translation';
 
 
 class MessageComposeForm extends Component {
@@ -100,7 +101,7 @@ class MessageComposeForm extends Component {
 
         const error = {
             name   : 'verified_sender_not_valid',
-            message: `verified sender must be a valid domain name`
+            message: Translation.getPhrase('f4df52d03')
         };
 
         domain_name = validate.domain_name('domain_name', domain_name, []);
@@ -115,7 +116,7 @@ class MessageComposeForm extends Component {
                           if (!data.is_address_verified) {
                               error_list.push({
                                   name   : 'verified_sender_not_valid',
-                                  message: <>domain name verification failed. click<HelpIconView help_item_name={'verified_sender'}/> for instructions</>
+                                  message: <>{Translation.getPhrase('48bcbdd7a', {help_icon: <HelpIconView help_item_name={'verified_sender'}/>})}</>
                               });
                           }
 
@@ -139,12 +140,12 @@ class MessageComposeForm extends Component {
             return;
         }
         const transaction_param = {
-            addresses: validate.required('address', this.state.destination_address_list, error_list),
-            amount   : validate.amount('amount', this.amount.value, error_list),
-            fee      : validate.amount('fee', this.fee.value, error_list),
+            addresses: validate.required(Translation.getPhrase('34e691203'), this.state.destination_address_list, error_list),
+            amount   : validate.amount(Translation.getPhrase('908073a53'), this.amount.value, error_list),
+            fee      : validate.amount(Translation.getPhrase('5d5997bf3'), this.fee.value, error_list),
             subject  : this.subject.value,
             message  : this.message.value,
-            dns      : validate.domain_name('verified sender', this.dns.value, error_list)
+            dns      : validate.domain_name(Translation.getPhrase('7ea14bda1'), this.dns.value, error_list)
         };
 
         if (error_list.length === 0) {
@@ -278,7 +279,7 @@ class MessageComposeForm extends Component {
                     error_list: [
                         {
                             name   : 'recipient_already_exist',
-                            message: `recipients must contain only unique addresses. multiple entries of address ${address.trim()}`
+                            message: Translation.getPhrase('cf02f25db') + ` ${address.trim()}`
                         }
                     ]
                 });
@@ -308,7 +309,7 @@ class MessageComposeForm extends Component {
                 <Row className={'message_compose'}>
                     <Col className={this.getFieldClassname('address')}>
                         <Form.Group className="form-group" role="form">
-                            <label>recipients</label>
+                            <label>{Translation.getPhrase('6ee1a646f')}</label>
                             <ReactChipInput
                                 ref={ref => {
                                     if (ref && !ref.state.focused && ref.formControlRef.current.value !== '') {
@@ -316,7 +317,7 @@ class MessageComposeForm extends Component {
                                         ref.formControlRef.current.value = '';
                                     }
                                     if (!this.chipInputAddress) {
-                                        ref.formControlRef.current.placeholder = 'recipients';
+                                        ref.formControlRef.current.placeholder = Translation.getPhrase('6ee1a646f');
                                         this.chipInputAddress                  = ref;
                                     }
                                 }}
@@ -330,21 +331,21 @@ class MessageComposeForm extends Component {
                     <Form>
                         <Col className={this.getFieldClassname('subject')}>
                             <Form.Group className="form-group">
-                                <label>subject</label>
+                                <label>{Translation.getPhrase('5c4428695')}</label>
                                 <Form.Control type="text"
                                               value={this.state.subject}
                                               onChange={c => this.setState({subject: c.target.value})}
-                                              placeholder="subject"
+                                              placeholder={Translation.getPhrase('5c4428695')}
                                               ref={c => this.subject = c}/>
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group className="form-group">
-                                <label>{this.props.input_label_message ? this.props.input_label_message : 'message'}</label>
+                                <label>{this.props.input_label_message ? this.props.input_label_message : Translation.getPhrase('70fd6e7fc')}</label>
                                 <Form.Control as="textarea" rows={10}
                                               value={this.state.message}
                                               onChange={c => this.setState({message: c.target.value})}
-                                              placeholder="message"
+                                              placeholder={Translation.getPhrase('70fd6e7fc')}
                                               autoFocus
                                               ref={c => {
                                                   this.message = c;
@@ -353,9 +354,9 @@ class MessageComposeForm extends Component {
                         </Col>
                         <Col className={this.getFieldClassname('amount')}>
                             <Form.Group className="form-group">
-                                <label>payment<HelpIconView help_item_name={'message_payment'}/></label>
+                                <label>{Translation.getPhrase('6997ec114')}<HelpIconView help_item_name={'message_payment'}/></label>
                                 <Form.Control type="text"
-                                              placeholder="amount"
+                                              placeholder={Translation.getPhrase('5227c5387')}
                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                               ref={c => this.amount = c}
                                               onChange={validate.handleAmountInputChange.bind(this)}/>
@@ -364,10 +365,10 @@ class MessageComposeForm extends Component {
                         <Col className={this.getFieldClassname('fee')}>
                             <Form.Group className="form-group"
                                         as={Row}>
-                                <label>fee</label>
+                                <label>{Translation.getPhrase('e957d8d6f')}</label>
                                 <Col className={'input-group'}>
                                     <Form.Control type="text"
-                                                  placeholder="fee"
+                                                  placeholder={Translation.getPhrase('e957d8d6f')}
                                                   pattern="[0-9]+([,][0-9]{1,2})?"
                                                   ref={c => {
                                                       this.fee = c;
@@ -391,10 +392,10 @@ class MessageComposeForm extends Component {
                         <Col className={this.getFieldClassname('verified_sender')}>
                             <Form.Group className="form-group"
                                         as={Row}>
-                                <label>verified sender (optional)<HelpIconView help_item_name={'verified_sender'}/></label>
+                                <label>{Translation.getPhrase('68c04bec8')}<HelpIconView help_item_name={'verified_sender'}/></label>
                                 <Col className={'input-group'}>
                                     <Form.Control type="text"
-                                                  placeholder="domain name"
+                                                  placeholder={Translation.getPhrase('973c2c6a3')}
                                                   pattern="^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$"
                                                   ref={c => this.dns = c}
                                                   onChange={e => this.validateDns(e)}/>
@@ -423,11 +424,11 @@ class MessageComposeForm extends Component {
                             <ModalView
                                 show={this.state.modal_show_confirmation}
                                 size={'lg'}
-                                heading={'send confirmation'}
+                                heading={Translation.getPhrase('232eb13bb')}
                                 on_accept={() => this.sendTransaction()}
                                 on_close={() => this.cancelSendTransaction()}
                                 body={<div>
-                                    <div>you are about to send a message and {format.millix(this.state.amount)} to</div>
+                                    <div>{Translation.getPhrase('11da3c1c9', {millix_amount: format.millix(this.state.amount)})}</div>
                                     <div>{this.state.address_base}{this.state.address_version}{this.state.address_key_identifier}</div>
                                     {text.get_confirmation_modal_question()}
                                 </div>}/>
@@ -435,7 +436,7 @@ class MessageComposeForm extends Component {
                                 show={this.state.modal_show_send_result}
                                 size={'lg'}
                                 on_close={() => this.changeModalShowSendResult(false)}
-                                heading={'message has been sent'}
+                                heading={Translation.getPhrase('3ff3dba19')}
                                 body={this.state.modal_body_send_result}/>
                             <Form.Group as={Row}>
                                 <Button
@@ -449,8 +450,8 @@ class MessageComposeForm extends Component {
                                     {this.state.sending ?
                                      <>
                                          <div className="loader-spin"/>
-                                         {this.state.canceling ? 'canceling' : 'cancel transaction'}
-                                     </> : <>send</>}
+                                         {this.state.canceling ? Translation.getPhrase('545fb12eb') : Translation.getPhrase('4498f50c0')}
+                                     </> : <>{Translation.getPhrase('fc58d259a')}</>}
                                 </Button>
                             </Form.Group>
                         </Col>

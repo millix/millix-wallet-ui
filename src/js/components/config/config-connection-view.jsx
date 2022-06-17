@@ -9,6 +9,7 @@ import * as validate from '../../helper/validate';
 import API from '../../api';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import _ from 'lodash';
+import Translation from '../../common/translation';
 
 
 class ConfigConnectionView extends Component {
@@ -78,7 +79,7 @@ class ConfigConnectionView extends Component {
     }
 
     updateData(connection_data, element) {
-        if(!_.isArray(element.value)){
+        if (!_.isArray(element.value)) {
             element.value = JSON.parse(element.value);
         }
         element.value.forEach(el => {
@@ -131,8 +132,8 @@ class ConfigConnectionView extends Component {
     saveConfig(config_name) {
         this.clearErrorList();
         let error_list = [];
-        validate.required('node id', this[config_name].value, error_list);
-        const node_id = validate.string_alphanumeric('node id', this[config_name].value, error_list, 34);
+        validate.required(Translation.getPhrase('6ba360897'), this[config_name].value, error_list);
+        const node_id = validate.string_alphanumeric(Translation.getPhrase('6ba360897'), this[config_name].value, error_list, 34);
 
         if (error_list.length > 0) {
             this.setState({
@@ -178,14 +179,14 @@ class ConfigConnectionView extends Component {
                     prevent_close_after_accept={true}
                     on_close={() => this.showModal(config_name, false)}
                     on_accept={() => this.saveConfig(config_name)}
-                    heading={`add ${connection_name}`}
+                    heading={Translation.getPhrase('33237b160') + ` ${connection_name}`}
                     body={
                         <Form>
                             <ErrorList
                                 error_list={this.state.error_list}/>
                             <Form.Control
                                 type="text"
-                                placeholder="node id"
+                                placeholder={Translation.getPhrase('6ba360897')}
                                 ref={(c) => this[config_name] = c}
                                 onChange={(e) => {
                                     return validate.handleInputChangeAlphanumericString(e, 34);
@@ -194,7 +195,7 @@ class ConfigConnectionView extends Component {
                         </Form>
                     }/>
                 <div className={'panel-heading bordered'}>
-                    {connection_name} whitelist
+                    {Translation.getPhrase('d53e5838a', {connection_name: connection_name})}
                 </div>
                 <div className={'panel-body'}>
                     <Col>
@@ -205,7 +206,7 @@ class ConfigConnectionView extends Component {
                             loading={this.state.connection_data['loading_' + config_name]}
                             datatable_reload_timestamp={this.state.connection_data['reload_timestamp_' + config_name]}
                             action_button={{
-                                label   : `add ${connection_name}`,
+                                label   : Translation.getPhrase('33237b160') + ` ${connection_name}`,
                                 on_click: () => this.showModal(config_name)
                             }}
                             value={this.state.connection_data[config_name]}
@@ -213,7 +214,8 @@ class ConfigConnectionView extends Component {
                             showActionColumn={true}
                             resultColumn={[
                                 {
-                                    field: 'node_id'
+                                    field : 'node_id',
+                                    header: Translation.getPhrase('6ba360897')
                                 }
                             ]}
                         />
@@ -225,9 +227,9 @@ class ConfigConnectionView extends Component {
 
     render() {
         return <div>
-            {this.getConnectionDatatable('inbound connection', 'NODE_CONNECTION_INBOUND_WHITELIST')}
-            {this.getConnectionDatatable('outbound connection', 'NODE_CONNECTION_OUTBOUND_WHITELIST')}
-            {this.getConnectionDatatable('static connection', 'NODE_CONNECTION_STATIC')}
+            {this.getConnectionDatatable(Translation.getPhrase('bd92fdceb'), 'NODE_CONNECTION_INBOUND_WHITELIST')}
+            {this.getConnectionDatatable(Translation.getPhrase('cae4027ec'), 'NODE_CONNECTION_OUTBOUND_WHITELIST')}
+            {this.getConnectionDatatable(Translation.getPhrase('483306b8a'), 'NODE_CONNECTION_STATIC')}
         </div>;
     }
 }

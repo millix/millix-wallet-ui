@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {Col, Row} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {DISCORD_URL} from '../../../config.js';
+import Translation from '../../common/translation';
 
 
 class FaqView extends Component {
@@ -14,7 +15,7 @@ class FaqView extends Component {
         return (<Col md="12">
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
-                    frequent questions
+                    {Translation.getPhrase('66f2297a0')}
                 </div>
                 <div className={'panel-body'}>
                     <Row>
@@ -23,29 +24,27 @@ class FaqView extends Component {
                                 millix
                             </div>
                             <div className={'form-group'}>
-                                <div>if you have a question about anything
-                                    related to millix cryptocurrency, like:
-                                </div>
+                                <div>{Translation.getPhrase('76e90feec')}</div>
                                 <ul>
-                                    <li>sending transactions</li>
-                                    <li>how does the millix cryptocurrency
-                                        work
-                                    </li>
-                                    <li>which technologies does it use</li>
-                                    <li>where to buy or sell millix</li>
-                                    <li>how to earn millix</li>
+                                    <li>{Translation.getPhrase('dea74a359')}</li>
+                                    <li>{Translation.getPhrase('c07e6bf76')}</li>
+                                    <li>{Translation.getPhrase('ae88baaa3')}</li>
+                                    <li>{Translation.getPhrase('0ca623439')}</li>
+                                    <li>{Translation.getPhrase('d1874305e')}</li>
                                 </ul>
                                 <div>
-                                    you may find answers on millix.org <a
-                                    href={'https://millix.org/faq.html'}
-                                    target={'_blank'}>faq</a> page
+                                    {Translation.getPhrase('8b704ebc9', {
+                                        faq_link: <a
+                                            href={'https://millix.org/faq.html'}
+                                            target={'_blank'}>{Translation.getPhrase('9439b19f2')}</a>
+                                    })}
                                 </div>
                                 <div>
-                                    if you haven't find an answer on faq page or
-                                    in other site sections you are always
-                                    welcome to ask a question on <a
-                                    href={DISCORD_URL}
-                                    target={'_blank'}>discord</a>
+                                    {Translation.getPhrase('8ff8f2824', {
+                                        discord_link: <a
+                                            href={DISCORD_URL}
+                                            target={'_blank'}>discord</a>
+                                    })}
                                 </div>
                             </div>
                             <hr/>
@@ -53,25 +52,22 @@ class FaqView extends Component {
                                 tangled
                             </div>
                             <div className={'form-group'}>
-                                <div>if you have a question about anything
-                                    related to tangled browser, like:
-                                </div>
+                                <div>{Translation.getPhrase('0a10bb8a1')}</div>
                                 <ul>
-                                    <li>advertisements</li>
-                                    <li>earning millix
-                                    </li>
-                                    <li>privacy</li>
-                                    <li>censorship</li>
+                                    <li>{Translation.getPhrase('876f3cf6e')}</li>
+                                    <li>{Translation.getPhrase('38d790ed6')}</li>
+                                    <li>{Translation.getPhrase('b9840d1f9')}</li>
+                                    <li>{Translation.getPhrase('4db417761')}</li>
                                 </ul>
                                 <div>
-                                    you may find answers on tangled.com <a
-                                    href={'https://tangled.com/browser'}
-                                    target={'_blank'}>overview</a> page
+                                    {Translation.getPhrase('0da6f70e0', {
+                                        tangled_link: <a
+                                            href={'https://tangled.com/browser'}
+                                            target={'_blank'}>{Translation.getPhrase('d690cecdb')}</a>
+                                    })}
                                 </div>
                                 <div>
-                                    if you haven't find an answer on faq page or
-                                    in other site sections you are always
-                                    welcome to ask a question on <a
+                                    {Translation.getPhrase('965d32628')}<a
                                     href={DISCORD_URL}
                                     target={'_blank'}>discord</a>
                                 </div>

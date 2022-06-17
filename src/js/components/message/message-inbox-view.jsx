@@ -5,6 +5,7 @@ import API from '../../api';
 import * as helper_message from '../../helper/message';
 import DatatableView from './../utils/datatable-view';
 import {connect} from 'react-redux';
+import Translation from '../../common/translation';
 
 
 class MessageInboxView extends Component {
@@ -50,7 +51,7 @@ class MessageInboxView extends Component {
                     <div className={'panel-body'} style={{textAlign: 'center'}}>
                         <div>
                             <p>
-                                use this address to receive messages
+                                {Translation.getPhrase('78916d069')}
                             </p>
                         </div>
                         <div className={'primary_address'}>
@@ -59,13 +60,12 @@ class MessageInboxView extends Component {
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>inbox
-                    </div>
+                    <div className={'panel-heading bordered'}>{Translation.getPhrase('a6e7dca40')}</div>
                     <div className={'panel-body'}>
                         <Row>
                             <DatatableView
                                 action_button={{
-                                    label   : 'compose',
+                                    label   : Translation.getPhrase('544d6013e'),
                                     on_click: () => this.props.history.push('/message-compose'),
                                     icon    : 'envelope'
                                 }}
@@ -79,6 +79,7 @@ class MessageInboxView extends Component {
                                 resultColumn={[
                                     {
                                         field     : 'date',
+                                        header    : Translation.getPhrase('b25d3cd74'),
                                         class_name: 'w-10'
                                     },
                                     {
@@ -86,14 +87,16 @@ class MessageInboxView extends Component {
                                         class_name: 'hidden_data_search_column'
                                     },
                                     {
-                                        field: 'subject'
+                                        field : 'subject',
+                                        header: Translation.getPhrase('d334c1e6d')
                                     },
                                     {
                                         field : 'address_from',
-                                        header: 'from'
+                                        header: Translation.getPhrase('666115b0d')
                                     },
                                     {
-                                        field: 'amount'
+                                        field: 'amount',
+                                        header: Translation.getPhrase('77ba93615')
                                     }
                                 ]}/>
                         </Row>

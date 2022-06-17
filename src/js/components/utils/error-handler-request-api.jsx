@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ModalView from './modal-view';
 import {Subject} from 'rxjs';
+import Translation from '../../common/translation';
 
 const modalState = new Subject();
 
@@ -32,7 +33,7 @@ class ErrorModalRequestApi extends Component {
                 let message = error.message;
 
                 if (error?.message === 'Failed to fetch') {
-                    message = 'a critical service is not responding. please close this application completely and reopen it to try again. if your issue persists click help on the left navigation to get assistance.';
+                    message = Translation.getPhrase('2cf433bce');
                 }
 
                 this.showModal(message);
@@ -75,7 +76,7 @@ class ErrorModalRequestApi extends Component {
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
                            on_close={() => this.close()}
-                           heading={'error'}
+                           heading={Translation.getPhrase('097302530')}
                            body={this.state.message}/>
             </>
         );

@@ -7,6 +7,7 @@ import os from 'os';
 import API from '../../api';
 import * as format from '../../helper/format';
 import HelpIconView from './../utils/help-icon-view';
+import Translation from '../../common/translation';
 
 
 class SystemInfoView extends Component {
@@ -50,7 +51,7 @@ class SystemInfoView extends Component {
         return (<Col md="12">
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
-                    system info
+                    {Translation.getPhrase('8f9df8a04')}
                 </div>
                 <div className={'panel-body'}>
                     <Row>
@@ -58,13 +59,13 @@ class SystemInfoView extends Component {
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
-                                        node
+                                        {Translation.getPhrase('5afb36415')}
                                     </div>
                                     <Table striped bordered hover>
                                         <tbody>
                                         <tr>
                                             <td className={'w-20'}>
-                                                node id
+                                                {Translation.getPhrase('a84b519b0')}
                                             </td>
                                             <td>
                                                 {props.network.node_id}
@@ -72,7 +73,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                key identifier<HelpIconView
+                                                {Translation.getPhrase('e2fd99059')}<HelpIconView
                                                 help_item_name={'key_identifier'}/>
                                             </td>
                                             <td>
@@ -87,13 +88,13 @@ class SystemInfoView extends Component {
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
-                                        version
+                                        {Translation.getPhrase('5fa8b6429')}
                                     </div>
                                     <Table striped bordered hover>
                                         <tbody>
                                         <tr>
                                             <td className={'w-20'}>
-                                                build
+                                                {Translation.getPhrase('e4065c1d6')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.node_millix_version}
@@ -101,7 +102,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                build date
+                                                {Translation.getPhrase('ba07da8bb')}
                                             </td>
                                             <td>
                                                 {format.date(this.state.node_os_info.node_millix_build_date)}
@@ -109,7 +110,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                browser
+                                                {Translation.getPhrase('1ff167e09')}
                                             </td>
                                             <td>
                                                 {this.state.browserRelease}
@@ -123,13 +124,13 @@ class SystemInfoView extends Component {
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
-                                        os
+                                        {Translation.getPhrase('704335ffa')}
                                     </div>
                                     <Table striped bordered hover>
                                         <tbody>
                                         <tr>
                                             <td className={'w-20'}>
-                                                platform
+                                                {Translation.getPhrase('7ced67593')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.platform}
@@ -137,7 +138,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                type
+                                                {Translation.getPhrase('607744dc0')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.type}
@@ -145,7 +146,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                release
+                                                {Translation.getPhrase('cb4b33640')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.release}
@@ -158,14 +159,14 @@ class SystemInfoView extends Component {
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
-                                        hardware
+                                        {Translation.getPhrase('039b2ab88')}
                                     </div>
                                     <Table striped bordered hover
                                            className={'mb-0'}>
                                         <tbody>
                                         <tr>
                                             <td className={'w-20'}>
-                                                architecture
+                                                {Translation.getPhrase('c73f78dcc')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.arch}
@@ -173,7 +174,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                memory total
+                                                {Translation.getPhrase('d5c0a0677')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.memory.total}
@@ -181,7 +182,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                memory free
+                                                {Translation.getPhrase('fc0869127')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.memory.free} ({this.state.node_os_info.memory.freePercent})
@@ -189,7 +190,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                cpu
+                                                {Translation.getPhrase('d3d3e029e')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.cpu.model}
@@ -197,7 +198,7 @@ class SystemInfoView extends Component {
                                         </tr>
                                         <tr>
                                             <td className={'w-20'}>
-                                                cpu load average
+                                                {Translation.getPhrase('b9f07a993')}
                                             </td>
                                             <td>
                                                 {this.state.node_os_info.cpu.loadavg.join(' ')}

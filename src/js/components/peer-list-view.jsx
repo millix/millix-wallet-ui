@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Row, Col, Button} from 'react-bootstrap';
+import {Row} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
+import Translation from '../common/translation';
 
 
 class PeerListView extends Component {
@@ -42,7 +43,7 @@ class PeerListView extends Component {
                    peerList.push({
                        node_idx   : idx + 1,
                        node_url   : `${item.node_prefix}${item.node_address}:${item.node_port}`,
-                       node_status: 'connected',
+                       node_status: Translation.getPhrase('8d14f90c0'),
                        action     : action
                    });
                });
@@ -70,10 +71,10 @@ class PeerListView extends Component {
         return (
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>peers</div>
+                    <div className={'panel-heading bordered'}>{Translation.getPhrase('df4e20959')}</div>
                     <div className={'panel-body'}>
                         <div className={'form-group'}>
-                            <span>these are peers to which you are connected. "peer" is another node to which your node connects to in order to send/receive data.</span>
+                            <span>{Translation.getPhrase('bd223d540')}</span>
                         </div>
                         <Row>
                             <DatatableView
@@ -88,15 +89,15 @@ class PeerListView extends Component {
                                 resultColumn={[
                                     {
                                         field : 'node_idx',
-                                        header: 'id'
+                                        header: Translation.getPhrase('6ca535005')
                                     },
                                     {
                                         field : 'node_url',
-                                        header: 'node'
+                                        header: Translation.getPhrase('0cc2c9f50')
                                     },
                                     {
                                         field : 'node_status',
-                                        header: 'status'
+                                        header: Translation.getPhrase('6c56ee442')
                                     }
                                 ]}/>
                         </Row>

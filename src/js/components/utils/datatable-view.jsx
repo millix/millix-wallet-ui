@@ -8,6 +8,7 @@ import {classNames} from 'primereact/utils';
 import * as format from '../../helper/format';
 import {FilterMatchMode} from 'primereact/api';
 import DatatableHeaderView from './datatable-header-view';
+import Translation from '../../common/translation';
 
 
 class DatatableView extends Component {
@@ -80,7 +81,7 @@ class DatatableView extends Component {
                 key={'action'}
                 className={'datatable_action_column'}
                 field={'action'}
-                header={'action'}
+                header={Translation.getPhrase('012bb6684')}
                 sortable={false}/>);
         }
 
@@ -109,7 +110,7 @@ class DatatableView extends Component {
                     <button type="button" className={options.className}
                             onClick={options.onClick}
                             disabled={options.disabled}>
-                        <span className="p-p-3">previous</span>
+                        <span className="p-p-3">{Translation.getPhrase('0203a5f25')}</span>
                         <Ripple/>
                     </button>
                 );
@@ -119,7 +120,7 @@ class DatatableView extends Component {
                     <button type="button" className={options.className}
                             onClick={options.onClick}
                             disabled={options.disabled}>
-                        <span className="p-p-3">next</span>
+                        <span className="p-p-3">{Translation.getPhrase('1ec756b35')}</span>
                         <Ripple/>
                     </button>
                 );
@@ -165,11 +166,11 @@ class DatatableView extends Component {
                 ];
 
                 return <div
-                    className={'paginator-dropdown-wrapper'}>show<Dropdown
+                    className={'paginator-dropdown-wrapper'}>{Translation.getPhrase('475b2bd56')}<Dropdown
                     value={options.value} options={dropdownOptions}
                     onChange={options.onChange} className={'align-middle'}/>
-                    records
-                . total records {options.totalRecords}.</div>;
+                    {Translation.getPhrase('fd8294f3a')}
+                . {Translation.getPhrase('380789fad')} {options.totalRecords}.</div>;
             }
         };
     }
@@ -231,7 +232,7 @@ class DatatableView extends Component {
                            columnResizeMode="fit"
                            sortField={this.props.sortField}
                            sortOrder={this.props.sortOrder}
-                           emptyMessage="no records found"
+                           emptyMessage={Translation.getPhrase('ea4617fde')}
 
                            globalFilterFields={this.state.result_global_search_field}
                            filters={this.state.result_filter}

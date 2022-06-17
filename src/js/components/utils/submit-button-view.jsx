@@ -4,6 +4,7 @@ import {Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalView from './modal-view';
+import Translation from '../../common/translation';
 
 
 class SubmitButtonView extends Component {
@@ -106,10 +107,10 @@ class SubmitButtonView extends Component {
         if (this.state.sending && this.isOnCancelDefined()) {
             icon = <div className="loader-spin"/>;
             if (this.state.canceling) {
-                label = <>canceling</>;
+                label = <>{Translation.getPhrase('1d7c45c87')}</>;
             }
             else {
-                label = <>cancel</>;
+                label = <>{Translation.getPhrase('1c5390bfe')}</>;
             }
         }
 

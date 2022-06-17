@@ -1,0 +1,442 @@
+[
+  {
+    "language_id": 1,
+    "language_guid": "49015ffef",
+    "language_name": "english",
+    "language_name_native": "english",
+    "language_code": "en",
+    "list_order": 10,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:04"
+  },
+  {
+    "language_id": 2,
+    "language_guid": "01ad5be5c",
+    "language_name": "spanish",
+    "language_name_native": "español",
+    "language_code": "es",
+    "list_order": 30,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:04"
+  },
+  {
+    "language_id": 3,
+    "language_guid": "6094877ec",
+    "language_name": "portuguese",
+    "language_name_native": "português",
+    "language_code": "pt",
+    "list_order": 80,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:04"
+  },
+  {
+    "language_id": 4,
+    "language_guid": "8e727efdf",
+    "language_name": "french",
+    "language_name_native": "français",
+    "language_code": "fr",
+    "list_order": 65,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:05"
+  },
+  {
+    "language_id": 5,
+    "language_guid": "995d6ba0a",
+    "language_name": "german",
+    "language_name_native": "deutsche",
+    "language_code": "de",
+    "list_order": 55,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:05"
+  },
+  {
+    "language_id": 6,
+    "language_guid": "0e033c6e9",
+    "language_name": "italian",
+    "language_name_native": "italiano",
+    "language_code": "it",
+    "list_order": 50,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:05"
+  },
+  {
+    "language_id": 7,
+    "language_guid": "7b34df94f",
+    "language_name": "turkish",
+    "language_name_native": "türk",
+    "language_code": "tr",
+    "list_order": 91,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:05"
+  },
+  {
+    "language_id": 8,
+    "language_guid": "fc01bfa90",
+    "language_name": "arabic",
+    "language_name_native": "عربى",
+    "language_code": "ar",
+    "list_order": 110,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:05"
+  },
+  {
+    "language_id": 9,
+    "language_guid": "abfc4f1b4",
+    "language_name": "russian",
+    "language_name_native": "pусский",
+    "language_code": "ru",
+    "list_order": 85,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:05"
+  },
+  {
+    "language_id": 10,
+    "language_guid": "c6fa87b52",
+    "language_name": "hindi",
+    "language_name_native": "हिंदी",
+    "language_code": "hi",
+    "list_order": 330,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:06"
+  },
+  {
+    "language_id": 11,
+    "language_guid": "45c8f00f4",
+    "language_name": "urdu",
+    "language_name_native": "اردو",
+    "language_code": "ur",
+    "list_order": 390,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:06"
+  },
+  {
+    "language_id": 12,
+    "language_guid": "441f09009",
+    "language_name": "indonesian",
+    "language_name_native": "indonesia",
+    "language_code": "id",
+    "list_order": 60,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:06"
+  },
+  {
+    "language_id": 13,
+    "language_guid": "9b0423ac1",
+    "language_name": "malay",
+    "language_name_native": "malay",
+    "language_code": "ms",
+    "list_order": 70,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:06"
+  },
+  {
+    "language_id": 14,
+    "language_guid": "f3cca98d5",
+    "language_name": "thai",
+    "language_name_native": "ไทย",
+    "language_code": "th",
+    "list_order": 140,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:06"
+  },
+  {
+    "language_id": 15,
+    "language_guid": "84dc74c4c",
+    "language_name": "vietnamese",
+    "language_name_native": "tiếng việt",
+    "language_code": "vi",
+    "list_order": 105,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:06"
+  },
+  {
+    "language_id": 16,
+    "language_guid": "6adbbb718",
+    "language_name": "chinese",
+    "language_name_native": "中文",
+    "language_code": "zh",
+    "list_order": 300,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:07"
+  },
+  {
+    "language_id": 17,
+    "language_guid": "94b60b92c",
+    "language_name": "korean",
+    "language_name_native": "한국어",
+    "language_code": "ko",
+    "list_order": 350,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:07"
+  },
+  {
+    "language_id": 18,
+    "language_guid": "439e1b03f",
+    "language_name": "japanese",
+    "language_name_native": "日本語",
+    "language_code": "ja",
+    "list_order": 340,
+    "status": 1,
+    "create_date": "2017-05-13 03:18:07"
+  },
+  {
+    "language_id": 19,
+    "language_guid": "0776fda62",
+    "language_name": "greek",
+    "language_name_native": "Ελληνικά",
+    "language_code": "el",
+    "list_order": 52,
+    "status": 1,
+    "create_date": "2017-05-13 14:38:16"
+  },
+  {
+    "language_id": 20,
+    "language_guid": "BEpDwgG53",
+    "language_name": "english (simplified)",
+    "language_name_native": "English (Simplified)",
+    "language_code": "en",
+    "list_order": 0,
+    "status": 0,
+    "create_date": "2017-05-17 22:57:32"
+  },
+  {
+    "language_id": 21,
+    "language_guid": "c251b5ab4",
+    "language_name": "bengali",
+    "language_name_native": "bengali",
+    "language_code": "bn",
+    "list_order": 30,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:06"
+  },
+  {
+    "language_id": 22,
+    "language_guid": "3df004450",
+    "language_name": "punjabi",
+    "language_name_native": "ਪੰਜਾਬੀ",
+    "language_code": "ma",
+    "list_order": null,
+    "status": 0,
+    "create_date": "2017-05-18 01:48:06"
+  },
+  {
+    "language_id": 23,
+    "language_guid": "0c68b8b29",
+    "language_name": "javanese",
+    "language_name_native": "javanese",
+    "language_code": "jw",
+    "list_order": 65,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:06"
+  },
+  {
+    "language_id": 24,
+    "language_guid": "d1e1fc678",
+    "language_name": "telugu",
+    "language_name_native": "తెలుగు",
+    "language_code": "te",
+    "list_order": null,
+    "status": 0,
+    "create_date": "2017-05-18 01:48:06"
+  },
+  {
+    "language_id": 25,
+    "language_guid": "fb619bb37",
+    "language_name": "marathi",
+    "language_name_native": "मराठी",
+    "language_code": "mr",
+    "list_order": null,
+    "status": 0,
+    "create_date": "2017-05-18 01:48:06"
+  },
+  {
+    "language_id": 26,
+    "language_guid": "a27b6c43a",
+    "language_name": "tamil",
+    "language_name_native": "தமிழ்",
+    "language_code": "ta",
+    "list_order": 380,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:07"
+  },
+  {
+    "language_id": 27,
+    "language_guid": "e3a715eb7",
+    "language_name": "persian",
+    "language_name_native": "فارسی",
+    "language_code": "fa",
+    "list_order": 370,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:07"
+  },
+  {
+    "language_id": 28,
+    "language_guid": "ed0053bc6",
+    "language_name": "gujarati",
+    "language_name_native": "gujarati",
+    "language_code": "gu",
+    "list_order": 65,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:07"
+  },
+  {
+    "language_id": 29,
+    "language_guid": "dc5c4f299",
+    "language_name": "polish",
+    "language_name_native": "polskie",
+    "language_code": "pl",
+    "list_order": 78,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:07"
+  },
+  {
+    "language_id": 30,
+    "language_guid": "760d77ce0",
+    "language_name": "ukranian",
+    "language_name_native": "український",
+    "language_code": "uk",
+    "list_order": 92,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:07"
+  },
+  {
+    "language_id": 31,
+    "language_guid": "8163c45e1",
+    "language_name": "malayam",
+    "language_name_native": "മല്യ്മ്",
+    "language_code": "ml",
+    "list_order": 360,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:08"
+  },
+  {
+    "language_id": 32,
+    "language_guid": "4339f421b",
+    "language_name": "kannada",
+    "language_name_native": "kannada",
+    "language_code": "kn",
+    "list_order": 65,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:08"
+  },
+  {
+    "language_id": 33,
+    "language_guid": "1ef8f0b1f",
+    "language_name": "czech",
+    "language_name_native": "čeština",
+    "language_code": "cs",
+    "list_order": 31,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:08"
+  },
+  {
+    "language_id": 34,
+    "language_guid": "ba88bb28e",
+    "language_name": "filipino",
+    "language_name_native": "filipino",
+    "language_code": "tl",
+    "list_order": 60,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:08"
+  },
+  {
+    "language_id": 35,
+    "language_guid": "9c69d12d3",
+    "language_name": "danish",
+    "language_name_native": "dansk",
+    "language_code": "da",
+    "list_order": 50,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:08"
+  },
+  {
+    "language_id": 36,
+    "language_guid": "e84e2b578",
+    "language_name": "dutch",
+    "language_name_native": "nederlands",
+    "language_code": "nl",
+    "list_order": 75,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:08"
+  },
+  {
+    "language_id": 37,
+    "language_guid": "3149d8e01",
+    "language_name": "estonian",
+    "language_name_native": "eesti",
+    "language_code": "et",
+    "list_order": 29,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:09"
+  },
+  {
+    "language_id": 38,
+    "language_guid": "d5f016c0c",
+    "language_name": "finnish",
+    "language_name_native": "suomalainen",
+    "language_code": "fi",
+    "list_order": 89,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:09"
+  },
+  {
+    "language_id": 39,
+    "language_guid": "e987aba70",
+    "language_name": "haitian",
+    "language_name_native": "ayisyen",
+    "language_code": "ht",
+    "list_order": 20,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:09"
+  },
+  {
+    "language_id": 40,
+    "language_guid": "efcc258d6",
+    "language_name": "hebrew",
+    "language_name_native": "עִברִית",
+    "language_code": "iw",
+    "list_order": 320,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:09"
+  },
+  {
+    "language_id": 41,
+    "language_guid": "d836cde91",
+    "language_name": "hungarian",
+    "language_name_native": "magyar",
+    "language_code": "hu",
+    "list_order": 69,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:09"
+  },
+  {
+    "language_id": 42,
+    "language_guid": "367fe37f5",
+    "language_name": "icelandic",
+    "language_name_native": "islensku",
+    "language_code": "is",
+    "list_order": 62,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:10"
+  },
+  {
+    "language_id": 43,
+    "language_guid": "a0ba5fe57",
+    "language_name": "kurdish",
+    "language_name_native": "kurdî",
+    "language_code": "ku",
+    "list_order": 66,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:10"
+  },
+  {
+    "language_id": 44,
+    "language_guid": "f8bc06ece",
+    "language_name": "swahili",
+    "language_name_native": "swahili",
+    "language_code": "sw",
+    "list_order": 90,
+    "status": 1,
+    "create_date": "2017-05-18 01:48:10"
+  }
+]

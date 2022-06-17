@@ -10,6 +10,7 @@ import API from '../../api';
 import HelpIconView from '../utils/help-icon-view';
 import SubmitButtonView from '../utils/submit-button-view';
 import UserInterfaceError from '../utils/user-interface-error';
+import Translation from '../../common/translation';
 
 
 class OutputAggregateView extends Component {
@@ -83,7 +84,7 @@ class OutputAggregateView extends Component {
 
                       const modalBodyResult = <div>
                           <div>
-                              transaction id
+                              {Translation.getPhrase('532967442')}
                           </div>
                           <div>
                               {transaction.transaction_id}
@@ -131,30 +132,24 @@ class OutputAggregateView extends Component {
                 show={this.state.modalShowResult}
                 size={'lg'}
                 on_close={() => this.changeModalShowResult(false)}
-                heading={'aggregation payment has been sent'}
+                heading={Translation.getPhrase('8440805a3')}
                 body={this.state.modalBodyResult}/>
 
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>unspents aggregation
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('3ee809e0a')}
                 </div>
                 <div className={'panel-body'}>
                     <ErrorList
                         error_list={this.state.errorList}/>
                     <p>
-                        the millix protocol limits each transaction to be funded by a maximum of 128 inputs<HelpIconView
-                        help_item_name={'transaction_max_input_number'}/>. the smallest unspents are being used first.
-                        aggregation consumes the smallest unspents by sending a payment to yourself.
-                        each time you click aggregate you will see numbers below change (unspent count will decrease and maximum single payment amount will
-                        increase). continue to click the aggregate button until
-                        the maximum single payment amount meets your needs. your balance and pending balance will change while
-                        aggregation is in progress.
+                        {Translation.getPhrase('0e865156b', {help_icon: <HelpIconView help_item_name={'transaction_max_input_number'}/>})}
                     </p>
 
                     <Table striped bordered hover>
                         <tbody>
                         <tr>
                             <td className={'w-20'}>
-                                unspent count
+                                {Translation.getPhrase('92446fccf')}
                             </td>
                             <td>
                                 {format.number(this.state.transactionOutputCount)}
@@ -162,7 +157,7 @@ class OutputAggregateView extends Component {
                         </tr>
                         <tr>
                             <td className={'w-20'}>
-                                maximum single payment amount
+                                {Translation.getPhrase('9471e9b65')}
                             </td>
                             <td>
                                 {format.millix(this.state.transactionMaxAmount)}
@@ -177,10 +172,10 @@ class OutputAggregateView extends Component {
                             on_submit={this.submit}
                             force_disabled={this.state.submitButtonForceDisabled}
                             icon={'code-merge'}
-                            label={'aggregate'}
-                            confirmation_modal_heading={'unspent aggregation'}
+                            label={Translation.getPhrase('dacb0dfc9')}
+                            confirmation_modal_heading={Translation.getPhrase('5d9c2c672')}
                             confirmation_modal_body={<>
-                                <div>you are about to aggregate {format.number(this.state.aggregationTransactionOutputCount)} unspents.</div>
+                                <div>{Translation.getPhrase('867dd91da', {output_count: format.number(this.state.aggregationTransactionOutputCount)})}</div>
                                 {text.get_confirmation_modal_question()}
                             </>}
                         />

@@ -10,6 +10,7 @@ import API from '../../api/index';
 import * as validate from '../../helper/validate';
 import {bool_label} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
+import Translation from '../../common/translation';
 
 
 class ConfigAddressVersionView extends Component {
@@ -41,8 +42,8 @@ class ConfigAddressVersionView extends Component {
         });
 
         let error_list = [];
-        validate.required('version', this.address_version_name.value, error_list);
-        validate.required('regex pattern', this.address_version_regex.value, error_list);
+        validate.required(Translation.getPhrase('b52d6e1fb'), this.address_version_name.value, error_list);
+        validate.required(Translation.getPhrase('1aba9d290'), this.address_version_regex.value, error_list);
 
         if (error_list.length > 0) {
             this.setState({
@@ -63,8 +64,8 @@ class ConfigAddressVersionView extends Component {
                        this.setState({
                            error_list: [
                                {
-                                   name   : 'api error',
-                                   message: data.api_message ? data.api_message : 'bad request'
+                                   name   : Translation.getPhrase('25df0b975'),
+                                   message: data.api_message ? data.api_message : Translation.getPhrase('25b452e43')
                                }
                            ]
                        });
@@ -116,7 +117,7 @@ class ConfigAddressVersionView extends Component {
             <Col>
                 <ErrorList error_list={this.state.error_list}/>
                 <Form.Group className="form-group">
-                    <label>default address</label>
+                    <label>{Translation.getPhrase('e805e90ab')}</label>
                     <Form.Select
                         as="select"
                         ref={(c) => this.address_is_default = c}
@@ -133,7 +134,7 @@ class ConfigAddressVersionView extends Component {
 
             <Col>
                 <Form.Group className="form-group">
-                    <label>version</label>
+                    <label>{Translation.getPhrase('16562cacb')}</label>
                     <Form.Control
                         type="text"
                         ref={(c) => this.address_version_name = c}
@@ -147,7 +148,7 @@ class ConfigAddressVersionView extends Component {
             <Col>
                 <Form.Group className="form-group">
                     <label>
-                        regex pattern
+                        {Translation.getPhrase('496398096')}
                     </label>
                     <Row>
                         <Col>
@@ -170,12 +171,12 @@ class ConfigAddressVersionView extends Component {
                 prevent_close_after_accept={true}
                 on_close={() => this.changeModalAddAddressVersion(false)}
                 on_accept={() => this.addAddressVersion()}
-                heading={'address version'}
+                heading={Translation.getPhrase('e7b50ed39')}
                 body={this.getAddressVersionBody()}/>
             <Form>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
-                        address version
+                        {Translation.getPhrase('c72953bd2')}
                     </div>
                     <div className={'panel-body'}>
                         <div>
@@ -183,9 +184,9 @@ class ConfigAddressVersionView extends Component {
                                 reload_datatable={() => this.loadConfig()}
                                 datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                                 loading={this.state.datatable_loading}
-                                action_button_label={'add address version'}
+                                action_button_label={Translation.getPhrase('d0db52233')}
                                 action_button={{
-                                    label   : 'add address version',
+                                    label   : Translation.getPhrase('f62c48427'),
                                     on_click: () => this.changeModalAddAddressVersion()
                                 }}
                                 value={this.state.address_version_list}
@@ -193,13 +194,16 @@ class ConfigAddressVersionView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        field: 'version'
+                                        field : 'version',
+                                        header: Translation.getPhrase('5fa8b6429')
                                     },
                                     {
-                                        field: 'regex_pattern'
+                                        field : 'regex_pattern',
+                                        header: Translation.getPhrase('cc95a518b')
                                     },
                                     {
-                                        field: 'default_address'
+                                        field : 'default_address',
+                                        header: Translation.getPhrase('a07ac1628')
                                     }
                                 ]}/>
                         </div>

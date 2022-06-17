@@ -7,6 +7,7 @@ import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import * as format from '../helper/format';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
+import Translation from '../common/translation';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -80,7 +81,7 @@ class UnspentTransactionOutputView extends Component {
                     icon={'eye'}/>
                     <DatatableActionButtonView
                         icon={'rotate-left'}
-                        title={'reset validation'}
+                        title={Translation.getPhrase('fcdda880e')}
                         callback={() => this.resetTransactionValidationRef.toggleConfirmationModal(output.transaction_id)}
                         callback_args={output.transaction_id}
                     />
@@ -97,10 +98,10 @@ class UnspentTransactionOutputView extends Component {
     render() {
         let title;
         if (this.state.stable) {
-            title = 'stable unspents';
+            title = Translation.getPhrase('164dc0ea9');
         }
         else {
-            title = 'pending unspents';
+            title = Translation.getPhrase('faeff0851');
         }
 
         return (
@@ -113,18 +114,14 @@ class UnspentTransactionOutputView extends Component {
                     </div>
                     <div className={'panel-body'}>
                         <div className={'form-group'}>
-                            an unspent is a transaction output sent to your address that you received and
-                            have not used to fund a payment. your balance is the sum of your validated unspents. your pending balance is the sum of your
-                            unspents that haven't been validated yet.
-                            when you send a transaction using an unspent, or group of unspents, whose sum is bigger than your payment, you will receive the
-                            remaining change as a new unspent.
+                            {Translation.getPhrase('4c8afee38')}
                         </div>
                         <Row id={'txhistory'}>
                             <DatatableView
                                 reload_datatable={() => this.reloadDatatable()}
                                 datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                                 action_button={{
-                                    label   : 'reset validation',
+                                    label   : Translation.getPhrase('8f381845e'),
                                     icon    : 'rotate-left',
                                     on_click: this.state.stable === 0 && this.state.transaction_output_list.length > 0 && (() => this.resetTransactionValidationRef.toggleConfirmationModal(this.state.transaction_output_list)),
                                     args    : this.state.transaction_output_list
@@ -137,20 +134,23 @@ class UnspentTransactionOutputView extends Component {
                                 resultColumn={[
                                     {
                                         field : 'transaction_date',
-                                        header: 'date'
+                                        header: Translation.getPhrase('021cfa5ad')
                                     },
                                     {
                                         field : 'amount',
-                                        format: 'amount'
+                                        header: Translation.getPhrase('c86534ace')
                                     },
                                     {
-                                        field: 'address'
+                                        field: 'address',
+                                        header: Translation.getPhrase('5795a5856')
                                     },
                                     {
-                                        field: 'transaction_id'
+                                        field: 'transaction_id',
+                                        header: Translation.getPhrase('1a6323a17')
                                     },
                                     {
-                                        field: 'output_position'
+                                        field: 'output_position',
+                                        header: Translation.getPhrase('8d11dfdb0')
                                     }
                                 ]}/>
                         </Row>
