@@ -10,6 +10,7 @@ import MnemonicConfirmView from './utils/mnemonic-confirm-view';
 import NewWalletStepProgressView from './utils/new-wallet-step-progress-view';
 import WalletCreateInfoView from './utils/wallet-create-info-view';
 import {unlockWallet} from '../redux/actions';
+import Translation from '../common/translation';
 
 const STATUS = {
     NEW_WALLET_PASSWORD        : 1,
@@ -63,16 +64,16 @@ class NewWalletView extends Component {
     getStepName() {
         const result_step = [
             {
-                label: 'create password'
+                label: Translation.getPhrase('022a0c60c')
             },
             {
-                label: 'save mnemonic phrase'
+                label: Translation.getPhrase('5c14bcece')
             },
             {
-                label: 'confirm mnemonic phrase'
+                label: Translation.getPhrase('a22a090ac')
             },
             {
-                label: 'finish'
+                label: Translation.getPhrase('b192f3b66')
             }
         ];
 
@@ -143,13 +144,16 @@ class NewWalletView extends Component {
                 <>
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
-                            create new wallet
+                            {Translation.getPhrase('8e0007e24')}
                         </div>
                         <div className={'panel-body'}>
                             <Row>
                                 <Col>
                                     <div className={'section_subtitle'}>
-                                        step {this.state.status} of {Object.keys(STATUS).length}. {this.getStepName()}
+                                        {Translation.getPhrase('432a43d26', {
+                                            status       : this.state.status,
+                                            status_length: Object.keys(STATUS).length
+                                        })} {this.getStepName()}
                                     </div>
                                     <div>
                                         {this.state.mnemonic && status === STATUS.NEW_WALLET_MNEMONIC && (
@@ -179,7 +183,7 @@ class NewWalletView extends Component {
                                         </div>
                                         <Button variant="outline-primary"
                                                 disabled={next_button_disabled}
-                                                onClick={() => this.createWalletNextStep()}>continue</Button>
+                                                onClick={() => this.createWalletNextStep()}>{Translation.getPhrase('e4c4d7e06')}</Button>
                                     </div>
                                 </Col>
                             </Row>

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row} from 'react-bootstrap';
 import MessageComposeForm from './message-compose-form';
+import Translation from '../../common/translation';
 
 class MessageComposeView extends Component {
 
@@ -12,12 +13,10 @@ class MessageComposeView extends Component {
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>compose</div>
+                            <div className={'panel-heading bordered'}>{Translation.getPhrase('88a62ae8d')}</div>
                             <div className={'panel-body'}>
                                 <p>
-                                    compose an encrypted message to any tangled browser user. the message will be stored on your device and the recipients
-                                    device. to transport the message to reach the recipient, the message is stored on the millix network for up to 90 days. only
-                                    you and the recipient can read your messages.
+                                    {Translation.getPhrase('24861d022')}
                                 </p>
                                 <MessageComposeForm/>
                             </div>

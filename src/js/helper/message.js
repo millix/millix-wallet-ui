@@ -3,6 +3,7 @@ import _ from 'lodash';
 import DatatableActionButtonView from '../components/utils/datatable-action-button-view';
 import {Spinner} from 'react-bootstrap';
 import React from 'react';
+import Translation from '../common/translation';
 
 export function datatable_format(data) {
     const message_list = [];
@@ -78,17 +79,17 @@ function getMessageSubjectAndBody(message, transaction, file_list, fileHash) {
     let spinner_message = '';
     if (!transaction.is_stable) {
         action_disabled = true;
-        spinner_message = 'waiting for message transaction to validate';
+        spinner_message = Translation.getPhrase('b89f1d110');
     }
     else if (file_list.length > 0 && !fileHash) {
         action_disabled = true;
-        spinner_message = 'waiting for message data to arrive';
+        spinner_message = Translation.getPhrase('b41465dc2');
     }
 
     if (spinner_message) {
         message_subject = <>
             <Spinner size={'sm'} animation="border" role="status">
-                <span className="visually-hidden">loading...</span>
+                <span className="visually-hidden">{Translation.getPhrase('f709146cf')}</span>
             </Spinner>
             <span className="ms-2">
                 <i>{spinner_message}</i>
@@ -96,7 +97,7 @@ function getMessageSubjectAndBody(message, transaction, file_list, fileHash) {
         </>;
         message_body    = <>
             <Spinner size={'sm'} animation="border" role="status">
-                <span className="visually-hidden">loading...</span>
+                <span className="visually-hidden">{Translation.getPhrase('fed841f01')}</span>
             </Spinner>
             <span className="ms-2">
                 <i>{spinner_message}</i>
@@ -114,10 +115,10 @@ function getMessageSubjectAndBody(message, transaction, file_list, fileHash) {
 export function get_subject_html(data) {
     let message_subject = '';
     if (!data) {
-        message_subject = 'send message';
+        message_subject = Translation.getPhrase('04c184362');
     }
     else if (!data.subject) {
-        message_subject = <i>no subject</i>;
+        message_subject = <i>{Translation.getPhrase('e5250b452')}</i>;
     }
     else if (data.subject) {
         message_subject = data.subject;

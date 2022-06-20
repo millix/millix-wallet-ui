@@ -8,13 +8,14 @@ import * as format from '../../helper/format';
 import {Col, Row} from 'react-bootstrap';
 import MessageComposeForm from '../message/message-compose-form';
 import {DISCORD_URL, REPORT_ISSUE_ADDRESS} from '../../../config.js';
+import Translation from '../../common/translation';
 
 
 class ReportIssueView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: 'loading'
+            message: Translation.getPhrase('09959a949')
         };
     }
 
@@ -52,18 +53,20 @@ hardware:
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>
-                            <div className={'panel-heading bordered'}>report issue</div>
+                            <div className={'panel-heading bordered'}>{Translation.getPhrase('7d765ea09')}</div>
                             <div className={'panel-body'}>
                                 <p>
-                                    report your issue on <a href={DISCORD_URL} target={'_blank'} rel="noreferrer">discord</a> (free but slower response) or
-                                    send a message directly to the development team by describing your issue in the field below (2,000 millix).
+                                    {Translation.getPhrase('13d321885', {
+                                        discord_link:
+                                            <a href={DISCORD_URL} target={'_blank'} rel="noreferrer">discord</a>
+                                    })}
                                 </p>
                                 <MessageComposeForm
                                     message={this.state.message}
                                     subject={`${this.props.wallet.address_key_identifier} issue report`}
                                     destination_address={REPORT_ISSUE_ADDRESS}
                                     amount={1000}
-                                    input_label_message={'describe your issue'}
+                                    input_label_message={Translation.getPhrase('414d5b031')}
                                     hidden_field_list={[
                                         'address',
                                         'subject',

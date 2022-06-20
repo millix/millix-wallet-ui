@@ -1,29 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Col, Form, FormControl, InputGroup, Row} from 'react-bootstrap';
+import Translation from '../../common/translation';
 
 const MnemonicView = (props) => {
     return (
         <div className={'mnemonic'}>
             <div className={'mb-3'}>
-                mnemonic phrase is a unique string that allows you to access
-                your wallet.
-                we recommend you to write these words down and keep them in
-                a safe place.
-                avoid saving your mnemonic phrase in a computer or online
-                service and do not take a screenshot of it.
+                {Translation.getPhrase('6bf163d02')}
             </div>
             <Form.Group className="form-group">
-                <label>you can copy entire mnemonic phrase</label>
+                <label>{Translation.getPhrase('01f11055b')}</label>
                 <Form.Control type="text"
-                              placeholder="mnemonic phrase"
+                              placeholder={Translation.getPhrase('b8b4deaaf')}
                               value={props.mnemonic.join(' ')}
                               readOnly={true}/>
             </Form.Group>
             <div className={'section_subtitle'}>
-                or
+                {Translation.getPhrase('c9f1c9835')}
             </div>
-            <label>save mnemonic phrase word by word</label>
+            <label>{Translation.getPhrase('020c9ae6f')}</label>
             {new Array(4).fill(1).map((_, row) =>
                 <Row key={`row_${row}`}>
                     {new Array(6).fill(1).map((_, col) => {

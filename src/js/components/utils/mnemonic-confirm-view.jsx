@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Col, FormControl, Row, InputGroup, Form} from 'react-bootstrap';
+import Translation from '../../common/translation';
 
 const MnemonicConfirmView = (props) => {
     const inputList                             = [];
@@ -23,9 +24,9 @@ const MnemonicConfirmView = (props) => {
         props.onChange(isValid(mnemonic), mnemonic);
     };
 
-    let info_label = 'reproduce the mnemonic phrase from the previous step.';
+    let info_label = Translation.getPhrase('485b49925');
     if (props.processName === 'import') {
-        info_label = 'enter the mnemonic phrase from the wallet you want to use.';
+        info_label = Translation.getPhrase('9d97c9f67');
     }
 
     return (
@@ -35,15 +36,15 @@ const MnemonicConfirmView = (props) => {
             </div>
 
             <Form.Group className="form-group">
-                <label>you can paste entire mnemonic phrase</label>
+                <label>{Translation.getPhrase('afa9ebab3')}</label>
                 <Form.Control type="text"
-                              placeholder="mnemonic phrase"
+                              placeholder={Translation.getPhrase('080d63a14')}
                               onChange={entirePhraseChange}/>
             </Form.Group>
             <div className={'section_subtitle'}>
-                or
+                {Translation.getPhrase('adbe6703b')}
             </div>
-            <label>enter mnemonic phrase word by word</label>
+            <label>{Translation.getPhrase('b374b45c8')}</label>
             {new Array(4).fill(1).map((_, row) => {
                 return (<Row key={`row_${row}`}>
                     {new Array(6).fill(1).map((_, col) => {

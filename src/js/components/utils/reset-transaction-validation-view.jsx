@@ -6,6 +6,7 @@ import ModalView from './modal-view';
 import _ from 'lodash';
 import API from '../../api';
 import {changeLoaderState} from '../loader';
+import Translation from '../../common/translation';
 
 
 class ResetTransactionValidationView extends Component {
@@ -60,11 +61,11 @@ class ResetTransactionValidationView extends Component {
 
     render() {
         const confirmation_modal_body_all_pending = <>
-            <div>continuing will force your node to revalidate all your pending transactions</div>
+            <div>{Translation.getPhrase('ddcefc418')}</div>
             {text.get_confirmation_modal_question()}
         </>;
         const confirmation_modal_body_single      = <>
-            <div>continuing will force your node to revalidate transaction</div>
+            <div>{Translation.getPhrase('7b4ab8e6b')}</div>
             <div>{this.state.reset_transaction_id}</div>
             {text.get_confirmation_modal_question()}
         </>;
@@ -74,7 +75,7 @@ class ResetTransactionValidationView extends Component {
                 <ModalView
                     show={this.state.confirmation_modal_show}
                     size={'lg'}
-                    heading={'reset transaction validation'}
+                    heading={Translation.getPhrase('d9b0ec301')}
                     on_close={() => this.toggleConfirmationModal(this.state.reset_transaction_id, false)}
                     on_accept={() => this.revalidateTransaction(this.state.reset_transaction_id)}
                     body={_.isArray(this.state.reset_transaction_id) ? confirmation_modal_body_all_pending : confirmation_modal_body_single}
@@ -82,20 +83,25 @@ class ResetTransactionValidationView extends Component {
                 <ModalView show={this.state.result_modal_show}
                            size={'lg'}
                            on_close={() => this.toggleResultModal(this.state.reset_transaction_id, false)}
-                           heading={'reset transaction validation'}
+                           heading={Translation.getPhrase('e9bc5c56e')}
                            body={(typeof (this.state.reset_transaction_id) === 'string') ? (
-                               <div>validation has been reset for
-                                   transaction {this.state.reset_transaction_id}
+                               <div>
+                                   {Translation.getPhrase('af3042810')} {this.state.reset_transaction_id}
                                    <div>
-                                       click <Link to={'/unspent-transaction-output-list/pending'} onClick={() => this.reloadAndClose()}>here</Link> to see all
-                                       your pending transactions
+                                       {Translation.getPhrase('b6f821b21', {
+                                           unspent_transaction_link: <Link
+                                               to={'/unspent-transaction-output-list/pending'} onClick={() => this.reloadAndClose()}>{Translation.getPhrase('a1fa680b7')}</Link>
+                                       })}
                                    </div>
                                </div>
                            ) : (
-                                     <div>validation has been reset for all
-                                         your pending transactions
+                                     <div>
+                                         {Translation.getPhrase('9c43cfe62')}
                                          <div>
-                                             click <Link to={'/unspent-transaction-output-list/pending'}>here</Link> to see all your pending transactions
+                                             {Translation.getPhrase('8a5638e24', {
+                                                 pending_transaction_link: <Link
+                                                     to={'/unspent-transaction-output-list/pending'}>{Translation.getPhrase('a1fa680b7')}</Link>
+                                             })}
                                          </div>
                                      </div>
                                  )

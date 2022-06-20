@@ -7,6 +7,7 @@ import {Row} from 'react-bootstrap';
 import DatatableView from './utils/datatable-view';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import Translation from '../common/translation';
 
 
 class AddressListView extends Component {
@@ -60,15 +61,14 @@ class AddressListView extends Component {
     render() {
         return (
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>addresses
-                </div>
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('4dab40251')}</div>
                 <div className={'panel-body'}>
                     <Row>
                         <DatatableView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                             action_button={{
-                                label   : 'generate address',
+                                label   : Translation.getPhrase('96c3282d7'),
                                 on_click: () => this.generateAddress()
                             }}
                             value={this.state.address_list}
@@ -77,18 +77,19 @@ class AddressListView extends Component {
                             resultColumn={[
                                 {
                                     field : 'address_position',
-                                    header: 'position'
+                                    header: Translation.getPhrase('929962376')
                                 },
                                 {
                                     field : 'address',
-                                    header: 'address'
+                                    header: Translation.getPhrase('93ef1ec9f')
                                 },
                                 {
                                     field : 'address_version',
-                                    header: 'version'
+                                    header: Translation.getPhrase('9ab7e37f6')
                                 },
                                 {
-                                    field: 'create_date'
+                                    field: 'create_date',
+                                    header: Translation.getPhrase('c0f1a562d')
                                 }
                             ]}/>
                     </Row>

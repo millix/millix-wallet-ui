@@ -7,6 +7,7 @@ import AdvertisementPreview from './advertisement-preview';
 import * as format from '../../helper/format';
 import moment from 'moment';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
+import Translation from '../../common/translation';
 
 
 class AdvertisementConsumerSettlementLedgerView extends Component {
@@ -87,18 +88,16 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
     render() {
         return (<div>
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>received advertisements deposits
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('828deaeb1')}
                 </div>
                 <div className={'panel-body'}>
                     <div className={'form-group'}>
                         <p>
-                            these are advertisements you have been presented in the past 24 hours. you should receive advertisement deposits on a consistent
-                            basis.
-                            if you are not receiving advertisement deposits click <a className={''}
-                                                                                     onClick={() => this.props.history.push('/report-issue')}>here</a> to
-                            request assistance.
+                            {Translation.getPhrase('cf301a3be', {
+                                report_issue_link: <a onClick={() => this.props.history.push('/report-issue')}>{Translation.getPhrase('f4f95ce68')}</a>
+                            })}
                         </p>
-                        <span>you have received {format.millix(this.state.total_paid_amount)} in the past 24 hours.</span>
+                        <span>{Translation.getPhrase('e507ef069', {total_paid_amount: format.millix(this.state.total_paid_amount)})}</span>
                     </div>
                     <Row id={'adlist'} className={'advertisement_consumer_settlement_ledger_list'}>
                         <DatatableView
@@ -111,7 +110,8 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
                             showActionColumn={true}
                             resultColumn={[
                                 {
-                                    field: 'preview',
+                                    field     : 'preview',
+                                    header    : Translation.getPhrase('2141e60bb'),
                                     class_name: 'advertisement_preview_datatable_column'
                                 },
                                 {
@@ -128,15 +128,15 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
                                 },
                                 {
                                     field : 'amount',
-                                    header: 'amount'
+                                    header: Translation.getPhrase('4124a215d')
                                 },
                                 {
                                     field : 'presentation_date',
-                                    header: 'presentation date'
+                                    header: Translation.getPhrase('54daea16f')
                                 },
                                 {
                                     field : 'payment_date',
-                                    header: 'payment date'
+                                    header: Translation.getPhrase('b200a90c6')
                                 }
                             ]}/>
                     </Row>
