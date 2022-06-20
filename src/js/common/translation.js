@@ -20,14 +20,22 @@ class Translation {
         let phrase        = phrase_data?.phrase;
         phrase            = this.htmlSpecialCharsDecode(phrase);
 
+        let phrase_suffix = '';
+        if (sessionStorage.getItem('show_phrase_guid')) {
+            phrase_suffix = ` (${phrase_guid})`;
+        }
+
         if (!_.isEmpty(replace_data)) {
             _.forOwn(replace_data, function(value, key) {
                 let replace_key   = `[${key}]`;
                 let result_phrase = phrase.split(replace_key);
                 if (result_phrase.length > 1) {
-                    phrase = <>{result_phrase.shift()}{value}{result_phrase.join('')}</>;
+                    phrase = <>{result_phrase.shift()}{value}{result_phrase.join('')}{phrase_suffix}</>;
                 }
             });
+        }
+        else {
+            phrase += phrase_suffix;
         }
 
         return phrase;
