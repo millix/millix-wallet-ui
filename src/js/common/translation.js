@@ -4,13 +4,15 @@ import store from '../redux/store';
 
 class Translation {
     constructor() {
-        this.language_name_list       = new Intl.DisplayNames(['en'], {
+        this.language_name_list = new Intl.DisplayNames(['en'], {
             type: 'language'
         });
-        this.language_list            = require('../../ui_language.json');
-        this.current_language_guid    = '';
-        this.current_translation_data = [];
-        this.new_language_list_loaded = false;
+        const ui_language       = require('../../ui_language.json');
+        this.language_list      = ui_language.filter(item_language => item_language.status === 1);
+
+        this.current_language_guid         = '';
+        this.current_translation_data      = [];
+        this.current_language_guid_changed = true;
     }
 
     getPhrase(phrase_guid, replace_data = {}) {
@@ -32,10 +34,10 @@ class Translation {
     }
 
     getCurrentTranslationList() {
-        if (this.current_translation_data.length === 0 || !this.new_language_list_loaded) {
-            this.new_language_list_loaded = true;
-            let translation_list          = require('../../ui_phrase.json');
-            this.current_translation_data = translation_list.filter(element => element.language_guid === this.getCurrentLanguageGuid());
+        if (this.current_translation_data.length === 0 || this.current_language_guid_changed) {
+            this.current_language_guid_changed = false;
+            let translation_list               = require('../../ui_phrase.json');
+            this.current_translation_data      = translation_list.filter(element => element.language_guid === this.getCurrentLanguageGuid());
         }
 
         return this.current_translation_data;
@@ -59,8 +61,8 @@ class Translation {
     }
 
     setCurrentLanguageGuid(language_guid) {
-        this.new_language_list_loaded = false;
-        this.current_language_guid    = language_guid;
+        this.current_language_guid_changed = true;
+        this.current_language_guid         = language_guid;
         sessionStorage.setItem('current_language_guid', language_guid);
     }
 
