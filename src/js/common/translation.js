@@ -21,18 +21,24 @@ class Translation {
         phrase            = this.htmlSpecialCharsDecode(phrase);
 
         let phrase_suffix = '';
-        if (sessionStorage.getItem('show_phrase_guid')) {
+        if (sessionStorage.getItem('show_phrase_guid') === '1') {
             phrase_suffix = ` (${phrase_guid})`;
         }
 
         if (!_.isEmpty(replace_data)) {
+            let result = [];
             _.forOwn(replace_data, function(value, key) {
                 let replace_key   = `[${key}]`;
                 let result_phrase = phrase.split(replace_key);
                 if (result_phrase.length > 1) {
-                    phrase = <>{result_phrase.shift()}{value}{result_phrase.join('')}{phrase_suffix}</>;
+                    result.push(result_phrase.shift());
+                    result.push(value);
+                    phrase = result_phrase.join('');
                 }
             });
+            result.push(phrase);
+            result.push(phrase_suffix);
+            phrase = <>{result}</>;
         }
         else {
             phrase += phrase_suffix;
