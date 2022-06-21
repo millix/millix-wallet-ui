@@ -437,11 +437,6 @@ class Sidebar extends Component {
                                 {Translation.getPhrase('8f9df8a04')}
                             </NavText>
                         </NavItem>
-                        <NavItem key={'system-info'} eventKey="/system-info">
-                            <NavText>
-                                system info
-                            </NavText>
-                        </NavItem>
                     </NavItem>
 
                     <NavItem key={'lock'} eventKey="lock">
