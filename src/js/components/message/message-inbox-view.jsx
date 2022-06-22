@@ -44,6 +44,10 @@ class MessageInboxView extends Component {
         });
     }
 
+    getDateField(rawData) {
+        return <>{rawData.date}</>;
+    }
+
     render() {
         return (
             <>
@@ -78,13 +82,10 @@ class MessageInboxView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        field     : 'date',
+                                        field     : 'raw_date',
+                                        body      : this.getDateField,
                                         header    : Translation.getPhrase('b25d3cd74'),
                                         class_name: 'w-10'
-                                    },
-                                    {
-                                        field     : 'raw_date',
-                                        class_name: 'hidden_data_search_column'
                                     },
                                     {
                                         field : 'subject',
@@ -95,7 +96,7 @@ class MessageInboxView extends Component {
                                         header: Translation.getPhrase('666115b0d')
                                     },
                                     {
-                                        field: 'amount',
+                                        field : 'amount',
                                         header: Translation.getPhrase('77ba93615')
                                     }
                                 ]}/>

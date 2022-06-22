@@ -44,6 +44,10 @@ class MessageSentView extends Component {
         });
     }
 
+    getDateField(rawData) {
+        return <>{rawData.date}</>;
+    }
+
     render() {
         return (<>
             <div className={'panel panel-filled'}>
@@ -75,13 +79,10 @@ class MessageSentView extends Component {
                             showActionColumn={true}
                             resultColumn={[
                                 {
-                                    field: 'date',
+                                    field: 'raw_date',
+                                    body: this.getDateField,
                                     class_name: 'w-10',
                                     header: Translation.getPhrase('d17a15dc6')
-                                },
-                                {
-                                    field: 'raw_date',
-                                    class_name: 'hidden_data_search_column'
                                 },
                                 {
                                     field: 'subject',
