@@ -35,8 +35,8 @@ class UserInterfaceError extends Component {
                 case 'transaction_input_max_error':
                     error = <>
                         {Translation.getPhrase('2bc667914', {
-                            help_icon        : <HelpIconView help_item_name={'transaction_max_input_number'}/>,
-                            action_link      : <a className={''} onClick={() => this.props.history.push('/actions')}>here</a>,
+                            help_icon        : <HelpIconView key={'transaction_max_input_number'} help_item_name={'transaction_max_input_number'}/>,
+                            action_link      : <a key={'actions'} className={''} onClick={() => this.props.history.push('/actions')}>here</a>,
                             millix_amount_max: format.millix(api_message.data.amount_max)
                         })}
                     </>;

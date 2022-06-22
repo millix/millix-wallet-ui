@@ -58,7 +58,7 @@ hardware:
                                 <p>
                                     {Translation.getPhrase('13d321885', {
                                         discord_link:
-                                            <a href={DISCORD_URL} target={'_blank'} rel="noreferrer">discord</a>
+                                            <a key={'discord_link'} href={DISCORD_URL} target={'_blank'} rel="noreferrer">discord</a>
                                     })}
                                 </p>
                                 <MessageComposeForm

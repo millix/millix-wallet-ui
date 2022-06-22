@@ -72,6 +72,7 @@ class StatsView extends Component {
                                 <tr>
                                     <td className={'w-20'}>
                                         {Translation.getPhrase('626426447')}<HelpIconView
+                                        key={'network_state'}
                                         help_item_name={'network_state'}/>
                                     </td>
                                     <td>

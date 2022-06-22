@@ -90,7 +90,9 @@ class ResetTransactionValidationView extends Component {
                                    <div>
                                        {Translation.getPhrase('b6f821b21', {
                                            unspent_transaction_link: <Link
-                                               to={'/unspent-transaction-output-list/pending'} onClick={() => this.reloadAndClose()}>{Translation.getPhrase('a1fa680b7')}</Link>
+                                               key={'unspent-transaction-output-list-pending'}
+                                               to={'/unspent-transaction-output-list/pending'}
+                                               onClick={() => this.reloadAndClose()}>{Translation.getPhrase('a1fa680b7')}</Link>
                                        })}
                                    </div>
                                </div>
@@ -100,6 +102,7 @@ class ResetTransactionValidationView extends Component {
                                          <div>
                                              {Translation.getPhrase('8a5638e24', {
                                                  pending_transaction_link: <Link
+                                                     key={'unspent-transaction-output-list-pending'}
                                                      to={'/unspent-transaction-output-list/pending'}>{Translation.getPhrase('a1fa680b7')}</Link>
                                              })}
                                          </div>

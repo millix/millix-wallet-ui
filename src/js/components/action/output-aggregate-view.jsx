@@ -142,7 +142,9 @@ class OutputAggregateView extends Component {
                     <ErrorList
                         error_list={this.state.errorList}/>
                     <p>
-                        {Translation.getPhrase('0e865156b', {help_icon: <HelpIconView help_item_name={'transaction_max_input_number'}/>})}
+                        {Translation.getPhrase('0e865156b', {
+                            help_icon: <HelpIconView key={'transaction_max_input_number'} help_item_name={'transaction_max_input_number'}/>
+                        })}
                     </p>
 
                     <Table striped bordered hover>

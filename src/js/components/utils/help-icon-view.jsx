@@ -27,6 +27,7 @@ class HelpIconView extends Component {
                         {Translation.getPhrase('fbbb6c10d', {
                             pending_transaction_link: <a
                                 className={''}
+                                key={'unspent-transaction-output-list-pending'}
                                 onClick={() => this.props.history.push('/unspent-transaction-output-list/pending')}>{Translation.getPhrase('e5c8095c6')}</a>
                         })}
                     </li>
@@ -36,6 +37,7 @@ class HelpIconView extends Component {
                     <li>
                         {Translation.getPhrase('7db0447cf', {
                             action_link: <a className={''}
+                                            key={'actions'}
                                             onClick={() => this.props.history.push('/actions')}>{Translation.getPhrase('c19a1dff8')}</a>
                         })}
                     </li>
@@ -56,6 +58,7 @@ class HelpIconView extends Component {
                     <li>
                         {Translation.getPhrase('02baec631', {
                             config_network_link: <a className={''}
+                                                    key={'config-network'}
                                                     onClick={() => this.props.history.push('/config/network')}>{Translation.getPhrase('cd13bcc76')}</a>
                         })}
                     </li>
@@ -75,7 +78,8 @@ class HelpIconView extends Component {
                     </li>
                     <li>
                         {Translation.getPhrase('e90a9df2a', {
-                            action_link: <a className={''} onClick={() => this.props.history.push('/actions')}>{Translation.getPhrase('1cefbe2a2')}</a>
+                            action_link: <a key={'actions'} className={''}
+                                            onClick={() => this.props.history.push('/actions')}>{Translation.getPhrase('1cefbe2a2')}</a>
                         })}
                     </li>
                 </ul>
@@ -98,6 +102,7 @@ class HelpIconView extends Component {
                     <li>
                         {Translation.getPhrase('59a9e0d55', {
                             address_list_link: <a
+                                key={'address-list'}
                                 className={''}
                                 onClick={() => this.props.history.push('/address-list')}>here</a>
                         })}
@@ -213,7 +218,7 @@ class HelpIconView extends Component {
                     <li>
                         {Translation.getPhrase('d33a93652', {
                             millix_link:
-                                <a href="" onClick={() => window.open('https://millix.com', '_blank').focus()}>millix.com</a>
+                                <a key={'millix-link'} href="" onClick={() => window.open('https://millix.com', '_blank').focus()}>millix.com</a>
                         })}
                     </li>
                 </ul>
