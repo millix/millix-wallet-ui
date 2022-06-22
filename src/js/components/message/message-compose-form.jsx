@@ -116,7 +116,9 @@ class MessageComposeForm extends Component {
                           if (!data.is_address_verified) {
                               error_list.push({
                                   name   : 'verified_sender_not_valid',
-                                  message: <>{Translation.getPhrase('48bcbdd7a', {help_icon: <HelpIconView help_item_name={'verified_sender'}/>})}</>
+                                  message: <>{Translation.getPhrase('48bcbdd7a', {
+                                      help_icon: <HelpIconView key={'verified-sender'} help_item_name={'verified_sender'}/>
+                                  })}</>
                               });
                           }
 

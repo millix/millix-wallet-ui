@@ -94,7 +94,8 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
                     <div className={'form-group'}>
                         <p>
                             {Translation.getPhrase('cf301a3be', {
-                                report_issue_link: <a onClick={() => this.props.history.push('/report-issue')}>{Translation.getPhrase('f4f95ce68')}</a>
+                                report_issue_link: <a key={'report-issue'}
+                                                      onClick={() => this.props.history.push('/report-issue')}>{Translation.getPhrase('f4f95ce68')}</a>
                             })}
                         </p>
                         <span>{Translation.getPhrase('e507ef069', {total_paid_amount: format.millix(this.state.total_paid_amount)})}</span>

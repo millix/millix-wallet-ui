@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 
 
 class AdvertisementPreview extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     getDomain(url) {
         let domain;
@@ -37,8 +34,12 @@ class AdvertisementPreview extends Component {
                         {(this.props.url || this.props.deck) && (
                             <a className="advertisement_deck"
                                style={{pointerEvents: this.props.disable_link ? 'none' : ''}}
-                               href={this.props.url ? this.getDomain(this.props.url) : ''}
-                               title={this.props.deck ? this.props.deck : ''}>{this.props.deck ? this.props.deck : ''} - {this.props.url ? this.props.url : ''}</a>)}
+                               href={this.props.url ? this.props.url : ''}
+                               target={'_blank'}
+                               title={this.props.deck ? this.props.deck : ''}
+                               rel="noreferrer">
+                                {this.props.deck ? this.props.deck : ''} - {this.props.url ? this.getDomain(this.props.url) : ''}
+                            </a>)}
                     </span>
                 </div>
             </div>

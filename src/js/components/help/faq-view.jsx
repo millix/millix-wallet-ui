@@ -35,6 +35,7 @@ class FaqView extends Component {
                                 <div>
                                     {Translation.getPhrase('8b704ebc9', {
                                         faq_link: <a
+                                            key={'millix_faq_link'}
                                             href={'https://millix.org/faq.html'}
                                             target={'_blank'}>{Translation.getPhrase('9439b19f2')}</a>
                                     })}
@@ -42,6 +43,7 @@ class FaqView extends Component {
                                 <div>
                                     {Translation.getPhrase('8ff8f2824', {
                                         discord_link: <a
+                                            key={'discord_link'}
                                             href={DISCORD_URL}
                                             target={'_blank'}>discord</a>
                                     })}
@@ -62,6 +64,7 @@ class FaqView extends Component {
                                 <div>
                                     {Translation.getPhrase('0da6f70e0', {
                                         tangled_link: <a
+                                            key={'tangled_browser_link'}
                                             href={'https://tangled.com/browser'}
                                             target={'_blank'}>{Translation.getPhrase('d690cecdb')}</a>
                                     })}

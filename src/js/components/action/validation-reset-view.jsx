@@ -62,7 +62,8 @@ class ValidationResetView extends Component {
                                {Translation.getPhrase('9d0b858a7')}
                                <div>
                                    {Translation.getPhrase('f076b569c', {
-                                       transaction_link_list: <Link to={'/unspent-transaction-output-list/pending'}>{Translation.getPhrase('c9d84d4df')}</Link>
+                                       transaction_link_list: <Link key={'unspent-transaction-output-list-pending'}
+                                                                    to={'/unspent-transaction-output-list/pending'}>{Translation.getPhrase('c9d84d4df')}</Link>
                                    })}
                                </div>
                            </div>

@@ -232,6 +232,7 @@ class TransactionDetailsView extends Component {
                                     <tr>
                                         <td className={'w-20'}>
                                             {Translation.getPhrase('808aa2285')}<HelpIconView
+                                            key={'transaction_status'}
                                             help_item_name={'transaction_status'}/>
                                         </td>
                                         <td>
