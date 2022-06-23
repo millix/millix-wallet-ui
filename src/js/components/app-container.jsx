@@ -37,6 +37,7 @@ import AdvertisementConsumerSettlementLedgerView from './advertisement/advertise
 import EventsLogView from './event-log-view';
 import NftCreateView from './nft/nft-create-view';
 import NftCollectionView from './nft/nft-collection-view';
+import NftTransferView from './nft/nft-transfer-view';
 
 
 class AppContainer extends Component {
@@ -73,6 +74,8 @@ class AppContainer extends Component {
                                                  component={NftCreateView}/>
                     <UnlockedWalletRequiredRoute path="/nft-collection"
                                                  component={NftCollectionView}/>
+                    <UnlockedWalletRequiredRoute path="/nft-transfer"
+                                                 component={NftTransferView}/>
                     <UnlockedWalletRequiredRoute path="/message-compose"
                                                  component={MessageComposeView}/>
                     <UnlockedWalletRequiredRoute path="/message-view"

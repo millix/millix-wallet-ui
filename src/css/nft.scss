@@ -8,6 +8,8 @@
 }
 
 .nft-value-container {
+  margin-top: 0;
+  margin-bottom: 1rem;
   align-items: center;
   display: flex;
 
@@ -22,7 +24,7 @@
   .millix-value {
     display: flex;
     color: $color-white;
-    font-size: 1.9rem;
+    font-size: 1.4rem;
 
     > span {
       line-height: 1;

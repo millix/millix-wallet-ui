@@ -206,12 +206,13 @@ class API {
         });
     }
 
-    getStatsTransactionWithDataReceived(addressKeyIdentifier, dateBegin) {
+    getStatsTransactionWithDataReceived(addressKeyIdentifier, dateBegin, dataType) {
         return this.fetchApiMillix(`/wWo8DCcoXVlpczoP`, {
             p0 : dateBegin,
             p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
             p10: addressKeyIdentifier,
-            p11: 'Adl87cz8kC190Nqc'
+            p11: 'Adl87cz8kC190Nqc',
+            p12: dataType
         });
     }
 

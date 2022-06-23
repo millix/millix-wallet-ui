@@ -19,8 +19,8 @@ import ImageUploader from 'react-images-upload';
 class NftCreateForm extends Component {
     constructor(props) {
         super(props);
-        const propsState    = props.location.state || {};
-        const address_value = propsState.sent ? propsState.address_to : propsState.address_from;
+        const propsState = props.location.state || {};
+        console.log(propsState);
 
         this.state = {
             sending                 : false,
@@ -34,11 +34,13 @@ class NftCreateForm extends Component {
             address_base            : '',
             address_version         : '',
             address_key_identifier  : '',
-            amount                  : '',
+            amount                  : propsState.amount || '',
             fee                     : '',
             image                   : undefined,
-            destination_address_list: address_value ? [address_value] : [],
-            txid                    : propsState.txid
+            destination_address_list: [],
+            txid                    : propsState.txid,
+            nft_src                 : propsState.src,
+            nft_hash                : propsState.hash
         };
 
         this.send = this.send.bind(this);
@@ -53,8 +55,8 @@ class NftCreateForm extends Component {
 
     componentDidMount() {
         let amount_default = 10000;
-        if (this.props.amount) {
-            amount_default = this.props.amount;
+        if (this.props.location?.state?.amount) {
+            amount_default = this.props.location.state.amount;
         }
         this.amount.value = format.millix(amount_default, false);
     }
@@ -112,7 +114,7 @@ class NftCreateForm extends Component {
             addresses: validate.required('address', this.state.destination_address_list, error_list),
             amount   : validate.amount('amount', this.amount.value, error_list),
             fee      : validate.amount('fee', this.fee.value, error_list),
-            image    : validate.required('image', this.state.image, error_list),
+            image    : !!this.state.txid || validate.required('image', this.state.image, error_list),
             dns      : validate.domain_name('verified sender', this.dns.value, error_list)
         };
 
@@ -166,7 +168,7 @@ class NftCreateForm extends Component {
             sending: true
         });
         let transactionOutputPayload = this.prepareTransactionOutputPayload();
-        Transaction.sendTransaction(transactionOutputPayload, true, true).then((data) => {
+        Transaction.sendTransaction(transactionOutputPayload, true, !this.state.txid).then((data) => {
             this.clearSendForm();
             this.changeModalShowConfirmation(false);
             this.changeModalShowSendResult();
@@ -200,7 +202,10 @@ class NftCreateForm extends Component {
 
         return {
             transaction_output_attribute: transactionOutputAttribute,
-            transaction_data            : this.state.image,
+            transaction_data            : !this.state.txid ? this.state.image : {
+                file_hash        : this.state.nft_hash,
+                attribute_type_id: 'Adl87cz8kC190Nqc'
+            },
             transaction_data_type       : 'tangled_nft',
             transaction_output_list     : this.state.address_list.map(address => ({
                 address_base          : address.address_base,
@@ -237,28 +242,22 @@ class NftCreateForm extends Component {
 
     addDestinationAddress(value) {
         const chips = this.state.destination_address_list.slice();
-        value.split(/\n| /).forEach(address => {
-            if (chips.includes(address.trim())) {
-                this.setState({
-                    error_list: [
-                        {
-                            name   : 'recipient_already_exist',
-                            message: `recipients must contain only unique addresses. multiple entries of address ${address.trim()}`
-                        }
-                    ]
-                });
-                return;
-            }
-            chips.push(address.trim());
-        });
-
+        if (chips.length !== 0) {
+            return;
+        }
+        const address = value.split(/\n| /)[0];
+        chips.push(address.trim());
         this.setState({destination_address_list: chips});
+        this.chipInputAddress.formControlRef.current.disabled    = true;
+        this.chipInputAddress.formControlRef.current.placeholder = '';
     };
 
     removeDestinationAddress(index) {
         const chips = this.state.destination_address_list.slice();
         chips.splice(index, 1);
         this.setState({destination_address_list: chips});
+        this.chipInputAddress.formControlRef.current.disabled    = false;
+        this.chipInputAddress.formControlRef.current.placeholder = 'recipient';
     };
 
     getFieldClassname(field) {
@@ -277,7 +276,7 @@ class NftCreateForm extends Component {
                 <Row className={'message_compose'}>
                     <Col className={this.getFieldClassname('address')}>
                         <Form.Group className="form-group" role="form">
-                            <label>recipients</label>
+                            <label>recipient</label>
                             <ReactChipInput
                                 ref={ref => {
                                     if (ref && !ref.state.focused && ref.formControlRef.current.value !== '') {
@@ -285,7 +284,7 @@ class NftCreateForm extends Component {
                                         ref.formControlRef.current.value = '';
                                     }
                                     if (!this.chipInputAddress) {
-                                        ref.formControlRef.current.placeholder = 'recipients';
+                                        ref.formControlRef.current.placeholder = 'recipient';
                                         this.chipInputAddress                  = ref;
                                     }
                                 }}
@@ -299,20 +298,25 @@ class NftCreateForm extends Component {
                     <Form>
                         <Col>
                             <Form.Group>
-                                <ImageUploader
-                                    withIcon={true}
-                                    withPreview={true}
-                                    withLabel={false}
-                                    singleImage={true}
-                                    buttonText="choose image"
-                                    onChange={this.onChangeFile.bind(this)}
-                                    fileContainerStyle={{backgroundColor: 'transparent'}}
-                                    imgExtension={[
-                                        '.jpg',
-                                        '.jpeg',
-                                        '.png'
-                                    ]}
-                                />
+                                {this.state.nft_src ? (
+                                    <div style={{textAlign: 'center'}}>
+                                        <img src={this.state.nft_src}/>
+                                    </div>) : (
+                                     <ImageUploader
+                                         withIcon={true}
+                                         withPreview={true}
+                                         withLabel={false}
+                                         singleImage={true}
+                                         buttonText="choose image"
+                                         onChange={this.onChangeFile.bind(this)}
+                                         fileContainerStyle={{backgroundColor: 'transparent'}}
+                                         imgExtension={[
+                                             '.jpg',
+                                             '.jpeg',
+                                             '.png'
+                                         ]}
+                                     />
+                                 )}
                             </Form.Group>
                         </Col>
                         <Col className={this.getFieldClassname('amount')}>
@@ -322,7 +326,8 @@ class NftCreateForm extends Component {
                                               placeholder="amount"
                                               pattern="[0-9]+([,][0-9]{1,2})?"
                                               ref={c => this.amount = c}
-                                              onChange={validate.handleAmountInputChange.bind(this)}/>
+                                              onChange={validate.handleAmountInputChange.bind(this)}
+                                              disabled={!!this.state.txid}/>
                             </Form.Group>
                         </Col>
                         <Col className={this.getFieldClassname('fee')}>
@@ -416,7 +421,7 @@ class NftCreateForm extends Component {
                                      <>
                                          <div className="loader-spin"/>
                                          {this.state.canceling ? 'canceling' : 'cancel transaction'}
-                                     </> : <>send</>}
+                                     </> : <>{this.state.txid ? 'transfer' : 'create'}</>}
                                 </Button>
                             </Form.Group>
                         </Col>
