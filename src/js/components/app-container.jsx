@@ -38,6 +38,7 @@ import EventsLogView from './event-log-view';
 import NftCreateView from './nft/nft-create-view';
 import NftCollectionView from './nft/nft-collection-view';
 import NftTransferView from './nft/nft-transfer-view';
+import AssetView from './asset/asset-view';
 
 
 class AppContainer extends Component {
@@ -70,6 +71,8 @@ class AppContainer extends Component {
                                                  component={EventsLogView}/>
                     <UnlockedWalletRequiredRoute path="/peer/:peer"
                                                  component={PeerInfoView}/>
+                    <UnlockedWalletRequiredRoute path="/asset-view"
+                                                 component={AssetView}/>
                     <UnlockedWalletRequiredRoute path="/nft-create"
                                                  component={NftCreateView}/>
                     <UnlockedWalletRequiredRoute path="/nft-collection"

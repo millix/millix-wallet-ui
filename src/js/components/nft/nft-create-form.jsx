@@ -406,7 +406,7 @@ class NftCreateForm extends Component {
                                 show={this.state.modal_show_send_result}
                                 size={'lg'}
                                 on_close={() => this.changeModalShowSendResult(false)}
-                                heading={'message has been sent'}
+                                heading={'the nft was sent'}
                                 body={this.state.modal_body_send_result}/>
                             <Form.Group as={Row}>
                                 <Button

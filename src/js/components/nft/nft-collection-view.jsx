@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Card, Col, Row} from 'react-bootstrap';
+import {Button, Card, Col, Form, Row} from 'react-bootstrap';
 import API from '../../api';
-import api from '../../api';
 import PhotoAlbum from 'react-photo-album';
 import {connect} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import * as format from '../../helper/format';
 import * as svg from '../../helper/svg';
+import ModalView from '../utils/modal-view';
+import * as text from '../../helper/text';
+import {changeLoaderState} from '../loader';
+import Transaction from '../../common/transaction';
 
 
 class NftCollectionView extends Component {
@@ -15,9 +18,14 @@ class NftCollectionView extends Component {
         super(props);
         this.datatable_reload_interval = undefined;
         this.state                     = {
-            nft_list                  : [],
-            datatable_reload_timestamp: '',
-            datatable_loading         : false
+            nft_list                    : [],
+            nft_selected                : undefined,
+            datatable_reload_timestamp  : '',
+            datatable_loading           : false,
+            modal_show_burn_confirmation: false,
+            modal_show_burn_result      : false,
+            modal_burn_create_asset     : true,
+            modal_body_burn_result      : []
         };
     }
 
@@ -30,18 +38,6 @@ class NftCollectionView extends Component {
         clearInterval(this.datatable_reload_interval);
     }
 
-    getNftSize(url) {
-        return new Promise((resolve, reject) => {
-            const img   = new Image();
-            img.onload  = () => resolve({
-                width : 1,
-                height: 1
-            });
-            img.onerror = () => reject();
-            img.src     = url;
-        });
-    }
-
     reloadCollection() {
         this.setState({
             datatable_loading: true
@@ -50,7 +46,7 @@ class NftCollectionView extends Component {
         return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, 'tangled_nft').then(data => {
             this.setState({
                 nft_list                  : data.map(row => ({
-                    src   : `${api.getAuthenticatedMillixApiURL()}/Mh9QifTIESw5t1fa?p0=${row.transaction_id}&p1=${row.address_key_identifier_to}&p2=Adl87cz8kC190Nqc&p3=${row.transaction_output_attribute[0].value.file_list[0].hash}`,
+                    src   : `${API.getAuthenticatedMillixApiURL()}/Mh9QifTIESw5t1fa?p0=${row.transaction_id}&p1=${row.address_key_identifier_to}&p2=Adl87cz8kC190Nqc&p3=${row.transaction_output_attribute[0].value.file_list[0].hash}`,
                     width : 4,
                     height: 3,
                     hash  : row.transaction_output_attribute[0].value.file_list[0].hash,
@@ -61,6 +57,62 @@ class NftCollectionView extends Component {
                 datatable_loading         : false
             });
         });
+    }
+
+    cancelNftBurn() {
+        this.setState({
+            nft_selected                : undefined,
+            modal_show_burn_confirmation: false,
+            modal_burn_create_asset     : true
+        });
+    }
+
+
+    prepareTransactionOutputToBurnNft(nft, keepAsAsset) {
+        return {
+            transaction_output_attribute: {
+                parent_transaction_id: nft.txid
+            },
+            transaction_data            : {
+                file_hash        : nft.hash,
+                attribute_type_id: 'Adl87cz8kC190Nqc'
+            },
+            transaction_data_type       : keepAsAsset ? 'tangled_asset' : 'transaction',
+            transaction_data_type_parent: 'tangled_nft',
+            transaction_output_list     : [
+                {
+                    address_base          : this.props.wallet.address_key_identifier,
+                    address_version       : this.props.wallet.address_key_identifier.startsWith('1') ? '0a0' : 'la0l',
+                    address_key_identifier: this.props.wallet.address_key_identifier,
+                    amount                : nft.amount
+                }
+            ],
+            transaction_output_fee      : {
+                fee_type: 'transaction_fee_default',
+                amount  : 1000
+            }
+        };
+    }
+
+    doNftBurn() {
+        const keepAsAsset = this.state.modal_burn_create_asset;
+
+        changeLoaderState(true);
+        let transactionOutputPayload = this.prepareTransactionOutputToBurnNft(this.state.nft_selected, keepAsAsset);
+        console.log(transactionOutputPayload);
+        Transaction.sendTransaction(transactionOutputPayload, true, false).then(() => {
+            this.reloadCollection();
+            this.setState({
+                modal_show_burn_result      : true,
+                modal_show_burn_confirmation: false,
+                modal_burn_create_asset     : true
+            });
+            changeLoaderState(false);
+        }).catch((error) => {
+            this.setState(error);
+            changeLoaderState(false);
+        });
+
     }
 
     renderNftImage({
@@ -90,7 +142,29 @@ class NftCollectionView extends Component {
                         <span>{format.millix(photo.amount, false)}</span>
                     </div>
                 </div>
-                <Button variant="primary" onClick={restImageProps.onClick}>transfer</Button>
+                <div style={{
+                    display      : 'flex',
+                    flex         : 1,
+                    flexDirection: 'row'
+                }}>
+                    <Button variant="primary" onClick={restImageProps.onClick}>transfer</Button>
+                    <div style={{
+                        flex         : 1,
+                        display      : 'flex',
+                        flexDirection: 'row-reverse'
+                    }}>
+                        <Button
+                            className="icon_only"
+                            variant="outline-secondary"
+                            onClick={() => this.setState({
+                                modal_show_burn_confirmation: true,
+                                nft_selected                : photo
+                            })}>
+                            <FontAwesomeIcon
+                                icon={'chain-slash'}/>
+                        </Button>
+                    </div>
+                </div>
             </Card.Body>
         </Card>);
     }
@@ -132,6 +206,28 @@ class NftCollectionView extends Component {
                             <Col>
                                 <PhotoAlbum layout="masonry" renderPhoto={this.renderNftImage.bind(this)} photos={this.state.nft_list}
                                             onClick={(event, photo, index) => this.props.history.push('/nft-transfer', photo)}/>
+                                <ModalView
+                                    show={this.state.modal_show_burn_confirmation}
+                                    size={'lg'}
+                                    heading={'burn nft'}
+                                    on_accept={() => this.doNftBurn()}
+                                    on_close={() => this.cancelNftBurn()}
+                                    body={<div>
+                                        <div>you are about to burn an nft and receive {format.millix(this.state.nft_selected?.amount)} in your wallet</div>
+                                        <div style={{
+                                            display      : 'flex',
+                                            flexDirection: 'row'
+                                        }}><Form.Check type="checkbox" label="" checked={this.state.modal_burn_create_asset}
+                                                       onChange={e => this.setState({modal_burn_create_asset: e.target.checked})}/> preserve image as an asset
+                                        </div>
+                                        {text.get_confirmation_modal_question()}
+                                    </div>}/>
+                                <ModalView
+                                    show={this.state.modal_show_burn_result}
+                                    size={'lg'}
+                                    on_close={() => this.setState({modal_show_burn_result: false})}
+                                    heading={'the nft was burned'}
+                                    body={this.state.modal_body_burn_result}/>
                             </Col>
                         </Row>
                     </div>
