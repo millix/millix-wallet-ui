@@ -238,6 +238,10 @@ class NftCreateForm extends Component {
         this.setState({
             modal_show_send_result: value
         });
+
+        if (!value) {
+            this.props.history.push('/nft-collection');
+        }
     }
 
     addDestinationAddress(value) {
