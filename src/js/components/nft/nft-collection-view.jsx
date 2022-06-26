@@ -11,6 +11,8 @@ import ModalView from '../utils/modal-view';
 import * as text from '../../helper/text';
 import {changeLoaderState} from '../loader';
 import Transaction from '../../common/transaction';
+import async from 'async';
+import utils from '../../helper/utils';
 
 
 class NftCollectionView extends Component {
@@ -36,6 +38,7 @@ class NftCollectionView extends Component {
 
     componentWillUnmount() {
         clearInterval(this.datatable_reload_interval);
+        this.state.nft_list.forEach(nft => nft.src && URL.revokeObjectURL(nft.src));
     }
 
     reloadCollection() {
@@ -44,17 +47,22 @@ class NftCollectionView extends Component {
         });
 
         return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, 'tangled_nft').then(data => {
-            this.setState({
-                nft_list                  : data.map(row => ({
-                    src   : `${API.getAuthenticatedMillixApiURL()}/Mh9QifTIESw5t1fa?p0=${row.transaction_id}&p1=${row.address_key_identifier_to}&p2=Adl87cz8kC190Nqc&p3=${row.transaction_output_attribute[0].value.file_list[0].hash}`,
-                    width : 4,
-                    height: 3,
-                    hash  : row.transaction_output_attribute[0].value.file_list[0].hash,
-                    amount: row.amount,
-                    txid  : row.transaction_id
-                })),
-                datatable_reload_timestamp: new Date(),
-                datatable_loading         : false
+            async.mapLimit(data, 6, (row, callback) => {
+                utils.getImageFromApi(`${API.getAuthenticatedMillixApiURL()}/Mh9QifTIESw5t1fa?p0=${row.transaction_id}&p1=${row.address_key_identifier_to}&p2=Adl87cz8kC190Nqc&p3=${row.transaction_output_attribute[0].value.file_list[0].hash}`)
+                    .then(imageUrl => callback(null, {
+                        src   : imageUrl,
+                        width : 4,
+                        height: 3,
+                        hash  : row.transaction_output_attribute[0].value.file_list[0].hash,
+                        amount: row.amount,
+                        txid  : row.transaction_id
+                    }));
+            }, (err, nftList) => {
+                this.setState({
+                    nft_list                  : nftList,
+                    datatable_reload_timestamp: new Date(),
+                    datatable_loading         : false
+                });
             });
         });
     }
