@@ -74,7 +74,7 @@ class MessageSentView extends Component {
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                             value={this.state.message_list}
                             loading={this.state.datatable_loading}
-                            sortField={'date'}
+                            sortField={'raw_date'}
                             sortOrder={-1}
                             showActionColumn={true}
                             resultColumn={[
