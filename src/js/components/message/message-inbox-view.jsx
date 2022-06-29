@@ -77,7 +77,7 @@ class MessageInboxView extends Component {
                                 reload_datatable={() => this.reloadDatatable()}
                                 datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                                 value={this.state.message_list}
-                                sortField={'date'}
+                                sortField={'raw_date'}
                                 sortOrder={-1}
                                 showActionColumn={true}
                                 resultColumn={[
