@@ -247,6 +247,7 @@ class MessageComposeForm extends Component {
                 subject: this.state.subject,
                 message: this.state.message
             },
+            transaction_data_type       : 'tangled_messenger',
             transaction_output_list     : this.state.address_list.map(address => ({
                 address_base          : address.address_base,
                 address_version       : address.address_version,
