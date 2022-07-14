@@ -59,7 +59,7 @@ class MessageComposeForm extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (this.props.message && this.state.message === 'loading') {
+        if (this.props.message && this.state.message === Translation.getPhrase('09959a949')) {
             this.populateFormFromProps();
         }
     }
