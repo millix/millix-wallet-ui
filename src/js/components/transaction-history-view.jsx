@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {withRouter, Link} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import DatatableView from './utils/datatable-view';
 import DatatableActionButtonView from './utils/datatable-action-button-view';
 import * as format from '../helper/format';
 import API from '../api';
-import * as text from '../helper/text';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
-import {bool_label} from '../helper/format';
 import Translation from '../common/translation';
 
 
@@ -39,14 +37,14 @@ class TransactionHistoryView extends Component {
 
         return API.getTransactionHistory(this.props.wallet.address_key_identifier).then(data => {
             const rows = data.map((transaction, idx) => ({
-                idx        : data.length - idx,
-                date       : format.date(transaction.transaction_date),
-                amount     : transaction.amount,
-                txid       : transaction.transaction_id,
-                stable_date: format.date(transaction.stable_date),
-                parent_date: format.date(transaction.parent_date),
-                double_spend: bool_label(transaction.is_double_spend),
-                action     : <>
+                idx         : data.length - idx,
+                date        : format.date(transaction.transaction_date),
+                amount      : transaction.amount,
+                txid        : transaction.transaction_id,
+                stable_date : format.date(transaction.stable_date),
+                parent_date : format.date(transaction.parent_date),
+                double_spend: format.bool_label(transaction.is_double_spend),
+                action      : <>
                     <DatatableActionButtonView
                         history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
                         history_state={[transaction]}
@@ -69,12 +67,6 @@ class TransactionHistoryView extends Component {
     }
 
     render() {
-        const confirmation_modal_body_single = <>
-            <div>{Translation.getPhrase('1b7bf87b5')}</div>
-            <div>{this.state.reset_transaction_id}</div>
-            {text.get_confirmation_modal_question()}
-        </>;
-
         return (
             <div>
                 <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance}/>
@@ -93,11 +85,12 @@ class TransactionHistoryView extends Component {
                                 showActionColumn={true}
                                 resultColumn={[
                                     {
-                                        field: 'date',
+                                        field : 'date',
                                         header: Translation.getPhrase('cd55d1db8')
                                     },
                                     {
                                         field : 'amount',
+                                        body  : format.formatMillixRow,
                                         header: Translation.getPhrase('0a4e9992e')
                                     },
                                     {
@@ -105,11 +98,11 @@ class TransactionHistoryView extends Component {
                                         header: Translation.getPhrase('da26d66d6')
                                     },
                                     {
-                                        field: 'stable_date',
+                                        field : 'stable_date',
                                         header: Translation.getPhrase('634fdbe34')
                                     },
                                     {
-                                        field: 'double_spend',
+                                        field : 'double_spend',
                                         header: Translation.getPhrase('d8654c020')
                                     }
                                 ]}/>

@@ -138,6 +138,7 @@ class UnspentTransactionOutputView extends Component {
                                     },
                                     {
                                         field : 'amount',
+                                        body  : format.formatMillixRow,
                                         header: Translation.getPhrase('c86534ace')
                                     },
                                     {
