@@ -54,12 +54,15 @@ const UnlockedWalletRequiredRoute = ({
         let fetch_currency_pair_summary_timeout_id;
         const setCurrencyPairSummary = () => {
             APIExternal.getCurrencyPairSummaryFiatleak().then(response => {
-                rest.updateCurrencyPairSummary({
-                    price : response.data.price,
-                    ticker: response.ticker,
-                    symbol: response.symbol
-                });
+                if (response?.data?.price) {
+                    rest.updateCurrencyPairSummary({
+                        price : response.data.price,
+                        ticker: response.ticker,
+                        symbol: response.symbol
+                    });
+                }
             });
+
             if (rest.wallet.unlocked) {
                 fetch_currency_pair_summary_timeout_id = setTimeout(() => {
                     setCurrencyPairSummary();
