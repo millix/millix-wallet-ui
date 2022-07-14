@@ -13,6 +13,10 @@ export function millix(amount, append_name = true) {
     return result;
 }
 
+export function formatMillixRow(data) {
+    return millix(data.amount, false);
+}
+
 export function fiat(amount) {
     const param = {
         value      : amount,
