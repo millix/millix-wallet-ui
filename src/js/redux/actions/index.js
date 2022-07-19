@@ -43,8 +43,8 @@ export function updateWalletNotification(payload) {
     };
 }
 
-export function walletUpdateTransactions(addressKeyIdentifier) {
-    return (dispatch) => API.getTransactionHistory(addressKeyIdentifier)
+export function walletUpdateTransactions(address_key_identifier) {
+    return (dispatch) => API.getTransactionHistory(address_key_identifier)
                             .then(payload => dispatch({
                                 type: UPDATE_WALLET_TRANSACTIONS,
                                 payload
@@ -200,23 +200,11 @@ export function walletUpdateBalance(payload) {
     };
 }
 
-export function walletUpdateAddresses(walletID) {
-    return {};
-}
-
-export function addNewAddress(walletID) {
-    return {};
-}
-
 export function updateClock(clock) {
     return {
         type   : UPDATE_CLOCK,
         payload: {clock}
     };
-}
-
-export function getNodeAttribute(nodeID) {//removeWalletAddressVersion(payload) {
-    return {};
 }
 
 export function updateCurrencyPairSummary(payload) {

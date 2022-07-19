@@ -8,7 +8,7 @@ import $ from 'jquery';
 import API from '../../api';
 import {setBackLogSize, setLogSize, updateNetworkState, walletUpdateBalance, updateCurrencyPairSummary, updateMessageStat} from '../../redux/actions';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS} from '../../../config.js';
+import {CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS, TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config.js';
 import APIExternal from '../../api/external';
 import moment from 'moment';
 
@@ -74,8 +74,8 @@ const UnlockedWalletRequiredRoute = ({
         let messageStatTimeoutID;
         const getMessageStat = (timeout) => {
             messageStatTimeoutID = setTimeout(() => {
-                const transactionDateBegin = moment().subtract(24, 'hours').unix();
-                API.getStatsTransactionWithDataReceived(rest.wallet.address_key_identifier, transactionDateBegin)
+                const transaction_date_begin = moment().subtract(24, 'hours').unix();
+                API.getStatsTransactionWithDataReceived(rest.wallet.address_key_identifier, transaction_date_begin, TRANSACTION_DATA_TYPE_MESSENGER)
                    .then(data => {
                        rest.updateMessageStat({count_received: data.count});
                    })

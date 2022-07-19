@@ -6,6 +6,7 @@ import API from '../../api';
 import DatatableView from './../utils/datatable-view';
 import * as helper_message from '../../helper/message';
 import Translation from '../../common/translation';
+import {TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config';
 
 
 class MessageSentView extends Component {
@@ -33,7 +34,7 @@ class MessageSentView extends Component {
             datatable_loading: true
         });
 
-        return API.listTransactionWithDataSent(this.props.wallet.address_key_identifier).then(data => {
+        return API.listTransactionWithDataSent(this.props.wallet.address_key_identifier, TRANSACTION_DATA_TYPE_MESSENGER).then(data => {
             const message_list = helper_message.datatable_format(data);
 
             this.setState({
@@ -79,17 +80,17 @@ class MessageSentView extends Component {
                             showActionColumn={true}
                             resultColumn={[
                                 {
-                                    field: 'raw_date',
-                                    body: this.getDateField,
+                                    field     : 'raw_date',
+                                    body      : this.getDateField,
                                     class_name: 'w-10',
-                                    header: Translation.getPhrase('d17a15dc6')
+                                    header    : Translation.getPhrase('d17a15dc6')
                                 },
                                 {
-                                    field: 'subject',
+                                    field : 'subject',
                                     header: Translation.getPhrase('3a22fb4b4')
                                 },
                                 {
-                                    field: 'amount',
+                                    field : 'amount',
                                     header: Translation.getPhrase('0e6acee5f')
                                 }
                             ]}/>

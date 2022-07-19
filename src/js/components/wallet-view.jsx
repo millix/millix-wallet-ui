@@ -50,11 +50,10 @@ class WalletView extends Component {
         }
 
         const transaction_params = {
-            addresses: [validate.required(Translation.getPhrase('c9861d7c2'), this.destinationAddress.value, error_list)],
-            amount   : validate.amount(Translation.getPhrase('cdfa46e99'), this.amount.value, error_list),
-            fee      : validate.amount(Translation.getPhrase('3ae48ceb8'), this.fee.value, error_list)
+            address_list: [validate.required(Translation.getPhrase('c9861d7c2'), this.destinationAddress.value, error_list)],
+            amount      : validate.amount(Translation.getPhrase('cdfa46e99'), this.amount.value, error_list),
+            fee         : validate.amount(Translation.getPhrase('3ae48ceb8'), this.fee.value, error_list)
         };
-
         if (error_list.length === 0) {
             Transaction.verifyAddress(transaction_params).then((data) => {
                 const addressList = data.address_list;

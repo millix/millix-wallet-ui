@@ -6,6 +6,7 @@ import * as helper_message from '../../helper/message';
 import DatatableView from './../utils/datatable-view';
 import {connect} from 'react-redux';
 import Translation from '../../common/translation';
+import {TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config';
 
 
 class MessageInboxView extends Component {
@@ -33,7 +34,7 @@ class MessageInboxView extends Component {
             datatable_loading: true
         });
 
-        return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier).then(data => {
+        return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, TRANSACTION_DATA_TYPE_MESSENGER).then(data => {
             const message_list = helper_message.datatable_format(data);
 
             this.setState({

@@ -1,6 +1,8 @@
 import * as format from './format';
 import _ from 'lodash';
 import Translation from '../common/translation';
+import API from '../api';
+import HelpIconView from '../components/utils/help-icon-view';
 
 export function required(field_name, value, error_list) {
     if (typeof value === 'string') {
@@ -91,6 +93,51 @@ export function ip(field_name, value, error_list) {
     }
 
     return value_escaped.join('.');
+}
+
+export async function verified_sender_domain_name(domain_name, address_identifier) {
+    let error_list = [];
+    if (!domain_name) {
+        return {
+            valid     : true,
+            error_list: error_list
+        };
+    }
+
+    domain_name = this.domain_name('domain_name', domain_name, error_list);
+    if (domain_name === null) {
+        return {
+            valid     : false,
+            error_list: error_list
+        };
+    }
+    else {
+        return API.isDNSVerified(domain_name, address_identifier)
+                  .then(data => {
+                      if (!data.is_address_verified) {
+                      }
+                      return {
+                          valid     : !!data.is_address_verified,
+                          error_list: [
+                              {
+                                  name   : 'verified_sender_not_valid',
+                                  message: <>domain name verification failed. click<HelpIconView help_item_name={'verified_sender'}/> for instructions</>
+                              }
+                          ]
+                      };
+                  })
+                  .catch(() => {
+                      return {
+                          valid     : false,
+                          error_list: [
+                              {
+                                  name   : 'api error',
+                                  message: 'domain name verification failed. please try again later'
+                              }
+                          ]
+                      };
+                  });
+    }
 }
 
 export function string_alphanumeric(field_name, value, error_list, length) {
@@ -187,7 +234,7 @@ export function handleAmountInputChange(e) {
     handleInputChangeInteger(e, false, 'millix');
 }
 
-export function handleInputChangeDNSString(e) {
+export function handleDomainNameInputChange(e) {
     if (e.target.value.length === 0) {
         return;
     }
