@@ -281,7 +281,7 @@ class NftCreateForm extends Component {
                             <ModalView
                                 show={this.state.modal_show_confirmation}
                                 size={'lg'}
-                                heading={'send confirmation'}
+                                heading={'create nft'}
                                 on_accept={() => this.sendTransaction()}
                                 on_close={() => this.cancelSendTransaction()}
                                 body={this.state.address_list && (<div>
@@ -295,8 +295,9 @@ class NftCreateForm extends Component {
                                 show={this.state.modal_show_send_result}
                                 size={'lg'}
                                 on_close={() => this.changeModalShowSendResult(false)}
-                                heading={'nft created'}
+                                heading={'create nft'}
                                 body={<div>
+                                    <div>nft created</div>
                                     <div>transaction id {this.state.transaction_id}</div>
                                     <div>
                                         you can see your nft collection
