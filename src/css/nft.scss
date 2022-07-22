@@ -1,3 +1,5 @@
+@import 'bootstrap/variable';
+
 .card-img-top:hover {
   transform: scale(0.98);
   box-shadow: 0 13px 40px -5px hsla(240, 30.1%, 28%, 0.12), 0 8px 32px -8px hsla(0, 0%, 0%, 0.14), 0 -6px 32px -6px hsla(0, 0%, 0%, 0.02);
@@ -33,7 +35,50 @@
 }
 
 .nft-card {
-  background-color: rgba(205, 207, 214, 0.1);
-  border: 1px solid rgba(205, 207, 214, 0.25);
+  background-color: $color-bg-layer-2;
+  border: $border-width solid $border-color;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  height: 100%;
+
+  .card-body {
+    display: flex;
+    flex: 0 1;
+    flex-direction: column;
+    margin-top: auto;
+  }
+}
+
+.nft-name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  min-height: 1.5rem;
+}
+
+.nft-description {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  min-height: 1.5rem;
+}
+
+.nft-collection-img {
+  padding: 1rem 1rem 0 1rem;
+  width: 100%;
+  height: 24rem;
+  text-align: center;
+
+  > img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+}
+
+.nft-action-section {
+  justify-content: space-between;
+  display: flex;
+  flex: 0 1;
+  flex-direction: row;
 }

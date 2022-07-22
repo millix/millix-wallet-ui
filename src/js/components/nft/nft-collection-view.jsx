@@ -143,9 +143,11 @@ class NftCollectionView extends Component {
             nft_list_formatted.push(
                 <Col xs={12} md={3} className={'mt-4'} key={image_details.transaction_id}>
                     <Card className={'nft-card'}>
-                        <img src={src} alt={alt} className={'nft-collection-img'}/>
+                        <div className={'nft-collection-img'}>
+                            <img src={src} alt={alt}/>
+                        </div>
                         <Card.Body>
-                            <Card.Title className={'nft-name'}>{image_details.value.name}</Card.Title>
+                            <div className={'nft-name page_subtitle'}>{image_details.value.name}</div>
                             <p className={'nft-description'}>{image_details.value.description}</p>
                             <div className={'nft-action-section'}>
                                 <Button
