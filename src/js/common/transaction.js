@@ -104,6 +104,7 @@ class Transaction {
             image                   : null,
             destination_address_list: [],
             address_verified_list   : [],
+            transaction_id          : transaction.transaction_id,
             modal_body_send_result  : this.getModalBodySuccessResult(transaction.transaction_id)
         };
     }

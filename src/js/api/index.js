@@ -320,6 +320,10 @@ class API {
         return this.fetchApiMillix('/CZOTAF5LfusB1Ht5');
     }
 
+    getStorageConfig() {
+        return this.fetchApiMillix('/kIoe20LWh2aw3CAu');
+    }
+
     getIsPrivateKeyExist() {
         return this.fetchApiMillix('/LOLb7q23p8rYSLwv');
     }

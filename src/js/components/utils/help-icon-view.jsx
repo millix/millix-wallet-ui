@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Route, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {OverlayTrigger, Popover} from 'react-bootstrap';
 import {connect} from 'react-redux';
@@ -308,6 +308,17 @@ class HelpIconView extends Component {
                         {Translation.getPhrase('c99fbcfeb')}
                     </li>
                 </ul>
+            },
+            'nft'                    : {
+                'title': 'nft',
+                'body' : <ul>
+                    <li>
+                        be sure to protect your nfts by backing up your millix transaction database: {this.props.config.database_dir}
+                    </li>
+                    <li>
+                        and the nft files: {this.props.config.file_dir}
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;
@@ -360,7 +371,8 @@ HelpIconView.propTypes = {
 
 export default connect(
     state => ({
-        wallet: state.wallet
+        wallet: state.wallet,
+        config: state.config
     }), {
         updateNetworkState
     })(withRouter(HelpIconView));

@@ -115,15 +115,14 @@ export async function verified_sender_domain_name(domain_name, address_identifie
         return API.isDNSVerified(domain_name, address_identifier)
                   .then(data => {
                       if (!data.is_address_verified) {
+                          error_list.push({
+                              name   : 'verified_sender_not_valid',
+                              message: <>domain name verification failed. click<HelpIconView help_item_name={'verified_sender'}/> for instructions</>
+                          });
                       }
                       return {
                           valid     : !!data.is_address_verified,
-                          error_list: [
-                              {
-                                  name   : 'verified_sender_not_valid',
-                                  message: <>domain name verification failed. click<HelpIconView help_item_name={'verified_sender'}/> for instructions</>
-                              }
-                          ]
+                          error_list: error_list
                       };
                   })
                   .catch(() => {
