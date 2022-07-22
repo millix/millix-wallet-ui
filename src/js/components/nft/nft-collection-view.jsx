@@ -30,7 +30,8 @@ class NftCollectionView extends Component {
             modal_show_burn_result      : false,
             modal_burn_create_asset     : true,
             modal_body_burn_result      : [],
-            nft_list_reload_timestamp   : moment.now()
+            nft_list_reload_timestamp   : moment.now(),
+            burned_nft_kept_as_asset    : true
         };
     }
 
@@ -113,7 +114,8 @@ class NftCollectionView extends Component {
         const newState                 = {
             modal_show_burn_result      : true,
             modal_show_burn_confirmation: false,
-            modal_burn_create_asset     : true
+            modal_burn_create_asset     : true,
+            burned_nft_kept_as_asset    : keepAsAsset
         };
 
         Transaction.sendTransaction(transaction_output_payload, true, false).then(() => {
@@ -147,18 +149,20 @@ class NftCollectionView extends Component {
                             <p className={'nft-description'}>{image_details.value.description}</p>
                             <div className={'nft-action-section'}>
                                 <Button
-                                    className='icon_only'
-                                    variant='outline-default'
+                                    variant="outline-default"
                                     size={'sm'}
                                     onClick={() => this.setState({
                                         modal_show_burn_confirmation: true,
                                         nft_selected                : image_props
                                     })}>
-                                    <FontAwesomeIcon icon={'fa-fire'}/>
+                                    <FontAwesomeIcon className="text-warning"
+                                                     icon={'bomb'}/>burn
                                 </Button>
-                                <Button variant='outline-primary'
+                                <Button variant="outline-primary"
                                         size={'sm'}
-                                        onClick={() => this.props.history.push('/nft-transfer', image_props)}>transfer</Button>
+                                        onClick={() => this.props.history.push('/nft-transfer', image_props)}>
+                                    <FontAwesomeIcon icon={'arrow-right'} className={'arrow_up_right'}/>send
+                                </Button>
                             </div>
                         </Card.Body>
                     </Card>
@@ -166,6 +170,17 @@ class NftCollectionView extends Component {
             );
         }
         return <>{nft_list_formatted}</>;
+    }
+
+    getBurnModalNftName() {
+        let result = '';
+        const name = this.state.nft_selected?.image_details.value.name;
+
+        if (name) {
+            result = <b> "{name}"</b>;
+        }
+
+        return result;
     }
 
     render() {
@@ -226,24 +241,33 @@ class NftCollectionView extends Component {
                                     on_accept={() => this.doNftBurn()}
                                     on_close={() => this.cancelNftBurn()}
                                     body={<div>
-                                        <div>you are about to burn an nft and receive {format.millix(this.state.nft_selected?.amount)} in your wallet</div>
-                                        <div style={{
-                                            display      : 'flex',
-                                            flexDirection: 'row'
-                                        }}><Form.Check type="checkbox" label="" checked={this.state.modal_burn_create_asset}
-                                                       onChange={e => this.setState({modal_burn_create_asset: e.target.checked})}/> preserve image as an asset
+                                        <div className="mb-3">
+                                            you are about to burn your nft {this.getBurnModalNftName()} and
+                                            unlock {format.millix(this.state.nft_selected?.amount)} in your wallet
+                                            balance. you can keep a non-nft copy of this file as an asset.
                                         </div>
+                                        <div className="mb-3"
+                                             style={{
+                                                 display      : 'flex',
+                                                 flexDirection: 'row'
+                                             }}><Form.Check type="checkbox" label="" checked={this.state.modal_burn_create_asset}
+                                                            onChange={e => this.setState({modal_burn_create_asset: e.target.checked})}/> preserve file as an
+                                            asset
+                                        </div>
+
                                         {text.get_confirmation_modal_question()}
                                     </div>}/>
                                 <ModalView
                                     show={this.state.modal_show_burn_result}
                                     size={'lg'}
                                     on_close={() => {
-                                        this.setState({modal_show_burn_result: false})
+                                        this.setState({modal_show_burn_result: false});
                                         this.reloadCollection();
                                     }}
                                     heading={'burn nft'}
-                                    body={<p>nft burned</p>}/>
+                                    body={<div>
+                                        your nft {this.getBurnModalNftName()} was burned successfully. {this.state.burned_nft_kept_as_asset && 'the file is now available as an asset.'}
+                                    </div>}/>
                             </Col>
                         </Row>
                     </div>

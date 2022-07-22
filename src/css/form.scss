@@ -169,3 +169,15 @@ label {
     margin: 0 0.2rem;
   }
 }
+
+.form-check {
+  min-height: auto;
+  padding-left: 0;
+  align-items: center;
+  display: flex;
+  margin-right: 0.3rem;
+
+  .form-check-input {
+    margin-left: 0;
+  }
+}

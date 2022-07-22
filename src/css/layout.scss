@@ -135,6 +135,10 @@ body .section_subtitle > .fab {
   margin-right: 0.3em;
 }
 
+.fa-arrow-right.arrow_up_right {
+  transform: rotate(-45deg);
+}
+
 hr {
   width: 100%;
 }

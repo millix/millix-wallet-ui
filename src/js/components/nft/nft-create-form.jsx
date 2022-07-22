@@ -237,7 +237,7 @@ class NftCreateForm extends Component {
                             <Form.Group className="form-group" as={Row}>
                                 <label>description</label>
                                 <Col>
-                                    <Form.Control type="text"
+                                    <Form.Control as="textarea" rows={5}
                                                   placeholder="description"
                                                   pattern="^([a-z0-9])$"
                                                   ref={c => this.description = c}/>
@@ -285,10 +285,17 @@ class NftCreateForm extends Component {
                                 on_accept={() => this.sendTransaction()}
                                 on_close={() => this.cancelSendTransaction()}
                                 body={this.state.address_list && (<div>
-                                    <div>you are about to create an nft locking {format.millix(this.amount)} to</div>
-                                    {this.state.address_list.length === 1 ?
-                                     <div>{this.state.address_list[0].address_base}{this.state.address_list[0].address_version}{this.state.address_list[0].address_key_identifier}</div> :
-                                     <div>{this.state.address_list.length} different address</div>}
+                                    <div className="mb-3">
+                                        you are about to create an nft in your millix wallet to address:
+                                        {this.state.address_list.length === 1 ?
+                                         <div>{this.state.address_list[0].address_base}{this.state.address_list[0].address_version}{this.state.address_list[0].address_key_identifier}</div> :
+                                         <div>{this.state.address_list.length} different address</div>}
+                                    </div>
+                                    <div className="mb-3">
+                                        this nft will be sent to yourself and requires {format.millix(this.amount)}.
+                                        to preserve the provenance of your nft, this {format.millix(this.amount)} will be locked and unavailable to spend
+                                        unless you burn the nft.
+                                    </div>
                                     {text.get_confirmation_modal_question()}
                                 </div>)}/>
                             <ModalView
@@ -297,11 +304,11 @@ class NftCreateForm extends Component {
                                 on_close={() => this.changeModalShowSendResult(false)}
                                 heading={'create nft'}
                                 body={<div>
-                                    <div>nft created</div>
-                                    <div>transaction id {this.state.transaction_id}</div>
+                                    <div className="mb-3">
+                                        your nft was created successfully with transaction id: {this.state.transaction_id}
+                                    </div>
                                     <div>
-                                        you can see your nft collection
-                                        <Link to={'/nft-collection'}> here</Link>
+                                        click <Link to={'/nft-collection'}> here</Link> to view and manage your nft collection
                                     </div>
                                 </div>}/>
                             <Form.Group as={Row}>
