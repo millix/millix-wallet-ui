@@ -160,6 +160,13 @@ class NftCollectionView extends Component {
                                     <FontAwesomeIcon className="text-warning"
                                                      icon={'bomb'}/>burn
                                 </Button>
+
+                                <Button variant="outline-primary"
+                                        size={'sm'}
+                                        className={'preview_link'}>
+                                    <FontAwesomeIcon icon={'eye'}/>preview
+                                </Button>
+
                                 <Button variant="outline-primary"
                                         size={'sm'}
                                         onClick={() => this.props.history.push('/nft-transfer', image_props)}>
@@ -268,7 +275,8 @@ class NftCollectionView extends Component {
                                     }}
                                     heading={'burn nft'}
                                     body={<div>
-                                        your nft {this.getBurnModalNftName()} was burned successfully. {this.state.burned_nft_kept_as_asset && 'the file is now available as an asset.'}
+                                        your nft {this.getBurnModalNftName()} was burned
+                                        successfully. {this.state.burned_nft_kept_as_asset && 'the file is now available as an asset.'}
                                     </div>}/>
                             </Col>
                         </Row>

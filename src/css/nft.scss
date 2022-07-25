@@ -65,7 +65,7 @@
 }
 
 .nft-collection-img {
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem 0 0 0;
   width: 100%;
   height: 24rem;
   text-align: center;
@@ -77,8 +77,12 @@
 }
 
 .nft-action-section {
-  justify-content: space-between;
   display: flex;
   flex: 0 1;
   flex-direction: row;
+
+  .preview_link {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
 }
