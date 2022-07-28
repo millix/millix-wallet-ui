@@ -42,8 +42,8 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
             response.ledger_list?.forEach(item_ledger => {
                 total_paid_amount += item_ledger.deposit;
                 ledger_list.push({
-                    payment_date          : format.date(item_ledger.payment_date),
-                    presentation_date     : format.date(item_ledger.presentation_date),
+                    payment_received_date : format.date(item_ledger.payment_received_date),
+                    impression_date_first : format.date(item_ledger.impression_date_first),
                     amount                : format.millix(item_ledger.deposit),
                     preview               : this.advertisementPreview(item_ledger),
                     advertisement_url     : item_ledger.advertisement_url,
@@ -105,7 +105,7 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                             value={this.state.ledger_list}
-                            sortField={'payment_date'}
+                            sortField={'payment_received_date'}
                             sortOrder={-1}
                             loading={this.state.datatable_loading}
                             showActionColumn={true}
@@ -132,11 +132,11 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
                                     header: Translation.getPhrase('4124a215d')
                                 },
                                 {
-                                    field : 'presentation_date',
+                                    field : 'impression_date_first',
                                     header: Translation.getPhrase('54daea16f')
                                 },
                                 {
-                                    field : 'payment_date',
+                                    field : 'payment_received_date',
                                     header: Translation.getPhrase('b200a90c6')
                                 }
                             ]}/>
