@@ -1,29 +1,22 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
 import {withRouter} from 'react-router-dom';
 import NftCreateForm from './nft-create-form';
 
 
-class NftView extends Component {
-    render() {
-        return (
-            <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>{this.props.nft_type}</div>
-                <div className={'panel-body'}>
-                    <p>
-                        {this.props.nft_text}
-                    </p>
-                    <NftCreateForm/>
-                </div>
+function NftView(props) {
+    return (
+        <div className={'panel panel-filled'}>
+            <div className={'panel-heading bordered'}>{props.nft_type}</div>
+            <div className={'panel-body'}>
+                <p>
+                    {props.nft_text}
+                </p>
+                <NftCreateForm nft_transaction_type={props.nft_type}/>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 
-export default connect(
-    state => ({
-        wallet: state.wallet,
-        config: state.config
-    })
-)(withRouter(NftView));
+export default (withRouter(NftView));
+

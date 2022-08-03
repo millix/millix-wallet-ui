@@ -271,6 +271,36 @@ body .section_subtitle {
   max-width: 100%;
 }
 
+.nft-name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  min-height: 1.5rem;
+}
+
+.nft-description {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  min-height: 1.5rem;
+}
+
+.nft-collection-img {
+  width: 100%;
+  height: 24rem;
+  object-fit: contain;
+  margin: auto;
+}
+
+.nft-action-section {
+  justify-content: space-between;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
 .help_icon {
   align-items: center;
   cursor: pointer;
@@ -442,4 +472,18 @@ h4, .h4, h5, .h5, h6, .h6 {
       display: none;
     }
   }
+}
+
+.nft-transfer-img-wrapper {
+  text-align: center;
+
+  img {
+    max-height: 30rem;
+    padding: 1rem;
+  }
+}
+
+.transfer-subtitle {
+  color: $color-white !important;
+  margin-bottom: 0.5rem;
 }

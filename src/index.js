@@ -53,6 +53,7 @@ import {
     faEnvelope,
     faLink,
     faChainSlash,
+    faFire,
     faChainBroken,
     faBomb,
     faArrowRight
@@ -82,8 +83,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faChevronDown, faChevronUp, faPencilAlt, faSync, faPlusCircle, faPlay,
     faPause, faQuestionCircle, faThList, faRedo, faEllipsisV,
     faChainSlash, faChainBroken,
-    faRotateLeft, faCodeMerge, faCheckCircle, faReply, faEnvelope, faLink, faBomb,
-    faArrowRight);
+    faRotateLeft, faCodeMerge, faCheckCircle, faReply, faEnvelope, faLink, faFire, faBomb, faArrowRight);
 
 
 let apiInfo = {
