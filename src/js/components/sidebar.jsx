@@ -132,7 +132,7 @@ class Sidebar extends Component {
                     '/message-inbox',
                 ],
                 asset: [
-                    '/asset-view'
+                    '/asset-list'
                 ],
                 nft: [
                     '/nft-create',
@@ -311,9 +311,9 @@ class Sidebar extends Component {
                                              size="1x"/>
                         </NavText>
                         <NavItem key={'nft-create'}
-                                 eventKey="/asset-view">
+                                 eventKey="/asset-list">
                             <NavText>
-                                view
+                                list
                             </NavText>
                         </NavItem>
                     </NavItem>
