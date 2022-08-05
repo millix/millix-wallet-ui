@@ -10,6 +10,7 @@ function NftTransferView() {
                            'millix network for up to 90 days. only\n' +
                            'you and the recipient can decrypt and see your nft.'}
                  nft_type={'transfer'}
+                 title={'transfer nft'}
         />
     );
 }

@@ -6,7 +6,7 @@ import NftCreateForm from './nft-create-form';
 function NftView(props) {
     return (
         <div className={'panel panel-filled'}>
-            <div className={'panel-heading bordered'}>{props.nft_type}</div>
+            <div className={'panel-heading bordered'}>{props.title}</div>
             <div className={'panel-body'}>
                 <p>
                     {props.nft_text}

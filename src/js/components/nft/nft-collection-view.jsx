@@ -146,7 +146,9 @@ class NftCollectionView extends Component {
             nft_list_formatted.push(
                 <Col xs={12} md={3} className={'mt-3'} key={result_image_detail.transaction_id}>
                     <Card className={'nft-card'}>
-                        <img src={src} alt={alt} className={'nft-collection-img'}/>
+                        <div className={'nft-collection-img'}>
+                            <img src={src} alt={alt}/>
+                        </div>
                         <Card.Body>
                             <div className={'nft-name page_subtitle'}>{result_image_detail.value.name}</div>
                             <p className={'nft-description'}>{result_image_detail.value.description}</p>
@@ -165,7 +167,7 @@ class NftCollectionView extends Component {
                                 <Button variant="outline-primary"
                                         size={'sm'}
                                         className={'preview_link'}>
-                                    <FontAwesomeIcon icon={'eye'}/>preview
+                                    <FontAwesomeIcon icon={'eye'}/>details
                                 </Button>
 
                                 <Button variant="outline-primary"
@@ -208,15 +210,14 @@ class NftCollectionView extends Component {
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>collection
+                    <div className={'panel-heading bordered'}>nft collection
                     </div>
                     <div className={'panel-body'}>
                         <p>
-                            nft files are different than normal media files. when you create or receive an nft in a millix transaction,
-                            the funds are not available in your wallet balance. this preserves and protects the provenance and ownership of the nft asset.
-                            if you burn an nft you are destroying the provenance and proof of ownership of the nft and the funds stored in the associated
-                            nft transaction are added to your wallet balance.
-                            backup your nft <HelpIconView help_item_name={'nft'}/>
+                            nft files are different than normal asset files. when you create or receive an nft in a millix transaction, the funds are not
+                            available in your wallet balance. this preserves and protects the provenance and ownership of the nft asset. if you burn an nft you
+                            are destroying the provenance and proof of ownership of the nft and the funds stored in the associated nft transaction are added to
+                            your wallet balance. backup your nft <HelpIconView help_item_name={'nft'}/>
                         </p>
                         <Row className={'align-items-center'}>
                             <Col md={5}>
