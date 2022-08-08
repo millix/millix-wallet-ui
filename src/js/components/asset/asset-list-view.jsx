@@ -105,6 +105,10 @@ class AssetListView extends Component {
                     <div className={'panel-heading bordered'}>asset list
                     </div>
                     <div className={'panel-body'}>
+                        <p>
+                            assets are files sent to you on the millix network. unlike nfts, assets do not include a history of ownership or proof of validity.
+                            assets can be sent to other users but they don’t have the value potential of nft files.
+                        </p>
                         <Row className={'align-items-center row'}>
                             <Col md={5}>
                                 <Button variant="outline-primary"

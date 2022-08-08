@@ -12,8 +12,8 @@ import ErrorList from './../utils/error-list-view';
 import Transaction from '../../common/transaction';
 import HelpIconView from '../utils/help-icon-view';
 import {changeLoaderState} from '../loader';
-import ImageUploader from 'react-images-upload';
 import {DEFAULT_NFT_CREATE_AMOUNT, TRANSACTION_DATA_TYPE_NFT, DEFAULT_NFT_CREATE_FEE} from '../../../config';
+import FileUpload from '../utils/file-upload';
 import ReactChipInput from 'react-chip-input';
 
 
@@ -43,9 +43,16 @@ class NftCreateForm extends Component {
             nft_transaction_type    : this.props.nft_transaction_type ?? 'create'
         };
 
-        this.name        = {value: ''};
-        this.description = {value: ''};
-        this.send        = this.send.bind(this);
+        this.send                    = this.send.bind(this);
+        this.onChangeFileUpload      = this.onChangeFileUpload.bind(this);
+        this.onFileCancelUpload      = this.onFileCancelUpload.bind(this);
+        this.onChangeFileUploadError = this.onChangeFileUploadError.bind(this);
+        this.resetNftForm            = this.resetNftForm.bind(this);
+
+        this.fileUploaderRef = React.createRef();
+        this.name            = {value: ''};
+        this.description     = {value: ''};
+        this.send            = this.send.bind(this);
     }
 
     componentWillUnmount() {
@@ -137,6 +144,7 @@ class NftCreateForm extends Component {
         Transaction.sendTransaction(transaction_output_payload, true, !this.state.txid).then((data) => {
             this.changeModalShowConfirmation(false);
             this.changeModalShowSendResult();
+            delete data.destination_address_list;
             this.setState(data);
             changeLoaderState(false);
         }).catch((error) => {
@@ -161,7 +169,7 @@ class NftCreateForm extends Component {
 
         return {
             transaction_output_attribute: transaction_output_attribute,
-            transaction_data            : !this.state.txid ? this.state.image : {
+            transaction_data            : !this.state.txid ? this.state.image.file : {
                 file_hash        : this.state.nft_hash,
                 attribute_type_id: 'Adl87cz8kC190Nqc'
             },
@@ -215,6 +223,18 @@ class NftCreateForm extends Component {
         if (this.props.nft_transaction_type !== 'create' && !value) {
             this.props.history.push('/nft-collection');
         }
+        if (!value) {
+            this.resetNftForm();
+        }
+    }
+
+    resetNftForm() {
+        if (this.fileUploaderRef.current) {
+            this.fileUploaderRef.current.clearFileInput();
+        }
+
+        this.name.value        = '';
+        this.description.value = '';
     }
 
     addDestinationAddress(value) {
@@ -241,8 +261,25 @@ class NftCreateForm extends Component {
         return this.props.hidden_field_list?.includes(field) ? 'd-none' : '';
     }
 
-    onChangeFile(file) {
-        this.setState({image: file[0]});
+    onChangeFileUpload(file) {
+        this.setState({
+            image     : file,
+            error_list: []
+        });
+    }
+
+    onFileCancelUpload() {
+        this.setState({
+            image: undefined
+        });
+    }
+
+    onChangeFileUploadError(error_list) {
+        if (error_list.length !== 0) {
+            this.setState({
+                error_list: error_list
+            });
+        }
     }
 
     render() {
@@ -257,19 +294,14 @@ class NftCreateForm extends Component {
                                     <div className={'nft-transfer-img-wrapper'}>
                                         <img src={this.state.nft_src} alt={'nft'}/>
                                     </div>) : (
-                                     <ImageUploader
-                                         withIcon={true}
-                                         withPreview={true}
-                                         withLabel={false}
-                                         singleImage={true}
-                                         buttonText="choose image"
-                                         onChange={this.onChangeFile.bind(this)}
-                                         fileContainerStyle={{backgroundColor: 'transparent'}}
-                                         imgExtension={[
-                                             '.jpg',
-                                             '.jpeg',
-                                             '.png'
-                                         ]}
+                                     <FileUpload
+                                         ref={this.fileUploaderRef}
+                                         title={'upload image'}
+                                         on_file_upload={this.onChangeFileUpload}
+                                         on_file_cancel_upload={this.onFileCancelUpload}
+                                         on_file_upload_error={this.onChangeFileUploadError}
+                                         accept={'image/*'}
+                                         file_type={'image'}
                                      />
                                  )}
                             </Form.Group>
@@ -280,8 +312,10 @@ class NftCreateForm extends Component {
                                  <label>name</label>
                                  <Col>
                                      <Form.Control type="text"
+                                                   maxLength={100}
                                                    placeholder="name"
                                                    pattern="^([a-z0-9])$"
+                                                   aria-valuemax={10}
                                                    ref={c => this.name = c}/>
                                  </Col>
                              </Form.Group>) :
@@ -293,8 +327,8 @@ class NftCreateForm extends Component {
                              (<Form.Group className="form-group" as={Row}>
                                  <label>description</label>
                                  <Col>
-                                     <Form.Control type="text"
-                                                   as="textarea" rows={5}
+                                     <Form.Control as="textarea" rows={5}
+                                                   maxLength={1000}
                                                    placeholder="description"
                                                    pattern="^([a-z0-9])$"
                                                    ref={c => this.description = c}/>
@@ -369,7 +403,7 @@ class NftCreateForm extends Component {
                             <ModalView
                                 show={this.state.modal_show_confirmation}
                                 size={'lg'}
-                                heading={this.state.nft_transaction_type + ' nft'}
+                                heading={'create nft'}
                                 on_accept={() => this.sendTransaction()}
                                 on_close={() => this.cancelSendTransaction()}
                                 body={this.state.nft_transaction_type === 'create' ? this.getCreateNftModalBody() : this.getTransferNftModalBody()}/>

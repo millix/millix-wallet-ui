@@ -10,6 +10,7 @@ class NftCreateView extends Component {
                                'device. to transport the nft to reach the recipient, the data is stored on the millix network for up to 90 days. only\n' +
                                'you and the recipient can decrypt and see your nft.'}
                      nft_type={'create'}
+                     title={'create nft'}
             />
         );
     }

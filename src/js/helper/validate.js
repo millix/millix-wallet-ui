@@ -252,3 +252,94 @@ export function domain_name(field_name, domain_name, error_list) {
     }
     return domain_name;
 }
+
+export function file(field_name, file, error_list, file_type = '', allowed_extension_list = [], allowed_mime_type_list = [], allowed_max_file_size = 0) {
+    const result_file_type_config = {
+        image: {
+            allowed_mime_type_list: [
+                'image/png',
+                'image/jpeg',
+                'image/jpg',
+                'image/gif'
+            ],
+            allowed_extension_list: [
+                'png',
+                'jpeg',
+                'jpg',
+                'gif'
+            ],
+            allowed_max_file_size : 50 * 1024 * 1024 // 50mb
+        }
+    };
+
+    let file_type_config = {
+        allowed_mime_type_list: [],
+        allowed_extension_list: [],
+        allowed_max_file_size : 0
+    };
+
+    if (file_type && Object.keys(result_file_type_config).includes(file_type)) {
+        file_type_config = result_file_type_config[file_type];
+    }
+
+    if (allowed_extension_list.length === 0) {
+        allowed_extension_list = file_type_config.allowed_extension_list;
+    }
+
+    if (allowed_mime_type_list.length === 0) {
+        allowed_mime_type_list = file_type_config.allowed_mime_type_list;
+    }
+
+    if (allowed_max_file_size <= 0) {
+        allowed_max_file_size = file_type_config.allowed_max_file_size;
+    }
+
+    const file_extension = file.file.name.split('.').pop();
+    const file_mime_type = file.file.type;
+
+    return new Promise((resolve, reject) => {
+        if (allowed_extension_list.length > 0 && !allowed_extension_list.includes(file_extension)) {
+            reject({
+                name   : get_error_name('invalid_file_extension', field_name),
+                message: `invalid file extension. allowed extensions are - ${allowed_extension_list.join(', ')}`
+            });
+            return null;
+        }
+
+        if (allowed_mime_type_list.length > 0 && !allowed_mime_type_list.includes(file_mime_type)) {
+            reject({
+                name   : get_error_name('invalid_file_mime_type', field_name),
+                message: `invalid file mime type. allowed mime types are - ${allowed_mime_type_list.join(', ')}`
+            });
+            return null;
+        }
+
+        if (file.file.size > allowed_max_file_size) {
+            reject({
+                name   : get_error_name('file_max_size', field_name),
+                message: `file size is too large. max allowed file size is ${(allowed_max_file_size / (1024 * 1024))}mb`
+            });
+            return null;
+        }
+
+        if (file_type === 'image') {
+            const reader = new FileReader();
+
+            reader.onload = e => {
+                const img   = new Image();
+                img.onload  = () => {
+                    resolve(file);
+                };
+                img.onerror = () => {
+                    reject({
+                        name   : get_error_name('file_content_does_not_match_file_type', field_name),
+                        message: `file is not a valid image.`
+                    });
+                    return false;
+                };
+                img.src     = e.target.result;
+            };
+            reader.readAsDataURL(file.file);
+        }
+    });
+}
