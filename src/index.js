@@ -72,7 +72,8 @@ import ntp from './js/core/ntp';
 import moment from 'moment';
 import localforage from 'localforage';
 import Loader from './js/components/loader';
-
+import password_strength from './js/password-strength';
+password_strength('[aria-label="password"]');
 
 faConfig.autoAddCss = false;
 library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
@@ -207,6 +208,7 @@ getNodeAboutAttribute();
 getNodeConfig();
 getStorageConfig();
 getWalletAddressVersion();
+
 ReactDOM.render(
     <div>
         <Loader/>
