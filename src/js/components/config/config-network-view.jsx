@@ -9,6 +9,7 @@ import ModalView from '../utils/modal-view';
 import * as validate from '../../helper/validate';
 import * as format from '../../helper/format';
 import HelpIconView from '../utils/help-icon-view';
+import Translation from '../../common/translation';
 
 
 class ConfigNetworkView extends Component {
@@ -60,19 +61,19 @@ class ConfigNetworkView extends Component {
         });
 
         const error_list = [];
-        validate.required('node port', this.node_port.value, error_list);
-        validate.required('node ip', this.node_host.value, error_list);
-        validate.required('api port', this.node_port_api.value, error_list);
-        validate.required('max connections in', this.node_connection_inbound_max.value, error_list);
-        validate.required('max connections out', this.node_connection_outbound_max.value, error_list);
-        validate.required('initial peer list', this.node_initial_list.value, error_list);
+        validate.required(Translation.getPhrase('cc19fdc0f'), this.node_port.value, error_list);
+        validate.required(Translation.getPhrase('110237d00'), this.node_host.value, error_list);
+        validate.required(Translation.getPhrase('9e90916e1'), this.node_port_api.value, error_list);
+        validate.required(Translation.getPhrase('b389b5852'), this.node_connection_inbound_max.value, error_list);
+        validate.required(Translation.getPhrase('df5bcf14a'), this.node_connection_outbound_max.value, error_list);
+        validate.required(Translation.getPhrase('3d2b1d5b1'), this.node_initial_list.value, error_list);
         let network_config = {
-            NODE_PORT                   : validate.integerPositive('node port', this.node_port.value, error_list, false),
-            NODE_HOST                   : validate.ip('node ip', this.node_host.value, error_list),
-            NODE_PORT_API               : validate.integerPositive('api port', this.node_port_api.value, error_list, false),
-            NODE_CONNECTION_INBOUND_MAX : validate.integerPositive('max connections in', this.node_connection_inbound_max.value, error_list, false),
-            NODE_CONNECTION_OUTBOUND_MAX: validate.integerPositive('max connections out', this.node_connection_outbound_max.value, error_list, false),
-            NODE_INITIAL_LIST           : validate.json('initial peer list', this.node_initial_list.value, error_list)
+            NODE_PORT                   : validate.integerPositive(Translation.getPhrase('cc19fdc0f'), this.node_port.value, error_list, false),
+            NODE_HOST                   : validate.ip(Translation.getPhrase('110237d00'), this.node_host.value, error_list),
+            NODE_PORT_API               : validate.integerPositive(Translation.getPhrase('9e90916e1'), this.node_port_api.value, error_list, false),
+            NODE_CONNECTION_INBOUND_MAX : validate.integerPositive(Translation.getPhrase('b389b5852'), this.node_connection_inbound_max.value, error_list, false),
+            NODE_CONNECTION_OUTBOUND_MAX: validate.integerPositive(Translation.getPhrase('df5bcf14a'), this.node_connection_outbound_max.value, error_list, false),
+            NODE_INITIAL_LIST           : validate.json(Translation.getPhrase('3d2b1d5b1'), this.node_initial_list.value, error_list)
         };
 
         if (error_list.length === 0) {
@@ -84,7 +85,7 @@ class ConfigNetworkView extends Component {
             }).catch(() => {
                 error_list.push({
                     name   : 'save_error',
-                    message: 'error while saving occurred, please try again later'
+                    message: Translation.getPhrase('6c6762f14')
                 });
             });
         }
@@ -102,15 +103,13 @@ class ConfigNetworkView extends Component {
                 show={this.state.modal_show_save_result}
                 size={'lg'}
                 on_close={() => this.changeModalShowSaveResult(false)}
-                heading={'success'}
+                heading={Translation.getPhrase('178dc8098')}
                 body={
-                    <div>
-                        successfully saved
-                    </div>
+                    <div>{Translation.getPhrase('ccbc62204')}</div>
                 }/>
             <div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>network</div>
+                    <div className={'panel-heading bordered'}>{Translation.getPhrase('8129a4405')}</div>
                     <div className={'panel-body'}>
                         <ErrorList
                             error_list={this.state.error_list}/>
@@ -118,7 +117,7 @@ class ConfigNetworkView extends Component {
                             <Form>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>node public ip</label>
+                                        <label>{Translation.getPhrase('57dd46c3f')}</label>
                                         <Form.Control
                                             type="text"
                                             value={this.state.node_public_ip}
@@ -127,7 +126,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>node ip<HelpIconView help_item_name={'node_ip'}/></label>
+                                        <label>{Translation.getPhrase('110237d00')}<HelpIconView help_item_name={'node_ip'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_host = c}
@@ -136,7 +135,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>node port</label>
+                                        <label>{Translation.getPhrase('cc19fdc0f')}</label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_port = c}
@@ -147,7 +146,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>api port<HelpIconView help_item_name={'api_port'}/></label>
+                                        <label>{Translation.getPhrase('9e90916e1')}<HelpIconView help_item_name={'api_port'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_port_api = c}
@@ -158,7 +157,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>max connections in<HelpIconView help_item_name={'max_connections_in'}/></label>
+                                        <label>{Translation.getPhrase('b389b5852')}<HelpIconView help_item_name={'max_connections_in'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_connection_inbound_max = c}
@@ -169,7 +168,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>max connections out<HelpIconView help_item_name={'max_connections_out'}/></label>
+                                        <label>{Translation.getPhrase('df5bcf14a')}<HelpIconView help_item_name={'max_connections_out'}/></label>
                                         <Form.Control
                                             type="text"
                                             ref={(c) => this.node_connection_outbound_max = c}
@@ -180,7 +179,7 @@ class ConfigNetworkView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>initial peer list<HelpIconView help_item_name={'initial_peer_list'}/></label>
+                                        <label>{Translation.getPhrase('3d2b1d5b1')}<HelpIconView help_item_name={'initial_peer_list'}/></label>
                                         <Form.Control as="textarea" rows={5}
                                                       ref={(c) => this.node_initial_list = c}/>
                                     </Form.Group>
@@ -192,7 +191,7 @@ class ConfigNetworkView extends Component {
                                             variant="outline-primary"
                                             onClick={() => this.save()}
                                             disabled={this.state.sending}>
-                                            {this.state.sending ? <>{'saving'}</> : <>continue</>}
+                                            {this.state.sending ? <>{Translation.getPhrase('15cc5bad2')}</> : <>{Translation.getPhrase('3dedae695')}</>}
                                         </Button>
                                     </Form.Group>
                                 </Col>

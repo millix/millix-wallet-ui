@@ -4,6 +4,7 @@ import {Table} from 'react-bootstrap';
 import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import * as format from '../helper/format';
+import Translation from '../common/translation';
 
 
 class PeerInfoView extends Component {
@@ -117,7 +118,7 @@ class PeerInfoView extends Component {
             <div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
-                        node
+                        {Translation.getPhrase('79b9dd190')}
                     </div>
                     <div className={'panel-body'}>
                         <Table striped bordered hover className={'mb-0'}>
@@ -142,7 +143,7 @@ class PeerInfoView extends Component {
                 </div>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
-                        job list
+                        {Translation.getPhrase('7dfe53682')}
                     </div>
                     <div className={'panel-body'}>
                         <DatatableView
@@ -160,23 +161,27 @@ class PeerInfoView extends Component {
                     </div>
                 </div>
                 <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>storage</div>
+                    <div className={'panel-heading bordered'}>{Translation.getPhrase('bdc12c879')}</div>
                     <div className={'panel-body'}>
                         <DatatableView
                             value={this.state.shard_list}
                             sortOrder={1}
                             resultColumn={[
                                 {
-                                    field: 'shard_id'
+                                    field: 'shard_id',
+                                    header: Translation.getPhrase('1545cfa15')
                                 },
                                 {
-                                    field: 'transaction_count'
+                                    field: 'transaction_count',
+                                    header: Translation.getPhrase('9818abb2f')
                                 },
                                 {
-                                    field: 'update_date'
+                                    field: 'update_date',
+                                    header: Translation.getPhrase('94ba10ce4')
                                 },
                                 {
-                                    field: 'is_required'
+                                    field: 'is_required',
+                                    header: Translation.getPhrase('e73335ea5')
                                 }
                             ]}/>
                     </div>

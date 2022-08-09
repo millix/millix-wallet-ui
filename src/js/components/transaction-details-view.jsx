@@ -12,6 +12,7 @@ import ResetTransactionValidationView from './utils/reset-transaction-validation
 import {bool_label} from '../helper/format';
 import API from '../api';
 import ErrorList from './utils/error-list-view';
+import Translation from '../common/translation';
 
 
 class TransactionDetailsView extends Component {
@@ -60,7 +61,7 @@ class TransactionDetailsView extends Component {
                    this.setState({
                        error_list: [
                            {
-                               message: 'failed to load transaction'
+                               message: Translation.getPhrase('ff8a8864b')
                            }
                        ]
                    });
@@ -161,7 +162,7 @@ class TransactionDetailsView extends Component {
                 <Col md="12">
                     <div className={'panel panel-filled'}>
                         <div className={'panel-heading bordered'}>
-                            transaction detail
+                            {Translation.getPhrase('1cb3d0a9b')}
                         </div>
                         <div className={'panel-body'}>
                             <ErrorList
@@ -170,19 +171,19 @@ class TransactionDetailsView extends Component {
                             {transaction && <>
                                 <div className={'section_subtitle'}>
                                 <span>
-                                transaction
+                                {Translation.getPhrase('7a6095c1f')}
                                 </span>
                                     <Button
                                         className={'ms-auto'}
                                         variant="outline-primary"
                                         size={'sm'}
                                         onClick={() => this.resetTransactionValidationRef.toggleConfirmationModal(transaction.transaction_id)}
-                                        title={'reset validation'}
+                                        title={Translation.getPhrase('6e1917558')}
                                     >
                                         <FontAwesomeIcon
                                             icon="rotate-left"
                                             size="1x"/>
-                                        reset validation
+                                        {Translation.getPhrase('9935457f0')}
                                     </Button>
                                 </div>
 
@@ -190,7 +191,7 @@ class TransactionDetailsView extends Component {
                                     <tbody>
                                     <tr>
                                         <td className={'w-20'}>
-                                            transaction id
+                                            {Translation.getPhrase('0ce9af6ca')}
                                         </td>
                                         <td>
                                             {transaction.transaction_id}
@@ -198,7 +199,7 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            shard id
+                                            {Translation.getPhrase('2faeb4201')}
                                         </td>
                                         <td>
                                             {transaction.shard_id}
@@ -206,7 +207,7 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            version
+                                            {Translation.getPhrase('f03a7df51')}
                                         </td>
                                         <td>
                                             {transaction.version}
@@ -214,7 +215,7 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            transaction date
+                                            {Translation.getPhrase('3416d8447')}
                                         </td>
                                         <td>
                                             {format.date(transaction.transaction_date)}
@@ -222,7 +223,7 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            stable
+                                            {Translation.getPhrase('a954b833e')}
                                         </td>
                                         <td>
                                             {stable_value}
@@ -230,7 +231,8 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            status<HelpIconView
+                                            {Translation.getPhrase('808aa2285')}<HelpIconView
+                                            key={'transaction_status'}
                                             help_item_name={'transaction_status'}/>
                                         </td>
                                         <td>
@@ -240,7 +242,7 @@ class TransactionDetailsView extends Component {
 
                                     <tr>
                                         <td className={'w-20'}>
-                                            node id sender
+                                            {Translation.getPhrase('5aee3304e')}
                                         </td>
                                         <td>
                                             {transaction.node_id_origin}
@@ -248,7 +250,7 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            node id proxy
+                                            {Translation.getPhrase('e9275e2d4')}
                                         </td>
                                         <td>
                                             {transaction.node_id_proxy}
@@ -256,7 +258,7 @@ class TransactionDetailsView extends Component {
                                     </tr>
                                     <tr>
                                         <td className={'w-20'}>
-                                            double spend
+                                            {Translation.getPhrase('e03f9df7e')}
                                         </td>
                                         <td>
                                             {is_double_spend_label}
@@ -267,7 +269,7 @@ class TransactionDetailsView extends Component {
 
                                 <div className={'mb-3'}>
                                     <div className={'section_subtitle'}>
-                                        input list<HelpIconView
+                                        {Translation.getPhrase('e754865b7')}<HelpIconView
                                         help_item_name={'transaction_input'}/>
                                     </div>
                                     <DatatableView
@@ -277,37 +279,46 @@ class TransactionDetailsView extends Component {
                                         showActionColumn={true}
                                         resultColumn={[
                                             {
-                                                field: 'input_position'
+                                                field: 'input_position',
+                                                header: Translation.getPhrase('16f28fe33')
                                             },
                                             {
-                                                field: 'output_transaction_id'
+                                                field: 'output_transaction_id',
+                                                header: Translation.getPhrase('615b87122')
                                             },
                                             {
-                                                field: 'output_position'
+                                                field: 'output_position',
+                                                header: Translation.getPhrase('acc570cb3')
                                             },
                                             {
-                                                field: 'output_transaction_date'
+                                                field: 'output_transaction_date',
+                                                header: Translation.getPhrase('0f9bca157')
                                             },
                                             {
-                                                field: 'is_double_spend'
+                                                field: 'is_double_spend',
+                                                header: Translation.getPhrase('43adcdf9e')
                                             },
                                             {
-                                                field: 'double_spend_date'
+                                                field: 'double_spend_date',
+                                                header: Translation.getPhrase('d94b61cfd')
                                             },
                                             {
-                                                field: 'is_stable'
+                                                field: 'is_stable',
+                                                header: Translation.getPhrase('089586ec8')
                                             },
                                             {
-                                                field: 'stable_date'
+                                                field: 'stable_date',
+                                                header: Translation.getPhrase('c43a5e401')
                                             },
                                             {
-                                                field: 'status'
+                                                field: 'status',
+                                                header: Translation.getPhrase('f46aa05ea')
                                             }
                                         ]}/>
                                 </div>
 
                                 <div className={'section_subtitle'}>
-                                    output list<HelpIconView
+                                    {Translation.getPhrase('bad83bc53')}<HelpIconView
                                     help_item_name={'transaction_output'}/>
                                 </div>
                                 <DatatableView
@@ -316,29 +327,37 @@ class TransactionDetailsView extends Component {
                                     sortOrder={1}
                                     resultColumn={[
                                         {
-                                            field: 'address'
+                                            field: 'address',
+                                            header: Translation.getPhrase('2d8702d1e')
                                         },
                                         {
-                                            field: 'output_position'
+                                            field: 'output_position',
+                                            header: Translation.getPhrase('061ec7249')
                                         },
                                         {
                                             field : 'amount',
-                                            format: 'amount'
+                                            format: 'amount',
+                                            header: Translation.getPhrase('7daee9d7b')
                                         },
                                         {
-                                            field: 'is_double_spend'
+                                            field: 'is_double_spend',
+                                            header: Translation.getPhrase('64cbba64f')
                                         },
                                         {
-                                            field: 'double_spend_date'
+                                            field: 'double_spend_date',
+                                            header: Translation.getPhrase('969d5ec7a')
                                         },
                                         {
-                                            field: 'is_stable'
+                                            field: 'is_stable',
+                                            header: Translation.getPhrase('51a8a8e7a')
                                         },
                                         {
-                                            field: 'stable_date'
+                                            field: 'stable_date',
+                                            header: Translation.getPhrase('f926e9ce5')
                                         },
                                         {
-                                            field: 'status'
+                                            field: 'status',
+                                            header: Translation.getPhrase('29f7cadf0')
                                         }
                                     ]}/>
                             </>}

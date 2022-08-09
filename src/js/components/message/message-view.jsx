@@ -7,6 +7,7 @@ import API from '../../api';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import HelpIconView from '../utils/help-icon-view';
 import * as helper_message from '../../helper/message';
+import Translation from '../../common/translation';
 
 
 class MessageView extends Component {
@@ -51,7 +52,7 @@ class MessageView extends Component {
     }
 
     verifyDNS(dns, addressKeyIdentifier) {
-        dns = validate.domain_name('dns', dns, []);
+        dns = validate.domain_name(Translation.getPhrase('1e0b22770'), dns, []);
         if (dns === null) {
             this.setState({
                 dnsValidated: false,
@@ -106,7 +107,7 @@ class MessageView extends Component {
 
                                 <div className={'ms-auto message_subject_action_container'}>
                                     <div className={'text-end message_subject_date'}>
-                                        {data.date} utc
+                                        {data.date} {Translation.getPhrase('ccafdd5e5')}
                                     </div>
                                     <Button
                                         variant="outline-primary"
@@ -115,7 +116,7 @@ class MessageView extends Component {
                                         <FontAwesomeIcon
                                             icon={'reply'}
                                             size="1x"/>
-                                        reply
+                                        {Translation.getPhrase('6b23af88e')}
                                     </Button>
                                     <Button
                                         variant='outline-default'
@@ -138,7 +139,7 @@ class MessageView extends Component {
                                                             <tbody>
                                                             <tr>
                                                                 <td className={'text-white'}>
-                                                                    from:
+                                                                    {Translation.getPhrase('334961683')}
                                                                 </td>
                                                                 <td>
                                                                     {data.address_from}
@@ -153,7 +154,7 @@ class MessageView extends Component {
                                                             </tr>
                                                             <tr>
                                                                 <td className={'text-white'}>
-                                                                    to:
+                                                                    {Translation.getPhrase('ce86b326d')}
                                                                 </td>
                                                                 <td>
                                                                     {data.address_to}
@@ -164,7 +165,7 @@ class MessageView extends Component {
                                                     </Col>
                                                     <Col>
                                                         <div className={'text-end'}>
-                                                            payment: {format.millix(data.amount)}
+                                                            {Translation.getPhrase('58e55b608')} {format.millix(data.amount)}
                                                         </div>
                                                     </Col>
                                                 </Row>
@@ -183,7 +184,7 @@ class MessageView extends Component {
                                                 <FontAwesomeIcon
                                                     icon={'reply'}
                                                     size="1x"/>
-                                                reply
+                                                {Translation.getPhrase('e1e7cd5a1')}
                                             </Button>
                                         </Col>
                                     </Form>

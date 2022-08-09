@@ -7,6 +7,7 @@ import * as validate from '../../helper/validate';
 import ModalView from '../utils/modal-view';
 import ErrorList from '../utils/error-list-view';
 import * as format from '../../helper/format';
+import Translation from '../../common/translation';
 
 
 class ConfigConsensusView extends Component {
@@ -49,20 +50,20 @@ class ConfigConsensusView extends Component {
 
         const error_list = [];
 
-        validate.required('number of nodes', this.consensus_round_node_count.value, error_list);
-        validate.required('number of validation rounds', this.consensus_round_validation_max.value, error_list);
-        validate.required('max double spend bound', this.consensus_round_double_spend_max.value, error_list);
-        validate.required('number of validation required', this.consensus_round_validation_required.value, error_list);
-        validate.required('max wait (sec)', this.consensus_validation_wait_time_max.value, error_list);
-        validate.required('retry wait (sec)', this.consensus_validation_retry_wait_time.value, error_list);
+        validate.required(Translation.getPhrase('b0f9e1f81'), this.consensus_round_node_count.value, error_list);
+        validate.required(Translation.getPhrase('c35f12505'), this.consensus_round_validation_max.value, error_list);
+        validate.required(Translation.getPhrase('f85ae3c89'), this.consensus_round_double_spend_max.value, error_list);
+        validate.required(Translation.getPhrase('e63cf8a3e'), this.consensus_round_validation_required.value, error_list);
+        validate.required(Translation.getPhrase('5e0bcf1fc'), this.consensus_validation_wait_time_max.value, error_list);
+        validate.required(Translation.getPhrase('cfb9afa09'), this.consensus_validation_retry_wait_time.value, error_list);
 
         let consensus_config = {
-            CONSENSUS_ROUND_NODE_COUNT          : validate.integerPositive('number of nodes', this.consensus_round_node_count.value, error_list, false),
-            CONSENSUS_ROUND_VALIDATION_MAX      : validate.integerPositive('number of validation rounds', this.consensus_round_validation_max.value, error_list, false),
-            CONSENSUS_ROUND_DOUBLE_SPEND_MAX    : validate.integerPositive('max double spend bound', this.consensus_round_double_spend_max.value, error_list, false),
-            CONSENSUS_ROUND_VALIDATION_REQUIRED : validate.integerPositive('number of validation required', this.consensus_round_validation_required.value, error_list, false),
-            CONSENSUS_VALIDATION_WAIT_TIME_MAX  : validate.integerPositive('max wait (sec)', this.consensus_validation_wait_time_max.value, error_list, false),
-            CONSENSUS_VALIDATION_RETRY_WAIT_TIME: validate.integerPositive('retry wait (sec)', this.consensus_validation_retry_wait_time.value, error_list, false)
+            CONSENSUS_ROUND_NODE_COUNT          : validate.integerPositive(Translation.getPhrase('b0f9e1f81'), this.consensus_round_node_count.value, error_list, false),
+            CONSENSUS_ROUND_VALIDATION_MAX      : validate.integerPositive(Translation.getPhrase('c35f12505'), this.consensus_round_validation_max.value, error_list, false),
+            CONSENSUS_ROUND_DOUBLE_SPEND_MAX    : validate.integerPositive(Translation.getPhrase('f85ae3c89'), this.consensus_round_double_spend_max.value, error_list, false),
+            CONSENSUS_ROUND_VALIDATION_REQUIRED : validate.integerPositive(Translation.getPhrase('e63cf8a3e'), this.consensus_round_validation_required.value, error_list, false),
+            CONSENSUS_VALIDATION_WAIT_TIME_MAX  : validate.integerPositive(Translation.getPhrase('5e0bcf1fc'), this.consensus_validation_wait_time_max.value, error_list, false),
+            CONSENSUS_VALIDATION_RETRY_WAIT_TIME: validate.integerPositive(Translation.getPhrase('cfb9afa09'), this.consensus_validation_retry_wait_time.value, error_list, false)
         };
         if (error_list.length === 0) {
             this.props.walletUpdateConfig(consensus_config).then(() => {
@@ -73,7 +74,7 @@ class ConfigConsensusView extends Component {
             }).catch(() => {
                 error_list.push({
                     name   : 'save_error',
-                    message: 'error while saving occurred, please try again later'
+                    message: Translation.getPhrase('d4d5e9f0b')
                 });
             });
         }
@@ -91,10 +92,10 @@ class ConfigConsensusView extends Component {
                 show={this.state.modal_show_save_result}
                 size={'lg'}
                 on_close={() => this.changeModalShowSaveResult(false)}
-                heading={'success'}
+                heading={Translation.getPhrase('e03c5a207')}
                 body={
                     <div>
-                        successfully saved
+                        {Translation.getPhrase('743463336')}
                     </div>
                 }/>
             <Form>
@@ -105,7 +106,7 @@ class ConfigConsensusView extends Component {
                             error_list={this.state.error_list}/>
                         <Col>
                             <Form.Group className="form-group">
-                                <label>number of nodes</label>
+                                <label>{Translation.getPhrase('b0f9e1f81')}</label>
                                 <Form.Control
                                     type="text"
                                     ref={(c) => this.consensus_round_node_count = c}
@@ -116,7 +117,7 @@ class ConfigConsensusView extends Component {
                         </Col>
                         <Col>
                             <Form.Group className="form-group">
-                                <label>number of validation rounds</label>
+                                <label>{Translation.getPhrase('c35f12505')}</label>
                                 <Form.Control
                                     type="text"
                                     ref={(c) => this.consensus_round_validation_max = c}
@@ -128,7 +129,7 @@ class ConfigConsensusView extends Component {
 
                         <Col>
                             <Form.Group className="form-group">
-                                <label>max double spend bound</label>
+                                <label>{Translation.getPhrase('f85ae3c89')}</label>
                                 <Form.Control
                                     type="text"
                                     ref={(c) => this.consensus_round_double_spend_max = c}
@@ -140,7 +141,7 @@ class ConfigConsensusView extends Component {
 
                         <Col>
                             <Form.Group className="form-group">
-                                <label>number of validation required</label>
+                                <label>{Translation.getPhrase('e63cf8a3e')}</label>
                                 <Form.Control
                                     type="text"
                                     ref={(c) => this.consensus_round_validation_required = c}
@@ -152,7 +153,7 @@ class ConfigConsensusView extends Component {
 
                         <Col>
                             <Form.Group className="form-group">
-                                <label>max wait (sec)</label>
+                                <label>{Translation.getPhrase('5e0bcf1fc')}</label>
                                 <Form.Control
                                     type="text"
                                     ref={(c) => this.consensus_validation_wait_time_max = c}
@@ -164,7 +165,7 @@ class ConfigConsensusView extends Component {
 
                         <Col>
                             <Form.Group className="form-group">
-                                <label>retry wait (sec)</label>
+                                <label>{Translation.getPhrase('cfb9afa09')}</label>
                                 <Form.Control
                                     type="text"
                                     ref={(c) => this.consensus_validation_retry_wait_time = c}
@@ -180,7 +181,7 @@ class ConfigConsensusView extends Component {
                                     variant="outline-primary"
                                     onClick={() => this.save()}
                                     disabled={this.state.sending}>
-                                    {this.state.sending ? <>{'saving'}</> : <>continue</>}
+                                    {this.state.sending ? <>{Translation.getPhrase('7e93c1830')}</> : <>{Translation.getPhrase('fbcee2e93')}</>}
                                 </Button>
                             </Form.Group>
                         </Col>

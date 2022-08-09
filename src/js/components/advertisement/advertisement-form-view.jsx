@@ -9,6 +9,7 @@ import ModalView from '../utils/modal-view';
 import * as format from '../../helper/format';
 import _ from 'lodash';
 import * as validate from '../../helper/validate';
+import Translation from '../../common/translation';
 
 
 class AdvertisementFormView extends Component {
@@ -18,7 +19,7 @@ class AdvertisementFormView extends Component {
         super(props);
 
         this.state = {
-            title                      : 'create advertisement',
+            title                      : Translation.getPhrase('e7115e611'),
             advertisement_guid         : '',
             advertisement              : {},
             error_list                 : [],
@@ -48,7 +49,7 @@ class AdvertisementFormView extends Component {
                 this.setState({
                     advertisement_guid: advertisement_guid,
                     fields            : fields,
-                    title             : 'edit advertisement',
+                    title             : Translation.getPhrase('0862231df'),
                     advertisement     : data.advertisement
                 });
 
@@ -74,20 +75,20 @@ class AdvertisementFormView extends Component {
         let form_data    = {};
         if (Object.keys(this.result_field_reference).length > 0) {
             form_data = {
-                advertisement_name         : validate.required('name', this.result_field_reference.advertisement_name.value, error_list),
+                advertisement_name         : validate.required(Translation.getPhrase('7619a6db5'), this.result_field_reference.advertisement_name.value, error_list),
                 advertisement_category_guid: this.result_field_reference.category.value,
-                headline                   : validate.required('headline', this.result_field_reference.headline.value, error_list),
-                deck                       : validate.required('deck', this.result_field_reference.deck.value, error_list),
-                url                        : validate.required('url', this.result_field_reference.advertisement_url.value, error_list),
-                budget_daily_mlx           : validate.amount('daily budget', this.result_field_reference.budget_daily_mlx.value, error_list),
-                bid_impression_mlx         : validate.amount('bid per impression', this.result_field_reference.bid_impression_mlx.value, error_list),
+                headline                   : validate.required(Translation.getPhrase('16f1ef84f'), this.result_field_reference.headline.value, error_list),
+                deck                       : validate.required(Translation.getPhrase('6dcff8016'), this.result_field_reference.deck.value, error_list),
+                url                        : validate.required(Translation.getPhrase('a58779268'), this.result_field_reference.advertisement_url.value, error_list),
+                budget_daily_mlx           : validate.amount(Translation.getPhrase('cdb55a09f'), this.result_field_reference.budget_daily_mlx.value, error_list),
+                bid_impression_mlx         : validate.amount(Translation.getPhrase('0dbf1fc30'), this.result_field_reference.bid_impression_mlx.value, error_list),
                 advertisement_guid         : this.state.advertisement_guid,
                 head_line_attribute_guid   : this.state.advertisement.advertisement_headline?.guid,
                 deck_attribute_guid        : this.state.advertisement.advertisement_deck?.guid
             };
 
             if (form_data.bid_impression_mlx > form_data.budget_daily_mlx) {
-                error_list.push('bid per impression cannot exceed the daily budget');
+                error_list.push(Translation.getPhrase('e08748b78'));
             }
         }
 
@@ -204,11 +205,9 @@ class AdvertisementFormView extends Component {
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
                            on_close={() => this.changeModalShow(false)}
-                           heading={'add funds'}
+                           heading={Translation.getPhrase('4644d1e82')}
                            body={<div>
-                               <div>fund your campaign by sending millix to the
-                                   address below
-                               </div>
+                               <div>{Translation.getPhrase('b84771088')}</div>
                                <span>{this.props.wallet.address}</span>
                            </div>}/>
 
@@ -217,14 +216,14 @@ class AdvertisementFormView extends Component {
                         {this.state.title}
                     </div>
                     <div className="panel-body">
-                        <div className="section_subtitle">creative</div>
+                        <div className="section_subtitle">{Translation.getPhrase('fce51664f')}</div>
                         <Form>
                             <ErrorList
                                 error_list={this.state.error_list}/>
                             <FormGroup controlId="advertisement_name"
                                        className={'form-group'}>
                                 <Form.Label>
-                                    name
+                                    {Translation.getPhrase('4282f1c37')}
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
@@ -234,7 +233,7 @@ class AdvertisementFormView extends Component {
                             <FormGroup controlId="category"
                                        className={'form-group'}>
                                 <Form.Label>
-                                    category
+                                    {Translation.getPhrase('889274d06')}
                                 </Form.Label>
                                 <Form.Control
                                     as="select"
@@ -250,7 +249,7 @@ class AdvertisementFormView extends Component {
                             <FormGroup controlId="headline"
                                        className={'form-group'}>
                                 <Form.Label>
-                                    headline
+                                    {Translation.getPhrase('efe1d6fa6')}
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
@@ -260,7 +259,7 @@ class AdvertisementFormView extends Component {
                             <FormGroup controlId="deck"
                                        className={'form-group'}>
                                 <Form.Label>
-                                    deck
+                                    {Translation.getPhrase('604ec27c3')}
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
@@ -269,7 +268,7 @@ class AdvertisementFormView extends Component {
 
                             <FormGroup controlId="url" className={'form-group'}>
                                 <Form.Label>
-                                    url
+                                    {Translation.getPhrase('cc1e741fb')}
                                 </Form.Label>
                                 <Form.Control type="text"
                                               ref={(c) => this.result_field_reference.advertisement_url = c}/>
@@ -278,7 +277,7 @@ class AdvertisementFormView extends Component {
                             <FormGroup className="advertisement-preview form-group"
                                        controlId="preview">
                                 <Form.Label>
-                                    preview
+                                    {Translation.getPhrase('6c3c9402a')}
                                 </Form.Label>
                                 {this.getAdvertisementPreview()}
                             </FormGroup>
@@ -286,13 +285,13 @@ class AdvertisementFormView extends Component {
                             <hr/>
 
                             <div className="section_subtitle">
-                                funding
+                                {Translation.getPhrase('d5d546539')}
                             </div>
 
                             <Form.Group controlId="funding"
                                         className={'form-group'}>
                                 <Form.Label>
-                                    balance
+                                    {Translation.getPhrase('84f030944')}
                                 </Form.Label>
                                 <div>
                                     <span>
@@ -303,14 +302,14 @@ class AdvertisementFormView extends Component {
                                         size={'sm'}
                                         className={'ms-3'}
                                         onClick={() => this.changeModalShow()}
-                                    >add funds</Button>
+                                    >{Translation.getPhrase('4644d1e82')}</Button>
                                 </div>
                             </Form.Group>
 
                             <Form.Group controlId="daily-budget"
                                         className={'form-group'}>
                                 <Form.Label>
-                                    daily budget
+                                    {Translation.getPhrase('1e2d1be0e')}
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
@@ -322,7 +321,7 @@ class AdvertisementFormView extends Component {
                             <Form.Group controlId="bid-per-impression"
                                         className={'form-group'}>
                                 <Form.Label>
-                                    bid per impression
+                                    {Translation.getPhrase('9e7cc6e16')}
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
@@ -335,7 +334,7 @@ class AdvertisementFormView extends Component {
                                 <Button
                                     variant="outline-primary"
                                     onClick={() => this.save()}
-                                >continue</Button>
+                                >{Translation.getPhrase('7e3e02f69')}</Button>
                             </div>
                         </Form>
                     </div>

@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {updateNetworkState} from '../redux/actions';
 import HelpIconView from './utils/help-icon-view';
 import * as format from '../helper/format';
+import Translation from '../common/translation';
 
 
 class StatsView extends Component {
@@ -16,20 +17,19 @@ class StatsView extends Component {
     render() {
         let is_public = '';
         if (this.props.network.node_is_public === 'unknown') {
-            is_public = 'analyzing your network connection';
+            is_public = Translation.getPhrase('b2e9a640f');
         }
         else if (this.props.network.node_is_public === true) {
-            is_public = 'your node is public';
+            is_public = Translation.getPhrase('bdacde9fd');
         }
         else {
-            is_public = 'your node is not public and is unlikely to receive transaction fees. use port forwarding on your router to make your node public.';
+            is_public = Translation.getPhrase('648c44366');
         }
 
         const props = this.props;
         return (<Col md="12">
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>status summary
-                </div>
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('729a7460c')}</div>
                 <div className={'panel-body'}>
                     {props.config.MODE_TEST_NETWORK && (<Row>
                         <Col className="pr-0"
@@ -48,8 +48,8 @@ class StatsView extends Component {
                                          fontSize: '75%',
                                          padding : 0,
                                          color   : '#ffadad'
-                                     }}>new version
-                                 available
+                                     }}>
+                                 {Translation.getPhrase('5144ca302')}
                                  v.{props.wallet.version_available} !</Button>
                          </Col>
                      </Row>)}
@@ -57,13 +57,13 @@ class StatsView extends Component {
                     <Row>
                         <Col>
                             <div className={'section_subtitle'}>
-                                node
+                                {Translation.getPhrase('5afb36415')}
                             </div>
                             <Table striped bordered hover>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
-                                        node id
+                                        {Translation.getPhrase('a84b519b0')}
                                     </td>
                                     <td>
                                         {props.network.node_id}
@@ -71,7 +71,8 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        network state<HelpIconView
+                                        {Translation.getPhrase('626426447')}<HelpIconView
+                                        key={'network_state'}
                                         help_item_name={'network_state'}/>
                                     </td>
                                     <td>
@@ -80,7 +81,7 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        key identifier<HelpIconView
+                                        {Translation.getPhrase('498ed7e9a')}<HelpIconView
                                         help_item_name={'key_identifier'}/>
                                     </td>
                                     <td>
@@ -95,14 +96,13 @@ class StatsView extends Component {
                     <Row>
                         <Col>
                             <div className={'section_subtitle'}>
-                                data
+                                {Translation.getPhrase('8eb3e2d2d')}
                             </div>
                             <Table striped bordered hover>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
-                                        transaction
-                                        count
+                                        {Translation.getPhrase('389451101')}
                                     </td>
                                     <td>
                                         {format.number(props.wallet.transaction_count)}
@@ -110,9 +110,7 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        pending
-                                        transaction
-                                        count
+                                        {Translation.getPhrase('b22cd1d5c')}
                                     </td>
                                     <td>
                                         {format.number(props.wallet.transaction_wallet_unstable_count)}
@@ -122,7 +120,7 @@ class StatsView extends Component {
                                     <td className={'w-20'}>
                                         <a className={''}
                                            onClick={() => props.history.push('/event-log')}>
-                                            event log size
+                                            {Translation.getPhrase('f183a9ddd')}
                                         </a>
                                     </td>
                                     <td>
@@ -133,7 +131,7 @@ class StatsView extends Component {
                                     <td className={'w-20'}>
                                         <a className={''}
                                            onClick={() => props.history.push('/backlog')}>
-                                            backlog size
+                                            {Translation.getPhrase('04a1455dc')}
                                         </a>
                                     </td>
                                     <td>
@@ -148,13 +146,13 @@ class StatsView extends Component {
                     <Row>
                         <Col>
                             <div className={'section_subtitle'}>
-                                network
+                                {Translation.getPhrase('e10d6c779')}
                             </div>
                             <Table striped bordered hover className={'mb-0'}>
                                 <tbody>
                                 <tr>
                                     <td className={'w-20'}>
-                                        node public address
+                                        {Translation.getPhrase('f920af04c')}
                                     </td>
                                     <td>
                                         {this.props.network.node_is_public === true && props.network.node_public_ip + ':' + props.network.node_port}
@@ -162,7 +160,7 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        node bind ip
+                                        {Translation.getPhrase('027ec7293')}
                                     </td>
                                     <td>
                                         {props.network.node_bind_ip}
@@ -172,7 +170,7 @@ class StatsView extends Component {
                                     <td className={'w-20'}>
                                         <a className={''}
                                            onClick={() => props.history.push('/peers')}>
-                                            peers
+                                            {Translation.getPhrase('1f9fb0f71')}
                                         </a>
                                     </td>
                                     <td>
@@ -181,8 +179,7 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
-                                        local network
-                                        addresses
+                                        {Translation.getPhrase('66a6b022e')}
                                     </td>
                                     <td>
                                         {props.network.node_network_addresses.join(', ')}

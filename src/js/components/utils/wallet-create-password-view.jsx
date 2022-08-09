@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Col, FormControl, Row} from 'react-bootstrap';
+import {FormControl} from 'react-bootstrap';
+import Translation from '../../common/translation';
 
 const WalletCreatePasswordView = (props) => {
     let passphraseRef, passphraseConfirmRef;
 
-    let info_label = 'create a strong password and save it in a safe place. if you lose or forget your password you will lose your funds.';
+    let info_label = Translation.getPhrase('b7e9ca83d');
     if (props.processName === 'import') {
-        info_label = 'enter the password. if you do not know the password to unlock the wallet you have lost access to your funds.';
+        info_label = Translation.getPhrase('0b3b5d17b');
     }
 
     return (
@@ -17,10 +18,10 @@ const WalletCreatePasswordView = (props) => {
                 className={'form-group'}
                 type="password"
                 ref={c => passphraseRef = c}
-                placeholder="password"
+                placeholder={Translation.getPhrase('43c568626')}
                 aria-label="password"
                 aria-describedby="basic-addon"
-                onChange={(e) => {
+                onChange={() => {
                     props.onPassword(passphraseRef.value);
                 }}
             />
@@ -28,10 +29,10 @@ const WalletCreatePasswordView = (props) => {
                 className={'form-group'}
                 type="password"
                 ref={c => passphraseConfirmRef = c}
-                placeholder="confirm password"
+                placeholder={Translation.getPhrase('e59f9ba20')}
                 aria-label="confirm password"
                 aria-describedby="basic-addon"
-                onChange={(e) => {
+                onChange={() => {
                     props.onConfirmPassword(passphraseConfirmRef.value);
                 }}
             />

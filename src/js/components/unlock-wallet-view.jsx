@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../api/index';
 import {unlockWallet, walletReady} from '../redux/actions';
 import ErrorList from './utils/error-list-view';
+import Translation from '../common/translation';
 
 const styles = {
     centered: {
@@ -18,8 +19,7 @@ const styles = {
 class UnlockWalletView extends Component {
     constructor(props) {
         super(props);
-        this.private_key_exists_interval_id = undefined;
-        this.state                          = {
+        this.state = {
             error_list        : [],
             private_key_exists: undefined, //ternary status: false -- doesn't
             // exists, true -- exist, undefined --
@@ -53,7 +53,7 @@ class UnlockWalletView extends Component {
                 let error_list = [];
                 error_list.push({
                     name   : 'auth_error',
-                    message: 'millix_private_key.json not found'
+                    message: Translation.getPhrase('a51c94711')
                 });
                 this.setState({
                     private_key_exists : false,
@@ -99,7 +99,7 @@ class UnlockWalletView extends Component {
 
                 error_list.push({
                     name   : 'auth_error_name',
-                    message: 'there was a problem authenticating your key file. please make sure you are using correct password'
+                    message: Translation.getPhrase('1704c9739')
                 });
 
                 this.setState({
@@ -130,7 +130,7 @@ class UnlockWalletView extends Component {
                                                         <FontAwesomeIcon
                                                             className="fal"
                                                             icon="sign-in-alt"/>
-                                                        login
+                                                        {Translation.getPhrase('2f90ead35')}
                                                     </h5>
                                                 </Nav.Link>
                                             </Nav.Item>
@@ -144,7 +144,7 @@ class UnlockWalletView extends Component {
                                                         <FontAwesomeIcon
                                                             className="fal"
                                                             icon="plus"/>
-                                                        create
+                                                        {Translation.getPhrase('8e3d5819b')}
                                                     </h5>
                                                 </Nav.Link>
                                             </Nav.Item>
@@ -158,7 +158,7 @@ class UnlockWalletView extends Component {
                                                         <FontAwesomeIcon
                                                             className="fal"
                                                             icon="file-import"/>
-                                                        import
+                                                        {Translation.getPhrase('dd46d77cc')}
                                                     </h5>
                                                 </Nav.Link>
                                             </Nav.Item>
@@ -176,12 +176,8 @@ class UnlockWalletView extends Component {
                                                             <ErrorList
                                                                 error_list={this.state.error_list}/>
                                                             {this.state.private_key_exists === undefined ? (
-                                                                <div
-                                                                    className="col-lg-12 text-center mt-4 mb-4">
-                                                                    looking
-                                                                    for
-                                                                    private
-                                                                    key
+                                                                <div className="col-lg-12 text-center mt-4 mb-4">
+                                                                    {Translation.getPhrase('a83fc8633')}
                                                                 </div>
                                                             ) : ('')}
                                                             {
@@ -191,7 +187,7 @@ class UnlockWalletView extends Component {
                                                                             className="form-group">
                                                                             <label
                                                                                 className="control-label"
-                                                                                htmlFor="password">password</label>
+                                                                                htmlFor="password">{Translation.getPhrase('95c8aab11')}</label>
                                                                             <FormControl
                                                                                 ref={c => {
                                                                                     passphraseRef = c;
@@ -199,7 +195,7 @@ class UnlockWalletView extends Component {
                                                                                 }}
                                                                                 type="password"
                                                                                 placeholder="******"
-                                                                                aria-label="wallet password"
+                                                                                aria-label={Translation.getPhrase('a71060280')}
                                                                                 aria-describedby="basic-addon"
                                                                                 onKeyPress={(e) => {
                                                                                     if (e.charCode === 13) {
@@ -211,7 +207,9 @@ class UnlockWalletView extends Component {
                                                                         <Button
                                                                             variant="outline-primary"
                                                                             className={'w-100'}
-                                                                            onClick={() => walletUnlockWithPassword(passphraseRef.value)}>continue</Button>
+                                                                            onClick={() => walletUnlockWithPassword(passphraseRef.value)}>
+                                                                            {Translation.getPhrase('936255419')}
+                                                                        </Button>
                                                                     </div>
                                                                 ) : ('')
                                                             }
@@ -225,41 +223,20 @@ class UnlockWalletView extends Component {
                                                     <div className="panel-body">
                                                         <div
                                                             className={'form-group'}>
-                                                            <div
-                                                                className="section_subtitle">attention
+                                                            <div className="section_subtitle">
+                                                                {Translation.getPhrase('a1f1962b0')}
                                                             </div>
                                                             <div>
-                                                                this will
-                                                                replace existing
-                                                                millix_private_key.json
-                                                                which contains
-                                                                your wallet
-                                                                mnemonic phrase.
-                                                                you cannot
-                                                                reverse
-                                                                this action.
-                                                                you will not be
-                                                                able
-                                                                to access this
-                                                                wallet or any
-                                                                funds
-                                                                it contains.
+                                                                {Translation.getPhrase('fb11beec6')}
                                                             </div>
                                                             <div>
-                                                                please make sure
-                                                                you
-                                                                saved a copy of
-                                                                millix_private_key.json
-                                                                to a
-                                                                safe
-                                                                place before
-                                                                proceed
+                                                                {Translation.getPhrase('afb651675')}
                                                             </div>
                                                         </div>
                                                         <Button
                                                             className={'w-100'}
                                                             variant="outline-primary"
-                                                            onClick={() => props.history.push('/new-wallet/')}>continue</Button>
+                                                            onClick={() => props.history.push('/new-wallet/')}>{Translation.getPhrase('0b05e60e4')}</Button>
                                                     </div>
                                                 </div>
                                             </Tab.Pane>
@@ -269,41 +246,20 @@ class UnlockWalletView extends Component {
                                                     <div className="panel-body">
                                                         <div
                                                             className={'form-group'}>
-                                                            <div
-                                                                className="section_subtitle">attention
+                                                            <div className="section_subtitle">
+                                                                {Translation.getPhrase('1c92a554a')}
                                                             </div>
                                                             <div>
-                                                                this will
-                                                                replace existing
-                                                                millix_private_key.json
-                                                                which contains
-                                                                your wallet
-                                                                mnemonic phrase.
-                                                                you cannot
-                                                                reverse
-                                                                this action.
-                                                                you will not be
-                                                                able
-                                                                to access this
-                                                                wallet or any
-                                                                funds
-                                                                it contains.
+                                                                {Translation.getPhrase('a7ec9aaff')}
                                                             </div>
                                                             <div>
-                                                                please make sure
-                                                                you
-                                                                saved a copy of
-                                                                millix_private_key.json
-                                                                to a
-                                                                safe
-                                                                place before
-                                                                proceed
+                                                                {Translation.getPhrase('cb09917c3')}
                                                             </div>
                                                         </div>
                                                         <Button
                                                             className={'w-100'}
                                                             variant="outline-primary"
-                                                            onClick={() => props.history.push('/import-wallet/')}>continue</Button>
+                                                            onClick={() => props.history.push('/import-wallet/')}>{Translation.getPhrase('5c15e1ccd')}</Button>
                                                     </div>
                                                 </div>
                                             </Tab.Pane>
@@ -329,7 +285,8 @@ class UnlockWalletView extends Component {
             </Container>
         );
     };
-};
+}
+
 
 export default connect(
     state => ({

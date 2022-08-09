@@ -34,3 +34,11 @@
 .p-dropdown-label {
   color: inherit;
 }
+
+.language-dropdown {
+  background-color: $color-input-bg !important;
+  border-color: $color-tab-hover !important;
+}
+.language-dropdown:hover {
+  border-color: $color-tab-hover !important;
+}

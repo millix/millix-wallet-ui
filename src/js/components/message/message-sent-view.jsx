@@ -5,6 +5,7 @@ import {Row} from 'react-bootstrap';
 import API from '../../api';
 import DatatableView from './../utils/datatable-view';
 import * as helper_message from '../../helper/message';
+import Translation from '../../common/translation';
 
 
 class MessageSentView extends Component {
@@ -43,14 +44,16 @@ class MessageSentView extends Component {
         });
     }
 
+    getDateField(rawData) {
+        return <>{rawData.date}</>;
+    }
+
     render() {
         return (<>
             <div className={'panel panel-filled'}>
                 <div className={'panel-body'} style={{textAlign: 'center'}}>
                     <div>
-                        <p>
-                            use this address to receive messages
-                        </p>
+                        <p>{Translation.getPhrase('9ff0d3497')}</p>
                     </div>
                     <div className={'primary_address'}>
                         {this.props.wallet.address_public_key}{this.props.wallet.address_key_identifier.startsWith('1') ? '0b0' : 'lb0l'}{this.props.wallet.address_key_identifier}
@@ -58,8 +61,7 @@ class MessageSentView extends Component {
                 </div>
             </div>
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>sent
-                </div>
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('b08c3033a')}</div>
                 <div className={'panel-body'}>
                     <Row>
                         <DatatableView
@@ -72,23 +74,23 @@ class MessageSentView extends Component {
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                             value={this.state.message_list}
                             loading={this.state.datatable_loading}
-                            sortField={'date'}
+                            sortField={'raw_date'}
                             sortOrder={-1}
                             showActionColumn={true}
                             resultColumn={[
                                 {
-                                    field: 'date',
-                                    class_name: 'w-10'
-                                },
-                                {
                                     field: 'raw_date',
-                                    class_name: 'hidden_data_search_column'
+                                    body: this.getDateField,
+                                    class_name: 'w-10',
+                                    header: Translation.getPhrase('d17a15dc6')
                                 },
                                 {
-                                    field: 'subject'
+                                    field: 'subject',
+                                    header: Translation.getPhrase('3a22fb4b4')
                                 },
                                 {
-                                    field: 'amount'
+                                    field: 'amount',
+                                    header: Translation.getPhrase('0e6acee5f')
                                 }
                             ]}/>
                     </Row>

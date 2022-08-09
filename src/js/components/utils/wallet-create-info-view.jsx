@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Col, Row, Form} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
+import Translation from '../../common/translation';
 
 const WalletCreateInfoView = (props) => {
     let info_label = 'your wallet has been successfully created.';
@@ -12,19 +13,19 @@ const WalletCreateInfoView = (props) => {
         <div className={'wallet-create-password'}>
             <div className={'center mb-3'}>{info_label}</div>
             <Form.Group className={'form-group'}>
-                <label>wallet id</label>
+                <label>{Translation.getPhrase('6e8dc8a1b')}</label>
                 <Form.Control type="text"
                               readOnly={true}
                               value={props.wallet.id}/>
             </Form.Group>
             <Form.Group className={'form-group'}>
-                <label>wallet private key</label>
+                <label>{Translation.getPhrase('ac81b973d')}</label>
                 <Form.Control type="text"
                               readOnly={true}
                               value={'0x' + props.wallet.private_key}/>
             </Form.Group>
             <Form.Group className={'form-group'}>
-                <label>wallet prime address</label>
+                <label>{Translation.getPhrase('235861067')}</label>
                 <Form.Control type="text"
                               readOnly={true}
                               value={props.wallet.address}/>

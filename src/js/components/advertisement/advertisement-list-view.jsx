@@ -6,6 +6,7 @@ import API from '../../api';
 import DatatableView from '../utils/datatable-view';
 import * as format from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
+import Translation from '../../common/translation';
 
 
 class AdvertisementListView extends Component {
@@ -23,9 +24,9 @@ class AdvertisementListView extends Component {
     }
 
     getStatusLabel(status) {
-        let label = 'inactive';
+        let label = Translation.getPhrase('c45f9e95a');
         if (status === 1) {
-            label = 'active';
+            label = Translation.getPhrase('2bb3b7131');
         }
 
         return label;
@@ -45,16 +46,16 @@ class AdvertisementListView extends Component {
 
     getActionButton(item) {
         let toggle_status_icon  = 'play';
-        let toggle_status_title = 'activate';
+        let toggle_status_title = Translation.getPhrase('ad7c48837');
         if (item.status === 1) {
             toggle_status_icon  = 'pause';
-            toggle_status_title = 'deactivate';
+            toggle_status_title = Translation.getPhrase('b861f5d60');
         }
 
         return <>
             <DatatableActionButtonView
                 icon={'pencil'}
-                title={'edit'}
+                title={Translation.getPhrase('73ac52193')}
                 callback={() => this.edit(item)}
                 callback_args={item}
             />
@@ -66,7 +67,7 @@ class AdvertisementListView extends Component {
             />
             <DatatableActionButtonView
                 icon={'redo'}
-                title={'reset'}
+                title={Translation.getPhrase('615682a2d')}
                 callback={() => this.resetAdvertisement(item.advertisement_guid)}
                 callback_args={item.advertisement_guid}
             />
@@ -175,25 +176,17 @@ class AdvertisementListView extends Component {
     render() {
         return (<div>
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>advertisements list
-                </div>
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('3a1ef95ab')}</div>
                 <div className={'panel-body'}>
                     <div className={'form-group'}>
-                        the tangled advertisement platform allows anyone to create an
-                        advertisement without approvals or permission. when
-                        your advertisement is created it will appear to other tangled
-                        browser users. the amount that you choose to pay for
-                        the advertisement to appear is paid directly to the consumer
-                        that views the advertisement.
-                        at the moment you can not edit advertisements. you
-                        can pause existing and create a new one instead.
+                        {Translation.getPhrase('6ee8b7209')}
                     </div>
                     <Row id={'adlist'}>
                         <DatatableView
                             reload_datatable={() => this.reloadDatatable()}
                             datatable_reload_timestamp={this.state.datatable_reload_timestamp}
                             action_button={{
-                                label   : 'create advertisement',
+                                label   : Translation.getPhrase('e7115e611'),
                                 on_click: () => this.props.history.push('/advertisement-form/')
                             }}
                             value={this.state.advertisement_list}
@@ -204,25 +197,28 @@ class AdvertisementListView extends Component {
                             resultColumn={[
                                 {
                                     field : 'advertisement_name',
-                                    header: 'name'
+                                    header: Translation.getPhrase('99e582355')
                                 },
                                 {
                                     field : 'advertisement_category',
-                                    header: 'category'
+                                    header: Translation.getPhrase('b9c691d49')
                                 },
                                 {
                                     field : 'advertisement_url',
-                                    header: 'url'
+                                    header: Translation.getPhrase('7139645b0')
                                 },
                                 {
-                                    field: 'expiration'
+                                    field: 'expiration',
+                                    header: Translation.getPhrase('1637cf139')
                                 },
                                 {
-                                    field: 'status'
+                                    field: 'status',
+                                    header: Translation.getPhrase('d5afe8b7b')
                                     // filter_type: 'multi_select'
                                 },
                                 {
-                                    field: 'create_date'
+                                    field: 'create_date',
+                                    header: Translation.getPhrase('e4cbe8fd8')
                                 }
                             ]}/>
                     </Row>

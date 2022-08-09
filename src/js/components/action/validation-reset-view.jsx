@@ -7,6 +7,7 @@ import * as text from '../../helper/text';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import API from '../../api';
 import {changeLoaderState} from '../loader';
+import Translation from '../../common/translation';
 
 
 class ValidationResetView extends Component {
@@ -45,47 +46,39 @@ class ValidationResetView extends Component {
         return <>
             <ModalView show={this.state.modalShowResetValidation}
                        size={'lg'}
-                       heading={'reset validation'}
+                       heading={Translation.getPhrase('9de297694')}
                        on_close={() => this.changeModalShowResetValidation(false)}
                        on_accept={() => this.resetTransactionValidation()}
                        body={<div>
-                           <div>continuing will force your node to
-                               revalidate all your transactions. this may
-                               take some time depending on how many
-                               transactions you have.
-                           </div>
+                           <div>{Translation.getPhrase('ead313199')}</div>
                            {text.get_confirmation_modal_question()}
                        </div>}/>
             <ModalView show={this.state.modalShowResult}
                        size={'lg'}
                        on_close={() => this.toggleResultModal(false)}
-                       heading={'reset transaction validation'}
+                       heading={Translation.getPhrase('2a0e88ec9')}
                        body={
-                           <div>validation has been reset for all
-                               your transactions
+                           <div>
+                               {Translation.getPhrase('9d0b858a7')}
                                <div>
-                                   click <Link to={'/unspent-transaction-output-list/pending'}>here</Link> to see all your pending transactions
+                                   {Translation.getPhrase('f076b569c', {
+                                       transaction_link_list: <Link key={'unspent-transaction-output-list-pending'}
+                                                                    to={'/unspent-transaction-output-list/pending'}>{Translation.getPhrase('c9d84d4df')}</Link>
+                                   })}
                                </div>
                            </div>
                        }
             />
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>reset
-                    validation
-                </div>
+                <div className={'panel-heading bordered'}>{Translation.getPhrase('155911684')}</div>
                 <div className={'panel-body'}>
                     <div className={'form-group'}>
-                        reset validation forces your node to
-                        revalidate all your transactions (to or from
-                        you). it is recommended to do in one of the
-                        following cases:
+                        {Translation.getPhrase('c0af243fd')}
                         <ul>
-                            <li>if you have
-                                transaction(s) in pending state for
-                                longer than 10-15 minutes
+                            <li>{Translation.getPhrase('06bf7636c')}
                             </li>
                             <li>
-                                you think that your balance is wrong
+                                {Translation.getPhrase('bfc5bbd78')}
                             </li>
                         </ul>
                     </div>
@@ -96,7 +89,7 @@ class ValidationResetView extends Component {
                             onClick={() => this.changeModalShowResetValidation()}>
                             <FontAwesomeIcon
                                 icon="rotate-left"
-                                size="1x"/>reset validation
+                                size="1x"/>{Translation.getPhrase('5768462be')}
                         </Button>
                     </div>
                 </div>

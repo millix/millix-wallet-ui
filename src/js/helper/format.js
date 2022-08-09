@@ -1,4 +1,5 @@
 import moment from 'moment';
+import Translation from '../common/translation';
 
 export function millix(amount, append_name = true) {
     let result = amount;
@@ -47,18 +48,18 @@ export function date(timestamp) {
 }
 
 export function status_label(status) {
-    return status ? 'active' : 'inactive';
+    return status ? Translation.getPhrase('9f05ada1c') : Translation.getPhrase('144b89cb0');
 }
 
 export function bool_label(value) {
-    return value ? 'yes' : 'no';
+    return value ? Translation.getPhrase('33ea8716d') : Translation.getPhrase('84ec8187e');
 }
 
 export function transaction_status_label(status) {
     const result_status = {
-        1: 'pending hibernation',
-        2: 'hibernated',
-        3: 'invalid'
+        1: Translation.getPhrase('47a2508cd'),
+        2: Translation.getPhrase('4ada43912'),
+        3: Translation.getPhrase('eef5c6554')
     };
 
     let label = '';
