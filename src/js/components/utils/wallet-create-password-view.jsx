@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl} from 'react-bootstrap';
 import Translation from '../../common/translation';
+import passwordCheck from '../../password-strength';
 
 const WalletCreatePasswordView = (props) => {
     let passphraseRef, passphraseConfirmRef;
@@ -23,6 +24,7 @@ const WalletCreatePasswordView = (props) => {
                 aria-describedby="basic-addon"
                 onChange={() => {
                     props.onPassword(passphraseRef.value);
+                    passwordCheck('[aria-label="password"]', passphraseRef.value, 0);
                 }}
             />
             <FormControl
