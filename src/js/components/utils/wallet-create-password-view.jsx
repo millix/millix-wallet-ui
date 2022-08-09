@@ -24,7 +24,7 @@ const WalletCreatePasswordView = (props) => {
                 aria-describedby="basic-addon"
                 onChange={() => {
                     props.onPassword(passphraseRef.value);
-                    passwordCheck('[aria-label="password"]', passphraseRef.value, 0);
+                    passwordCheck(`[aria-label="${passphraseRef.ariaLabel}"`, passphraseRef.value, 0);
                 }}
             />
             <FormControl
