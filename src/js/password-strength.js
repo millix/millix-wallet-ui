@@ -72,39 +72,46 @@
     });
 };
  */
-function passwordCheck(password_input_selector, password, strength) {
-  
-  
-  let password_input = document.querySelector(password_input_selector);
-  
 
-    function displayBar(strength) {
-      if(password_input.nextElementSibling.tagName == 'DIV') {
-        password_input.nextElementSibling.innerHTML = strength
-      } else {
-        let strength_bar = document.createElement('div');
-        password_input.after(strength_bar);
-        strength_bar.innerHTML = strength;
-      }
+import React, {Component} from 'react';
+import ReactDOM from 'react';
 
+
+class PaswordCheck extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      password_strength: this.props.strength
     }
+  }
 
-  if (password.length >= 8)
-    strength += 1;
+  strength_increase = () => {
+    this.setState(state => ({
+      password_strength: state.password_strength + 1
+    }))
+  }
 
-  if (password.match(/(?=.*[0-9])/))
-    strength += 1;
+  componentDidMount() {
+    if (this.props.password.length >= 8)
+      this.strength_increase()
 
-  if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/))
-    strength += 1;
+    if (this.props.password.match(/(?=.*[0-9])/))
+      this.strength_increase()
 
-  if (password.match(/(?=.*[a-z])/))
-    strength += 1;
+    if (this.props.password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/))
+      this.strength_increase()
 
-  if (password.match(/(?=.*[A-Z])/))
-    strength += 1;
+    if (this.props.password.match(/(?=.*[a-z])/))
+      this.strength_increase()
 
-    displayBar(strength);
+    if (this.props.password.match(/(?=.*[A-Z])/))
+      this.strength_increase()
+  }
+
+  render() {
+    return ReactDOM.createPortal(<h1>Password strength = {this.state.password_strength}</h1>,
+        document.getElementById("portal"))
+  }
 }
 
-export default passwordCheck;
+export default PaswordCheck

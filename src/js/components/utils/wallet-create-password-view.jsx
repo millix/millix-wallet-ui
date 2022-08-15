@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl} from 'react-bootstrap';
 import Translation from '../../common/translation';
-import passwordCheck from '../../password-strength';
+import PaswordCheck from '../../password-strength';
+
 
 const WalletCreatePasswordView = (props) => {
     let passphraseRef, passphraseConfirmRef;
@@ -14,6 +15,7 @@ const WalletCreatePasswordView = (props) => {
 
     return (
         <div className={'wallet-create-password'}>
+            
             <div className={'center mb-3'}>{info_label}</div>
             <FormControl
                 className={'form-group'}
@@ -24,7 +26,8 @@ const WalletCreatePasswordView = (props) => {
                 aria-describedby="basic-addon"
                 onChange={() => {
                     props.onPassword(passphraseRef.value);
-                    passwordCheck(`[aria-label="${passphraseRef.ariaLabel}"`, passphraseRef.value, 0);
+                    <PaswordCheck password={passphraseRef.value} strength={0}/>
+                    
                 }}
             />
             <FormControl
@@ -38,6 +41,8 @@ const WalletCreatePasswordView = (props) => {
                     props.onConfirmPassword(passphraseConfirmRef.value);
                 }}
             />
+            
+            <div id="portal"></div>
         </div>
     );
 };
