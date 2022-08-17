@@ -39,13 +39,10 @@ import NftCreateView from './nft/nft-create-view';
 import NftCollectionView from './nft/nft-collection-view';
 import NftTransferView from './nft/nft-transfer-view';
 import AssetListView from './asset/asset-list-view';
+import NftPreviewView from './nft/nft-preview-view';
 
 
 class AppContainer extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
     }
 
@@ -59,6 +56,8 @@ class AppContainer extends Component {
                     <Route path="/new-wallet/" component={NewWalletView}/>
                     <Route path="/import-wallet/" component={ImportWalletView}/>
 
+                    <UnlockedWalletRequiredRoute path="/nft-preview/"
+                                                 component={NftPreviewView}/>
                     <UnlockedWalletRequiredRoute path="/advertisement-form"
                                                  component={AdvertisementFormView}/>
                     <UnlockedWalletRequiredRoute path="/advertisement-list"

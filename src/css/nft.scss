@@ -70,7 +70,7 @@
   height: 24rem;
   display: flex;
 
-  > img {
+  img {
     max-height: 100%;
     max-width: 100%;
     align-self: flex-start;
@@ -83,8 +83,18 @@
   flex: 0 1;
   flex-direction: row;
 
-  .preview_link {
+  .preview_button_trans {
     margin-left: auto;
+  }
+
+  .btn-sm-copy-link {
     margin-right: 1rem;
   }
 }
+
+.copy-link-button {
+  float: right;
+  width: 3rem;
+}
+
+
