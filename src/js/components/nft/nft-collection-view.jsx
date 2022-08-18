@@ -67,15 +67,6 @@ class NftCollectionView extends Component {
         });
     }
 
-    getViewLink(nft_data, absolute = false) {
-        let origin = '';
-        if (absolute) {
-            origin = window.location.origin;
-        }
-
-        return `${origin}/nft-preview/?p0=${nft_data.transaction.transaction_id}&p1=${nft_data.transaction.address_key_identifier_to}&p2=${nft_data.file_key}&p3=${nft_data.hash}&p4=${nft_data.metadata_hash}`;
-    }
-
     renderNftImage(nft_list) {
         let nft_list_formatted = [];
         for (const image_props of nft_list) {
@@ -98,13 +89,14 @@ class NftCollectionView extends Component {
                             <div className={'nft-action-section'}>
                                 <NftActionSummaryView
                                     nft_data={image_props}
+                                    modal_show_burn_result_on_close={() => this.reloadCollection()}
                                 />
 
                                 <Button variant="outline-default"
                                         size={'sm'}
                                         className={'ms-auto'}
                                         onClick={() => {
-                                            this.props.history.push(this.getViewLink(image_props));
+                                            this.props.history.push(utils.getNftViewLink(image_props));
                                         }}
                                 >
                                     <FontAwesomeIcon icon={'eye'}/>details

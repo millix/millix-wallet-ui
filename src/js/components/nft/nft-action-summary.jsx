@@ -11,6 +11,7 @@ import {changeLoaderState} from '../loader';
 import Transaction from '../../common/transaction';
 import {TRANSACTION_DATA_TYPE_ASSET, TRANSACTION_DATA_TYPE_NFT, TRANSACTION_DATA_TYPE_TRANSACTION} from '../../../config';
 import API from '../../api';
+import utils from '../../helper/utils';
 
 
 class NftActionSummaryView extends Component {
@@ -63,10 +64,8 @@ class NftActionSummaryView extends Component {
         };
 
         Transaction.sendTransaction(transaction_output_payload, true, false).then(() => {
-            // this.reloadCollection(); // todo: either reload or redirect to collection
             this.setState(newState);
             changeLoaderState(false);
-            this.props.history.push('/nft-collection');
         }).catch((error) => {
             this.setState({
                 ...error,
@@ -112,14 +111,9 @@ class NftActionSummaryView extends Component {
     }
 
     getViewLink(absolute = false) {
-        let origin = '';
-        if (absolute) {
-            origin = window.location.origin;
-        }
-
         let url = '';
         if (this.state.nft_data.transaction) {
-            url = `${origin}/nft-preview/?p0=${this.state.nft_data.transaction.transaction_id}&p1=${this.state.nft_data.transaction.address_key_identifier_to}&p2=${this.state.nft_data.file_key}&p3=${this.state.nft_data.hash}&p4=${this.state.nft_data.metadata_hash}`;
+            url = utils.getNftViewLink(this.state.nft_data, absolute);
         }
 
         return url;
@@ -183,7 +177,7 @@ class NftActionSummaryView extends Component {
         }
 
         const popoverFocus = (
-            <Popover id="popover-basic">
+            <Popover className="nftActionSummaryPopover">
                 <Popover.Header>
                     <div className={'page_subtitle'}>
                         nft actions
@@ -254,7 +248,13 @@ class NftActionSummaryView extends Component {
                     size={'lg'}
                     on_close={() => {
                         this.setState({modal_show_burn_result: false});
-                        this.props.history.push('/nft-collection');
+
+                        if (typeof (this.props.modal_show_burn_result_on_close) === 'function') {
+                            this.props.modal_show_burn_result_on_close();
+                        }
+                        else {
+                            this.props.history.push('/nft-collection');
+                        }
                     }}
                     heading={'burn nft'}
                     body={<div>
@@ -276,9 +276,10 @@ class NftActionSummaryView extends Component {
 
 
 NftActionSummaryView.propTypes = {
-    nft_data : PropTypes.any,
-    src      : PropTypes.string,
-    view_page: PropTypes.bool
+    nft_data                       : PropTypes.any,
+    src                            : PropTypes.string,
+    view_page                      : PropTypes.bool,
+    modal_show_burn_result_on_close: PropTypes.any
 };
 
 export default connect(

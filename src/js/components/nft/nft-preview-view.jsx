@@ -95,7 +95,7 @@ class NftPreviewView extends Component {
                            utils.getImageFromApi(transaction)
                                 .then(image_data => {
                                     this.setState({
-                                        image_data
+                                        image_data,
                                     });
                                     changeLoaderState(false);
                                 });
@@ -168,7 +168,7 @@ class NftPreviewView extends Component {
             if (this.state.error_list.length === 0) {
                 nft_body = <>
                     <div className={'nft-collection-img'}>
-                        <a href={this.state.image_data.src} target={'_blank'} className={'mx-auto'}>
+                        <a href={this.state.image_data.src} target={'_blank'} className={'mx-auto d-flex'}>
                             <img src={this.state.image_data.src} alt={this.state.image_data.name}/>
                         </a>
                     </div>
