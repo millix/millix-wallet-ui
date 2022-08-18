@@ -65,19 +65,20 @@ function nftImageData(transaction) {
     }
 
     return {
-        src                      : file_data_tangled_nft,
-        width                    : 4,
-        height                   : 3,
-        transaction              : transaction,
-        address_key_identifier_to: transaction.address_key_identifier_to,
-        amount                   : transaction.amount,
-        txid                     : transaction.transaction_id,
-        hash                     : file_tangled_nft?.hash,
-        metadata_hash            : file_tangled_nft_meta?.hash,
-        name                     : file_data_tangled_nft_meta?.name,
-        description              : file_data_tangled_nft_meta?.description,
-        attribute_type_id        : attribute.attribute_type_id,
-        file_key                 : file_key
+        src                        : file_data_tangled_nft,
+        width                      : 4,
+        height                     : 3,
+        transaction                : transaction,
+        address_key_identifier_to  : transaction.address_key_identifier_to,
+        address_key_identifier_from: transaction.address_key_identifier_from,
+        amount                     : transaction.amount,
+        txid                       : transaction.transaction_id,
+        hash                       : file_tangled_nft?.hash,
+        metadata_hash              : file_tangled_nft_meta?.hash,
+        name                       : file_data_tangled_nft_meta?.name,
+        description                : file_data_tangled_nft_meta?.description,
+        attribute_type_id          : attribute.attribute_type_id,
+        file_key                   : file_key
     };
 }
 

@@ -456,7 +456,6 @@ class API {
     getTransactionOutputData(data) {
         return this.fetchApiMillix('/Mh9QifTIESw5t1fa', {
             p0: data.transaction_id,
-            p1: data.address_key_identifier_to,
             p2: 'Adl87cz8kC190Nqc',
             p3: data.file_hash,
             p4: data.file_key
@@ -474,7 +473,6 @@ class API {
     getSyncNftTransaction(data, metadata = false) {
         return this.fetchApiMillix('/SLzLU50givH77Rns', {
             p0: data.transaction_id,
-            p1: data.address_key_identifier_to,
             p2: 'Adl87cz8kC190Nqc',
             p3: metadata ? data.metadata_hash : data.hash,
             p4: data.key
