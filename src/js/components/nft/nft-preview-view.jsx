@@ -40,11 +40,11 @@ class NftPreviewView extends Component {
         const params = parse(this.props.location.search.slice(1));
         this.setState({
             parameter_list: {
-                transaction_id             : params.p0,
-                address_key_identifier_from: params.p1,
-                key                        : params.p2,
-                hash                       : params.p3,
-                metadata_hash              : params.p4
+                transaction_id           : params.p0,
+                address_key_identifier_to: params.p1,
+                key                      : params.p2,
+                hash                     : params.p3,
+                metadata_hash            : params.p4
             }
         }, () => {
             if (params.type) {
@@ -77,7 +77,7 @@ class NftPreviewView extends Component {
 
             if (result_image.status !== 'syncing' && result_metadata.status !== 'syncing') {
                 clearTimeout(this.timeout_id);
-                API.listTransactionWithDataReceived(this.state.parameter_list.address_key_identifier_from, TRANSACTION_DATA_TYPE_NFT)
+                API.listTransactionWithDataReceived(this.state.parameter_list.address_key_identifier_to, TRANSACTION_DATA_TYPE_NFT)
                    .then(transaction_list => {
                        const transaction = transaction_list.filter((entry) => entry.transaction_id === this.state.parameter_list.transaction_id)[0];
 

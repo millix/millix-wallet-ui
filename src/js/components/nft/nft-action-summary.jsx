@@ -119,7 +119,7 @@ class NftActionSummaryView extends Component {
 
         let url = '';
         if (this.state.nft_data.transaction) {
-            url = `${origin}/nft-preview/?p0=${this.state.nft_data.transaction.transaction_id}&p1=${this.state.nft_data.transaction.address_key_identifier_from}&p2=${this.state.nft_data.file_key}&p3=${this.state.nft_data.hash}&p4=${this.state.nft_data.metadata_hash}`;
+            url = `${origin}/nft-preview/?p0=${this.state.nft_data.transaction.transaction_id}&p1=${this.state.nft_data.transaction.address_key_identifier_to}&p2=${this.state.nft_data.file_key}&p3=${this.state.nft_data.hash}&p4=${this.state.nft_data.metadata_hash}`;
         }
 
         return url;
