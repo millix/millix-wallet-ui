@@ -82,7 +82,16 @@ function nftImageData(transaction) {
     };
 }
 
+function getNftViewLink(nft_data, absolute = false) {
+    let origin = '';
+    if (absolute) {
+        origin = window.location.origin;
+    }
+
+    return `${origin}/nft-preview/?p0=${nft_data.transaction.transaction_id}&p1=${nft_data.transaction.address_key_identifier_to}&p2=${nft_data.file_key}&p3=${nft_data.hash}&p4=${nft_data.metadata_hash}`;
+}
 
 export default {
-    getImageFromApi
+    getImageFromApi,
+    getNftViewLink
 };
