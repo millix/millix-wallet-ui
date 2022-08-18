@@ -80,6 +80,7 @@ class NftPreviewView extends Component {
                 API.listTransactionWithDataReceived(this.state.parameter_list.address_key_identifier_to, TRANSACTION_DATA_TYPE_NFT)
                    .then(transaction_list => {
                        const transaction = transaction_list.filter((entry) => entry.transaction_id === this.state.parameter_list.transaction_id)[0];
+
                        if (!transaction) {
                            this.setState({
                                error_list: [
