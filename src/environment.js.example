@@ -4,10 +4,13 @@ const SHOW_API_ERROR_IN_MODAL = false;
 const NODE_ID        = ''; // to be used in src/js/api/index.js
 const NODE_SIGNATURE = ''; // to be used in src/js/api/index.js
 
+const NFT_VIEW_LINK_ORIGIN = 'tangled://millix';
+
 const environment = {
     SHOW_API_ERROR_IN_MODAL,
     NODE_ID,
-    NODE_SIGNATURE
+    NODE_SIGNATURE,
+    NFT_VIEW_LINK_ORIGIN
 };
 
 // test net
