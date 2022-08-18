@@ -36,6 +36,7 @@ class NftPreviewView extends Component {
     }
 
     componentDidMount() {
+        moment.relativeTimeThreshold('ss', -1);
         const params = parse(this.props.location.search.slice(1));
         this.setState({
             parameter_list: {
@@ -102,10 +103,10 @@ class NftPreviewView extends Component {
                    });
             }
             else {
-                setTimeout(() => this.setNftData(), 30000);
+                setTimeout(() => this.setNftData(), 10000);
             }
         }).catch(_ => {
-            setTimeout(() => this.setNftData(), 30000);
+            setTimeout(() => this.setNftData(), 10000);
         });
     }
 
