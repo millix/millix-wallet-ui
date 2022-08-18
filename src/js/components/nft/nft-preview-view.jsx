@@ -40,11 +40,11 @@ class NftPreviewView extends Component {
         const params = parse(this.props.location.search.slice(1));
         this.setState({
             parameter_list: {
-                transaction_id           : params.p0,
-                address_key_identifier_to: params.p1,
-                key                      : params.p2,
-                hash                     : params.p3,
-                metadata_hash            : params.p4
+                transaction_id             : params.p0,
+                address_key_identifier_from: params.p1,
+                key                        : params.p2,
+                hash                       : params.p3,
+                metadata_hash              : params.p4
             }
         }, () => {
             if (params.type) {
