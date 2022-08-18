@@ -1,6 +1,7 @@
 import {
     ADD_LOG_EVENT,
     ADD_WALLET_CONFIG,
+    ADD_STORAGE_CONFIG,
     CLEAR_TRANSACTION_DETAILS,
     LOCK_WALLET,
     SET_BACKLOG_SIZE,
@@ -43,8 +44,8 @@ export function updateWalletNotification(payload) {
     };
 }
 
-export function walletUpdateTransactions(addressKeyIdentifier) {
-    return (dispatch) => API.getTransactionHistory(addressKeyIdentifier)
+export function walletUpdateTransactions(address_key_identifier) {
+    return (dispatch) => API.getTransactionHistory(address_key_identifier)
                             .then(payload => dispatch({
                                 type: UPDATE_WALLET_TRANSACTIONS,
                                 payload
@@ -98,6 +99,13 @@ export function lockWallet(payload) {
 export function addWalletConfig(payload) {
     return {
         type: ADD_WALLET_CONFIG,
+        payload
+    };
+}
+
+export function addStorageConfig(payload) {
+    return {
+        type: ADD_STORAGE_CONFIG,
         payload
     };
 }
@@ -200,23 +208,11 @@ export function walletUpdateBalance(payload) {
     };
 }
 
-export function walletUpdateAddresses(walletID) {
-    return {};
-}
-
-export function addNewAddress(walletID) {
-    return {};
-}
-
 export function updateClock(clock) {
     return {
         type   : UPDATE_CLOCK,
         payload: {clock}
     };
-}
-
-export function getNodeAttribute(nodeID) {//removeWalletAddressVersion(payload) {
-    return {};
 }
 
 export function updateCurrencyPairSummary(payload) {
@@ -241,5 +237,5 @@ export function updateMessageStat(payload) {
     return {
         type: UPDATE_MESSAGE_STAT,
         payload
-    }
+    };
 }

@@ -51,7 +51,7 @@ class MessageView extends Component {
         }
     }
 
-    verifyDNS(dns, addressKeyIdentifier) {
+    verifyDNS(dns, address_key_identifier) {
         dns = validate.domain_name(Translation.getPhrase('1e0b22770'), dns, []);
         if (dns === null) {
             this.setState({
@@ -60,7 +60,7 @@ class MessageView extends Component {
             });
         }
         else {
-            API.isDNSVerified(dns, addressKeyIdentifier)
+            API.isDNSVerified(dns, address_key_identifier)
                .then(data => {
                    this.setState({
                        dnsValidated: data.is_address_verified,

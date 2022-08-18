@@ -14,7 +14,7 @@ class APIExternal {
                 result_json.symbol = symbol;
 
                 return result_json;
-            }).catch();
+            }).catch(error => error);
     }
 }
 

@@ -135,6 +135,10 @@ body .section_subtitle > .fab {
   margin-right: 0.3em;
 }
 
+.fa-arrow-right.arrow_up_right {
+  transform: rotate(-45deg);
+}
+
 hr {
   width: 100%;
 }
@@ -432,10 +436,60 @@ h4, .h4, h5, .h5, h6, .h6 {
   color: #ffffff !important;
 }
 
-.messageParent.sidenav---expanded---1KdUL {
+.nftParent.sidenav---expanded---1KdUL, .messageParent.sidenav---expanded---1KdUL {
   > .sidenav---navitem---9uL5T {
     .message_inbox_count_badge {
       display: none;
     }
   }
 }
+
+.nft-transfer-img-wrapper {
+  text-align: center;
+
+  img {
+    max-height: 30rem;
+    padding: 1rem;
+  }
+}
+
+.transfer-subtitle {
+  color: $color-white !important;
+  margin-bottom: 0.5rem;
+}
+
+.file-uploader {
+  svg {
+    margin: 1rem;
+  }
+
+  img {
+    max-height: 30rem;
+    max-width: 100%;
+  }
+
+  button {
+    margin-bottom: 1rem;
+  }
+
+  .clear-file-input-icon {
+    cursor: pointer;
+    position: absolute;
+    top: -2rem;
+    right: -2rem;
+
+    path {
+      fill: $color-primary;
+    }
+  }
+
+  .preview {
+    display: inline-block;
+    position: relative;
+  }
+}
+
+.nft-preview-description {
+  margin-top: 1rem;
+}
+

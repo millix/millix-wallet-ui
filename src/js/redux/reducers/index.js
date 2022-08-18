@@ -1,5 +1,5 @@
 import {
-    ADD_LOG_EVENT, ADD_NEW_ADDRESS, ADD_WALLET_CONFIG, CLEAR_TRANSACTION_DETAILS,
+    ADD_LOG_EVENT, ADD_NEW_ADDRESS, ADD_WALLET_CONFIG, ADD_STORAGE_CONFIG, CLEAR_TRANSACTION_DETAILS,
     LOCK_WALLET, SET_BACKLOG_SIZE, SET_LOG_SIZE, UNLOCK_WALLET, UPDATE_CLOCK, UPDATE_NETWORK_CONNECTIONS,
     UPDATE_NETWORK_NODE_LIST, UPDATE_NETWORK_STATE, UPDATE_TRANSACTION_DETAILS,
     UPDATE_WALLET_ADDRESS, UPDATE_WALLET_CONFIG, UPDATE_WALLET_MAINTENANCE,
@@ -200,6 +200,11 @@ function rootReducer(state = initialState, action) {
         return Object.assign({}, state, {
             config    : {...state.config, ...action.payload.config},
             configType: {...state.configType, ...action.payload.type}
+        });
+    }
+    else if (action.type === ADD_STORAGE_CONFIG) {
+        return Object.assign({}, state, {
+            config: {...state.config, ...action.payload}
         });
     }
     else if (action.type === UPDATE_WALLET_CONFIG) {

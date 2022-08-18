@@ -58,7 +58,14 @@ Check [here](https://github.com/millix/millix-node) how to run the node locally.
 
 ## Run millix-wallet-ui
 ```
-cd millix-wallet-ui\
+cd millix-wallet-ui
 npm install
 npm start
+```
+
+## run in testnet
+update the genesis information in src/environment.js. add the following before `export default environment;`
+```
+environment['GENESIS_TRANSACTION_ID'] = 'BbYAZLcxbx6adN3KwHZSTGjE6VpeDhiJ3ZPrXs6EMAGqDPfi5';
+environment['GENESIS_SHARD_ID']       = 'AyAC3kjLtjM4vktAJ5Xq6mbXKjzEqXoSsmGhhgjnkXUvjtF2M';
 ```

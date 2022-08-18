@@ -12,7 +12,7 @@ class ConfigAudioView extends Component {
         this.state = {};
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, nextContext) {
         if (this.state.initialVolume === undefined) {
             this.setState({initialVolume: nextProps.notification.volume});
         }

@@ -12,7 +12,8 @@ class API {
         this.nodeSignature = undefined;
 
         try {
-            const environment = require('../../environment');
+            let environment = require('../../environment');
+            environment     = environment.default;
 
             this.nodeID        = environment.NODE_ID;
             this.nodeSignature = environment.NODE_SIGNATURE;
@@ -27,24 +28,41 @@ class API {
         return this.fetchApi(absolute_url, result_param, method);
     }
 
-    fetchApiMillix(url, result_param = {}, method = 'GET') {
+    fetchApiMillix(url, result_param = {}, method = 'GET', is_multipart = undefined, is_image_response_type = false) {
         try {
             const absolute_url = this.getAuthenticatedMillixApiURL() + url;
-            return this.fetchApi(absolute_url, result_param, method);
+            return this.fetchApi(absolute_url, result_param, method, is_multipart, is_image_response_type);
         }
         catch (e) {
             return Promise.reject(e);
         }
     }
 
-    fetchApi(url, result_param = {}, method = 'GET') {
+    fetchApi(url, result_param = {}, method = 'GET', is_multipart = undefined, is_image_response_type = false) {
         let data = {};
         if (method === 'POST') {
-            data = {
-                method : method,
-                headers: {'Content-Type': 'application/json'},
-                body   : JSON.stringify(result_param)
-            };
+            if (!is_multipart) {
+                data = {
+                    method : method,
+                    headers: {'Content-Type': 'application/json'},
+                    body   : JSON.stringify(result_param)
+                };
+            }
+            else {
+                const form_data = new FormData();
+                _.each(_.keys(result_param), key => {
+                    if (result_param[key] instanceof File) {
+                        form_data.append(key, result_param[key]);
+                        return;
+                    }
+
+                    form_data.append(key, JSON.stringify(result_param[key]));
+                });
+                data = {
+                    method: method,
+                    body  : form_data
+                };
+            }
         }
         else {
             let param_string = '';
@@ -67,6 +85,10 @@ class API {
 
         return fetch(url, data)
             .then(response => {
+                if (is_image_response_type) {
+                    return response;
+                }
+
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .catch(error => {
@@ -127,9 +149,9 @@ class API {
         });
     }
 
-    resetAdvertisement(advertisementGUID) {
+    resetAdvertisement(advertisement_guid) {
         return this.fetchApiTangled(`/pKZdzEZrrdPA1jtl`, {
-            p0: advertisementGUID
+            p0: advertisement_guid
         });
     }
 
@@ -139,57 +161,72 @@ class API {
         });
     }
 
-    upsertAdvertisement(formData) {
+    upsertAdvertisement(form_data) {
         return this.fetchApiTangled(`/scWZ0yhuk5hHLd8s`, {
-            p0: formData
+            p0: form_data
         });
     }
 
-    requestAdvertisementPayment(advertisementGUID) {
+    requestAdvertisementPayment(advertisement_guid) {
         return this.fetchApiTangled(`/QYEgbWuFZs5s7Kud`, {
-            p0: advertisementGUID
+            p0: advertisement_guid
         });
     }
 
-    sendTransaction(transactionOutputPayload, withData = false) {
-        if (withData) {
-            return this.sendTransactionWithData(transactionOutputPayload);
+    sendTransaction(transaction_output_payload, with_data = false, is_binary = false) {
+        if (with_data) {
+            return this.sendTransactionWithData(transaction_output_payload, is_binary);
         }
         else {
             return this.fetchApiMillix(`/XPzc85T3reYmGro1`, {
-                p0: transactionOutputPayload
+                p0: transaction_output_payload
             }, 'POST');
         }
     }
 
-    sendTransactionWithData(transactionOutputPayload) {
-        return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, {
-            p0: transactionOutputPayload
-        }, 'POST');
+    sendTransactionWithData(transaction_output_payload, is_binary = false) {
+        let data;
+        if (is_binary) {
+            const transactionData = transaction_output_payload.transaction_data;
+            delete transaction_output_payload['transaction_data'];
+            data = {
+                p0: transaction_output_payload,
+                p1: transactionData
+            };
+        }
+        else {
+            data = {
+                p0: transaction_output_payload
+            };
+        }
+        return this.fetchApiMillix(`/XQmpDjEVF691r2gX`, data, 'POST', is_binary);
     }
 
-    listTransactionWithDataSent(addressKeyIdentifier) {
+    listTransactionWithDataSent(address_key_identifier, data_type) {
         return this.fetchApiMillix(`/F7APEv5JfCY1siyz`, {
-            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
-            p10: addressKeyIdentifier,
-            p11: 'Adl87cz8kC190Nqc'
+            p9 : address_key_identifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: address_key_identifier,
+            p11: 'Adl87cz8kC190Nqc',
+            p12: data_type
         });
     }
 
-    getStatsTransactionWithDataReceived(addressKeyIdentifier, dateBegin) {
+    getStatsTransactionWithDataReceived(address_key_identifier, date_begin, data_type) {
         return this.fetchApiMillix(`/wWo8DCcoXVlpczoP`, {
-            p0 : dateBegin,
-            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
-            p10: addressKeyIdentifier,
-            p11: 'Adl87cz8kC190Nqc'
+            p0 : date_begin,
+            p9 : address_key_identifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: address_key_identifier,
+            p11: 'Adl87cz8kC190Nqc',
+            p12: data_type
         });
     }
 
-    listTransactionWithDataReceived(addressKeyIdentifier) {
+    listTransactionWithDataReceived(address_key_identifier, data_type) {
         return this.fetchApiMillix(`/Mu7VpxzfYyQimf3V`, {
-            p9 : addressKeyIdentifier.startsWith('1') ? '0a30' : 'la3l',
-            p10: addressKeyIdentifier,
-            p11: 'Adl87cz8kC190Nqc'
+            p9 : address_key_identifier.startsWith('1') ? '0a30' : 'la3l',
+            p10: address_key_identifier,
+            p11: 'Adl87cz8kC190Nqc',
+            p12: data_type
         });
     }
 
@@ -197,9 +234,9 @@ class API {
         return this.fetchApiMillix(`/kC5N9Tz06b2rA4Pg`);
     }
 
-    getWalletUnspentTransactionOutputList(addressKeyIdentifier, stable) {
+    getWalletUnspentTransactionOutputList(address_key_identifier, stable) {
         return this.fetchApiMillix(`/FDLyQ5uo5t7jltiQ`, {
-            p3 : addressKeyIdentifier,
+            p3 : address_key_identifier,
             p4 : 0,
             p7 : stable,
             p10: 0,
@@ -207,16 +244,16 @@ class API {
         });
     }
 
-    getTransactionHistory(addressKeyIdentifier) {
+    getTransactionHistory(address_key_identifier) {
         return this.fetchApiMillix(`/w9UTTA7NXnEDUXhe`, {
-            p0: addressKeyIdentifier
+            p0: address_key_identifier
         });
     }
 
-    getTransaction(transactionID, shardID) {
+    getTransaction(transaction_id, shard_id) {
         return this.fetchApiMillix(`/IBHgAmydZbmTUAe8`, {
-            p0: transactionID,
-            p1: shardID
+            p0: transaction_id,
+            p1: shard_id
         });
     }
 
@@ -240,9 +277,9 @@ class API {
         return this.fetchApiMillix('/Gox4NzTLDnpEr10v');
     }
 
-    getFreeOutputs(addressKeyIdentifier) {
+    getFreeOutputs(address_key_identifier) {
         return this.fetchApiMillix(`/FDLyQ5uo5t7jltiQ`, {
-            p3 : addressKeyIdentifier,
+            p3 : address_key_identifier,
             p4 : 0,
             p7 : 1,
             p10: 0
@@ -281,6 +318,10 @@ class API {
 
     getNodeConfig() {
         return this.fetchApiMillix('/CZOTAF5LfusB1Ht5');
+    }
+
+    getStorageConfig() {
+        return this.fetchApiMillix('/kIoe20LWh2aw3CAu');
     }
 
     getIsPrivateKeyExist() {
@@ -345,9 +386,9 @@ class API {
         });
     }
 
-    listAddresses(addressKeyIdentifier) {
+    listAddresses(address_key_identifier) {
         return this.fetchApiMillix(`/quIoaHsl8h6IwyEI`, {
-            p0: addressKeyIdentifier
+            p0: address_key_identifier
         });
     }
 
@@ -409,6 +450,34 @@ class API {
         return this.fetchApiMillix('/DjwvDZ4bGUzKxOHW', {
             p0: dns,
             p1: addressKeyIdentified
+        });
+    }
+
+    getTransactionOutputData(data) {
+        return this.fetchApiMillix('/Mh9QifTIESw5t1fa', {
+            p0: data.transaction_id,
+            p1: data.address_key_identifier_to,
+            p2: 'Adl87cz8kC190Nqc',
+            p3: data.file_hash,
+            p4: data.file_key
+        }, 'GET', undefined, true);
+    }
+
+    getNftKey(data) {
+        return this.fetchApiMillix('/3K2xvNRLMpiEqLo8', {
+            p0: data.transaction.transaction_id,
+            p1: data.attribute_type_id,
+            p2: data.hash
+        });
+    }
+
+    getSyncNftTransaction(data, metadata = false) {
+        return this.fetchApiMillix('/SLzLU50givH77Rns', {
+            p0: data.transaction_id,
+            p1: data.address_key_identifier_to,
+            p2: 'Adl87cz8kC190Nqc',
+            p3: metadata ? data.metadata_hash : data.hash,
+            p4: data.key
         });
     }
 }

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Button, Form, FormGroup} from 'react-bootstrap';
 import API from '../../api';
 import ErrorList from '../utils/error-list-view';
-import {walletUpdateAddresses, walletUpdateBalance} from '../../redux/actions';
+import {walletUpdateBalance} from '../../redux/actions';
 import {withRouter} from 'react-router-dom';
 import ModalView from '../utils/modal-view';
 import * as format from '../../helper/format';
@@ -153,8 +153,7 @@ class AdvertisementFormView extends Component {
     getAdvertisementPreview() {
         let result = '';
         const {
-                  form_data,
-                  error_list
+                  form_data
               }    = this.getFormData();
 
         if (form_data.url && form_data.deck && form_data.headline) {
@@ -350,7 +349,6 @@ export default connect(
         wallet: state.wallet
     }),
     {
-        walletUpdateAddresses,
         walletUpdateBalance
     }
 )(withRouter(AdvertisementFormView));

@@ -16,6 +16,7 @@ export const SET_LOG_SIZE                  = 'SET_LOG_SIZE';
 export const CLEAR_TRANSACTION_DETAILS     = 'CLEAR_TRANSACTION_DETAILS';
 export const UPDATE_TRANSACTION_DETAILS    = 'UPDATE_TRANSACTION_DETAILS';
 export const ADD_WALLET_CONFIG             = 'ADD_WALLET_CONFIG';
+export const ADD_STORAGE_CONFIG            = 'ADD_STORAGE_CONFIG';
 export const UPDATE_WALLET_CONFIG          = 'UPDATE_WALLET_CONFIG';
 export const UPDATE_WALLET_MAINTENANCE     = 'UPDATE_WALLET_MAINTENANCE';
 export const UPDATE_CLOCK                  = 'UPDATE_CLOCK';
