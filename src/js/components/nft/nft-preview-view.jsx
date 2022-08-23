@@ -95,7 +95,7 @@ class NftPreviewView extends Component {
                            utils.getImageFromApi(transaction)
                                 .then(image_data => {
                                     this.setState({
-                                        image_data,
+                                        image_data
                                     });
                                     changeLoaderState(false);
                                 });
@@ -162,11 +162,21 @@ class NftPreviewView extends Component {
     //     });
     // }
 
+    isOwner() {
+        return this.state.image_data.transaction?.address_key_identifier_to === this.props.wallet.address_key_identifier;
+    }
+
     render() {
         let nft_body;
         if (this.state.status !== 'syncing') {
             if (this.state.error_list.length === 0) {
                 nft_body = <>
+                    {!this.isOwner() &&
+                     <div className={'alert alert-warning'}>
+                         there is no guarantee that this nft is currently owned by the person that sent you this preview link. the only way to safely buy an nft
+                         is through an escrow service or trusted marketplace.
+                     </div>
+                    }
                     <div className={'nft-collection-img'}>
                         <a href={this.state.image_data.src} target={'_blank'} className={'mx-auto d-flex'}>
                             <img src={this.state.image_data.src} alt={this.state.image_data.name}/>
