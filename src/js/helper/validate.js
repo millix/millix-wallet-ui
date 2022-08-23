@@ -95,24 +95,24 @@ export function ip(field_name, value, error_list) {
     return value_escaped.join('.');
 }
 
-export async function verified_sender_domain_name(domain_name, address_identifier) {
+export async function verified_sender_domain_name(value, address_identifier) {
     let error_list = [];
-    if (!domain_name) {
+    if (!value) {
         return {
             valid     : true,
             error_list: error_list
         };
     }
 
-    domain_name = this.domain_name('domain_name', domain_name, error_list);
-    if (domain_name === null) {
+    value = domain_name('domain_name', value, error_list);
+    if (value === null) {
         return {
             valid     : false,
             error_list: error_list
         };
     }
     else {
-        return API.isDNSVerified(domain_name, address_identifier)
+        return API.isDNSVerified(value, address_identifier)
                   .then(data => {
                       if (!data.is_address_verified) {
                           error_list.push({
@@ -241,16 +241,16 @@ export function handleDomainNameInputChange(e) {
     e.target.value = e.target.value.replace(/[^a-z0-9\\.-]/g, '');
 }
 
-export function domain_name(field_name, domain_name, error_list) {
+export function domain_name(field_name, value, error_list) {
     const match = new RegExp('^([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$', 'gi');
-    if (domain_name && !match.test(domain_name)) {
+    if (value && !match.test(value)) {
         error_list.push({
             name   : get_error_name('dns_invalid', field_name),
             message: `${field_name} ${Translation.getPhrase('0ccc5cddf')}`
         });
         return null;
     }
-    return domain_name;
+    return value;
 }
 
 export function file(field_name, file, error_list, file_type = '', allowed_extension_list = [], allowed_mime_type_list = [], allowed_max_file_size = 0) {
