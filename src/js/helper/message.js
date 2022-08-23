@@ -12,11 +12,11 @@ export function datatable_format(data) {
             if (attribute?.value) {
                 const file_list = attribute.value.file_list;
                 const file_hash = file_list[0].hash;
-                if (!attribute.file_data[file_hash]) {
+                if (!attribute.value.file_data[file_hash]) {
                     return;
                 }
 
-                const message = !_.isNil(attribute.file_data[file_hash]) ? attribute.file_data[file_hash] : {};
+                const message = !_.isNil(attribute.value.file_data[file_hash]) ? attribute.value.file_data[file_hash] : {};
                 const {
                           message_subject,
                           message_body,
