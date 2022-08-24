@@ -102,13 +102,17 @@ class NftCreateForm extends Component {
         };
 
         if (error_list.length === 0) {
-            validate.verified_sender_domain_name(transaction_param.dns, error_list).then(result => {
+            validate.verified_sender_domain_name(transaction_param.dns, this.props.wallet.address_key_identifier).then(result => {
                 if (result.valid) {
                     Transaction.verifyAddress(transaction_param).then((data) => {
                         this.setState(data);
                         this.changeModalShowConfirmation();
                     }).catch((error) => {
                         error_list.push(error);
+
+                        this.setState({
+                            error_list: error_list
+                        });
                     });
                 }
                 else {
