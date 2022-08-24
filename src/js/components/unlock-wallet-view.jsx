@@ -80,7 +80,7 @@ class UnlockWalletView extends Component {
 
         const goToWalletView = (walletInfo) => {
             props.unlockWallet(walletInfo);
-            props.history.replace('/');
+            props.history.replace(this.props.location.state.from ?? '/');
         };
 
         let passphraseRef;

@@ -34,13 +34,18 @@ export const CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS = 10 * 60000;
 export const DISCORD_URL                               = 'https://discord.com/invite/nb5uaKq4yX';
 export const REPORT_ISSUE_ADDRESS                      = 'tA6KT866gnf9UbqwNwvs67SYPXk4Jgm1Y9z43H5YZKdw0b01H6GPn9imdJCGuoxa5syub43JuW4Fi14DA';
 
-export const TRANSACTION_DATA_TYPE_ASSET       = 'tangled_asset';
 export const TRANSACTION_DATA_TYPE_TRANSACTION = 'transaction';
 export const TRANSACTION_DATA_TYPE_MESSENGER   = 'tangled_messenger';
-export const TRANSACTION_DATA_TYPE_NFT         = 'tangled_nft';
-export const DEFAULT_NFT_CREATE_AMOUNT         = 10000;
-export const DEFAULT_NFT_CREATE_FEE            = 1000;
-const config                                   = {
+
+export const TRANSACTION_DATA_TYPE_NFT      = 'tangled_nft';
+export const TRANSACTION_DATA_TYPE_NFT_META = 'tangled_nft_meta';
+
+export const TRANSACTION_DATA_TYPE_ASSET      = 'tangled_asset';
+export const TRANSACTION_DATA_TYPE_ASSET_META = 'tangled_asset_meta';
+
+export const DEFAULT_NFT_CREATE_AMOUNT = 10000;
+export const DEFAULT_NFT_CREATE_FEE    = 1000;
+const config                           = {
     WALLET_LOG_SIZE_MAX,
     GENESIS_TRANSACTION_ID,
     GENESIS_SHARD_ID,

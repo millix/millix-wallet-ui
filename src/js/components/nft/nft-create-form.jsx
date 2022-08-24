@@ -23,24 +23,25 @@ class NftCreateForm extends Component {
         const propsState = props.location.state || {};
 
         this.state = {
-            sending                 : false,
-            dns_valid               : false,
-            dns_validating          : false,
-            error_list              : [],
-            modal_show_confirmation : false,
-            modal_show_send_result  : false,
-            modal_body_send_result  : [],
-            address_base            : '',
-            address_version         : '',
-            address_key_identifier  : '',
-            image                   : undefined,
-            destination_address_list: [`${this.props.wallet.address_public_key}${this.props.wallet.address_key_identifier.startsWith('1') ? '0b0' : 'lb0l'}${this.props.wallet.address_key_identifier}`],
-            txid                    : propsState.txid,
-            nft_src                 : propsState.src,
-            nft_hash                : propsState.hash,
-            name                    : propsState.name ?? '',
-            description             : propsState.description ?? '',
-            nft_transaction_type    : this.props.nft_transaction_type ?? 'create'
+            sending                    : false,
+            dns_valid                  : false,
+            dns_validating             : false,
+            error_list                 : [],
+            modal_show_confirmation    : false,
+            modal_show_send_result     : false,
+            modal_body_send_result     : [],
+            address_base               : '',
+            address_version            : '',
+            address_key_identifier     : '',
+            image                      : undefined,
+            destination_address_list   : [`${this.props.wallet.address_public_key}${this.props.wallet.address_key_identifier.startsWith('1') ? '0b0' : 'lb0l'}${this.props.wallet.address_key_identifier}`],
+            txid                       : propsState.txid,
+            nft_src                    : propsState.src,
+            nft_hash                   : propsState.hash,
+            name                       : propsState.name ?? '',
+            description                : propsState.description ?? '',
+            default_target_address_self: propsState.default_target_address_self ?? false,
+            nft_transaction_type       : propsState.nft_transaction_type ?? this.props.nft_transaction_type ?? 'create'
         };
 
         this.send                    = this.send.bind(this);
@@ -50,8 +51,8 @@ class NftCreateForm extends Component {
         this.resetNftForm            = this.resetNftForm.bind(this);
 
         this.fileUploaderRef = React.createRef();
-        this.name            = {value: ''};
-        this.description     = {value: ''};
+        this.name            = {value: propsState.name ?? ''};
+        this.description     = {value: propsState.description ?? ''};
         this.send            = this.send.bind(this);
     }
 
@@ -63,9 +64,16 @@ class NftCreateForm extends Component {
     }
 
     componentDidMount() {
-        if (this.state.nft_transaction_type !== 'create') {
+        if (this.state.nft_transaction_type === 'transfer') {
             this.setState({
                 destination_address_list: []
+            });
+        }
+        if (this.state.nft_transaction_type === 'revoke') {
+            this.setState({
+                image: {
+                    file: new File([this.state.nft_src], this.state.name)
+                }
             });
         }
         this.name.value        = this.state.name;
@@ -84,25 +92,27 @@ class NftCreateForm extends Component {
             return;
         }
 
-        const address_list      = [validate.required('recipient', this.state.destination_address_list[0], error_list)];
+        const address_list = [validate.required('recipient', this.state.destination_address_list[0], error_list)];
         const transaction_param = {
             address_list: address_list,
             amount      : validate.amount('amount', this.amount, error_list),
             fee         : validate.amount('fee', this.fee, error_list),
-            // if this.state.txid is defined we should not verify this.state.image because it is not used. the image is not send back again to the server
-            // this.state.txid is defined when the nft already exists and you want to sent it to someone else
             image: !!this.state.txid || validate.required('image', this.state.image, error_list),
             dns  : validate.domain_name('verified sender', this.dns.value, error_list)
         };
 
         if (error_list.length === 0) {
-            validate.verified_sender_domain_name(transaction_param.dns, error_list).then(result => {
+            validate.verified_sender_domain_name(transaction_param.dns, this.props.wallet.address_key_identifier).then(result => {
                 if (result.valid) {
                     Transaction.verifyAddress(transaction_param).then((data) => {
                         this.setState(data);
                         this.changeModalShowConfirmation();
                     }).catch((error) => {
                         error_list.push(error);
+
+                        this.setState({
+                            error_list: error_list
+                        });
                     });
                 }
                 else {
@@ -156,6 +166,10 @@ class NftCreateForm extends Component {
 
     prepareTransactionOutputPayload() {
         const transaction_output_attribute = {};
+        const transaction_data_meta        = {
+            name       : this.name.value,
+            description: this.description.value
+        };
 
         if (!!this.state.dns) {
             transaction_output_attribute['dns'] = this.state.dns;
@@ -164,10 +178,8 @@ class NftCreateForm extends Component {
             transaction_output_attribute['parent_transaction_id'] = this.state.txid;
         }
 
-        transaction_output_attribute.name        = this.name.value;
-        transaction_output_attribute.description = this.description.value;
-
         return {
+            transaction_data_meta       : transaction_data_meta,
             transaction_output_attribute: transaction_output_attribute,
             transaction_data            : !this.state.txid ? this.state.image.file : {
                 file_hash        : this.state.nft_hash,
@@ -307,7 +319,7 @@ class NftCreateForm extends Component {
                             </Form.Group>
                         </Col>
                         <Col>
-                            {this.state.nft_transaction_type === 'create' ?
+                            {this.state.nft_transaction_type === 'create' || this.state.nft_transaction_type === 'revoke' ?
                              (<Form.Group className="form-group" as={Row}>
                                  <label>name</label>
                                  <Col>
@@ -323,7 +335,7 @@ class NftCreateForm extends Component {
                                  <p>{this.name.value}</p></div>)}
                         </Col>
                         <Col>
-                            {this.state.nft_transaction_type === 'create' ?
+                            {this.state.nft_transaction_type === 'create' || this.state.nft_transaction_type === 'revoke' ?
                              (<Form.Group className="form-group" as={Row}>
                                  <label>description</label>
                                  <Col>
@@ -344,7 +356,7 @@ class NftCreateForm extends Component {
                                  <p>{format.millix(this.amount)}</p>
                              </div>
                          </Col> : ''}
-                        {this.state.nft_transaction_type !== 'create' ?
+                        {this.state.nft_transaction_type !== 'create' && !this.state.default_target_address_self ?
                          <Col className={this.getFieldClassname('address')}>
                              <Form.Group className="form-group">
                                  <label>recipient</label>
