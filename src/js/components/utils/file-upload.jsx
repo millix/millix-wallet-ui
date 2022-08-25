@@ -37,11 +37,8 @@ class FileUpload extends Component {
         });
     }
 
-    onFileInputClick() {
-        this.clearFileInput();
-    }
-
     clearFileInput() {
+        this.input_file_ref.value = null;
         this.setState({
             image_data: null
         });
@@ -93,7 +90,6 @@ class FileUpload extends Component {
                         ref={input => this.input_file_ref = input}
                         name={'file_upload'}
                         onChange={event => this.handleFileChange(event)}
-                        onClick={() => this.onFileInputClick()}
                         accept={this.props.accept}
                     />
                 </div>
