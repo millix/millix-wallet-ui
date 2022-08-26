@@ -13,7 +13,7 @@ class API {
 
         try {
             let environment = require('../../environment');
-            environment = environment.default
+            environment     = environment.default;
 
             this.nodeID        = environment.NODE_ID;
             this.nodeSignature = environment.NODE_SIGNATURE;
@@ -453,13 +453,30 @@ class API {
         });
     }
 
-    getNftImage(data) {
+    getTransactionOutputData(data) {
         return this.fetchApiMillix('/Mh9QifTIESw5t1fa', {
             p0: data.transaction_id,
-            p1: data.address_key_identifier_to,
             p2: 'Adl87cz8kC190Nqc',
-            p3: data.transaction_output_attribute[0].value.file_list[0].hash
+            p3: data.file_hash,
+            p4: data.file_key
         }, 'GET', undefined, true);
+    }
+
+    getNftKey(data) {
+        return this.fetchApiMillix('/3K2xvNRLMpiEqLo8', {
+            p0: data.transaction.transaction_id,
+            p1: data.attribute_type_id,
+            p2: data.hash
+        });
+    }
+
+    getSyncNftTransaction(data, metadata = false) {
+        return this.fetchApiMillix('/SLzLU50givH77Rns', {
+            p0: data.transaction_id,
+            p2: 'Adl87cz8kC190Nqc',
+            p3: metadata ? data.metadata_hash : data.hash,
+            p4: data.key
+        });
     }
 }
 

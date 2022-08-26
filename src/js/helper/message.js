@@ -10,18 +10,27 @@ export function datatable_format(data) {
     data.forEach((transaction) => {
         transaction?.transaction_output_attribute.forEach(attribute => {
             if (attribute?.value) {
-                const outputAttributeValue = attribute.value;
-                if (!outputAttributeValue.file_data) {
+                const file_list = attribute.value.file_list;
+                const file_hash = file_list[0].hash;
+
+                let file_data;
+                if (attribute.file_data) {
+                    file_data = attribute.file_data;
+                }
+                else if (attribute.value.file_data) {
+                    file_data = attribute.value.file_data;
+                }
+
+                if (!file_data[file_hash]) {
                     return;
                 }
-                const fileHash = _.keys(outputAttributeValue.file_data)[0];
-                const message  = !_.isNil(outputAttributeValue.file_data[fileHash]) ? outputAttributeValue.file_data[fileHash] : {};
 
+                const message = !_.isNil(file_data[file_hash]) ? file_data[file_hash] : {};
                 const {
                           message_subject,
                           message_body,
                           action_disabled
-                      } = getMessageSubjectAndBody(message, transaction, outputAttributeValue.file_list, fileHash);
+                      }       = getMessageSubjectAndBody(message, transaction, file_list, file_hash);
 
                 message.subject = message_subject;
                 message.message = message_body;
@@ -30,8 +39,8 @@ export function datatable_format(data) {
                     date        : format.date(transaction.transaction_date),
                     raw_date    : format.date(transaction.transaction_date),
                     txid        : transaction.transaction_id,
-                    txid_parent : outputAttributeValue.parent_transaction_id,
-                    dns         : outputAttributeValue.dns,
+                    txid_parent : attribute.value.parent_transaction_id,
+                    dns         : attribute.value.dns,
                     amount      : format.number(transaction.amount),
                     subject     : message.subject,
                     address_from: transaction.address_from,
@@ -71,7 +80,7 @@ export function datatable_format(data) {
     return message_list;
 }
 
-function getMessageSubjectAndBody(message, transaction, file_list, fileHash) {
+function getMessageSubjectAndBody(message, transaction, file_list, file_hash) {
     let message_subject = message.subject;
     let message_body    = message.message;
     let action_disabled = false;
@@ -81,7 +90,7 @@ function getMessageSubjectAndBody(message, transaction, file_list, fileHash) {
         action_disabled = true;
         spinner_message = Translation.getPhrase('b89f1d110');
     }
-    else if (file_list.length > 0 && !fileHash) {
+    else if (file_list.length > 0 && !file_hash) {
         action_disabled = true;
         spinner_message = Translation.getPhrase('b41465dc2');
     }

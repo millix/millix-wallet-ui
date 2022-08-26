@@ -40,11 +40,11 @@ class AssetListView extends Component {
         });
 
         return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, TRANSACTION_DATA_TYPE_ASSET).then(data => {
-            async.mapLimit(data, 6, (row, callback) => {
-                utils.getImageFromApi(row)
+            async.mapLimit(data, 6, (transaction, callback) => {
+                utils.getImageFromApi(transaction)
                      .then(image_data => {
-                         image_data.result_image_detail = row.transaction_output_attribute[0];
                          callback(null, image_data);
+                         changeLoaderState(false);
                      });
             }, (err, assetList) => {
                 changeLoaderState(false);
@@ -63,18 +63,28 @@ class AssetListView extends Component {
             const {
                       src,
                       alt,
-                      result_image_detail
+                      transaction,
+                      name,
+                      description
                   } = image_props;
             asset_list_formatted.push(
-                <Col xs={12} md={3} className={'mt-3'} key={result_image_detail.transaction_id}>
+                <Col xs={12} md={3} className={'mt-3'} key={transaction.transaction_id}>
                     <Card className={'nft-card'}>
                         <div className={'nft-collection-img'}>
                             <img src={src} alt={alt}/>
                         </div>
                         <Card.Body>
-                            <div className={'nft-name page_subtitle'}>{result_image_detail.value.name}</div>
-                            <p className={'nft-description'}>{result_image_detail.value.description}</p>
+                            <div className={'nft-name page_subtitle'}>{name}</div>
+                            <p className={'nft-description'}>{description}</p>
                             <div className={'nft-action-section'}>
+                                <Button variant="outline-primary"
+                                        size={'sm'}
+                                        className={'preview_button_trans'}
+                                        onClick={() => this.props.history.push('/transaction/' + image_props.txid)}
+                                >
+                                    <FontAwesomeIcon icon={'list'}/>
+                                    transaction
+                                </Button>
 
                             </div>
                         </Card.Body>

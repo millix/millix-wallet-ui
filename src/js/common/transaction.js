@@ -2,11 +2,11 @@ import API from '../api';
 import async from 'async';
 import UserInterfaceError from '../components/utils/user-interface-error';
 import Translation from './translation';
+import utils from '../helper/utils';
 import _ from 'lodash';
 
 
 class Transaction {
-
     verifyAddress(result_transaction_param) {
         return new Promise((resolve, reject) => {
             const verified_address_list = [];
@@ -48,7 +48,7 @@ class Transaction {
                 }
                 return data;
             }).then(data => {
-                resolve(this.handleSuccessResponse(data, transaction_output_payload.transaction_output_list[0].address_base.startsWith('1')));
+                resolve(this.handleSuccessResponse(data, utils.is_main_network_address(transaction_output_payload.transaction_output_list[0].address_key_identifier)));
             }).catch((e) => {
                 reject(this.handleErrorResponse(e));
             });
@@ -95,6 +95,8 @@ class Transaction {
             return item.version.indexOf(is_main_net ? '0a' : 'la') !== -1;
         });
 
+        const transaction_id = transaction?.transaction_id;
+
         return {
             sending                 : false,
             fee_input_locked        : true,
@@ -104,8 +106,8 @@ class Transaction {
             image                   : null,
             destination_address_list: [],
             address_verified_list   : [],
-            transaction_id          : transaction.transaction_id,
-            modal_body_send_result  : this.getModalBodySuccessResult(transaction.transaction_id)
+            transaction_id          : transaction_id,
+            modal_body_send_result  : this.getModalBodySuccessResult(transaction_id)
         };
     }
 }
