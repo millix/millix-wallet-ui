@@ -181,3 +181,32 @@ label {
     margin-left: 0;
   }
 }
+
+.password-strength-value {
+  background-color: $color-red;
+  transition: width 0.3s;
+  width: 0;
+  
+  &.danger-20 {
+    width: 20%;
+  }
+  &.danger-40 {
+    width: 40%;
+  }
+  &.danger-60 {
+    width: 60%;
+  }
+  &.warning-80 {
+    background-color: $color-yellow;
+    width: 80%;
+  }
+  &.safe-100 {
+    background-color: $color-green;
+    width: 100%;
+  }
+}
+
+.progress.password-strength-bar {
+  background-color: rgba(205, 207, 214, 0.1);
+  width: auto
+}
