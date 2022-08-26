@@ -48,8 +48,7 @@ class WalletCreatePasswordView extends Component {
                     onChange={() => {
                         this.props.onConfirmPassword(passphraseConfirmRef.value);
                     }}
-                />
-                  
+                />  
                 <PasswordCheck password={this.state.password} strength={0}/>
             </div>
         );
