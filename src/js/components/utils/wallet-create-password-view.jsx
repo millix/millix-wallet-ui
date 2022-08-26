@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl} from 'react-bootstrap';
 import Translation from '../../common/translation';
-import PasswordCheck from '../../password-strength';
+import PasswordStrength from './password-strength-view';
 import { Component } from 'react';
 
 class WalletCreatePasswordView extends Component {
@@ -38,6 +38,7 @@ class WalletCreatePasswordView extends Component {
                           });
                     }}
                 />
+                <PasswordStrength password={this.state.password}/>
                 <FormControl
                     className={'form-group'}
                     type="password"
@@ -49,7 +50,7 @@ class WalletCreatePasswordView extends Component {
                         this.props.onConfirmPassword(passphraseConfirmRef.value);
                     }}
                 />  
-                <PasswordCheck password={this.state.password} strength={0}/>
+                
             </div>
         );
     }
