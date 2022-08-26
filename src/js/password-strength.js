@@ -73,45 +73,41 @@
 };
  */
 
-import React, {Component} from 'react';
-import ReactDOM from 'react';
+import { Component } from 'react';
 
-
-class PaswordCheck extends Component {
+class PasswordCheck extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      password_strength: this.props.strength
+      password_strength: 0
     }
   }
+  
+  counter = (password, strength) => {
+    console.log(password);
+    if (password.length >= 8)
+        strength += 1
 
-  strength_increase = () => {
-    this.setState(state => ({
-      password_strength: state.password_strength + 1
-    }))
-  }
+    if (password.match(/(?=.*[0-9])/))
+        strength += 1
 
-  componentDidMount() {
-    if (this.props.password.length >= 8)
-      this.strength_increase()
+    if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/))
+        strength += 1
 
-    if (this.props.password.match(/(?=.*[0-9])/))
-      this.strength_increase()
+    if (password.match(/(?=.*[a-z])/))
+        strength += 1
 
-    if (this.props.password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/))
-      this.strength_increase()
+    if (password.match(/(?=.*[A-Z])/))
+        strength += 1
 
-    if (this.props.password.match(/(?=.*[a-z])/))
-      this.strength_increase()
-
-    if (this.props.password.match(/(?=.*[A-Z])/))
-      this.strength_increase()
+    return strength
   }
 
   render() {
-    return ReactDOM.createPortal(<h1>Password strength = {this.state.password_strength}</h1>,
-        document.getElementById("portal"))
+    const {password, strength} = this.props
+    return <h1>Password strength = {this.counter(password, strength)}</h1>
+        
   }
 }
 
-export default PaswordCheck
+export default PasswordCheck
