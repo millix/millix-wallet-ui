@@ -49,7 +49,7 @@
   z-index: 9999;
 }
 
-.loader-container .loader .circle {
+.loader .circle {
   animation: spin 1s linear infinite;
   border: 0.5rem solid $border-color;
   border-top: 0.5rem solid $color-primary;

@@ -230,6 +230,14 @@ class API {
         });
     }
 
+    getTransactionWithDataReceived(transaction_id, data_type) {
+        return this.fetchApiMillix(`/yyCtgjuFu9mx0edg`, {
+            p0 : transaction_id,
+            p2: 'Adl87cz8kC190Nqc',
+            p3: data_type
+        });
+    }
+
     sendAggregationTransaction() {
         return this.fetchApiMillix(`/kC5N9Tz06b2rA4Pg`);
     }
