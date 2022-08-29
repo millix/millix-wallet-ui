@@ -121,12 +121,6 @@ class NftPreviewView extends Component {
 
                            utils.getImageFromApi(transaction)
                                 .then(image_data => {
-                                    if (!this.isOwner()) {
-                                        warning_list.push({
-                                            message: 'there is no guarantee that this nft is currently owned by the person that sent you this preview link. the only way to safely buy an nft is through an escrow service or trusted marketplace.'
-                                        });
-                                    }
-
                                     this.setState({
                                         nft_sync_timestamp: nft_sync_timestamp,
                                         image_data,
@@ -326,6 +320,13 @@ class NftPreviewView extends Component {
             </Row>;
         }
 
+        let help_icon = '';
+        if (!this.isOwner()) {
+            help_icon = <div>
+                best practices for safely buying nfts <HelpIconView help_item_name={'nft_trade'}/>
+            </div>
+        }
+
         return (<div className={'panel panel-filled'}>
             <div className={'panel-heading bordered d-flex'}>
                 nft details
@@ -341,6 +342,7 @@ class NftPreviewView extends Component {
                 {load_control}
                 <ErrorList error_list={this.state.error_list} class_name={'mb-0'}/>
                 <WarningList warning_list={this.state.warning_list} class_name={'mb-0'}/>
+                {help_icon}
                 {nft_body}
             </div>
 
