@@ -16,6 +16,9 @@ import ErrorList from '../utils/error-list-view';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import utils from '../../helper/utils';
 import {changeLoaderState} from '../loader';
+import * as validate from '../../helper/validate';
+import HelpIconView from '../utils/help-icon-view';
+import WarningList from '../utils/warning-list-view';
 
 
 class NftPreviewView extends Component {
@@ -29,7 +32,11 @@ class NftPreviewView extends Component {
             nft_sync_timestamp      : moment.now(),
             modal_show_copy_result  : false,
             error_list              : [],
-            transaction_history_list: []
+            warning_list            : [],
+            transaction_history_list: [],
+            dnsValidated            : false,
+            dns                     : '',
+            warning_message         : []
         };
 
         this.timeout_id = null;
@@ -67,42 +74,82 @@ class NftPreviewView extends Component {
             sync_request_image,
             sync_request_metadata
         ]).then((result_sync) => {
-            const result_image    = result_sync[0];
-            const result_metadata = result_sync[1];
-
-            this.setState({
-                status            : result_image.status,
-                nft_sync_timestamp: moment.now()
-            });
+            const result_image       = result_sync[0];
+            const result_metadata    = result_sync[1];
+            const nft_sync_timestamp = moment.now();
+            let status_new           = result_image.status;
 
             if (result_image.status !== 'syncing' && result_metadata.status !== 'syncing') {
                 clearTimeout(this.timeout_id);
-                API.listTransactionWithDataReceived(this.state.parameter_list.address_key_identifier_to, TRANSACTION_DATA_TYPE_NFT)
-                   .then(transaction_list => {
-                       const transaction = transaction_list.filter((entry) => entry.transaction_id === this.state.parameter_list.transaction_id)[0];
 
+                API.getTransactionWithDataReceived(this.state.parameter_list.transaction_id, TRANSACTION_DATA_TYPE_NFT)
+                   .then(transaction => {
+                       let warning_list = [];
+                       let error_list   = [];
                        if (!transaction) {
+                           error_list.push({
+                               message: 'nft not found'
+                           });
+                       }
+                       else if (transaction.is_double_spend !== 0) {
+                           error_list.push({
+                               message: 'the nft you are viewing has been sent to more than one recipient, or was minted using invalid funds, and only one version is considered valid. the version of the nft that you are viewing is considered to be an invalid copy of the nft.'
+                           });
+                       }
+                       else if (transaction.is_spent !== 0) {
+                           error_list.push({
+                               message: 'the ownership and validity of nfts can change at any time, reload the page to see the most current state of this nft.'
+                           });
+                       }
+                       else if (transaction.is_stable !== 1) {
+                           status_new = 'syncing';
+                           warning_list.push({
+                               message: 'your browser has not validated this nft transaction yet. continue to reload the page to see the current state of this nft transaction.'
+                           });
+                       }
+
+                       if (error_list.length > 0) {
                            this.setState({
-                               error_list: [
-                                   {
-                                       message: 'nft not found'
-                                   }
-                               ]
+                               nft_sync_timestamp: nft_sync_timestamp,
+                               error_list        : error_list,
+                               warning_list      : warning_list,
+                               status            : status_new
                            });
                        }
                        else {
                            transaction.file_key = this.state.parameter_list.key;
+
                            utils.getImageFromApi(transaction)
                                 .then(image_data => {
+                                    if (!this.isOwner()) {
+                                        warning_list.push({
+                                            message: 'there is no guarantee that this nft is currently owned by the person that sent you this preview link. the only way to safely buy an nft is through an escrow service or trusted marketplace.'
+                                        });
+                                    }
+
                                     this.setState({
-                                        image_data
+                                        nft_sync_timestamp: nft_sync_timestamp,
+                                        image_data,
+                                        status            : status_new,
+                                        warning_list      : warning_list
                                     });
-                                    changeLoaderState(false);
+
+                                    if (image_data.dns) {
+                                        this.verifyDNS(image_data.dns, this.state.image_data.transaction?.address_key_identifier_to);
+                                        changeLoaderState(false);
+                                    }
+                                    else {
+                                        changeLoaderState(false);
+                                    }
                                 });
                        }
                    });
             }
             else {
+                this.setState({
+                    nft_sync_timestamp: nft_sync_timestamp,
+                    status            : 'syncing'
+                });
                 setTimeout(() => this.setNftData(), 10000);
             }
         }).catch(_ => {
@@ -162,22 +209,58 @@ class NftPreviewView extends Component {
     //     });
     // }
 
+    verifyDNS(dns, address_key_identifier) {
+        dns = validate.domain_name(Translation.getPhrase('1e0b22770'), dns, []);
+        if (dns === null) {
+            this.setState({
+                dnsValidated: false,
+                dns
+            });
+        }
+        else {
+            API.isDNSVerified(dns, address_key_identifier)
+               .then(data => {
+                   this.setState({
+                       dnsValidated: data.is_address_verified,
+                       dns
+                   });
+               })
+               .catch(() => {
+                   this.setState({
+                       dnsValidated: false,
+                       dns
+                   });
+               });
+        }
+    }
+
     isOwner() {
         return this.state.image_data.transaction?.address_key_identifier_to === this.props.wallet.address_key_identifier;
     }
 
     render() {
+        let sender_verified = '';
+        if (this.state.dns) {
+            let className = '';
+            let icon      = '';
+            if (this.state.dnsValidated) {
+                className       = 'text-success';
+                icon            = 'check-circle';
+                sender_verified = <div className={className + ' labeled form-group'}>
+                    <FontAwesomeIcon
+                        icon={icon}
+                        size="1x"/>
+                    <span>{this.state.dns}</span><HelpIconView help_item_name={'verified_sender'}/>
+                </div>;
+            }
+        }
+
+        let load_control;
         let nft_body;
         if (this.state.status !== 'syncing') {
             if (this.state.error_list.length === 0) {
                 nft_body = <>
-                    {!this.isOwner() &&
-                     <div className={'alert alert-warning'}>
-                         there is no guarantee that this nft is currently owned by the person that sent you this preview link. the only way to safely buy an nft
-                         is through an escrow service or trusted marketplace.
-                     </div>
-                    }
-                    <div className={'nft-collection-img'}>
+                    <div className={'nft-preview-img'}>
                         <a href={this.state.image_data.src} target={'_blank'} className={'mx-auto d-flex'}>
                             <img src={this.state.image_data.src} alt={this.state.image_data.name}/>
                         </a>
@@ -187,6 +270,7 @@ class NftPreviewView extends Component {
                             <div>
                                 <p className={'nft-name page_subtitle mb-0'}>{this.state.image_data.name}</p>
                                 <p className={'nft-description'}>{this.state.image_data.description}</p>
+                                {sender_verified}
                             </div>
                         </Col>
                     </Row>
@@ -219,8 +303,9 @@ class NftPreviewView extends Component {
                 </>;
             }
         }
-        else {
-            nft_body = <Row className={'align-items-center'}>
+
+        if (this.state.status !== 'synced') {
+            load_control = <Row className={'align-items-center mb-3'}>
                 <Col md={5}>
                     <Button variant="outline-primary"
                             size={'sm'}
@@ -253,8 +338,9 @@ class NftPreviewView extends Component {
                 </div>
             </div>
             <div className={'panel-body'}>
-                <ErrorList
-                    error_list={this.state.error_list}/>
+                {load_control}
+                <ErrorList error_list={this.state.error_list} class_name={'mb-0'}/>
+                <WarningList warning_list={this.state.warning_list} class_name={'mb-0'}/>
                 {nft_body}
             </div>
 

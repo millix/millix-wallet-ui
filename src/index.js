@@ -62,7 +62,8 @@ import {
     faCopy,
     faCaretDown,
     faArrowRightArrowLeft,
-    faFile
+    faFile,
+    faTriangleExclamation
 } from '@fortawesome/free-solid-svg-icons';
 import './css/bootstrap/bootstrap.scss';
 
@@ -90,7 +91,7 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faPause, faQuestionCircle, faThList, faRedo, faEllipsisV,
     faChainSlash, faChainBroken,
     faRotateLeft, faCodeMerge, faCheckCircle, faReply, faEnvelope, faLink, faFire, faBomb,
-    faArrowRight, faUpload, faMinusCircle, faCopy, faCaretDown, faArrowRightArrowLeft, faFile);
+    faArrowRight, faUpload, faMinusCircle, faCopy, faCaretDown, faArrowRightArrowLeft, faFile, faTriangleExclamation);
 
 
 let apiInfo = {

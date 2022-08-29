@@ -199,6 +199,14 @@ class NftActionSummaryView extends Component {
                                 </button>
                             </Col>
                         </Form.Group>
+                        <div className={'mt-3'}>
+                            <Button
+                                variant="outline-default"
+                                className={'w-100'}
+                                onClick={() => this.props.history.push('/transaction/' + this.state.nft_data.txid)}>
+                                <FontAwesomeIcon icon={'list'}/>transaction
+                            </Button>
+                        </div>
                         {owner_action_list}
                         {detail_link}
                     </div>

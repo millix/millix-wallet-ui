@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Button, Card, Col, Form, Row} from 'react-bootstrap';
+import {Button, Card, Col, Row} from 'react-bootstrap';
 import API from '../../api';
 import {connect} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import * as format from '../../helper/format';
-import ModalView from '../utils/modal-view';
-import * as text from '../../helper/text';
 import {changeLoaderState} from '../loader';
-import Transaction from '../../common/transaction';
 import async from 'async';
 import utils from '../../helper/utils';
-import {TRANSACTION_DATA_TYPE_ASSET, TRANSACTION_DATA_TYPE_NFT, TRANSACTION_DATA_TYPE_TRANSACTION} from '../../../config';
+import {TRANSACTION_DATA_TYPE_NFT} from '../../../config';
 import HelpIconView from '../utils/help-icon-view';
 import moment from 'moment';
 import ReloadTimeTickerView from '../utils/reload-time-ticker-view';
@@ -77,11 +73,13 @@ class NftCollectionView extends Component {
                       name,
                       description
                   } = image_props;
+
+            let image = <img src={src} alt={alt}/>;
             nft_list_formatted.push(
                 <Col xs={12} md={3} className={'mt-3'} key={transaction.transaction_id}>
                     <Card className={'nft-card'}>
                         <div className={'nft-collection-img'}>
-                            <img src={src} alt={alt}/>
+                            {image}
                         </div>
                         <Card.Body>
                             <div className={'nft-name page_subtitle'}>{name}</div>
