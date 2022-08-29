@@ -334,11 +334,13 @@ class NftPreviewView extends Component {
                 </div>
             </div>
             <div className={'panel-body'}>
-                {load_control}
-                <ErrorList error_list={this.state.error_list}/>
-                <WarningList warning_list={this.state.warning_list}/>
-                {help_icon}
-                {nft_body}
+                {this.state.error_list.length > 0 && <ErrorList error_list={this.state.error_list} class_name={'mb-0'}/>}
+                {this.state.error_list.length === 0 && <>
+                    {load_control}
+                    <WarningList warning_list={this.state.warning_list}/>
+                    {help_icon}
+                    {nft_body}
+                </>}
             </div>
 
         </div>);
