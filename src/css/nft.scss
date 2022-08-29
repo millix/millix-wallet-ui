@@ -64,7 +64,8 @@
   min-height: 1.5rem;
 }
 
-.nft-collection-img {
+.nft-collection-img,
+.nft-preview-img {
   padding: 1rem 0 0 0;
   width: 100%;
   height: 24rem;
@@ -75,6 +76,15 @@
     max-width: 100%;
     align-self: flex-start;
     margin: 0 auto;
+  }
+}
+
+.nft-preview-img {
+  height: auto;
+  text-align: center;
+
+  img {
+    max-height: 48rem;
   }
 }
 
@@ -99,4 +109,9 @@
 
 .nftActionSummaryPopover {
   z-index: 1010;
+}
+
+.nft-preview-description {
+  margin-top: 1rem;
+  text-align: center;
 }

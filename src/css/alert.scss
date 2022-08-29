@@ -8,3 +8,8 @@
   }
 }
 
+.alert-warning {
+  color: $color-white;
+  border-color: rgba($color-yellow, 0.5);
+  background-color: rgba($color-yellow, 0.05);
+}

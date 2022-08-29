@@ -16,7 +16,7 @@ const ErrorList = (props) => {
 
     if (Object.keys(error_list).length > 0) {
         return (
-            <div className="alert alert-danger" role="alert">
+            <div className={'alert alert-danger ' + props.class_name} role="alert">
                 <ul>
                     {error_list.map((error, idx) =>
                         <li key={'message_' + idx}>
