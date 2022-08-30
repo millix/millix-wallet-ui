@@ -309,7 +309,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'nft'                    : {
+            'nft'                         : {
                 'title': 'nft',
                 'body' : <ul>
                     <li>
@@ -317,6 +317,24 @@ class HelpIconView extends Component {
                     </li>
                     <li>
                         and the nft files: {this.props.config.file_dir}
+                    </li>
+                </ul>
+            }
+            ,
+            'nft_trade': {
+                'title': 'best practices for safely buying nfts',
+                'body' : <ul>
+                    <li>
+                        there is no guarantee that this nft is currently owned by the person that sent you this preview link
+                    </li>
+                    <li>
+                        use a trustworthy marketplace or escrow service
+                    </li>
+                    <li>
+                        if the nft was recently minted continue to reload the page until the transaction is stable
+                    </li>
+                    <li>
+                        if the nft was minted with a verified sender, examine the website to determine if it matches the nft and looks trustworthy
                     </li>
                 </ul>
             }

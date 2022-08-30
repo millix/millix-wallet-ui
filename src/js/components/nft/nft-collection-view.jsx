@@ -83,7 +83,7 @@ class NftCollectionView extends Component {
                         </div>
                         <Card.Body>
                             <div className={'nft-name page_subtitle'}>{name}</div>
-                            <p className={'nft-description'}>{description}</p>
+                            <div className={'nft-description'}>{description}</div>
                             <div className={'nft-action-section'}>
                                 <NftActionSummaryView
                                     nft_data={image_props}

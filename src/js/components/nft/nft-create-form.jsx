@@ -415,7 +415,7 @@ class NftCreateForm extends Component {
                             <ModalView
                                 show={this.state.modal_show_confirmation}
                                 size={'lg'}
-                                heading={'create nft'}
+                                heading={this.state.nft_transaction_type === 'transfer' ? 'transfer nft' : 'create nft'}
                                 on_accept={() => this.sendTransaction()}
                                 on_close={() => this.cancelSendTransaction()}
                                 body={this.state.nft_transaction_type === 'create' ? this.getCreateNftModalBody() : this.getTransferNftModalBody()}/>

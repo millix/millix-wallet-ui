@@ -102,7 +102,6 @@ class NftPreviewView extends Component {
                            });
                        }
                        else if (transaction.is_stable !== 1) {
-                           status_new = 'syncing';
                            warning_list.push({
                                message: 'your browser has not validated this nft transaction yet. continue to reload the page to see the current state of this nft transaction.'
                            });
@@ -121,12 +120,6 @@ class NftPreviewView extends Component {
 
                            utils.getImageFromApi(transaction)
                                 .then(image_data => {
-                                    if (!this.isOwner()) {
-                                        warning_list.push({
-                                            message: 'there is no guarantee that this nft is currently owned by the person that sent you this preview link. the only way to safely buy an nft is through an escrow service or trusted marketplace.'
-                                        });
-                                    }
-
                                     this.setState({
                                         nft_sync_timestamp: nft_sync_timestamp,
                                         image_data,
@@ -265,15 +258,11 @@ class NftPreviewView extends Component {
                             <img src={this.state.image_data.src} alt={this.state.image_data.name}/>
                         </a>
                     </div>
-                    <Row className={'nft-preview-description'}>
-                        <Col>
-                            <div>
-                                <p className={'nft-name page_subtitle mb-0'}>{this.state.image_data.name}</p>
-                                <p className={'nft-description'}>{this.state.image_data.description}</p>
-                                {sender_verified}
-                            </div>
-                        </Col>
-                    </Row>
+                    <div className={'nft-preview-description'}>
+                        <div className={'nft-name page_subtitle mb-0'}>{this.state.image_data.name}</div>
+                        <div className={'nft-description'}>{this.state.image_data.description}</div>
+                        {sender_verified}
+                    </div>
 
                     {/*<hr/>*/}
 
@@ -326,6 +315,13 @@ class NftPreviewView extends Component {
             </Row>;
         }
 
+        let help_icon = '';
+        if (!this.isOwner()) {
+            help_icon = <div className={'mb-3'}>
+                best practices for safely buying nfts <HelpIconView help_item_name={'nft_trade'}/>
+            </div>;
+        }
+
         return (<div className={'panel panel-filled'}>
             <div className={'panel-heading bordered d-flex'}>
                 nft details
@@ -338,10 +334,13 @@ class NftPreviewView extends Component {
                 </div>
             </div>
             <div className={'panel-body'}>
-                {load_control}
-                <ErrorList error_list={this.state.error_list} class_name={'mb-0'}/>
-                <WarningList warning_list={this.state.warning_list} class_name={'mb-0'}/>
-                {nft_body}
+                {this.state.error_list.length > 0 && <ErrorList error_list={this.state.error_list} class_name={'mb-0'}/>}
+                {this.state.error_list.length === 0 && <>
+                    {load_control}
+                    <WarningList warning_list={this.state.warning_list}/>
+                    {help_icon}
+                    {nft_body}
+                </>}
             </div>
 
         </div>);

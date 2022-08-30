@@ -15,8 +15,10 @@ const WarningList = (props) => {
     }
 
     if (Object.keys(warning_list).length > 0) {
+        const class_name = props.class_name ? props.class_name : '';
+
         return (
-            <div className={'alert alert-warning ' + props.class_name} role="alert">
+            <div className={'alert alert-warning ' + class_name} role="alert">
                 <ul>
                     {warning_list.map((warning, idx) =>
                         <li key={'message_' + idx}>

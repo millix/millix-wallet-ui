@@ -294,7 +294,7 @@ export function file(field_name, file, error_list, file_type = '', allowed_exten
         allowed_max_file_size = file_type_config.allowed_max_file_size;
     }
 
-    const file_extension = file.file.name.split('.').pop();
+    const file_extension = file.file.name.split('.').pop().toLowerCase();
     const file_mime_type = file.file.type;
 
     return new Promise((resolve, reject) => {
