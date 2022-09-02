@@ -329,6 +329,20 @@ class HelpIconView extends Component {
         return help_item;
     }
 
+    closePopover = () => {
+        this.setState({
+          show: false
+        });
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.closePopover);
+      }
+      
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.closePopover);
+      }
+
     render() {
         const help_item = this.getHelpItem(this.props.help_item_name);
         if (!help_item) {
@@ -345,15 +359,15 @@ class HelpIconView extends Component {
                 <Popover.Body>{help_item.body}</Popover.Body>
             </Popover>
         );
-
+      
         return (
             <>
                 <OverlayTrigger
-                    trigger={['click']}
                     placement="auto"
                     overlay={popoverFocus}
+                    show={this.state.show}
                 >
-                    <span className={'help_icon'}>
+                    <span onClick={() => {this.setState((state) => ({show: !state.show}))}} className={'help_icon'}>
                     <FontAwesomeIcon
                         icon="chevron-down"
                         size="1x"/>
