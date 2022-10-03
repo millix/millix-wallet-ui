@@ -117,11 +117,14 @@ export function walletUpdateConfig(payload) {
                 API.updateNodeConfigValue(key, payload[key])
                    .then(() => callback());
             }, () => {
-                dispatch({
-                    type: UPDATE_WALLET_CONFIG,
-                    payload
-                });
-                resolve();
+                API.reloadNodeConfigFromDatabase()
+                   .then(() => {
+                       dispatch({
+                           type: UPDATE_WALLET_CONFIG,
+                           payload
+                       });
+                       resolve();
+                   });
             });
         });
     };

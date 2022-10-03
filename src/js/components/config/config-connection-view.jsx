@@ -110,14 +110,18 @@ class ConfigConnectionView extends Component {
                 result_config.push(element);
             }
         });
-        API.updateNodeConfigValue(config_name, this.prepareApiConfigData(result_config)).then(() => {
-            this.setState({
-                connection_data: {
-                    ...this.state.connection_data,
-                    [config_name]: result_config
-                }
-            });
-        });
+        API.updateNodeConfigValue(config_name, this.prepareApiConfigData(result_config))
+           .then(() => {
+               return API.reloadNodeConfigFromDatabase();
+           })
+           .then(() => {
+               this.setState({
+                   connection_data: {
+                       ...this.state.connection_data,
+                       [config_name]: result_config
+                   }
+               });
+           });
     }
 
     showModal(config_name, show = true) {
@@ -144,7 +148,10 @@ class ConfigConnectionView extends Component {
             let configuration_data = this.prepareApiConfigData(this.state.connection_data[config_name]);
             configuration_data.push(node_id);
 
-            API.updateNodeConfigValue(config_name, configuration_data).then(() => {
+            API.updateNodeConfigValue(config_name, configuration_data)
+               .then(() => {
+                   return API.reloadNodeConfigFromDatabase();
+               }).then(() => {
                 this.showModal(config_name, false);
                 this.loadConfig(config_name);
             }).catch((e) => {

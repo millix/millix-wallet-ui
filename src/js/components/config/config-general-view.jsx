@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import {walletUpdateConfig} from '../../redux/actions';
 import {Dropdown} from 'primereact/dropdown';
 import Translation from '../../common/translation';
+import {bool_label} from '../../helper/format';
 
 
 class ConfigGeneralView extends Component {
@@ -46,8 +47,9 @@ class ConfigGeneralView extends Component {
 
 
     populateForm() {
-        this.transaction_fee_proxy_input.value   = format.millix(this.props.config.TRANSACTION_FEE_PROXY, false);
-        this.transaction_fee_default_input.value = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
+        this.transaction_fee_proxy_input.value     = format.millix(this.props.config.TRANSACTION_FEE_PROXY, false);
+        this.transaction_fee_default_input.value   = format.millix(this.props.config.TRANSACTION_FEE_DEFAULT, false);
+        this.wallet_aggregation_auto_enabled.value = !!JSON.parse(this.props.config.WALLET_AGGREGATION_AUTO_ENABLED) ? 1 : 0;
     }
 
     changeModalShowSaveResult(value = true) {
@@ -67,9 +69,10 @@ class ConfigGeneralView extends Component {
 
         const error_list = [];
         let config       = {
-            TRANSACTION_FEE_PROXY  : validate.amount(Translation.getPhrase('9b54da23c'), this.transaction_fee_proxy_input.value, error_list),
-            TRANSACTION_FEE_DEFAULT: validate.amount(Translation.getPhrase('6614812f0'), this.transaction_fee_default_input.value, error_list),
-            ACTIVE_LANGUAGE_GUID   : this.state.language
+            TRANSACTION_FEE_PROXY          : validate.amount(Translation.getPhrase('9b54da23c'), this.transaction_fee_proxy_input.value, error_list),
+            TRANSACTION_FEE_DEFAULT        : validate.amount(Translation.getPhrase('6614812f0'), this.transaction_fee_default_input.value, error_list),
+            ACTIVE_LANGUAGE_GUID           : this.state.language,
+            WALLET_AGGREGATION_AUTO_ENABLED: validate.integerPositive('auto aggregation', this.wallet_aggregation_auto_enabled.value, error_list, true)
         };
         if (error_list.length === 0) {
             this.props.walletUpdateConfig(config).then(() => {
@@ -141,6 +144,21 @@ class ConfigGeneralView extends Component {
                                             return validate.handleInputChangeInteger(e, false, 'millix');
                                         }}
                                     />
+                                </Form.Group>
+
+                                <Form.Group className="form-group">
+                                    <label>auto-aggregation<HelpIconView help_item_name={'auto_aggregation'}/></label>
+                                    <Form.Select
+                                        as="select"
+                                        ref={(c) => this.wallet_aggregation_auto_enabled = c}
+                                    >
+                                        <option value={1} key={1}>
+                                            {bool_label(1)}
+                                        </option>
+                                        <option value={0} key={0}>
+                                            {bool_label(0)}
+                                        </option>
+                                    </Form.Select>
                                 </Form.Group>
 
                                 <Form.Group
