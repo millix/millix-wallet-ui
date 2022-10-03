@@ -74,8 +74,8 @@ const UnlockedWalletRequiredRoute = ({
         let messageStatTimeoutID;
         const getMessageStat = (timeout) => {
             messageStatTimeoutID = setTimeout(() => {
-                const transaction_date_begin = moment().subtract(24, 'hours').unix();
-                API.getStatsTransactionWithDataReceived(rest.wallet.address_key_identifier, transaction_date_begin, TRANSACTION_DATA_TYPE_MESSENGER)
+                const create_date_begin = moment().subtract(24, 'hours').unix();
+                API.getStatsTransactionWithDataReceived(rest.wallet.address_key_identifier, TRANSACTION_DATA_TYPE_MESSENGER, create_date_begin)
                    .then(data => {
                        rest.updateMessageStat({count_received: data.count});
                    })

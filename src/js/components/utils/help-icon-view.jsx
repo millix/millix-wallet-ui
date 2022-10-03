@@ -338,6 +338,24 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             }
+            ,
+            'auto_aggregation': {
+                'title': 'auto-aggregation',
+                'body' : <ul>
+                    <li>
+                        auto-aggregation optimizes the funds in your wallet
+                    </li>
+                    <li>
+                        when enabled, auto-aggregation runs every few minutes
+                    </li>
+                    <li>
+                        you may see a pending balance in your wallet when auto-aggregation runs
+                    </li>
+                    <li>
+                        disable auto-aggregation if you want to preserve the exact amount of payments
+                    </li>
+                </ul>
+            }
         };
         let help_item     = false;
         if (Object.keys(result_help).includes(help_item_name)) {

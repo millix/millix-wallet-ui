@@ -36,8 +36,8 @@ export function datatable_format(data) {
                 message.message = message_body;
 
                 const newRow = {
-                    date        : format.date(transaction.transaction_date),
-                    raw_date    : format.date(transaction.transaction_date),
+                    date        : format.date(transaction.transaction_create_date),
+                    raw_date    : format.date(transaction.transaction_create_date),
                     txid        : transaction.transaction_id,
                     txid_parent : attribute.value.parent_transaction_id,
                     dns         : attribute.value.dns,
