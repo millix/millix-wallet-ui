@@ -12,6 +12,7 @@ import {walletUpdateConfig} from '../../redux/actions';
 import {Dropdown} from 'primereact/dropdown';
 import Translation from '../../common/translation';
 import {bool_label} from '../../helper/format';
+import ConfigTranslationView from './config-translation-view';
 
 
 class ConfigGeneralView extends Component {
@@ -176,6 +177,7 @@ class ConfigGeneralView extends Component {
                 </div>
                 <div className={'col-lg-2'}>
                     <ConfigAudioView/>
+                    <ConfigTranslationView/>
                 </div>
             </Row>
         );
