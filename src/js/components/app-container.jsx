@@ -3,8 +3,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import PropTypes from 'prop-types';
 import WalletView from './wallet-view';
-import ImportWalletView from './import-wallet-view';
-import UnlockWalletView from './unlock-wallet-view';
+import UnlockWalletView from './auth/unlock-wallet-view';
 import UnlockedWalletRequiredRoute from './utils/unlocked-wallet-required-route';
 import TransactionHistoryView from './transaction-history-view';
 import UnspentTransactionOutputView from './unspent-transaction-output-view';
@@ -14,8 +13,6 @@ import PeerInfoView from './peer-info-view';
 import AdvertisementFormView from './advertisement/advertisement-form-view';
 import AdvertisementListView from './advertisement/advertisement-list-view';
 import ActionView from './action-view';
-import NewWalletView from './new-wallet-view';
-import ManageWalletView from './manage-wallet-view';
 import StatsView from './stats-view';
 import BacklogView from './backlog-view';
 import ReportIssueView from './help/report-issue-view';
@@ -52,9 +49,6 @@ class AppContainer extends Component {
                 <ErrorModalRequestApi/>
                 <Switch>
                     <Route path="/unlock/" component={UnlockWalletView}/>
-                    <Route path="/manage-wallet/" component={ManageWalletView}/>
-                    <Route path="/new-wallet/" component={NewWalletView}/>
-                    <Route path="/import-wallet/" component={ImportWalletView}/>
 
                     <UnlockedWalletRequiredRoute path="/nft-preview/"
                                                  component={NftPreviewView}/>

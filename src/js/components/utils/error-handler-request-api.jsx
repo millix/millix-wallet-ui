@@ -13,9 +13,13 @@ export function showErrorModalRequestApi(error) {
 class ErrorModalRequestApi extends Component {
     constructor(props) {
         super(props);
+
+        const showAfterDate = new Date();
+        showAfterDate.setSeconds(showAfterDate.getSeconds() + 10); // do not show errors for the first N second. let node load and be responsive
+
         this.state = {
             showIntervalSecond: 10,
-            showAfterDate     : new Date(),
+            showAfterDate     : showAfterDate,
             modalShow         : false,
             message           : ''
         };

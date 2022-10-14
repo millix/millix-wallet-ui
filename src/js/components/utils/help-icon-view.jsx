@@ -368,6 +368,9 @@ class HelpIconView extends Component {
                     <li>
                         send the spreadsheet to us and we will include it in one of next build, so you can enjoy a better interface
                     </li>
+                    <li>
+                        make sure you let us know which language you contribute to
+                    </li>
                 </ul>
             }
         };
