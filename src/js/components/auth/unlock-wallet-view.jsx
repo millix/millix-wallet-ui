@@ -9,7 +9,7 @@ import ErrorList from '../utils/error-list-view';
 import Translation from '../../common/translation';
 import NewWalletView from './new-wallet-view';
 import ImportWalletView from './import-wallet-view';
-import {get_mnemonic_phrase_warning} from '../../helper/text';
+import WarningList from '../utils/warning-list-view';
 
 const styles = {
     centered: {
@@ -24,6 +24,7 @@ class UnlockWalletView extends Component {
         super(props);
         this.state = {
             error_list        : [],
+            warning_list      : [],
             private_key_exists: undefined, //ternary status: false -- doesn't
             // exists, true -- exist, undefined --
             // unknown. ajax didn't return a response yet
@@ -53,15 +54,16 @@ class UnlockWalletView extends Component {
                 }
             }
             else {
-                let error_list = [];
-                error_list.push({
+                let warning_list = [];
+                warning_list.push({
                     name   : 'auth_error',
                     message: Translation.getPhrase('a51c94711')
                 });
                 this.setState({
                     private_key_exists : false,
                     defaultTabActiveKey: 2,
-                    error_list         : error_list
+                    warning_list       : warning_list,
+                    error_list         : []
                 });
             }
         }).catch(_ => {
@@ -106,10 +108,30 @@ class UnlockWalletView extends Component {
                 });
 
                 this.setState({
-                    error_list: error_list
+                    error_list  : error_list,
+                    warning_list: []
                 });
             });
         };
+
+        let create_wallet_warning = <>
+            <div className={'form-group'}>
+                <div className="section_subtitle">
+                    {Translation.getPhrase('a1f1962b0')}
+                </div>
+                <div>{Translation.getPhrase('nZNDLcY3N')}</div>
+            </div>
+        </>;
+
+        let import_wallet_warning = <>
+            <div className={'form-group'}>
+                <div className="section_subtitle">
+                    {Translation.getPhrase('1c92a554a')}
+                </div>
+                <div>{Translation.getPhrase('kRl4q57S4')}</div>
+            </div>
+        </>;
+
 
         return (
             <Container>
@@ -176,6 +198,8 @@ class UnlockWalletView extends Component {
                                                         className="panel panel-filled">
                                                         <div
                                                             className="panel-body">
+                                                            <WarningList
+                                                                warning_list={this.state.warning_list}/>
                                                             <ErrorList
                                                                 error_list={this.state.error_list}/>
                                                             {this.state.private_key_exists === undefined ? (
@@ -223,7 +247,7 @@ class UnlockWalletView extends Component {
                                                 <div
                                                     className="panel panel-filled">
                                                     <div className="panel-body">
-                                                        {this.state.private_key_exists === true && get_mnemonic_phrase_warning()}
+                                                        {this.state.private_key_exists === true && create_wallet_warning}
                                                         <NewWalletView/>
                                                     </div>
                                                 </div>
@@ -232,7 +256,7 @@ class UnlockWalletView extends Component {
                                                 <div
                                                     className="panel panel-filled">
                                                     <div className="panel-body">
-                                                        {this.state.private_key_exists === true && get_mnemonic_phrase_warning()}
+                                                        {this.state.private_key_exists === true && import_wallet_warning}
                                                         <ImportWalletView/>
                                                     </div>
                                                 </div>

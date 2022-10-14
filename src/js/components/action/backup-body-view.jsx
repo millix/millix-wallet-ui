@@ -5,7 +5,6 @@ import {Button, Form} from 'react-bootstrap';
 import ModalView from '../utils/modal-view';
 import API from '../../api';
 import Translation from '../../common/translation';
-import {get_mnemonic_phrase_warning} from '../../helper/text';
 
 
 class BackupBodyView extends Component {
@@ -15,23 +14,6 @@ class BackupBodyView extends Component {
             modalShowMnemonic: false,
             mnemonic         : []
         };
-    }
-
-    exportPrivateKey() {
-        API.getMnemonicPhrase().then(phrase => {
-            let json              = JSON.stringify(phrase);
-            const blob            = new Blob([json]);
-            const fileDownloadUrl = URL.createObjectURL(blob);
-
-            this.setState({
-                    fileDownloadUrl: fileDownloadUrl
-                },
-                () => {
-                    this.dofileDownload.click();
-                    URL.revokeObjectURL(fileDownloadUrl);
-                    this.setState({fileDownloadUrl: ''});
-                });
-        });
     }
 
     showMnemonicPhraseModal() {
@@ -66,21 +48,8 @@ class BackupBodyView extends Component {
                                </Form.Group>
                            </div>
                        }/>
-
-            {get_mnemonic_phrase_warning(true)}
-            <div className={'text-center form-group'}>
-                <Button variant="outline-primary"
-                        className={'btn btn-w-md btn-accent'}
-                        onClick={() => {
-                            this.exportPrivateKey();
-                        }}>
-                    {Translation.getPhrase('ffc200ff0')}
-                </Button>
-                <a style={{display: 'none'}}
-                   download="millix_private_key.json"
-                   href={this.state.fileDownloadUrl}
-                   ref={e => this.dofileDownload = e}
-                />
+            <div className={'form-group'}>
+                {Translation.getPhrase('HAuW8C8V2')}
             </div>
             <div className={'text-center'}>
                 <Button variant="outline-primary"
