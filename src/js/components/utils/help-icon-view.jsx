@@ -339,7 +339,7 @@ class HelpIconView extends Component {
                 </ul>
             }
             ,
-            'auto_aggregation': {
+            'auto_aggregation'         : {
                 'title': 'auto-aggregation',
                 'body' : <ul>
                     <li>
@@ -353,6 +353,23 @@ class HelpIconView extends Component {
                     </li>
                     <li>
                         disable auto-aggregation if you want to preserve the exact amount of payments
+                    </li>
+                </ul>
+            },
+            'contribute_to_translation': {
+                'title': 'contribute to translation',
+                'body' : <ul>
+                    <li>
+                        to contribute to translation in the dropdown below choose "yes" to see unique phrase identifiers
+                    </li>
+                    <li>
+                        copy an identifier of a phrase, put it in a spreadsheet and add a translation that you think is correct next to it
+                    </li>
+                    <li>
+                        send the spreadsheet to us and we will include it in one of next build, so you can enjoy a better interface
+                    </li>
+                    <li>
+                        make sure you let us know which language you contribute to
                     </li>
                 </ul>
             }
