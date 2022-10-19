@@ -12,22 +12,11 @@ class NewWalletView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mnemonic             : undefined,
-            mnemonic_is_confirmed: false,
-            password_new         : undefined,
-            password_confirm     : undefined,
-            password_valid       : false,
-            wallet_info          : undefined
+            password_new    : undefined,
+            password_confirm: undefined,
+            password_valid  : false,
+            wallet_info     : undefined
         };
-    }
-
-    componentDidMount() {
-        API.getRandomMnemonic()
-           .then(data => {
-               this.setState({
-                   mnemonic: data.mnemonic.split(' ')
-               });
-           });
     }
 
     verifyPassword() {
@@ -44,32 +33,35 @@ class NewWalletView extends Component {
     }
 
     createNewWallet() {
-        API.newSessionWithPhrase(this.state.password_confirm, this.state.mnemonic.join(' '))
+        API.getRandomMnemonic()
            .then(data => {
-               let wallet_info              = data.wallet;
-               const address_key_identifier = wallet_info.address_key_identifier;
+               API.newSessionWithPhrase(this.state.password_confirm, data.mnemonic)
+                  .then(data => {
+                      let wallet_info              = data.wallet;
+                      const address_key_identifier = wallet_info.address_key_identifier;
 
-               let backup_reminder = localStorage.getItem('backup_reminder');
-               if (!backup_reminder) {
-                   backup_reminder = {};
-               }
-               else {
-                   backup_reminder = JSON.parse(backup_reminder);
-               }
+                      let backup_reminder = localStorage.getItem('backup_reminder');
+                      if (!backup_reminder) {
+                          backup_reminder = {};
+                      }
+                      else {
+                          backup_reminder = JSON.parse(backup_reminder);
+                      }
 
-               backup_reminder[address_key_identifier] = {
-                   display_counter: 0,
-                   timestamp      : 0
-               };
-               localStorage.setItem('backup_reminder', JSON.stringify(backup_reminder));
+                      backup_reminder[address_key_identifier] = {
+                          display_counter: 0,
+                          timestamp      : 0
+                      };
+                      localStorage.setItem('backup_reminder', JSON.stringify(backup_reminder));
 
 
-               this.setState({
-                   wallet_info
-               });
-           })
-           .then(() => {
-               this.props.unlockWallet(this.state.wallet_info);
+                      this.setState({
+                          wallet_info
+                      });
+                  })
+                  .then(() => {
+                      this.props.unlockWallet(this.state.wallet_info);
+                  });
            });
     }
 
