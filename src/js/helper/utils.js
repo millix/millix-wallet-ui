@@ -102,11 +102,26 @@ function getNftViewLink(nft_data, absolute = false) {
 }
 
 function is_main_network_address(address_key_identifier) {
-    return address_key_identifier.startsWith('1');
+    let is_main_network_address = true;
+    if (address_key_identifier) {
+        is_main_network_address = address_key_identifier.startsWith('1');
+    }
+
+    return is_main_network_address;
+}
+
+function get_address_version(address_key_identifier) {
+    let version = '0b0';
+    if (address_key_identifier) {
+        version = is_main_network_address(address_key_identifier) ? '0b0' : 'lb0l';
+    }
+
+    return version;
 }
 
 export default {
     getImageFromApi,
     getNftViewLink,
-    is_main_network_address
+    is_main_network_address,
+    get_address_version
 };

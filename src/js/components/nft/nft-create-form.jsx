@@ -15,6 +15,7 @@ import {changeLoaderState} from '../loader';
 import {DEFAULT_NFT_CREATE_AMOUNT, TRANSACTION_DATA_TYPE_NFT, DEFAULT_NFT_CREATE_FEE} from '../../../config';
 import FileUpload from '../utils/file-upload';
 import ReactChipInput from 'react-chip-input';
+import utils from '../../helper/utils';
 
 
 class NftCreateForm extends Component {
@@ -34,7 +35,7 @@ class NftCreateForm extends Component {
             address_version            : '',
             address_key_identifier     : '',
             image                      : undefined,
-            destination_address_list   : [`${this.props.wallet.address_public_key}${this.props.wallet.address_key_identifier.startsWith('1') ? '0b0' : 'lb0l'}${this.props.wallet.address_key_identifier}`],
+            destination_address_list   : [`${this.props.wallet.address_public_key}${utils.get_address_version(this.props.wallet.address_key_identifier)}${this.props.wallet.address_key_identifier}`],
             txid                       : propsState.txid,
             nft_src                    : propsState.src,
             nft_hash                   : propsState.hash,
