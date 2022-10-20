@@ -7,6 +7,7 @@ import DatatableView from './../utils/datatable-view';
 import * as helper_message from '../../helper/message';
 import Translation from '../../common/translation';
 import {TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config';
+import utils from '../../helper/utils';
 
 
 class MessageSentView extends Component {
@@ -57,7 +58,7 @@ class MessageSentView extends Component {
                         <p>{Translation.getPhrase('9ff0d3497')}</p>
                     </div>
                     <div className={'primary_address'}>
-                        {this.props.wallet.address_public_key}{this.props.wallet.address_key_identifier.startsWith('1') ? '0b0' : 'lb0l'}{this.props.wallet.address_key_identifier}
+                        {this.props.wallet.address_public_key}{utils.get_address_version(this.props.wallet.address_key_identifier)}{this.props.wallet.address_key_identifier}
                     </div>
                 </div>
             </div>

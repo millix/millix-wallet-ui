@@ -30,7 +30,7 @@ class BackupReminderView extends Component {
                 const last_display_counter   = backup_reminder[address_key_identifier].display_counter;
                 const last_display_timestamp = backup_reminder[address_key_identifier].timestamp;
                 const diff_minute            = (moment.now() - last_display_timestamp) / 1000 / 60;
-                const diff_minute_min        = 1; //60 * 24;
+                const diff_minute_min        = 60 * 24;
                 const display_counter_max    = 2;
 
                 if (diff_minute > diff_minute_min && display_counter_max > last_display_counter) {
@@ -46,8 +46,7 @@ class BackupReminderView extends Component {
                     };
                 }
 
-                if (display_counter_max === backup_reminder[address_key_identifier].display_counter)
-                {
+                if (display_counter_max === backup_reminder[address_key_identifier].display_counter) {
                     delete backup_reminder[address_key_identifier];
                 }
 
@@ -88,10 +87,12 @@ class BackupReminderView extends Component {
                                <div className={'mnemonic'}>
                                    <Form.Group className={'form-group'}>
                                        <label>{Translation.getPhrase('01f11055b')}</label>
-                                       <Form.Control type="text"
-                                                     placeholder={Translation.getPhrase('b8b4deaaf')}
-                                                     value={this.state.mnemonic.join(' ')}
-                                                     readOnly={true}/>
+                                       {/* second div wrapper prevents select of label on tripple click */}
+                                       <div>
+                                           <div className={'form-control'}>
+                                               {this.state.mnemonic.join(' ')}
+                                           </div>
+                                       </div>
                                    </Form.Group>
                                </div>
                                <div>
