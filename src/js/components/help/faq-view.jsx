@@ -70,7 +70,7 @@ class FaqView extends Component {
                                     })}
                                 </div>
                                 <div>
-                                    {Translation.getPhrase('965d32628')}<a
+                                    {Translation.getPhrase('965d32628')} <a
                                     href={DISCORD_URL}
                                     target={'_blank'}>discord</a>
                                 </div>

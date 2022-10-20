@@ -126,7 +126,7 @@ class UnlockWalletView extends Component {
         let import_wallet_warning = <>
             <div className={'form-group'}>
                 <div className="section_subtitle">
-                    {Translation.getPhrase('1c92a554a')}
+                    {Translation.getPhrase('a1f1962b0')}
                 </div>
                 <div>{Translation.getPhrase('kRl4q57S4')}</div>
             </div>
