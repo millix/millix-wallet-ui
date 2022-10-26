@@ -161,12 +161,16 @@ class AdvertisementFormView extends Component {
                 <div className="advertisement-slider">
                         <span>
                             <a className="advertisement_headline"
+                               target='_blank'
+                               rel="noreferrer"
                                href={form_data.url}
                                title={form_data.deck}>{form_data.headline}</a>
                         </span>
                     <span>
                     {(form_data.url || form_data.deck) && (
                         <a className="advertisement_deck"
+                           target='_blank'
+                           rel="noreferrer"
                            href={this.getDomain(form_data.url)}
                            title={form_data.deck}>{form_data.deck} - {form_data.url}</a>)}</span>
                 </div>
