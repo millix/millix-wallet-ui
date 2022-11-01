@@ -248,6 +248,7 @@ class UnlockWalletView extends Component {
                                                     className="panel panel-filled">
                                                     <div className="panel-body">
                                                         {this.state.private_key_exists === true && create_wallet_warning}
+                                                        <div className={'mb-3'}>{Translation.getPhrase('Vh5bMwzK8')}</div>
                                                         <NewWalletView/>
                                                     </div>
                                                 </div>
