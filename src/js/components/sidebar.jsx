@@ -65,7 +65,7 @@ class Sidebar extends Component {
 
     getAvailableVersionLink() {
         let link = null;
-        if (this.state.node_millix_version && this.state.node_millix_version !== this.state.node_millix_version_available) {
+        if (this.state.node_millix_version && this.state.node_millix_version >= this.state.node_millix_version_available) {
             let download_url = 'https://tangled.com/browser/download.php';
             if (this.state.application === 'client') {
                 download_url = 'https://millix.org/client.html';
@@ -258,8 +258,8 @@ class Sidebar extends Component {
                     >
                         <NavText>
                             {Translation.getPhrase('gF2RunKcS')} <FontAwesomeIcon className={'icon'}
-                                                  icon="chevron-down"
-                                                  size="1x"/>
+                                                                                  icon="chevron-down"
+                                                                                  size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
                                              icon="chevron-up"
                                              size="1x"/>
