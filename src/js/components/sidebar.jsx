@@ -99,7 +99,9 @@ class Sidebar extends Component {
         let result = false;
         if (!this.state.ignore_is_expanded || this.state.ignore_is_expanded !== defaultSelected) {
             const section_list = {
-                trade        : [],
+                trade        : [
+                    '/transaction-mint',
+                ],
                 earn         : [],
                 transaction  : [
                     '/transaction-list',
@@ -246,6 +248,11 @@ class Sidebar extends Component {
                         <NavItem key={'millix_com'} onClick={() => window.open('https://millix.com', '_blank').focus()}>
                             <NavText>
                                 millix.com
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'transaction-mint'} eventKey="/transaction-mint">
+                            <NavText>
+                                mint wmlx
                             </NavText>
                         </NavItem>
                     </NavItem>
