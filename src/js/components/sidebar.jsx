@@ -255,6 +255,11 @@ class Sidebar extends Component {
                                 mint wmlx
                             </NavText>
                         </NavItem>
+                        <NavItem key={'transaction-burn'} eventKey="/transaction-burn">
+                            <NavText>
+                                burn wmlx
+                            </NavText>
+                        </NavItem>
                     </NavItem>
 
                     <NavItem
