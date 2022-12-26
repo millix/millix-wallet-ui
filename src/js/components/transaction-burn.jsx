@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {Alert, Button, Col, Form, Row} from 'react-bootstrap';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import API from '../api/index';
+import {Button, Col, Form, Row} from 'react-bootstrap';
 import ErrorList from './utils/error-list-view';
 import ModalView from './utils/modal-view';
 import * as format from '../helper/format';
@@ -12,6 +10,7 @@ import * as text from '../helper/text';
 import Transaction from '../common/transaction';
 import Translation from '../common/translation';
 import Web3 from 'web3';
+import MetamaskInstall from './utils/metamask-install-view';
 
 
 class TransactionBurnView extends Component {
@@ -220,7 +219,7 @@ class TransactionBurnView extends Component {
                                 className={'btn_loader'}
                                 onClick={() => this.connectEthereumWallet()}>
                                 connect wallet
-                            </Button> : this.state.ethereum_address) : (<Alert variant={'warning'}>please, install metamask extension</Alert>)}
+                            </Button> : this.state.ethereum_address) : <MetamaskInstall/>}
                         </div>
                     </div>
                 </div>
