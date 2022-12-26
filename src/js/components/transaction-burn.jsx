@@ -296,7 +296,7 @@ class TransactionBurnView extends Component {
                                         body={<div>
                                             <div>{`you are about to burn and send ${format.wMillix(this.state.amount)} to the millix address ${this.state.address}`}</div>
                                             <div>this transaction will cost
-                                                you {format.number(this.bridgeFee)} ether and {format.millix(this.millixFee)} in fees
+                                                you {format.number(this.bridgeFee)} gwei and {format.millix(this.millixFee)} in fees
                                             </div>
                                             <div>you will receive {format.millix(this.state.amount * 1000000 - this.millixFee)} in the destination address</div>
                                             {text.get_confirmation_modal_question()}
