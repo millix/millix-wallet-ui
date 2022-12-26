@@ -20,6 +20,7 @@ class TransactionBurnView extends Component {
             ethereum_address       : undefined,
             wmlx_balance           : undefined,
             fee_input_locked       : true,
+            loaded                 : false,
             error_list             : [],
             modal_show_confirmation: false,
             modal_show_send_result : false,
@@ -103,6 +104,17 @@ class TransactionBurnView extends Component {
     componentWillUnmount() {
     }
 
+    componentDidMount() {
+        if (window.ethereum) {
+            window.ethereum.request({method: 'eth_accounts'}).then(data => this._loadEthereumAddress(data[0]))
+                  .catch(_ => _)
+                  .then(_ => this.setState({loaded: true}));
+            return;
+        }
+
+        this.setState({loaded: true});
+    }
+
     connectEthereumWallet() {
         window.ethereum && window.ethereum.request({method: 'eth_requestAccounts'})
                                  .then(data => this._loadEthereumAddress(data[0]))
@@ -110,20 +122,20 @@ class TransactionBurnView extends Component {
     }
 
     _loadEthereumAddress(address) {
-        this.wmlxContract.methods.burnFees().call()
-            .then(burnFees => {
-                try {
-                    this.bridgeFee = parseInt(burnFees);
-                }
-                catch (e) {
-                }
-                return this.wmlxContract.methods.balanceOf(address).call()
-                           .then(wmlxBalance => this.setState({
-                               wmlx_balance    : wmlxBalance,
-                               ethereum_address: address
-                           }));
-            })
-            .catch(_ => _);
+        return this.wmlxContract.methods.burnFees().call()
+                   .then(burnFees => {
+                       try {
+                           this.bridgeFee = parseInt(burnFees);
+                       }
+                       catch (e) {
+                       }
+                       return this.wmlxContract.methods.balanceOf(address).call()
+                                  .then(wmlxBalance => this.setState({
+                                      wmlx_balance    : wmlxBalance,
+                                      ethereum_address: address
+                                  }));
+                   })
+                   .catch(_ => _);
     }
 
     send() {
@@ -202,6 +214,10 @@ class TransactionBurnView extends Component {
     }
 
     render() {
+        if (!this.state.loaded) {
+            return null;
+        }
+
         return (
             <>
                 <div className={'panel panel-filled'}>
@@ -255,7 +271,7 @@ class TransactionBurnView extends Component {
                                 </Col>
                                 <Col>
                                     <Form.Group className="form-group">
-                                        <label>bridge fee (ether)</label>
+                                        <label>bridge fee (gwei)</label>
                                         <Form.Control type="text"
                                                       value={format.number(this.bridgeFee)}
                                                       disabled={true}/>
