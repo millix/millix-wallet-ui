@@ -104,9 +104,9 @@ class AppContainer extends Component {
                     <UnlockedWalletRequiredRoute path="/report-issue"
                                                  component={ReportIssueView}/>
 
-                    <UnlockedWalletRequiredRoute path="/transaction-mint"
+                    <UnlockedWalletRequiredRoute path="/send-to-exchange"
                                                  component={TransactionMintView}/>
-                    <UnlockedWalletRequiredRoute path="/transaction-burn"
+                    <UnlockedWalletRequiredRoute path="/send-from-exchange"
                                                  component={TransactionBurnView}/>
                     <UnlockedWalletRequiredRoute path="/transaction/:transaction_id"
                                                  component={TransactionDetails}/>

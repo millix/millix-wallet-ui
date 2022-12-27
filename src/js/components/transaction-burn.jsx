@@ -218,49 +218,69 @@ class TransactionBurnView extends Component {
             return null;
         }
 
-        return (
-            <>
+        let balance_panel = '';
+        if (window.ethereum && this.state.ethereum_address) {
+            balance_panel = <>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-body balance_panel'}>
                         <div className={'balance_container'}>
                             <div className={'stable_millix'}>
-                                <span>{!this.state.ethereum_address ? 'burn wrapped millix' : this.state.wmlx_balance + ' WMLX'}</span>
+                                <span>{format.wMillix(this.state.wmlx_balance, false) + ' wmlx'}</span>
                             </div>
                         </div>
                         <hr className={'w-100'}/>
                         <div
                             className={'primary_address'}>
-                            {window.ethereum ? (!this.state.ethereum_address ? <Button
-                                variant="outline-primary"
-                                className={'btn_loader'}
-                                onClick={() => this.connectEthereumWallet()}>
-                                connect wallet
-                            </Button> : this.state.ethereum_address) : <MetamaskInstall/>}
+                            {this.state.ethereum_address}
                         </div>
                     </div>
                 </div>
-                {window.ethereum && this.state.ethereum_address && <div className={'panel panel-filled'}>
-                    <div className={'panel-heading bordered'}>burn wmlx</div>
+            </>;
+        }
+
+        return (
+            <>
+                {balance_panel}
+
+                <div className={'panel panel-filled'}>
+                    <div className={'panel-heading bordered'}>
+                        send from exchange
+                    </div>
+
                     <div className={'panel-body'}>
-                        <p>
-                            use this form to send wrapped millix (WMLX) to the millix network (MLX). 1 wrapped millix = 1 million millix. there is an
-                            ethereum network fee to send wmlx to the bridge and a millix network fee to send the millix from the bridge to the destination
-                            address.
-                        </p>
-                        <ErrorList
-                            error_list={this.state.error_list}/>
-                        <Row>
+                        {window.ethereum ?
+                         <>
+                             {!this.state.ethereum_address &&
+                              <div className={'text-center'}>
+                                  <Button
+                                      variant="outline-primary"
+                                      className={'btn_loader'}
+                                      onClick={() => this.connectEthereumWallet()}>
+                                      connect wallet
+                                  </Button>
+                              </div>}
+                         </>
+                                         :
+                         <MetamaskInstall/>}
+
+                        {window.ethereum && this.state.ethereum_address && <>
+                            <p>
+                                use this form to send wrapped millix (WMLX) to the millix network (MLX). 1 wrapped millix = 1 million millix. there is an
+                                ethereum network fee to send wmlx to the bridge and a millix network fee to send the millix from the bridge to the destination
+                                address.
+                            </p>
+                            <ErrorList
+                                error_list={this.state.error_list}/>
                             <Form>
-                                <Col>
-                                    <Form.Group className="form-group">
-                                        <label>destination address in the millix network</label>
-                                        <Form.Control type="text"
-                                                      placeholder={Translation.getPhrase('c9861d7c2')}
-                                                      ref={c => this.destinationAddress = c}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group className="form-group">
+                                <Form.Group className="form-group">
+                                    <label>destination address in the millix network</label>
+                                    <Form.Control type="text"
+                                                  placeholder={Translation.getPhrase('c9861d7c2')}
+                                                  ref={c => this.destinationAddress = c}/>
+                                </Form.Group>
+
+                                <div className={'d-flex'}>
+                                    <Form.Group className={'form-group w-50 me-3'}>
                                         <label>wmlx amount</label>
                                         <Form.Control type="text"
                                                       placeholder={Translation.getPhrase('cdfa46e99')}
@@ -268,64 +288,66 @@ class TransactionBurnView extends Component {
                                                       ref={c => this.amount = c}
                                                       onChange={validate.handleAmountInputChange.bind(this)}/>
                                     </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group className="form-group">
-                                        <label>bridge fee (gwei)</label>
-                                        <Form.Control type="text"
-                                                      value={format.number(this.bridgeFee)}
-                                                      disabled={true}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group className="form-group">
-                                        <label>millix network fee (mlx)</label>
-                                        <Form.Control type="text"
-                                                      value={format.number(this.millixFee)}
-                                                      disabled={true}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col
-                                    className={'d-flex justify-content-center'}>
-                                    <ModalView
-                                        show={this.state.modal_show_confirmation}
-                                        size={'lg'}
-                                        heading={Translation.getPhrase('d469333b4')}
-                                        on_accept={() => this.sendTransaction()}
-                                        on_close={() => this.cancelSendTransaction()}
-                                        body={<div>
-                                            <div>{`you are about to burn and send ${format.wMillix(this.state.amount)} to the millix address ${this.state.address}`}</div>
-                                            <div>this transaction will cost
-                                                you {format.number(this.bridgeFee)} gwei and {format.millix(this.millixFee)} in fees
-                                            </div>
-                                            <div>you will receive {format.millix(this.state.amount * 1000000 - this.millixFee)} in the destination address</div>
-                                            {text.get_confirmation_modal_question()}
-                                        </div>}/>
 
-                                    <ModalView
-                                        show={this.state.modal_show_send_result}
-                                        size={'lg'}
-                                        on_close={() => this.changeModalShowSendResult(false)}
-                                        heading={Translation.getPhrase('54bb1b342')}
-                                        body={this.state.modal_body_send_result}/>
-                                    <Form.Group as={Row}>
-                                        <Button
-                                            variant="outline-primary"
-                                            className={'btn_loader'}
-                                            onClick={() => this.send()}
-                                            disabled={this.state.canceling}>
-                                            {this.state.sending ?
-                                             <>
-                                                 <div className="loader-spin"/>
-                                                 {this.state.canceling ? Translation.getPhrase('20b672040') : Translation.getPhrase('607120b8a')}
-                                             </> : <>{Translation.getPhrase('2c2a681e8')}</>}
-                                        </Button>
+                                    <Form.Group className="form-group w-50">
+                                        <label>mlx amount</label>
+                                        <Form.Control type="text"
+                                                      value={this.amount?.value ? format.millix(this.amount?.value.replaceAll(',', '') * 1000000) : 0}
+                                                      disabled={true}/>
                                     </Form.Group>
-                                </Col>
+                                </div>
+
+                                <Form.Group className="form-group">
+                                    <label>bridge fee (gwei)</label>
+                                    <Form.Control type="text"
+                                                  value={format.number(this.bridgeFee)}
+                                                  disabled={true}/>
+                                </Form.Group>
+                                <Form.Group className="form-group">
+                                    <label>millix network fee (mlx)</label>
+                                    <Form.Control type="text"
+                                                  value={format.number(this.millixFee)}
+                                                  disabled={true}/>
+                                </Form.Group>
+                                <ModalView
+                                    show={this.state.modal_show_confirmation}
+                                    size={'lg'}
+                                    heading={Translation.getPhrase('d469333b4')}
+                                    on_accept={() => this.sendTransaction()}
+                                    on_close={() => this.cancelSendTransaction()}
+                                    body={<div>
+                                        <div>{`you are about to burn and send ${format.wMillix(this.state.amount)} to the millix address ${this.state.address}`}</div>
+                                        <div>this transaction will cost
+                                            you {format.number(this.bridgeFee)} gwei and {format.millix(this.millixFee)} in fees
+                                        </div>
+                                        <div>you will receive {format.millix(this.state.amount * 1000000 - this.millixFee)} in the destination address</div>
+                                        {text.get_confirmation_modal_question()}
+                                    </div>}/>
+
+                                <ModalView
+                                    show={this.state.modal_show_send_result}
+                                    size={'lg'}
+                                    on_close={() => this.changeModalShowSendResult(false)}
+                                    heading={Translation.getPhrase('54bb1b342')}
+                                    body={this.state.modal_body_send_result}/>
+
+                                <div className={'text-center'}>
+                                    <Button
+                                        variant="outline-primary"
+                                        className={'btn_loader'}
+                                        onClick={() => this.send()}
+                                        disabled={this.state.canceling}>
+                                        {this.state.sending ?
+                                         <>
+                                             <div className="loader-spin"/>
+                                             {this.state.canceling ? Translation.getPhrase('20b672040') : Translation.getPhrase('607120b8a')}
+                                         </> : <>{Translation.getPhrase('2c2a681e8')}</>}
+                                    </Button>
+                                </div>
                             </Form>
-                        </Row>
+                        </>}
                     </div>
-                </div>}
+                </div>
             </>
         );
     }

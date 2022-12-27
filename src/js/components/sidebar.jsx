@@ -100,7 +100,7 @@ class Sidebar extends Component {
         if (!this.state.ignore_is_expanded || this.state.ignore_is_expanded !== defaultSelected) {
             const section_list = {
                 trade        : [
-                    '/transaction-mint'
+                    '/send-to-exchange'
                 ],
                 earn         : [],
                 transaction  : [
@@ -245,19 +245,19 @@ class Sidebar extends Component {
                                 getting started
                             </NavText>
                         </NavItem>
-                        <NavItem key={'transaction-mint'} eventKey="/transaction-mint">
+                        <NavItem key={'send-to-exchange'} eventKey="/send-to-exchange">
                             <NavText>
                                 send to exchange
                             </NavText>
                         </NavItem>
-                        <NavItem key={'transaction-burn'} eventKey="/transaction-burn">
+                        <NavItem key={'send-from-exchange'} eventKey="/send-from-exchange">
                             <NavText>
                                 send from exchange
                             </NavText>
                         </NavItem>
-                        <NavItem key={'meta-mask'} eventKey="/meta-mask">
+                        <NavItem key={'metamask'} eventKey="/metamask">
                             <NavText>
-                                meta mask
+                                metamask
                             </NavText>
                         </NavItem>
                         <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
