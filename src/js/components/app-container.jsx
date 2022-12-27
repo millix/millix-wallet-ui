@@ -37,6 +37,8 @@ import NftCollectionView from './nft/nft-collection-view';
 import NftTransferView from './nft/nft-transfer-view';
 import AssetListView from './asset/asset-list-view';
 import NftPreviewView from './nft/nft-preview-view';
+import TransactionMintView from './transaction-mint';
+import TransactionBurnView from './transaction-burn';
 
 
 class AppContainer extends Component {
@@ -102,9 +104,12 @@ class AppContainer extends Component {
                     <UnlockedWalletRequiredRoute path="/report-issue"
                                                  component={ReportIssueView}/>
 
-                    <UnlockedWalletRequiredRoute
-                        path="/transaction/:transaction_id"
-                        component={TransactionDetails}/>
+                    <UnlockedWalletRequiredRoute path="/transaction-mint"
+                                                 component={TransactionMintView}/>
+                    <UnlockedWalletRequiredRoute path="/transaction-burn"
+                                                 component={TransactionBurnView}/>
+                    <UnlockedWalletRequiredRoute path="/transaction/:transaction_id"
+                                                 component={TransactionDetails}/>
                     <UnlockedWalletRequiredRoute path="/address-list"
                                                  component={AddressListView}/>
                     <UnlockedWalletRequiredRoute path="/transaction-list"

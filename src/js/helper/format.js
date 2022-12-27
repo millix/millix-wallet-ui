@@ -1,16 +1,24 @@
 import moment from 'moment';
 import Translation from '../common/translation';
 
-export function millix(amount, append_name = true) {
+function _millix(amount, append_name = true, denomination = '') {
     let result = amount;
     if (amount) {
         result = amount.toLocaleString('en-US');
         if (append_name) {
-            result += ' millix';
+            result += denomination;
         }
     }
 
     return result;
+}
+
+export function millix(amount, append_name = true) {
+    return _millix(amount, append_name, ' millix');
+}
+
+export function wMillix(amount, append_name = true) {
+    return _millix(amount, append_name, ' wrapped millix');
 }
 
 export function formatMillixRow(data) {
