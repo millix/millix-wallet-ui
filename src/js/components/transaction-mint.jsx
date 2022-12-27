@@ -12,9 +12,7 @@ import * as validate from '../helper/validate';
 import * as text from '../helper/text';
 import Transaction from '../common/transaction';
 import Translation from '../common/translation';
-import BackupReminderView from './education/backup-reminder-view';
 import web3 from 'web3';
-import {wMillix} from '../helper/format';
 import MetamaskInstall from './utils/metamask-install-view';
 import Web3 from 'web3';
 
@@ -82,23 +80,14 @@ class TransactionMintView extends Component {
         if (error_list.length === 0) {
             this.web3.eth.getBalance(transactionParams.address)
                 .then(balance => {
-                    console.log(balance);
-                    if (parseInt(balance) === 0) {
-                        this.setState({
-                            modal_show_mint_warning: true,
-                            mintResumeCallback     : () => {
-                                this.setState({
-                                    transactionParams,
-                                    modal_show_mint_warning: false
-                                });
-                                this.changeModalShowConfirmation();
-                            }
-                        });
-                        return;
-                    }
-
                     this.setState(transactionParams);
-                    this.changeModalShowConfirmation();
+
+                    if (parseInt(balance) === 0) {
+                        this.changeModalShowZeroBalanceWarning();
+                    }
+                    else {
+                        this.changeModalShowConfirmation();
+                    }
                 });
         }
 
@@ -161,8 +150,7 @@ class TransactionMintView extends Component {
         this.setState({
             canceling              : false,
             sending                : false,
-            modal_show_mint_warning: false,
-            mintResumeCallback     : undefined
+            modal_show_mint_warning: false
         });
         this.changeModalShowConfirmation(false);
     }
@@ -170,6 +158,12 @@ class TransactionMintView extends Component {
     changeModalShowConfirmation(value = true) {
         this.setState({
             modal_show_confirmation: value
+        });
+    }
+
+    changeModalShowZeroBalanceWarning(value = true) {
+        this.setState({
+            modal_show_mint_warning: value
         });
     }
 
@@ -279,7 +273,10 @@ class TransactionMintView extends Component {
                                            show={this.state.modal_show_mint_warning}
                                            size={'lg'}
                                            heading={Translation.getPhrase('d469333b4')}
-                                           on_accept={() => this.state.mintResumeCallback()}
+                                           on_accept={() => {
+                                               this.changeModalShowZeroBalanceWarning(false);
+                                               this.changeModalShowConfirmation();
+                                           }}
                                            on_close={() => this.cancelSendTransaction()}
                                            body={<div>
                                                <div>The address you are sending Wrapped Millix to does not have any Ethereum. Ethereum is required to pay

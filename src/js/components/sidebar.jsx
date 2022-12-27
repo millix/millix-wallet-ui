@@ -100,7 +100,7 @@ class Sidebar extends Component {
         if (!this.state.ignore_is_expanded || this.state.ignore_is_expanded !== defaultSelected) {
             const section_list = {
                 trade        : [
-                    '/transaction-mint',
+                    '/transaction-mint'
                 ],
                 earn         : [],
                 transaction  : [
@@ -233,31 +233,36 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('trade')}
                     >
                         <NavText>
-                            {Translation.getPhrase('14539e6a9')} <FontAwesomeIcon className={'icon'}
-                                                                                  icon="chevron-down"
-                                                                                  size="1x"/>
+                            exchange <FontAwesomeIcon className={'icon'}
+                                                      icon="chevron-down"
+                                                      size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
                                              icon="chevron-up"
                                              size="1x"/>
                         </NavText>
-                        <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
+                        <NavItem key={'exchange-getting-started'} eventKey="/exchange-getting-started">
                             <NavText>
-                                swapland.io
-                            </NavText>
-                        </NavItem>
-                        <NavItem key={'millix_com'} onClick={() => window.open('https://millix.com', '_blank').focus()}>
-                            <NavText>
-                                millix.com
+                                getting started
                             </NavText>
                         </NavItem>
                         <NavItem key={'transaction-mint'} eventKey="/transaction-mint">
                             <NavText>
-                                mint wmlx
+                                send to exchange
                             </NavText>
                         </NavItem>
                         <NavItem key={'transaction-burn'} eventKey="/transaction-burn">
                             <NavText>
-                                burn wmlx
+                                send from exchange
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'meta-mask'} eventKey="/meta-mask">
+                            <NavText>
+                                meta mask
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
+                            <NavText>
+                                quick buy
                             </NavText>
                         </NavItem>
                     </NavItem>
