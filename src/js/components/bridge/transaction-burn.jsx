@@ -2,15 +2,16 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Button, Col, Form, Row} from 'react-bootstrap';
-import ErrorList from './utils/error-list-view';
-import ModalView from './utils/modal-view';
-import * as format from '../helper/format';
-import * as validate from '../helper/validate';
-import * as text from '../helper/text';
-import Transaction from '../common/transaction';
-import Translation from '../common/translation';
+import ErrorList from '../utils/error-list-view';
+import ModalView from '../utils/modal-view';
+import * as format from '../../helper/format';
+import * as validate from '../../helper/validate';
+import * as text from '../../helper/text';
+import Transaction from '../../common/transaction';
+import Translation from '../../common/translation';
 import Web3 from 'web3';
-import MetamaskInstall from './utils/metamask-install-view';
+import MetamaskInstall from '../utils/metamask-install-view';
+import {BRIDGE_ETH_CONTRACT_ADDRESS} from '../../../config';
 
 
 class TransactionBurnView extends Component {
@@ -95,7 +96,7 @@ class TransactionBurnView extends Component {
 
         if (window.ethereum) {
             this.web3         = new Web3(window.ethereum);
-            this.wmlxContract = new this.web3.eth.Contract(miniABI, '0x2C9d6465aaDa86421A9CF5cAD030fEF3de93c5aD');
+            this.wmlxContract = new this.web3.eth.Contract(miniABI, BRIDGE_ETH_CONTRACT_ADDRESS);
         }
 
         this.send = this.send.bind(this);
@@ -265,7 +266,7 @@ class TransactionBurnView extends Component {
 
                         {window.ethereum && this.state.ethereum_address && <>
                             <p>
-                                use this form to send wrapped millix (WMLX) to the millix network (MLX). 1 wrapped millix = 1 million millix. there is an
+                                use this form to send wrapped millix (wmlx) to the millix network (mlx). there is an
                                 ethereum network fee to send wmlx to the bridge and a millix network fee to send the millix from the bridge to the destination
                                 address.
                             </p>
@@ -279,8 +280,9 @@ class TransactionBurnView extends Component {
                                                   ref={c => this.destinationAddress = c}/>
                                 </Form.Group>
 
-                                <div className={'d-flex'}>
-                                    <Form.Group className={'form-group w-50 me-3'}>
+
+                                <div className={'d-flex mb-2'}>
+                                    <Form.Group className={'flex-fill me-3'}>
                                         <label>wmlx amount</label>
                                         <Form.Control type="text"
                                                       placeholder={Translation.getPhrase('cdfa46e99')}
@@ -289,12 +291,15 @@ class TransactionBurnView extends Component {
                                                       onChange={validate.handleAmountInputChange.bind(this)}/>
                                     </Form.Group>
 
-                                    <Form.Group className="form-group w-50">
+                                    <Form.Group className="flex-fill">
                                         <label>mlx amount</label>
                                         <Form.Control type="text"
                                                       value={this.amount?.value ? format.millix(this.amount?.value.replaceAll(',', '') * 1000000) : 0}
                                                       disabled={true}/>
                                     </Form.Group>
+                                </div>
+                                <div className={'text-white text-center'}>
+                                    1 wmlx = 1,000,000 mlx
                                 </div>
 
                                 <Form.Group className="form-group">

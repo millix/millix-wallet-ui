@@ -255,11 +255,6 @@ class Sidebar extends Component {
                                 send from exchange
                             </NavText>
                         </NavItem>
-                        <NavItem key={'metamask'} eventKey="/metamask">
-                            <NavText>
-                                metamask
-                            </NavText>
-                        </NavItem>
                         <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
                             <NavText>
                                 quick buy

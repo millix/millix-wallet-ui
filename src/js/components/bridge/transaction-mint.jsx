@@ -3,17 +3,16 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Col, Row, Form, Button} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import API from '../api/index';
-import ErrorList from './utils/error-list-view';
-import ModalView from './utils/modal-view';
-import * as format from '../helper/format';
-import BalanceView from './utils/balance-view';
-import * as validate from '../helper/validate';
-import * as text from '../helper/text';
-import Transaction from '../common/transaction';
-import Translation from '../common/translation';
+import API from '../../api';
+import ErrorList from '../utils/error-list-view';
+import ModalView from '../utils/modal-view';
+import * as format from '../../helper/format';
+import * as validate from '../../helper/validate';
+import * as text from '../../helper/text';
+import Transaction from '../../common/transaction';
+import Translation from '../../common/translation';
 import web3 from 'web3';
-import MetamaskInstall from './utils/metamask-install-view';
+import MetamaskInstall from '../utils/metamask-install-view';
 import Web3 from 'web3';
 
 
@@ -180,9 +179,7 @@ class TransactionMintView extends Component {
                 {window.ethereum ?
                  <>
                      <p>
-                         use this form to send millix (MLX) to the ethereum network as wrapped millix (WMLX). 1 million millix = 1 wrapped millix.
-                         there
-                         is a
+                         use this form to send millix (mlx) to the ethereum network as wrapped millix (wmlx). there is a
                          millix network fee to send millix to the bridge and an ethereum network fee to send the wmlx from the bridge to the
                          destination
                          address.
@@ -197,8 +194,8 @@ class TransactionMintView extends Component {
                                            ref={c => this.destinationAddress = c}/>
                          </Form.Group>
 
-                         <div className={'d-flex'}>
-                             <Form.Group className={'form-group w-50 me-3'}>
+                         <div className={'d-flex mb-2'}>
+                             <Form.Group className={'flex-fill me-3'}>
                                  <label>wmlx amount</label>
                                  <Form.Control type="text"
                                                placeholder={Translation.getPhrase('cdfa46e99')}
@@ -207,12 +204,15 @@ class TransactionMintView extends Component {
                                                onChange={validate.handleAmountInputChange.bind(this)}/>
                              </Form.Group>
 
-                             <Form.Group className="form-group w-50">
+                             <Form.Group className="flex-fill">
                                  <label>mlx amount</label>
                                  <Form.Control type="text"
                                                value={this.amount?.value ? format.millix(this.amount?.value.replaceAll(',', '') * 1000000) : 0}
                                                disabled={true}/>
                              </Form.Group>
+                         </div>
+                         <div className={'text-white text-center'}>
+                             1 wmlx = 1,000,000 mlx
                          </div>
 
                          <Form.Group className="form-group">

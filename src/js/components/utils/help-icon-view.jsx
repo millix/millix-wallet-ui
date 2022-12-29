@@ -339,7 +339,7 @@ class HelpIconView extends Component {
                 </ul>
             }
             ,
-            'auto_aggregation'         : {
+            'auto_aggregation'           : {
                 'title': 'auto-aggregation',
                 'body' : <ul>
                     <li>
@@ -356,7 +356,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'contribute_to_translation': {
+            'contribute_to_translation'  : {
                 'title': 'contribute to translation',
                 'body' : <ul>
                     <li>
@@ -370,6 +370,63 @@ class HelpIconView extends Component {
                     </li>
                     <li>
                         make sure you let us know which language you contribute to
+                    </li>
+                </ul>
+            },
+            'bridge_eth'                     : {
+                'title': 'mlx - eth bridge',
+                'body' : <ul>
+                    <li>
+                        the bridge
+                        was built by the Millix Foundation (<a key={'millix-org-link'} href=""
+                                                               onClick={() => window.open('https://millix.org', '_blank').focus()}>millix.org</a>)
+                    </li>
+                </ul>
+            },
+            'bridge_eth_exchange_rate'   : {
+                'title': 'wmlx exchange rate',
+                'body' : <ul>
+                    <li>
+                        to optimize compatibility there is an exchange rate of 1 wmlx = 1,000,000 mlx
+                    </li>
+                </ul>
+            },
+            'bridge_eth_balance_required': {
+                'title': 'why do I need Ethereum balance?',
+                'body' : <ul>
+                    <li>
+                        if you do not have any Ethereum you will not be able to pay transaction fees on the Ethereum network
+                    </li>
+                    <li>
+                        if you do not have any Ethereum you cannot move wmlx anywhere
+                    </li>
+                    <li>
+                        if you do not have any Ethereum you cannot exchange wmlx to another token on Uniswap
+                    </li>
+                    <li>
+                        if you do not have any Ethereum you can not convert from wmlx to mlx
+                    </li>
+                </ul>
+            },
+            'bridge_eth_metamask': {
+                'title': 'MetaMask',
+                'body' : <ul>
+                    <li>
+                        It is a tool that connects you to the Ethereum network.
+                    </li>
+                    <li>
+                        It allows you create a new Ethereum address, view your balance of wmlx and send wmlx.
+                    </li>
+                    <li>
+                        It is installed as a browser extension and connects to your Millix wallet.
+                    </li>
+                </ul>
+            },
+            'bridge_eth_metamask_wallet': {
+                'title': 'MetaMask wallet',
+                'body' : <ul>
+                    <li>
+                        when you create a wallet on MetaMask it provides you with secure phrases that you can use to backup your MetaMask wallet
                     </li>
                 </ul>
             }
