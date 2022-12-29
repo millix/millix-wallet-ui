@@ -9,6 +9,7 @@ import bridgeWalletScreen from '../../../image/bridge_eth_metamask/wallet.png';
 import bridgeWalletImportToken from '../../../image/bridge_eth_metamask/import_token.png';
 import bridgeWalletImportTokenConfirmation from '../../../image/bridge_eth_metamask/import_token_confirmation.png';
 import bridgeWalletImportTokenResult from '../../../image/bridge_eth_metamask/import_token_result.png';
+import Translation from '../../common/translation';
 
 
 class GettingStartedView extends Component {
@@ -16,10 +17,10 @@ class GettingStartedView extends Component {
         super(props);
 
         this.state = {
-            collapse_overview          : false,
+            collapse_overview          : true,
             collapse_metamask          : false,
             collapse_send_to_exchange  : false,
-            collapse_send_from_exchange: true
+            collapse_send_from_exchange: false
         };
     }
 
@@ -34,42 +35,45 @@ class GettingStartedView extends Component {
         return (
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
-                    getting started
+                    {Translation.getPhrase('pCHSGHLZ8')}
                 </div>
                 <div className={'panel-body exchange_getting_started'}>
                     <div className={'section_subtitle collapse_title'} onClick={() => this.toggleCollapseState('collapse_overview')}>
-                        <span>overview</span> <FontAwesomeIcon className={'icon'}
-                                                               icon={this.state.collapse_overview ? 'chevron-up' : 'chevron-down'}
-                                                               size="1x"/>
+                        <span>{Translation.getPhrase('zvSN5VyUW')}</span> <FontAwesomeIcon className={'icon'}
+                                                                                           icon={this.state.collapse_overview ? 'chevron-up' : 'chevron-down'}
+                                                                                           size="1x"/>
                     </div>
                     <Collapse in={this.state.collapse_overview}>
                         <div className={'mb-3 mt-2'}>
                             <div className={'mb-2'}>
-                                You can convert Millix (<b>mlx</b>) to Wrapped Millix (<b>wmlx</b>). wmlx is stored on the Ethereum network.
+                                {Translation.getPhrase('2mCq2CTwA', {
+                                    ticker_mlx : <b>mlx</b>,
+                                    ticker_wmlx: <b>wmlx</b>
+                                })}
                             </div>
                             <div className={'mb-2 text-white'}>
                                 1 wmlx = 1,000,000 mlx <HelpIconView help_item_name={'bridge_eth_exchange_rate'}/>
                             </div>
                             <div className={'mb-2'}>
                                 <div className={'mb-2'}>
-                                    Converting mlx to wmlx
-                                    uses a bridge<HelpIconView help_item_name={'bridge_eth'}/> that interacts with the Millix Network and the Ethereum Network.
-                                    It requires a transaction fee for the Millix Network and the Ethereum network.
+                                    {Translation.getPhrase('u8nDoiESA', {
+                                        help_icon: <HelpIconView help_item_name={'bridge_eth'}/>
+                                    })}
                                 </div>
                                 <div>
-                                    <b>You need to have an Ethereum balance available</b>
+                                    <b>{Translation.getPhrase('y13JskKf0')}</b>
                                     <ul>
                                         <li>
-                                            if you do not have any Ethereum you will not be able to pay transaction fees on the Ethereum network
+                                            {Translation.getPhrase('fRFqFgeuW')}
                                         </li>
                                         <li>
-                                            if you do not have any Ethereum you cannot move wmlx anywhere
+                                            {Translation.getPhrase('cwESzAha1')}
                                         </li>
                                         <li>
-                                            if you do not have any Ethereum you cannot exchange wmlx to another token on Uniswap
+                                            {Translation.getPhrase('Tbi0bj8HQ')}
                                         </li>
                                         <li>
-                                            if you do not have any Ethereum you can not convert from wmlx to mlx
+                                            {Translation.getPhrase('uqV4CwoY2')}
                                         </li>
                                     </ul>
                                 </div>
@@ -78,15 +82,17 @@ class GettingStartedView extends Component {
                     </Collapse>
                     <hr/>
                     <div className={'section_subtitle collapse_title'} onClick={() => this.toggleCollapseState('collapse_metamask')}>
-                        <span>configure MetaMask</span> <FontAwesomeIcon className={'icon'}
-                                                                         icon={this.state.collapse_metamask ? 'chevron-up' : 'chevron-down'}
-                                                                         size="1x"/>
+                        <span>{Translation.getPhrase('Fzx73dKka')}</span> <FontAwesomeIcon className={'icon'}
+                                                                                           icon={this.state.collapse_metamask ? 'chevron-up' : 'chevron-down'}
+                                                                                           size="1x"/>
                     </div>
                     <Collapse in={this.state.collapse_metamask}>
                         <div className={'mb-3 mt-2'}>
                             <div className={'mb-2'}>
                                 1. {window.ethereum ?
-                                    <span>you already have MetaMask<HelpIconView help_item_name={'bridge_eth_metamask'}/> extension installed</span>
+                                    <span>{Translation.getPhrase('szoMkBdfE', {
+                                        help_icon: <HelpIconView help_item_name={'bridge_eth_metamask'}/>
+                                    })}</span>
                                                     :
                                     <span className={''}>
                                      click <a href={''}
@@ -98,18 +104,25 @@ class GettingStartedView extends Component {
                             </div>
                             <div className={'mb-2'}>
                                 <div className={'mb-1'}>
-                                    2. create a wmlx wallet<HelpIconView help_item_name={'bridge_eth_metamask_wallet'}/> within MetaMask to get started
+                                    2. {Translation.getPhrase('NZnzTP7fN', {
+                                    help_icon: <HelpIconView help_item_name={'bridge_eth_metamask_wallet'}/>
+                                })}
                                 </div>
                                 <div className={'text-center'}>
                                     <a href={bridgeWalletScreen} target={'_blank'}><img src={bridgeWalletScreen}/></a>
                                 </div>
                             </div>
                             <div className={'mb-2'}>
-                                3. click <i>import tokens</i>
+                                3. {Translation.getPhrase('wSfEDfOcB', {
+                                import_tokens_phrase: <i>{Translation.getPhrase('hxqDynNEM')}</i>
+                            })}
                             </div>
                             <div className={'mb-2'}>
                                 <div className={'mb-1'}>
-                                    4. select <i>custom token</i> tab and provide wmlx smart contract address
+                                    4.
+                                    {Translation.getPhrase('9xl24xpBI', {
+                                        custom_token_phrase: <i>{Translation.getPhrase('qvYxi6QQJ')}</i>
+                                    })}
                                 </div>
                                 <input className={'form-control mb-2'} readOnly={true} value={BRIDGE_ETH_CONTRACT_ADDRESS}/>
                                 <div className={'text-center'}>
@@ -120,7 +133,9 @@ class GettingStartedView extends Component {
 
                             <div className={'mb-2'}>
                                 <div className={'mb-1'}>
-                                    5. confirm that you want to <i>import tokens</i>
+                                    5. {Translation.getPhrase('1un2p04AJ', {
+                                    import_tokens_phrase: <i>{Translation.getPhrase('C9mxWRoGM')}</i>
+                                })}
                                 </div>
                                 <div className={'text-center'}>
                                     <a href={bridgeWalletImportTokenConfirmation} target={'_blank'}><img src={bridgeWalletImportTokenConfirmation}/></a>
@@ -129,7 +144,7 @@ class GettingStartedView extends Component {
 
                             <div className={'mb-2'}>
                                 <div className={'mb-1'}>
-                                    6. when this is completed successfully you will see something like this:
+                                    6. {Translation.getPhrase('sUBgsM31L')}
                                 </div>
                                 <div className={'text-center'}>
                                     <a href={bridgeWalletImportTokenResult} target={'_blank'}><img src={bridgeWalletImportTokenResult}/></a>
@@ -139,62 +154,62 @@ class GettingStartedView extends Component {
                     </Collapse>
                     <hr/>
                     <div className={'section_subtitle collapse_title'} onClick={() => this.toggleCollapseState('collapse_send_to_exchange')}>
-                        <span>send to exchange</span> <FontAwesomeIcon className={'icon'}
-                                                                       icon={this.state.collapse_send_to_exchange ? 'chevron-up' : 'chevron-down'}
-                                                                       size="1x"/>
+                        <span>{Translation.getPhrase('rgLWY0FGn')}</span> <FontAwesomeIcon className={'icon'}
+                                                                                           icon={this.state.collapse_send_to_exchange ? 'chevron-up' : 'chevron-down'}
+                                                                                           size="1x"/>
                     </div>
                     <Collapse in={this.state.collapse_send_to_exchange}>
                         <div className={'mb-3 mt-2'}>
                             <div className={'mb-2'}>
-                                When you convert from Millix (mlx) to Wrapped Millix (wmlx) you need to
+                                {Translation.getPhrase('TT8GQZAQ4')}
                             </div>
                             <div className={'mb-2'}>
-                                1. specify the Ethereum address that you are sending the
-                                Wrapped Millix to. <b>You need to have an Ethereum balance available</b><HelpIconView
+                                1. {Translation.getPhrase('oGyu7ajqx')} <b>{Translation.getPhrase('y13JskKf0')}</b><HelpIconView
                                 help_item_name={'bridge_eth_balance_required'}/>
                             </div>
                             <div className={'mb-2'}>
-                                2. indicate how many wmlx you wish to send to the Ethereum address.<HelpIconView help_item_name={'bridge_eth_exchange_rate'}/>
+                                2. {Translation.getPhrase('lur7HV4b5')}<HelpIconView help_item_name={'bridge_eth_exchange_rate'}/>
                             </div>
                             <div className={'mb-2'}>
-                                3. click <i>send</i>. It will take 10-15 minutes for the wmlx to arrive at the Ethereum address.
+                                3. {Translation.getPhrase('Aldz0MHoa', {
+                                send_phrase: <i>{Translation.getPhrase('QuVec3TGo')}</i>
+                            })}. {Translation.getPhrase('k028szJjn')}
                             </div>
                             <div>
-                                When you send to an Ethereum address the bridge will pay the Ethereum transaction fee for you. You will pay a bridge fee of
-                                1,000,000
-                                Millix to reimburse the bridge. In addition, there is a Millix network fee of 1,000 to send your Millix to the bridge.
+                                {Translation.getPhrase('8AqXP89ry')}
                             </div>
                         </div>
                     </Collapse>
 
                     <hr/>
                     <div className={'section_subtitle collapse_title'} onClick={() => this.toggleCollapseState('collapse_send_from_exchange')}>
-                        <span>send from exchange</span> <FontAwesomeIcon className={'icon'}
-                                                                         icon={this.state.collapse_send_from_exchange ? 'chevron-up' : 'chevron-down'}
-                                                                         size="1x"/>
+                        <span>{Translation.getPhrase('J0rheaCHm')}</span> <FontAwesomeIcon className={'icon'}
+                                                                                           icon={this.state.collapse_send_from_exchange ? 'chevron-up' : 'chevron-down'}
+                                                                                           size="1x"/>
                     </div>
                     <Collapse in={this.state.collapse_send_from_exchange}>
                         <div className={'mb-3 mt-2'}>
                             <div className={'mb-2'}>
-                                When you convert from Wrapped Millix (wmlx) to Millix (mlx) you need to
+                                {Translation.getPhrase('jvPlZ1i12')}
                             </div>
                             <div className={'mb-2'}>
-                                1. provide the Millix address you want the Millix to be sent to
+                                1. {Translation.getPhrase('I2u2DAnZW')}
                             </div>
                             <div className={'mb-2'}>
-                                2. indicate how many wmlx you wish to send to the Millix address.<HelpIconView help_item_name={'bridge_eth_exchange_rate'}/>
+                                2. {Translation.getPhrase('vzwVaB5ED')}<HelpIconView help_item_name={'bridge_eth_exchange_rate'}/>
                             </div>
                             <div className={'mb-2'}>
-                                3. click <i>send</i>
+                                3. {Translation.getPhrase('Aldz0MHoa', {
+                                send_phrase: <i>{Translation.getPhrase('QuVec3TGo')}</i>
+                            })}
                             </div>
                             <div className={'mb-2'}>
                                 <div>
-                                    Your transaction requires two transaction fees: a fee for the Ethereum network and a fee for the Millix network. <b>You need
-                                    to have an Ethereum balance available</b><HelpIconView help_item_name={'bridge_eth_balance_required'}/>
+                                    {Translation.getPhrase('IME4DoFhS')}<b>{Translation.getPhrase('y13JskKf0')}</b><HelpIconView
+                                    help_item_name={'bridge_eth_balance_required'}/>
                                 </div>
                                 <div>
-                                    The fee for the Ethereum network is measured in GWEI (amount is calculated automatically). The transaction fee for the
-                                    bridge and the Millix network is 1,000,000 mlx.
+                                    {Translation.getPhrase('Z154HHyBy')}
                                 </div>
                             </div>
                         </div>

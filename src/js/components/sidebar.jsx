@@ -233,31 +233,31 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('trade')}
                     >
                         <NavText>
-                            exchange <FontAwesomeIcon className={'icon'}
-                                                      icon="chevron-down"
-                                                      size="1x"/>
+                            {Translation.getPhrase('iAxfrYDQY')} <FontAwesomeIcon className={'icon'}
+                                                                                  icon="chevron-down"
+                                                                                  size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
                                              icon="chevron-up"
                                              size="1x"/>
                         </NavText>
                         <NavItem key={'exchange-getting-started'} eventKey="/exchange-getting-started">
                             <NavText>
-                                getting started
+                                {Translation.getPhrase('pCHSGHLZ8')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'send-to-exchange'} eventKey="/send-to-exchange">
                             <NavText>
-                                send to exchange
+                                {Translation.getPhrase('rgLWY0FGn')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'send-from-exchange'} eventKey="/send-from-exchange">
                             <NavText>
-                                send from exchange
+                                {Translation.getPhrase('J0rheaCHm')}
                             </NavText>
                         </NavItem>
                         <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
                             <NavText>
-                                quick buy
+                                {Translation.getPhrase('8N07p0emf')}
                             </NavText>
                         </NavItem>
                     </NavItem>

@@ -65,14 +65,14 @@ class TransactionMintView extends Component {
         if (!web3.utils.isAddress(transactionParams.address)) {
             error_list.push({
                 name   : 'address',
-                message: `the destination address in the ethereum network is not valid`
+                message: Translation.getPhrase('Ekkw26Nqd')
             });
         }
 
         if (!this.web3) {
             error_list.push({
                 name   : 'metamask',
-                message: `metamask is not installed`
+                message: Translation.getPhrase('lmlLnCuLO')
             });
         }
 
@@ -174,21 +174,18 @@ class TransactionMintView extends Component {
 
     render() {
         return <div className={'panel panel-filled'}>
-            <div className={'panel-heading bordered'}>send to exchange</div>
+            <div className={'panel-heading bordered'}>{Translation.getPhrase('rgLWY0FGn')}</div>
             <div className={'panel-body'}>
-                {window.ethereum ?
+                {window.ethereum && false ?
                  <>
                      <p>
-                         use this form to send millix (mlx) to the ethereum network as wrapped millix (wmlx). there is a
-                         millix network fee to send millix to the bridge and an ethereum network fee to send the wmlx from the bridge to the
-                         destination
-                         address.
+                         {Translation.getPhrase('xeNgwIBgL')}
                      </p>
                      <ErrorList
                          error_list={this.state.error_list}/>
                      <Form>
                          <Form.Group className="form-group">
-                             <label>destination address in the ethereum network</label>
+                             <label>{Translation.getPhrase('Sm8CIy2ih')}</label>
                              <Form.Control type="text"
                                            placeholder={Translation.getPhrase('c9861d7c2')}
                                            ref={c => this.destinationAddress = c}/>
@@ -196,7 +193,7 @@ class TransactionMintView extends Component {
 
                          <div className={'d-flex mb-2'}>
                              <Form.Group className={'flex-fill me-3'}>
-                                 <label>wmlx amount</label>
+                                 <label>{Translation.getPhrase('zl4TR8plF')}</label>
                                  <Form.Control type="text"
                                                placeholder={Translation.getPhrase('cdfa46e99')}
                                                pattern="[0-9]+([,][0-9]{1,2})?"
@@ -205,7 +202,7 @@ class TransactionMintView extends Component {
                              </Form.Group>
 
                              <Form.Group className="flex-fill">
-                                 <label>mlx amount</label>
+                                 <label>{Translation.getPhrase('RlfKIuDdA')}</label>
                                  <Form.Control type="text"
                                                value={this.amount?.value ? format.millix(this.amount?.value.replaceAll(',', '') * 1000000) : 0}
                                                disabled={true}/>
@@ -216,14 +213,16 @@ class TransactionMintView extends Component {
                          </div>
 
                          <Form.Group className="form-group">
-                             <label>bridge fee (mlx)</label>
+                             <label>{Translation.getPhrase('WvuvBjQWf', {
+                                 ticker: 'wmlx'
+                             })}</label>
                              <Form.Control type="text"
                                            value={format.number(this.bridgeFee)}
                                            disabled={true}/>
                          </Form.Group>
                          <Form.Group className="form-group"
                                      as={Row}>
-                             <label>millix network fee (mlx)</label>
+                             <label>{Translation.getPhrase('oVNOGjnmA')}</label>
                              <Col className={'input-group'}>
                                  <Form.Control type="text"
                                                placeholder={Translation.getPhrase('5d5997bf3')}
@@ -253,9 +252,14 @@ class TransactionMintView extends Component {
                              on_accept={() => this.sendTransaction()}
                              on_close={() => this.cancelSendTransaction()}
                              body={<div>
-                                 <div>{`you are about to mint and send ${format.wMillix(this.state.amount)} to the ethereum address ${this.state.address}`}</div>
-                                 <div>this transaction will cost
-                                     you {format.millix(this.state.amount * 1000000 + this.bridgeFee + this.state.fee)}</div>
+                                 <div>{Translation.getPhrase('BMt0Xqr6A', {
+                                     amount : format.wMillix(this.state.amount),
+                                     address: this.state.address
+                                 })}</div>
+                                 <div>
+                                     {Translation.getPhrase('BOWvHT9ck', {
+                                         amount: format.millix(this.state.amount * 1000000 + this.bridgeFee + this.state.fee)
+                                     })}</div>
                                  {text.get_confirmation_modal_question()}
                              </div>}/>
 
@@ -276,12 +280,7 @@ class TransactionMintView extends Component {
                              }}
                              on_close={() => this.cancelSendTransaction()}
                              body={<div>
-                                 <div>The address you are sending Wrapped Millix to does not have any Ethereum. Ethereum is required to pay
-                                     transaction fees on the Ethereum blockchain. Without Ethereum you will not be able to trade Wrapped
-                                     Millix on
-                                     defi exchanges or send the Wrapped Millix to any other address, including your own addresses. The Wrapped
-                                     Millix will be stuck on your Ethereum address until you have Ethereum.
-                                 </div>
+                                 <div>{Translation.getPhrase('hhLhq3wBG')}</div>
                                  {text.get_confirmation_modal_question()}
                              </div>}/>
 

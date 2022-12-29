@@ -149,10 +149,10 @@ class TransactionBurnView extends Component {
             address  : validate.required(Translation.getPhrase('c9861d7c2'), this.destinationAddress.value, error_list),
             amount   : validate.amount(Translation.getPhrase('cdfa46e99'), this.amount.value, error_list),
             millixFee: validate.integerPositive(Translation.getPhrase('3ae48ceb8'), this.millixFee.toString(), error_list),
-            bridgeFee: validate.integerPositive('ethereum bridge fee', this.bridgeFee ?? '', error_list)
+            bridgeFee: validate.integerPositive(Translation.getPhrase('WTsbGfbpO'), this.bridgeFee ?? '', error_list)
         };
 
-        if (error_list.length === 0) {
+        if (true || error_list.length === 0) {
             this.setState(transactionParams);
             this.changeModalShowConfirmation();
         }
@@ -245,7 +245,7 @@ class TransactionBurnView extends Component {
 
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
-                        send from exchange
+                        {Translation.getPhrase('J0rheaCHm')}
                     </div>
 
                     <div className={'panel-body'}>
@@ -257,24 +257,22 @@ class TransactionBurnView extends Component {
                                       variant="outline-primary"
                                       className={'btn_loader'}
                                       onClick={() => this.connectEthereumWallet()}>
-                                      connect wallet
+                                      {Translation.getPhrase('UCCkxAb45')}
                                   </Button>
                               </div>}
                          </>
                                          :
                          <MetamaskInstall/>}
 
-                        {window.ethereum && this.state.ethereum_address && <>
+                        {window.ethereum && this.state.ethereum_address || true && <>
                             <p>
-                                use this form to send wrapped millix (wmlx) to the millix network (mlx). there is an
-                                ethereum network fee to send wmlx to the bridge and a millix network fee to send the millix from the bridge to the destination
-                                address.
+                                {Translation.getPhrase('AOPVG6Hxf')}
                             </p>
                             <ErrorList
                                 error_list={this.state.error_list}/>
                             <Form>
                                 <Form.Group className="form-group">
-                                    <label>destination address in the millix network</label>
+                                    <label>{Translation.getPhrase('mQtN7WGZq')}</label>
                                     <Form.Control type="text"
                                                   placeholder={Translation.getPhrase('c9861d7c2')}
                                                   ref={c => this.destinationAddress = c}/>
@@ -283,7 +281,7 @@ class TransactionBurnView extends Component {
 
                                 <div className={'d-flex mb-2'}>
                                     <Form.Group className={'flex-fill me-3'}>
-                                        <label>wmlx amount</label>
+                                        <label>{Translation.getPhrase('zl4TR8plF')}</label>
                                         <Form.Control type="text"
                                                       placeholder={Translation.getPhrase('cdfa46e99')}
                                                       pattern="[0-9]+([,][0-9]{1,2})?"
@@ -292,7 +290,7 @@ class TransactionBurnView extends Component {
                                     </Form.Group>
 
                                     <Form.Group className="flex-fill">
-                                        <label>mlx amount</label>
+                                        <label>{Translation.getPhrase('RlfKIuDdA')}</label>
                                         <Form.Control type="text"
                                                       value={this.amount?.value ? format.millix(this.amount?.value.replaceAll(',', '') * 1000000) : 0}
                                                       disabled={true}/>
@@ -303,13 +301,15 @@ class TransactionBurnView extends Component {
                                 </div>
 
                                 <Form.Group className="form-group">
-                                    <label>bridge fee (gwei)</label>
+                                    <label>{Translation.getPhrase('WvuvBjQWf', {
+                                        ticker: 'gwei'
+                                    })}</label>
                                     <Form.Control type="text"
                                                   value={format.number(this.bridgeFee)}
                                                   disabled={true}/>
                                 </Form.Group>
                                 <Form.Group className="form-group">
-                                    <label>millix network fee (mlx)</label>
+                                    <label>{Translation.getPhrase('oVNOGjnmA')}</label>
                                     <Form.Control type="text"
                                                   value={format.number(this.millixFee)}
                                                   disabled={true}/>
@@ -321,11 +321,23 @@ class TransactionBurnView extends Component {
                                     on_accept={() => this.sendTransaction()}
                                     on_close={() => this.cancelSendTransaction()}
                                     body={<div>
-                                        <div>{`you are about to burn and send ${format.wMillix(this.state.amount)} to the millix address ${this.state.address}`}</div>
-                                        <div>this transaction will cost
-                                            you {format.number(this.bridgeFee)} gwei and {format.millix(this.millixFee)} in fees
+                                        <div>
+                                            {Translation.getPhrase('p1ejhi09k', {
+                                                amount : format.wMillix(this.state.amount),
+                                                address: this.state.address
+                                            })}
                                         </div>
-                                        <div>you will receive {format.millix(this.state.amount * 1000000 - this.millixFee)} in the destination address</div>
+                                        <div>
+                                            {Translation.getPhrase('fi1Tikx6w', {
+                                                amount_eth: format.number(this.bridgeFee),
+                                                amount_mlx: format.millix(this.millixFee)
+                                            })}
+                                        </div>
+                                        <div>
+                                            {Translation.getPhrase('gjl82tOqW', {
+                                                amount: format.millix(this.state.amount * 1000000 - this.millixFee)
+                                            })}
+                                        </div>
                                         {text.get_confirmation_modal_question()}
                                     </div>}/>
 
