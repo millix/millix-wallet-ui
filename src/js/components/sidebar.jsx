@@ -99,7 +99,9 @@ class Sidebar extends Component {
         let result = false;
         if (!this.state.ignore_is_expanded || this.state.ignore_is_expanded !== defaultSelected) {
             const section_list = {
-                trade        : [],
+                trade        : [
+                    '/send-to-exchange'
+                ],
                 earn         : [],
                 transaction  : [
                     '/transaction-list',
@@ -231,21 +233,31 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('trade')}
                     >
                         <NavText>
-                            {Translation.getPhrase('14539e6a9')} <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('iAxfrYDQY')} <FontAwesomeIcon className={'icon'}
                                                                                   icon="chevron-down"
                                                                                   size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
                                              icon="chevron-up"
                                              size="1x"/>
                         </NavText>
-                        <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
+                        <NavItem key={'exchange-getting-started'} eventKey="/exchange-getting-started">
                             <NavText>
-                                swapland.io
+                                {Translation.getPhrase('pCHSGHLZ8')}
                             </NavText>
                         </NavItem>
-                        <NavItem key={'millix_com'} onClick={() => window.open('https://millix.com', '_blank').focus()}>
+                        <NavItem key={'send-to-exchange'} eventKey="/send-to-exchange">
                             <NavText>
-                                millix.com
+                                {Translation.getPhrase('rgLWY0FGn')}
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'send-from-exchange'} eventKey="/send-from-exchange">
+                            <NavText>
+                                {Translation.getPhrase('J0rheaCHm')}
+                            </NavText>
+                        </NavItem>
+                        <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
+                            <NavText>
+                                {Translation.getPhrase('8N07p0emf')}
                             </NavText>
                         </NavItem>
                     </NavItem>

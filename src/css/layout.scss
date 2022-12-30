@@ -489,3 +489,18 @@ h4, .h4, h5, .h5, h6, .h6 {
   }
 }
 
+body .collapse_title {
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0;
+
+  > span {
+    display: inline-block;
+    margin-right: 0.3rem;
+  }
+}
+
+.exchange_getting_started img {
+  max-height: 30rem;
+  max-width: 30rem;
+}
