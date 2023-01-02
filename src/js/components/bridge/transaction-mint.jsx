@@ -176,7 +176,7 @@ class TransactionMintView extends Component {
         return <div className={'panel panel-filled'}>
             <div className={'panel-heading bordered'}>{Translation.getPhrase('rgLWY0FGn')}</div>
             <div className={'panel-body'}>
-                {window.ethereum && false ?
+                {window.ethereum ?
                  <>
                      <p>
                          {Translation.getPhrase('xeNgwIBgL')}
