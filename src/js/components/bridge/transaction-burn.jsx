@@ -264,7 +264,7 @@ class TransactionBurnView extends Component {
                                          :
                          <MetamaskInstall/>}
 
-                        {window.ethereum && this.state.ethereum_address || true && <>
+                        {window.ethereum && this.state.ethereum_address && <>
                             <p>
                                 {Translation.getPhrase('AOPVG6Hxf')}
                             </p>
