@@ -32,7 +32,7 @@ class TransactionMintView extends Component {
             fee                    : ''
         };
 
-        this.bridgeFee = 1000000;
+        this.bridgeFee = 10000000;
         this.send      = this.send.bind(this);
 
         if (window.ethereum) {
