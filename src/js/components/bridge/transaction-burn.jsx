@@ -126,7 +126,7 @@ class TransactionBurnView extends Component {
         return this.wmlxContract.methods.burnFees().call()
                    .then(burnFees => {
                        try {
-                           this.bridgeFee = parseInt(burnFees);
+                           this.bridgeFee = this.web3.utils.toWei(burnFees, 'gwei');
                        }
                        catch (e) {
                        }
@@ -302,10 +302,10 @@ class TransactionBurnView extends Component {
 
                                 <Form.Group className="form-group">
                                     <label>{Translation.getPhrase('WvuvBjQWf', {
-                                        ticker: 'gwei'
+                                        ticker: 'ether'
                                     })}</label>
                                     <Form.Control type="text"
-                                                  value={format.number(this.bridgeFee)}
+                                                  value={format.number(this.web3.utils.fromWei(this.bridgeFee))}
                                                   disabled={true}/>
                                 </Form.Group>
                                 <Form.Group className="form-group">
@@ -329,7 +329,7 @@ class TransactionBurnView extends Component {
                                         </div>
                                         <div>
                                             {Translation.getPhrase('fi1Tikx6w', {
-                                                amount_eth: format.number(this.bridgeFee),
+                                                amount_eth: format.number(this.web3.utils.fromWei(this.bridgeFee)),
                                                 amount_mlx: format.millix(this.millixFee)
                                             })}
                                         </div>
