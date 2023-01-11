@@ -15,6 +15,7 @@ import {changeLoaderState} from '../loader';
 import ReactChipInput from 'react-chip-input';
 import Translation from '../../common/translation';
 import {TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config';
+import ModalAddressBookView from '../utils/modal-address-book-view';
 
 
 class MessageComposeForm extends Component {
@@ -46,7 +47,8 @@ class MessageComposeForm extends Component {
             destination_address_list: address_value ? [address_value] : [],
             subject                 : propsState.subject ? this.getReplySubjectText(propsState.subject) : '',
             message                 : message_body,
-            txid                    : propsState.txid
+            txid                    : propsState.txid,
+            modal_show_address_book : false
         };
 
         this.send = this.send.bind(this);
@@ -265,32 +267,57 @@ class MessageComposeForm extends Component {
         return this.props.hidden_field_list?.includes(field) ? 'd-none' : '';
     }
 
+    getAddressBookButton() {
+        if (!!this.props.address_book) {
+            return <button
+                className="btn btn-outline-input-group-addon icon_only"
+                type="button"
+                onClick={() => this.changeModalShowAddressBook()}>
+                <FontAwesomeIcon
+                    icon={'address-book'}
+                />
+            </button>;
+        }
+        return null;
+    }
+
+    changeModalShowAddressBook(value = true) {
+        this.setState({
+            modal_show_address_book: value
+        });
+    }
+
     render() {
         return (<>
             <ErrorList
                 error_list={this.state.error_list}/>
             <Row className={'message_compose'}>
-                <Col className={this.getFieldClassname('address')}>
-                    <Form.Group className="form-group" role="form">
-                        <label>{Translation.getPhrase('6ee1a646f')}</label>
-                        <ReactChipInput
-                            ref={ref => {
-                                if (ref && !ref.state.focused && ref.formControlRef.current.value !== '') {
-                                    this.addDestinationAddress(ref.formControlRef.current.value);
-                                    ref.formControlRef.current.value = '';
-                                }
-                                if (!this.chipInputAddress) {
-                                    ref.formControlRef.current.placeholder = Translation.getPhrase('6ee1a646f');
-                                    this.chipInputAddress                  = ref;
-                                }
-                            }}
-                            classes="chip_input form-control"
-                            chips={this.state.destination_address_list}
-                            onSubmit={value => this.addDestinationAddress(value)}
-                            onRemove={index => this.removeDestinationAddress(index)}
-                        />
-                    </Form.Group>
-                </Col>
+                <Form>
+                    <Col className={this.getFieldClassname('address')}>
+                        <Form.Group className="form-group" role="form">
+                            <label>{Translation.getPhrase('6ee1a646f')}</label>
+                            <Col className={'input-group'}>
+                                <ReactChipInput
+                                    ref={ref => {
+                                        if (ref && !ref.state.focused && ref.formControlRef.current.value !== '') {
+                                            this.addDestinationAddress(ref.formControlRef.current.value);
+                                            ref.formControlRef.current.value = '';
+                                        }
+                                        if (!this.chipInputAddress) {
+                                            ref.formControlRef.current.placeholder = Translation.getPhrase('6ee1a646f');
+                                            this.chipInputAddress                  = ref;
+                                        }
+                                    }}
+                                    classes="chip_input form-control"
+                                    chips={this.state.destination_address_list}
+                                    onSubmit={value => this.addDestinationAddress(value)}
+                                    onRemove={index => this.removeDestinationAddress(index)}
+                                />
+                                {this.getAddressBookButton()}
+                            </Col>
+                        </Form.Group>
+                    </Col>
+                </Form>
                 <Form>
                     <Col className={this.getFieldClassname('subject')}>
                         <Form.Group className="form-group">
@@ -399,6 +426,11 @@ class MessageComposeForm extends Component {
                             on_close={() => this.changeModalShowSendResult(false)}
                             heading={Translation.getPhrase('3ff3dba19')}
                             body={this.state.modal_body_send_result}/>
+                        <ModalAddressBookView
+                            show={this.state.modal_show_address_book}
+                            on_close={() => this.changeModalShowAddressBook(false)}
+                            on_accept={(address) => this.addDestinationAddress(address)}
+                        />
                         <Form.Group as={Row}>
                             <Button
                                 variant="outline-primary"

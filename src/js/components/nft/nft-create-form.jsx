@@ -93,13 +93,13 @@ class NftCreateForm extends Component {
             return;
         }
 
-        const address_list = [validate.required('recipient', this.state.destination_address_list[0], error_list)];
+        const address_list      = [validate.required('recipient', this.state.destination_address_list[0], error_list)];
         const transaction_param = {
             address_list: address_list,
             amount      : validate.amount('amount', this.amount, error_list),
             fee         : validate.amount('fee', this.fee, error_list),
-            image: !!this.state.txid || validate.required('image', this.state.image, error_list),
-            dns  : validate.domain_name('verified sender', this.dns.value, error_list)
+            image       : !!this.state.txid || validate.required('image', this.state.image, error_list),
+            dns         : validate.domain_name('verified sender', this.dns.value, error_list)
         };
 
         if (error_list.length === 0) {

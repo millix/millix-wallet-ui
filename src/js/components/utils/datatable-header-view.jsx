@@ -13,6 +13,11 @@ class DatatableHeaderView extends Component {
         moment.relativeTimeThreshold('ss', -1); // required to get diff in
         // seconds instead of "a few
         // seconds ago"
+        this.inputRef = React.createRef();
+    }
+
+    onInputRef() {
+        this.inputRef.current.click();
     }
 
     render() {
@@ -43,12 +48,39 @@ class DatatableHeaderView extends Component {
 
         return (
             <div className={'datatable_action_row'}>
+                {this.props.allow_import && (
+                    <Col xs={4}>
+                        <Button
+                            variant="outline-primary"
+                            className={'btn_loader'}
+                            type="file"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                this.onInputRef();
+                            }}
+                            size={'sm'}>
+                            <FontAwesomeIcon
+                                size="1x"
+                                icon={'upload'}/>
+                            upload
+                        </Button>
+                        <input
+                            ref={this.inputRef}
+                            className={'d-none'}
+                            type="file"
+                            name={'file_upload'}
+                            onChange={this.props.onImportFile}
+                        />
+                    </Col>
+                )}
+
                 {this.props.allow_export && (
                     <>
-                        <Col>
+                        <Col xs={4}>
                             <Button variant="outline-primary"
+                                    className={'me-auto ms-auto'}
                                     size={'sm'}
-                                    onClick={() => this.props.datatable_reference.exportCSV({selectionOnly: false})}
+                                    onClick={() => this.props.datatable_reference.exportCSV(({selectionOnly: false}))}
                             >
                                 csv
                             </Button>
@@ -58,7 +90,7 @@ class DatatableHeaderView extends Component {
 
                 {action_button.on_click && (
                     <>
-                        <Col>
+                        <Col xs={4} className={'ms-auto'}>
                             <Button variant="outline-primary"
                                     size={'sm'}
                                     className={'datatable_action_button'}
@@ -73,7 +105,7 @@ class DatatableHeaderView extends Component {
                     </>
                 )}
 
-                {(this.props.allow_export || action_button.on_click)  && (
+                {(this.props.allow_export || action_button.on_click) && (
                     <hr/>
                 )}
 
