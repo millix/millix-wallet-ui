@@ -294,6 +294,12 @@ class Sidebar extends Component {
                         </NavText>
                     </NavItem>
 
+                    <NavItem key={'address-book'} eventKey="/address-book">
+                        <NavText>
+                            {'address book'}
+                        </NavText>
+                    </NavItem>
+
                     <NavItem
                         eventKey="transaction"
                         expanded={this.isExpanded('transaction', defaultSelected)}

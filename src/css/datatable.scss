@@ -41,6 +41,17 @@
   background-color: $table-hover-bg;
 }
 
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd.p-highlight,
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-highlight,
+.p-datatable .p-datatable-tbody > tr.p-highlight,
+.p-datatable.p-datatable-selectable .p-datatable-tbody > tr.p-selectable-row:focus,
+.p-datatable.p-datatable-selectable .p-datatable-tbody > tr.p-selectable-row:not(.p-highlight):not(.p-datatable-emptymessage):hover {
+  outline: none;
+  background-color: $table-hover-bg;
+  background: $table-hover-bg;
+  color: $color-white;
+}
+
 .p-datatable .p-datatable-thead > tr > th,
 .p-datatable .p-datatable-tbody > tr > td {
   border: $border-width solid $border-color;

@@ -40,6 +40,7 @@ import NftPreviewView from './nft/nft-preview-view';
 import BridgeGettingStartedView from './bridge/getting-started-view';
 import BridgeTransactionMintView from './bridge/transaction-mint';
 import BridgeTransactionBurnView from './bridge/transaction-burn';
+import AddressBookView from './address-book-view';
 
 
 class AppContainer extends Component {
@@ -115,6 +116,8 @@ class AppContainer extends Component {
                                                  component={TransactionDetails}/>
                     <UnlockedWalletRequiredRoute path="/address-list"
                                                  component={AddressListView}/>
+                    <UnlockedWalletRequiredRoute path="/address-book"
+                                                 component={AddressBookView}/>
                     <UnlockedWalletRequiredRoute path="/transaction-list"
                                                  component={TransactionHistoryView}/>
                     <UnlockedWalletRequiredRoute path="/faq"

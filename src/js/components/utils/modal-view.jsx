@@ -55,7 +55,8 @@ class ModalView extends Component {
         let accept_button = '';
         if (this.isOnAcceptDefined()) {
             accept_button = <Button variant="outline-primary"
-                                    onClick={() => this.accept()}>
+                                    onClick={() => this.accept()}
+                                    disabled={this.props.disabled}>
                 {Translation.getPhrase('ec17636ae')}
             </Button>;
         }

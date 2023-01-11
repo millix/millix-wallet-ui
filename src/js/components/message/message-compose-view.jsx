@@ -5,6 +5,7 @@ import {Col, Row} from 'react-bootstrap';
 import MessageComposeForm from './message-compose-form';
 import Translation from '../../common/translation';
 
+
 class MessageComposeView extends Component {
 
     render() {
@@ -18,7 +19,9 @@ class MessageComposeView extends Component {
                                 <p>
                                     {Translation.getPhrase('24861d022')}
                                 </p>
-                                <MessageComposeForm/>
+                                <MessageComposeForm
+                                    address_book={true}
+                                />
                             </div>
                         </div>
                     </Col>

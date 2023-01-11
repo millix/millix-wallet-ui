@@ -1,7 +1,7 @@
 const const_value_default = {
     'GENESIS_TRANSACTION_ID'     : '2VngVznbdiQ5tqfWqn2NMP8DijqCbLX79Gygo9yYRVFU6iN35h',
     'GENESIS_SHARD_ID'           : 'qGuUgMMVmaCvqrvoWG6zARjkrujGMpzJmpNhBgz1y3RjBG7ZR',
-    'BRIDGE_ETH_CONTRACT_ADDRESS': '0x77d0cb0ab54f9e74b9405a5b3f60da06a78f1aad',
+    'BRIDGE_ETH_CONTRACT_ADDRESS': '0x77d0cb0ab54f9e74b9405a5b3f60da06a78f1aad'
 };
 
 let environment;
