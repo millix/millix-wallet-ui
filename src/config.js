@@ -46,7 +46,7 @@ export const TRANSACTION_DATA_TYPE_ASSET_META = 'tangled_asset_meta';
 export const DEFAULT_NFT_CREATE_AMOUNT = 10000;
 export const DEFAULT_NFT_CREATE_FEE    = 1000;
 
-export const BRIDGE_ETH_CONTRACT_ADDRESS = '0x2C9d6465aaDa86421A9CF5cAD030fEF3de93c5aD';
+export const BRIDGE_ETH_CONTRACT_ADDRESS = '0x77d0cb0ab54f9e74b9405a5b3f60da06a78f1aad';
 
 const config                           = {
     WALLET_LOG_SIZE_MAX,
