@@ -1,6 +1,7 @@
 const const_value_default = {
-    'GENESIS_TRANSACTION_ID': '2VngVznbdiQ5tqfWqn2NMP8DijqCbLX79Gygo9yYRVFU6iN35h',
-    'GENESIS_SHARD_ID'      : 'qGuUgMMVmaCvqrvoWG6zARjkrujGMpzJmpNhBgz1y3RjBG7ZR'
+    'GENESIS_TRANSACTION_ID'     : '2VngVznbdiQ5tqfWqn2NMP8DijqCbLX79Gygo9yYRVFU6iN35h',
+    'GENESIS_SHARD_ID'           : 'qGuUgMMVmaCvqrvoWG6zARjkrujGMpzJmpNhBgz1y3RjBG7ZR',
+    'BRIDGE_ETH_CONTRACT_ADDRESS': '0x77d0cb0ab54f9e74b9405a5b3f60da06a78f1aad'
 };
 
 let environment;
@@ -27,8 +28,9 @@ function get_const_value(const_name) {
 
 export const WALLET_LOG_SIZE_MAX = 1000;
 
-export const GENESIS_TRANSACTION_ID = get_const_value('GENESIS_TRANSACTION_ID');
-export const GENESIS_SHARD_ID       = get_const_value('GENESIS_SHARD_ID');
+export const GENESIS_TRANSACTION_ID      = get_const_value('GENESIS_TRANSACTION_ID');
+export const GENESIS_SHARD_ID            = get_const_value('GENESIS_SHARD_ID');
+export const BRIDGE_ETH_CONTRACT_ADDRESS = get_const_value('BRIDGE_ETH_CONTRACT_ADDRESS');
 
 export const CURRENCY_PAIR_SUMMARY_REFRESH_INTERVAL_MS = 10 * 60000;
 export const DISCORD_URL                               = 'https://discord.com/invite/nb5uaKq4yX';
@@ -46,9 +48,7 @@ export const TRANSACTION_DATA_TYPE_ASSET_META = 'tangled_asset_meta';
 export const DEFAULT_NFT_CREATE_AMOUNT = 10000;
 export const DEFAULT_NFT_CREATE_FEE    = 1000;
 
-export const BRIDGE_ETH_CONTRACT_ADDRESS = '0x77d0cb0ab54f9e74b9405a5b3f60da06a78f1aad';
-
-const config                           = {
+const config = {
     WALLET_LOG_SIZE_MAX,
     GENESIS_TRANSACTION_ID,
     GENESIS_SHARD_ID,

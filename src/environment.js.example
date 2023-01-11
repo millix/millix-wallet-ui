@@ -14,9 +14,11 @@ const environment = {
 };
 
 // test net
-// environment['NODE_ID']                = '';
-// environment['NODE_SIGNATURE']         = '';
-// environment['GENESIS_TRANSACTION_ID'] = 'BbYAZLcxbx6adN3KwHZSTGjE6VpeDhiJ3ZPrXs6EMAGqDPfi5';
-// environment['GENESIS_SHARD_ID']       = 'AyAC3kjLtjM4vktAJ5Xq6mbXKjzEqXoSsmGhhgjnkXUvjtF2M';
+// environment['MODE_TEST_NETWORK']           = true;
+// environment['NODE_ID']                     = '';
+// environment['NODE_SIGNATURE']              = '';
+// environment['GENESIS_TRANSACTION_ID']      = 'BbYAZLcxbx6adN3KwHZSTGjE6VpeDhiJ3ZPrXs6EMAGqDPfi5';
+// environment['GENESIS_SHARD_ID']            = 'AyAC3kjLtjM4vktAJ5Xq6mbXKjzEqXoSsmGhhgjnkXUvjtF2M';
+// environment['BRIDGE_ETH_CONTRACT_ADDRESS'] = '0x2C9d6465aaDa86421A9CF5cAD030fEF3de93c5aD';
 
 export default environment;

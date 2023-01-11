@@ -32,7 +32,7 @@ class TransactionMintView extends Component {
             fee                    : ''
         };
 
-        this.bridgeFee = 1000000;
+        this.bridgeFee = 10000000;
         this.send      = this.send.bind(this);
 
         if (window.ethereum) {
@@ -176,7 +176,7 @@ class TransactionMintView extends Component {
         return <div className={'panel panel-filled'}>
             <div className={'panel-heading bordered'}>{Translation.getPhrase('rgLWY0FGn')}</div>
             <div className={'panel-body'}>
-                {window.ethereum && false ?
+                {window.ethereum ?
                  <>
                      <p>
                          {Translation.getPhrase('xeNgwIBgL')}
