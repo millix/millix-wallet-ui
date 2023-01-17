@@ -340,7 +340,7 @@ class HelpIconView extends Component {
             }
             ,
             'auto_aggregation'           : {
-                'title': 'auto-aggregation',
+                'title': Translation.getPhrase('BvHlTKiXV'),
                 'body' : <ul>
                     <li>
                         auto-aggregation optimizes the funds in your wallet

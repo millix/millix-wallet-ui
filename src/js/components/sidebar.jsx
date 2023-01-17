@@ -370,7 +370,7 @@ class Sidebar extends Component {
                         onClick={() => this.toggleParentNavigationItem('asset')}
                     >
                         <NavText>
-                            asset <FontAwesomeIcon className={'icon'}
+                            {Translation.getPhrase('Mw40Tj8Kl')} <FontAwesomeIcon className={'icon'}
                                                    icon="chevron-down"
                                                    size="1x"/>
                             <FontAwesomeIcon className={'icon hidden'}
