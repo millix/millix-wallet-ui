@@ -214,7 +214,7 @@ class TransactionMintView extends Component {
 
                          <Form.Group className="form-group">
                              <label>{Translation.getPhrase('WvuvBjQWf', {
-                                 ticker: 'wmlx'
+                                 ticker: 'mlx'
                              })}</label>
                              <Form.Control type="text"
                                            value={format.number(this.bridgeFee)}
