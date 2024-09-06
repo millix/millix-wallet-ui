@@ -7,7 +7,7 @@ class API {
     static HOST_MILLIX_API  = 'https://localhost:5500/api';
     static HOST_TANGLED_API = 'https://localhost:15555/api';
 
-    static HOST_TANGLED_BOT_API = 'http://localhost:16666/api';
+    static HOST_TANGLED_BOT_API = 'https://localhost:16666/api';
 
     constructor() {
         this.nodeID        = undefined;
