@@ -14,6 +14,7 @@
   color: inherit;
   border-radius: $border-radius;
   border: $border-width solid $border-color;
+  z-index: $zindex-dropdown !important;
 }
 
 .p-dropdown-panel .p-dropdown-items {

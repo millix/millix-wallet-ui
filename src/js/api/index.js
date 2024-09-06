@@ -7,6 +7,8 @@ class API {
     static HOST_MILLIX_API  = 'https://localhost:5500/api';
     static HOST_TANGLED_API = 'https://localhost:15555/api';
 
+    static HOST_TANGLED_BOT_API = 'http://localhost:16666/api';
+
     constructor() {
         this.nodeID        = undefined;
         this.nodeSignature = undefined;
@@ -24,6 +26,12 @@ class API {
 
     fetchApiTangled(url, result_param = {}, method = 'GET') {
         const absolute_url = this.getTangledApiURL() + url;
+
+        return this.fetchApi(absolute_url, result_param, method);
+    }
+
+    fetchApiTangledBot(url, result_param = {}, method = 'GET') {
+        const absolute_url = this.getTangledBotApiURL() + url;
 
         return this.fetchApi(absolute_url, result_param, method);
     }
@@ -119,6 +127,10 @@ class API {
 
     getTangledApiURL() {
         return API.HOST_TANGLED_API;
+    }
+
+    getTangledBotApiURL() {
+        return API.HOST_TANGLED_BOT_API;
     }
 
     getAdvertisementCategoryList() {
@@ -504,6 +516,34 @@ class API {
             p1: contacts_list
         });
     }
+
+    getTangledBotExchangeApiKey() {
+        return this.fetchApiTangledBot(`/krSnkcU4DLqKDG3x`);
+    }
+
+    setTangledBotExchangeApiKey(apiKey) {
+        return this.fetchApiTangledBot(`/zdLrGUDCxXZLSeBz`, {p0: apiKey});
+    }
+
+    listStrategies(strategyType) {
+        return this.fetchApiTangledBot(`/G53BNuerqTA7LSuF`, {p0: strategyType});
+    }
+
+    upsertStrategy(strategyId, strategyDescription, strategyType, orderType, amount, priceMin, priceMax, totalBudget, extraConfig, status) {
+        return this.fetchApiTangledBot(`/Dm4LbtkrxBbdXwKw`, {
+            p0 : strategyId,
+            p1 : strategyDescription,
+            p2 : strategyType,
+            p3 : orderType,
+            p4 : amount,
+            p5 : priceMin,
+            p6 : priceMax,
+            p8 : totalBudget,
+            p9 : extraConfig,
+            p10: status
+        }, 'POST');
+    }
+
 }
 
 

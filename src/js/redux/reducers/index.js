@@ -62,7 +62,8 @@ const initialState = {
     notification         : {
         volume: 0
     },
-    message_stat         : {}
+    message_stat         : {},
+    bot                  : {}
 };
 
 function rootReducer(state = initialState, action) {

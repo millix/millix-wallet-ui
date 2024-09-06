@@ -41,6 +41,7 @@ import BridgeGettingStartedView from './bridge/getting-started-view';
 import BridgeTransactionMintView from './bridge/transaction-mint';
 import BridgeTransactionBurnView from './bridge/transaction-burn';
 import AddressBookView from './address-book-view';
+import TradingBotView from './trading-bot/trading-bot-view';
 
 
 class AppContainer extends Component {
@@ -112,6 +113,8 @@ class AppContainer extends Component {
                                                  component={BridgeTransactionMintView}/>
                     <UnlockedWalletRequiredRoute path="/send-from-exchange"
                                                  component={BridgeTransactionBurnView}/>
+                    <UnlockedWalletRequiredRoute path="/trading-bot"
+                                                 component={TradingBotView}/>
                     <UnlockedWalletRequiredRoute path="/transaction/:transaction_id"
                                                  component={TransactionDetails}/>
                     <UnlockedWalletRequiredRoute path="/address-list"

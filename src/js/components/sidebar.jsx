@@ -100,7 +100,10 @@ class Sidebar extends Component {
         if (!this.state.ignore_is_expanded || this.state.ignore_is_expanded !== defaultSelected) {
             const section_list = {
                 trade        : [
-                    '/send-to-exchange'
+                    '/send-to-exchange',
+                    '/exchange-getting-started',
+                    '/send-from-exchange',
+                    '/trading-bot'
                 ],
                 earn         : [],
                 transaction  : [
@@ -255,6 +258,11 @@ class Sidebar extends Component {
                                 {Translation.getPhrase('J0rheaCHm')}
                             </NavText>
                         </NavItem>
+                        <NavItem key={'trading-bot'} eventKey="/trading-bot">
+                            <NavText>
+                                {`trading bot`}
+                            </NavText>
+                        </NavItem>
                         <NavItem key={'swapland_io'} onClick={() => window.open('https://swapland.io', '_blank').focus()}>
                             <NavText>
                                 {Translation.getPhrase('8N07p0emf')}
@@ -265,7 +273,7 @@ class Sidebar extends Component {
                     <NavItem
                         eventKey="earn"
                         expanded={this.isExpanded('earn', defaultSelected)}
-                        id="trade"
+                        id="earn"
                         onClick={() => this.toggleParentNavigationItem('earn')}
                     >
                         <NavText>

@@ -64,6 +64,32 @@ export function integerPositive(field_name, value, error_list, allow_zero = fals
     return value_escaped;
 }
 
+export function floatPositive(field_name, value, error_list, allow_zero = false) {
+    let value_escaped = value.toString().trim();
+    value_escaped     = parseFloat(value_escaped);
+
+    if (!Number.isFinite(value_escaped)) {
+        error_list.push({
+            name   : get_error_name('value_is_not_float', field_name),
+            message: `${field_name} ${Translation.getPhrase('9efbcbf8f')}`
+        });
+    }
+    else if (!allow_zero && value_escaped <= 0) {
+        error_list.push({
+            name   : get_error_name('value_is_lt_zero', field_name),
+            message: `${field_name} ${Translation.getPhrase('020c0fa2c')}`
+        });
+    }
+    else if (allow_zero && value_escaped < 0) {
+        error_list.push({
+            name   : get_error_name('value_is_lte_zero', field_name),
+            message: `${field_name} ${Translation.getPhrase('ed23a3bf1')}`
+        });
+    }
+
+    return value_escaped;
+}
+
 export function ip(field_name, value, error_list) {
     let value_escaped   = [];
     let result_ip_octet = value.split('.');
@@ -214,6 +240,34 @@ export function handleInputChangeInteger(e, allow_negative = true, formatter = '
 
     e.target.value = value;
     e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
+}
+
+export function handleInputChangeFloat(e, allow_negative = true, formatter = 'number') {
+    if (e.target.value.length === 0) {
+        return;
+    }
+
+    let cursorStart      = e.target.selectionStart,
+        cursorEnd        = e.target.selectionEnd;
+    let amountFloatParts = e.target.value.replace(/,/g, '').split('.');
+    let amount           = amountFloatParts[0];
+    if (!allow_negative) {
+        amount = amount.replace(/-/g, '');
+    }
+
+    amount    = parseInt(amount);
+    let value = 0;
+    if (!isNaN(amount)) {
+        if (formatter === 'number') {
+            value = format.number(amount);
+        }
+        else {
+            value = amount;
+        }
+    }
+
+    e.target.value = `${value}.${amountFloatParts[1]?.replace(/\D/g, '') || ''}`;
+    e.target.setSelectionRange(cursorStart, cursorEnd);
 }
 
 export function handleInputChangeAlphanumericString(e, length = false) {
