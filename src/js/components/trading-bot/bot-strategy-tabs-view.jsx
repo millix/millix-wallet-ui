@@ -41,24 +41,11 @@ class BotStrategyTabsView extends Component {
            .then(data => {
                const strategyList = data.strategy_list;
                strategyList.forEach((strategy) => {
-                   strategy.amount       = millix(strategy.amount, false);
-                   strategy.total_budget = millix(strategy.total_budget, false);
-                   if (strategy.amount_traded) {
-                       strategy.amount_traded = millix(strategy.amount_traded, false);
-                   }
                    if (strategy.extra_config) {
                        const extraConfig                = JSON.parse(strategy.extra_config);
-                       strategy.time_frequency          = number(extraConfig.frequency);
-                       strategy.time_frame              = number(extraConfig.time_frame);
-                       strategy.price_change_percentage = number(extraConfig.price_change_percentage);
-                   }
-
-                   if (strategy.price_min) {
-                       strategy.price_min = strategy.price_min.toFixed(9);
-                   }
-
-                   if (strategy.price_max) {
-                       strategy.price_max = strategy.price_max.toFixed(9);
+                       strategy.time_frequency          = extraConfig.frequency;
+                       strategy.time_frame              = extraConfig.time_frame;
+                       strategy.price_change_percentage = extraConfig.price_change_percentage;
                    }
 
                    strategy.action = <>
@@ -118,24 +105,29 @@ class BotStrategyTabsView extends Component {
             },
             {
                 field : 'amount',
-                header: `amount`
+                header: `amount`,
+                body  : (item) => millix(item.amount, false)
             },
             {
                 field : 'price_min',
-                header: `minimum price`
+                header: `minimum price`,
+                body  : (item) => item?.price_min?.toFixed(9)
             },
             {
                 field : 'price_max',
-                header: `maximum price`
+                header: `maximum price`,
+                body  : (item) => item?.price_max?.toFixed(9)
             },
             {
                 field : 'amount_traded',
-                header: `amount traded`
+                header: `amount traded`,
+                body  : (item) => millix(item.amount_traded, false)
             },
             {
                 field : 'total_budget',
-                header: `total budget`
-            }
+                header: `total budget`,
+                body  : (item) => millix(item.total_budget, false)
+            },
         ];
         return <>
             <div className={'panel panel-filled'}>
@@ -240,7 +232,13 @@ class BotStrategyTabsView extends Component {
                                     ...commonFields,
                                     {
                                         field : 'time_frequency',
-                                        header: `time frequency (ms)`
+                                        header: `time frequency`,
+                                        body  : (item) => number(item.time_frequency)
+                                    },
+                                    {
+                                        field : 'status',
+                                        header: `status`,
+                                        body  : (item) => item.status === 1 ? 'running' : 'paused'
                                     }
                                 ]}
                             />
@@ -262,11 +260,18 @@ class BotStrategyTabsView extends Component {
                                     ...commonFields,
                                     {
                                         field : 'price_change_percentage',
-                                        header: `change percentage`
+                                        header: `change percentage`,
+                                        body  : (item) => number(item.price_change_percentage)
                                     },
                                     {
                                         field : 'time_frame',
-                                        header: `time frame`
+                                        header: `time frame`,
+                                        body  : (item) => number(item.time_frame)
+                                    },
+                                    {
+                                        field : 'status',
+                                        header: `status`,
+                                        body  : (item) => item.status === 1 ? 'running' : 'paused'
                                     }
                                 ]}
                             />
