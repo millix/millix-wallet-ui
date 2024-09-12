@@ -119,9 +119,44 @@ function get_address_version(address_key_identifier) {
     return version;
 }
 
+function toCapitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function importCSV(file) {
+    return new Promise((resolve) => {
+        const reader  = new FileReader();
+        reader.onload = (e) => {
+            const csv  = e.target.result;
+            const data = csv.split(',\n');
+            const cols = data[0].replace(/['"]+/g, '').split(',');
+            data.shift();
+            let importedCols = cols.map(col => ({
+                field : col,
+                header: toCapitalize(col.replace(/['"]+/g, ''))
+            }));
+            let importedData = data.map(d => {
+                d = d.slice(1, -1).split(',');
+
+                return cols.reduce((obj, c, i) => {
+                    obj[c] = d[i]?.replace(/['"]+/g, '');
+                    return obj;
+                }, {});
+
+            });
+            resolve({
+                columns: importedCols,
+                data   : importedData
+            });
+        };
+        reader.readAsText(file, 'UTF-8');
+    });
+}
+
 export default {
     getImageFromApi,
     getNftViewLink,
+    toCapitalize,
+    importCSV,
     is_main_network_address,
     get_address_version
 };

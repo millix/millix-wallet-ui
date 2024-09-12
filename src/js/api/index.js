@@ -529,19 +529,24 @@ class API {
         return this.fetchApiTangledBot(`/G53BNuerqTA7LSuF`, {p0: strategyType});
     }
 
-    upsertStrategy(strategyId, strategyDescription, strategyType, orderType, amount, priceMin, priceMax, totalBudget, extraConfig, status) {
+    upsertStrategy(strategyId, strategyDescription, strategyType, orderType, orderTTL, amount, priceMin, priceMax, totalBudget, extraConfig, status) {
         return this.fetchApiTangledBot(`/Dm4LbtkrxBbdXwKw`, {
             p0 : strategyId,
             p1 : strategyDescription,
             p2 : strategyType,
             p3 : orderType,
-            p4 : amount,
-            p5 : priceMin,
-            p6 : priceMax,
-            p8 : totalBudget,
-            p9 : extraConfig,
-            p10: status
+            p4 : orderTTL,
+            p5 : amount,
+            p6 : priceMin,
+            p7 : priceMax,
+            p9 : totalBudget,
+            p10: extraConfig,
+            p11: status
         }, 'POST');
+    }
+
+    importStrategies(strategies) {
+        return this.fetchApiTangledBot(`/nh8Ck5RTxgxYgStT`, {p0: strategies}, 'POST');
     }
 
 }

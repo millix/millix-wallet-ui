@@ -64,6 +64,26 @@ export function integerPositive(field_name, value, error_list, allow_zero = fals
     return value_escaped;
 }
 
+export function integer(field_name, value, error_list, allow_zero = false) {
+    let value_escaped = value.toString().trim();
+    value_escaped     = parseInt(value_escaped.replace(/[,.]/g, ''));
+
+    if (!Number.isInteger(value_escaped)) {
+        error_list.push({
+            name   : get_error_name('value_is_not_integer', field_name),
+            message: `${field_name} ${Translation.getPhrase('9efbcbf8f')}`
+        });
+    }
+    else if (!allow_zero && value_escaped === 0) {
+        error_list.push({
+            name   : get_error_name('value_is_zero', field_name),
+            message: `${field_name} is zero`
+        });
+    }
+
+    return value_escaped;
+}
+
 export function floatPositive(field_name, value, error_list, allow_zero = false) {
     let value_escaped = value.toString().trim();
     value_escaped     = parseFloat(value_escaped);
@@ -207,7 +227,7 @@ function get_error_name(prefix, field_name) {
 }
 
 export function handleInputChangeInteger(e, allow_negative = true, formatter = 'number') {
-    if (e.target.value.length === 0) {
+    if (e.target.value.length === 0 || allow_negative && e.target.value === '-') {
         return;
     }
 

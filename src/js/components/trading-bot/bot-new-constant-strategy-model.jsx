@@ -25,6 +25,7 @@ export default class BotNewConstantStrategyModel extends Component {
         const data                = {};
         data.strategy_description = validate.required(`strategy description`, this.strategy_description.value, error_list);
         data.strategy_order_type  = validate.required(`order type`, this.strategy_order_type.props.value, error_list);
+        data.strategy_order_ttl   = validate.integerPositive(`order time to live`, this.strategy_order_ttl.value, error_list, false);
         data.strategy_amount      = validate.amount(`order amount`, this.strategy_amount.value, error_list);
         if (this.strategy_price_min.value) {
             data.strategy_price_min = validate.floatPositive(`minimum price`, this.strategy_price_min.value, error_list, true);
@@ -32,13 +33,13 @@ export default class BotNewConstantStrategyModel extends Component {
         if (this.strategy_price_max.value) {
             data.strategy_price_max = validate.floatPositive(`maximum price`, this.strategy_price_max.value, error_list, true);
         }
-        data.strategy_total_budget = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
-        data.strategy_frequency    = validate.integerPositive(`frequency`, this.strategy_frequency.value, error_list, false);
+        data.strategy_total_budget   = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
+        data.strategy_time_frequency = validate.integerPositive(`frequency`, this.strategy_time_frequency.value, error_list, false);
 
         if (error_list.length === 0) {
             try {
-                await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type,
-                    data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({frequency: data.strategy_frequency}));
+                await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
+                    data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({time_frequency: data.strategy_time_frequency}));
                 return true;
             }
             catch (e) {
@@ -72,10 +73,22 @@ export default class BotNewConstantStrategyModel extends Component {
                 <Dropdown
                     value={this.state.type} options={[
                     'buy',
-                    'sell'
+                    'sell',
+                    'bid',
+                    'ask'
                 ]}
                     ref={(c) => this.strategy_order_type = c}
                     onChange={(e) => this.setState({type: e.value})} className={'form-control p-0'}/>
+            </Form.Group>
+
+            <Form.Group className="form-group">
+                <label>{`order time-to-live (s)`}</label>
+                <Form.Control type="text"
+                              defaultValue={number(this.props.strategyData?.order_ttl || 60)}
+                              placeholder={`order time-to-live in seconds`}
+                              pattern="[0-9]+([,][0-9]{1,2})?"
+                              ref={c => this.strategy_order_ttl = c}
+                              onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
@@ -123,12 +136,12 @@ export default class BotNewConstantStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`frequency (ms)`}</label>
+                <label>{`frequency (s)`}</label>
                 <Form.Control type="text"
                               defaultValue={number(this.props.strategyData?.time_frequency)}
-                              placeholder={`frequency`}
+                              placeholder={`frequency in seconds`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
-                              ref={c => this.strategy_frequency = c}
+                              ref={c => this.strategy_time_frequency = c}
                               onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
         </Form>;

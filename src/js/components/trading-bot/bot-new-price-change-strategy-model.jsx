@@ -25,6 +25,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
         const data                = {};
         data.strategy_description = validate.required(`strategy description`, this.strategy_description.value, error_list);
         data.strategy_order_type  = validate.required(`order type`, this.strategy_order_type.props.value, error_list);
+        data.strategy_order_ttl   = validate.integerPositive(`order time to live`, this.strategy_order_ttl.value, error_list, false);
         data.strategy_amount      = validate.amount(`order amount`, this.strategy_amount.value, error_list);
         if (this.strategy_price_min.value) {
             data.strategy_price_min = validate.floatPositive(`minimum price`, this.strategy_price_min.value, error_list, true);
@@ -33,12 +34,12 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             data.strategy_price_max = validate.floatPositive(`maximum price`, this.strategy_price_max.value, error_list, true);
         }
         data.strategy_total_budget      = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
-        data.strategy_change_percentage = validate.integerPositive(`change percentage`, this.strategy_change_percentage.value, error_list, false);
+        data.strategy_change_percentage = validate.integer(`change percentage`, this.strategy_change_percentage.value, error_list, false);
         data.strategy_time_frame        = validate.integerPositive(`time frame`, this.strategy_time_frame.value, error_list, false);
 
         if (error_list.length === 0) {
             try {
-                await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type,
+                await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
                         time_frame             : data.strategy_time_frame,
                         price_change_percentage: data.strategy_change_percentage
@@ -76,10 +77,22 @@ export default class BotNewPriceChangeStrategyModel extends Component {
                 <Dropdown
                     value={this.state.type} options={[
                     'buy',
-                    'sell'
+                    'sell',
+                    'bid',
+                    'ask'
                 ]}
                     ref={(c) => this.strategy_order_type = c}
                     onChange={(e) => this.setState({type: e.value})} className={'form-control p-0'}/>
+            </Form.Group>
+
+            <Form.Group className="form-group">
+                <label>{`order time-to-live (s)`}</label>
+                <Form.Control type="text"
+                              defaultValue={number(this.props.strategyData?.order_ttl || 60)}
+                              placeholder={`order time-to-live in seconds`}
+                              pattern="[0-9]+([,][0-9]{1,2})?"
+                              ref={c => this.strategy_order_ttl = c}
+                              onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
@@ -137,10 +150,10 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`time frame (ms)`}</label>
+                <label>{`time frame (s)`}</label>
                 <Form.Control type="text"
                               defaultValue={number(this.props.strategyData?.time_frame)}
-                              placeholder={`time frame`}
+                              placeholder={`time frame in seconds`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_time_frame = c}
                               onChange={e => validate.handleInputChangeInteger(e, false)}/>

@@ -10,6 +10,7 @@ import DatatableActionButtonView from './utils/datatable-action-button-view';
 import Translation from '../common/translation';
 import localforage from 'localforage';
 import API from '../api';
+import utils from '../helper/utils';
 
 
 class AddressBookView extends Component {
@@ -204,37 +205,13 @@ class AddressBookView extends Component {
         </div>;
     }
 
-    toCapitalize(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-
     importCSV(e) {
-        const file    = e.target.files[0];
-        const reader  = new FileReader();
-        reader.onload = (e) => {
-            const csv  = e.target.result;
-            const data = csv.split(',\n');
-            const cols = data[0].replace(/['"]+/g, '').split(',');
-            data.shift();
-            let importedCols = cols.map(col => ({
-                field : col,
-                header: this.toCapitalize(col.replace(/['"]+/g, ''))
-            }));
-            let importedData = data.map(d => {
-                d = d.slice(1, -1).split(',');
-
-                return cols.reduce((obj, c, i) => {
-                    obj[c] = d[i]?.replace(/['"]+/g, '');
-                    return obj;
-                }, {});
-
-            });
-            this.setState({
-                importedCols,
-                importedData
-            });
-        };
-        reader.readAsText(file, 'UTF-8');
+        const file = e.target.files[0];
+        utils.importCSV(file)
+             .then(csv => this.setState({
+                 importedCols: csv.columns,
+                 importedData: csv.data
+             }));
         this.addContact();
         e.target.value = null;
     }

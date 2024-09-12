@@ -9,13 +9,15 @@ import Api from '../../api';
 import {millix, number} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import * as text from '../../helper/text';
+import utils from '../../helper/utils';
 
 
 class BotStrategyTabsView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show_model                  : undefined,
+            showModelType               : undefined,
+            dataLoading                 : true,
             selectedStrategyType        : 'strategy-constant',
             lastUpdateTime              : Date.now(),
             selectedStrategy            : undefined,
@@ -25,6 +27,89 @@ class BotStrategyTabsView extends Component {
 
         this.updateTimeoutHandler = undefined;
 
+        this.commonFields = [
+            {
+                field : 'strategy_description',
+                header: `description`,
+                parser: (data) => data
+            },
+            {
+                field : 'order_type',
+                header: `type`,
+                parser: (data) => data
+            },
+            {
+                field : 'order_ttl',
+                header: `time to live`,
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'amount',
+                header: `amount`,
+                body  : (item) => millix(item.amount, false),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'price_min',
+                header: `minimum price`,
+                body  : (item) => item?.price_min?.toFixed(9),
+                parser: (data) => parseFloat(data)
+            },
+            {
+                field : 'price_max',
+                header: `maximum price`,
+                body  : (item) => item?.price_max?.toFixed(9),
+                parser: (data) => parseFloat(data)
+            },
+            {
+                field : 'amount_traded',
+                header: `amount traded`,
+                body  : (item) => millix(item.amount_traded, false),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'total_budget',
+                header: `total budget`,
+                body  : (item) => millix(item.total_budget, false),
+                parser: (data) => parseInt(data)
+            }
+        ];
+
+        this.constantStrategyFields = [
+            {
+                field : 'time_frequency',
+                header: `time frequency`,
+                body  : (item) => number(item.time_frequency),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'status',
+                header: `status`,
+                body  : (item) => item.status === 1 ? 'running' : 'paused',
+                parser: (data) => parseInt(data)
+            }
+        ];
+
+        this.priceChangeStrategyFields = [
+            {
+                field : 'price_change_percentage',
+                header: `change percentage`,
+                body  : (item) => number(item.price_change_percentage),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'time_frame',
+                header: `time frame`,
+                body  : (item) => number(item.time_frame),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'status',
+                header: `status`,
+                body  : (item) => item.status === 1 ? 'running' : 'paused',
+                parser: (data) => parseInt(data)
+            }
+        ];
     }
 
     componentDidMount() {
@@ -36,6 +121,7 @@ class BotStrategyTabsView extends Component {
     }
 
     update() {
+        this.setState({dataLoading: true});
         clearTimeout(this.updateTimeoutHandler);
         Api.listStrategies(this.state.selectedStrategyType)
            .then(data => {
@@ -43,7 +129,7 @@ class BotStrategyTabsView extends Component {
                strategyList.forEach((strategy) => {
                    if (strategy.extra_config) {
                        const extraConfig                = JSON.parse(strategy.extra_config);
-                       strategy.time_frequency          = extraConfig.frequency;
+                       strategy.time_frequency          = extraConfig.time_frequency;
                        strategy.time_frame              = extraConfig.time_frame;
                        strategy.price_change_percentage = extraConfig.price_change_percentage;
                    }
@@ -51,13 +137,13 @@ class BotStrategyTabsView extends Component {
                    strategy.action = <>
                        <DatatableActionButtonView
                            icon={`fa-solid ${strategy.status === 1 ? 'fa-pause' : 'fa-play'}`}
-                           callback={() => Api.upsertStrategy(strategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, strategy.status === 1 ? 2 : 1).then(() => this.update())}
+                           callback={() => Api.upsertStrategy(strategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, strategy.status === 1 ? 2 : 1).then(() => this.update())}
                            callback_args={[]}
                        />
                        <DatatableActionButtonView
                            icon={'fa-solid fa-pencil'}
                            callback={() => this.setState({
-                               show_model      : strategy.strategy_type,
+                               showModelType   : strategy.strategy_type,
                                selectedStrategy: strategy
                            })}
                            callback_args={[]}
@@ -74,12 +160,14 @@ class BotStrategyTabsView extends Component {
                });
 
                this.setState({
+                   dataLoading                                : false,
                    lastUpdateTime                             : Date.now(),
                    [`${this.state.selectedStrategyType}-data`]: strategyList
                });
                this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
            })
            .catch(() => {
+               this.setState({dataLoading: false});
                this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
            });
     }
@@ -93,42 +181,58 @@ class BotStrategyTabsView extends Component {
         ].join('');
     }
 
+    importStrategies(e) {
+        const file         = e.target.files[0];
+        const fieldParsers = {};
+        this.commonFields.forEach(field => fieldParsers[field.header] = field);
+        if (this.state.selectedStrategyType === 'strategy-constant') {
+            this.constantStrategyFields.forEach(field => fieldParsers[field.header] = field);
+        }
+        if (this.state.selectedStrategyType === 'strategy-price-change') {
+            this.priceChangeStrategyFields.forEach(field => fieldParsers[field.header] = field);
+        }
+        utils.importCSV(file)
+             .then(csv => {
+                 for (const item of csv.data) {
+                     for (const k of Object.keys(item)) {
+                         const fieldParser = fieldParsers[k];
+                         if (fieldParser && item[k]) {
+                             item[fieldParser.field] = fieldParser.parser(item[k]);
+                         }
+                         if (!fieldParser || k !== fieldParser.field) {
+                             delete item[k];
+                         }
+                     }
+                     item['strategy_type'] = this.state.selectedStrategyType;
+                 }
+                 const data = csv.data.filter(strategy => {
+                     if (this.state.selectedStrategyType === 'strategy-constant') {
+                         if (!!strategy.time_frequency) {
+                             strategy['extra_config'] = JSON.stringify({time_frequency: strategy.time_frequency});
+                             delete strategy['time_frequency'];
+                             return true;
+                         }
+                         return false;
+                     }
+                     if (this.state.selectedStrategyType === 'strategy-price-change') {
+                         if (!!strategy.price_change_percentage && !!strategy.time_frame) {
+                             strategy['extra_config'] = JSON.stringify({
+                                 price_change_percentage: strategy.price_change_percentage,
+                                 time_frame             : strategy.time_frame
+                             });
+                             delete strategy['price_change_percentage'];
+                             delete strategy['time_frame'];
+                             return true;
+                         }
+                         return false;
+                     }
+                 });
+
+                 Api.importStrategies(data).then(_ => this.update()).catch(_ => _).then(_ => e.target.value = null);
+             });
+    }
+
     render() {
-        const commonFields = [
-            {
-                field : 'strategy_description',
-                header: `description`
-            },
-            {
-                field : 'order_type',
-                header: `type`
-            },
-            {
-                field : 'amount',
-                header: `amount`,
-                body  : (item) => millix(item.amount, false)
-            },
-            {
-                field : 'price_min',
-                header: `minimum price`,
-                body  : (item) => item?.price_min?.toFixed(9)
-            },
-            {
-                field : 'price_max',
-                header: `maximum price`,
-                body  : (item) => item?.price_max?.toFixed(9)
-            },
-            {
-                field : 'amount_traded',
-                header: `amount traded`,
-                body  : (item) => millix(item.amount_traded, false)
-            },
-            {
-                field : 'total_budget',
-                header: `total budget`,
-                body  : (item) => millix(item.total_budget, false)
-            },
-        ];
         return <>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
@@ -157,7 +261,7 @@ class BotStrategyTabsView extends Component {
                                    selectedStrategy       : undefined
                                })}
                                on_accept={() => {
-                                   Api.upsertStrategy(this.state.selectedStrategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0)
+                                   Api.upsertStrategy(this.state.selectedStrategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0)
                                       .then(() => {
                                           this.setState({
                                               modalShowDeleteStrategy: false,
@@ -171,18 +275,18 @@ class BotStrategyTabsView extends Component {
                                    {text.get_confirmation_modal_question()}
                                </div>}/>
                     <ModalView
-                        show={!!this.state.show_model}
+                        show={!!this.state.showModelType}
                         size={'lg'}
                         prevent_close_after_accept={true}
                         on_close={() => {
                             this.setState({
-                                show_model      : false,
+                                showModelType   : false,
                                 selectedStrategy: undefined
                             });
                         }}
                         on_accept={async() => {
                             let success = false;
-                            if (this.state.show_model === 'strategy-constant') {
+                            if (this.state.showModelType === 'strategy-constant') {
                                 success = await this.constant_strategy_modal.save();
                             }
                             else {
@@ -190,19 +294,19 @@ class BotStrategyTabsView extends Component {
                             }
                             if (success) {
                                 this.setState({
-                                    show_model      : false,
+                                    showModelType   : false,
                                     selectedStrategy: undefined
                                 });
                                 this.update();
                             }
                         }}
-                        heading={`${this.state.show_model === 'strategy-constant' ? 'constant strategy' : 'price change strategy'}`}
+                        heading={`${this.state.showModelType === 'strategy-constant' ? 'constant strategy' : 'price change strategy'}`}
                         body={
                             <>
-                                {this.state.show_model === 'strategy-constant' &&
+                                {this.state.showModelType === 'strategy-constant' &&
                                  <BotNewConstantStrategyModel strategyType="strategy-constant" strategyData={this.state.selectedStrategy}
                                                               ref={c => this.constant_strategy_modal = c}/>}
-                                {this.state.show_model === 'strategy-price-change' &&
+                                {this.state.showModelType === 'strategy-price-change' &&
                                  <BotNewPriceChangeStrategyModel strategyType="strategy-price-change" strategyData={this.state.selectedStrategy}
                                                                  ref={c => this.price_change_strategy_modal = c}/>}
                             </>
@@ -220,26 +324,20 @@ class BotStrategyTabsView extends Component {
                             <DatatableView
                                 reload_datatable={() => this.update()}
                                 loading={false}
+                                allow_export={true}
+                                allow_import={true}
+                                onImportFile={this.importStrategies.bind(this)}
                                 datatable_reload_timestamp={this.state.lastUpdateTime}
                                 action_button={{
                                     label   : `new strategy`,
-                                    on_click: () => this.setState({show_model: 'strategy-constant'})
+                                    on_click: () => this.setState({showModelType: 'strategy-constant'})
                                 }}
                                 value={this.state['strategy-constant-data']}
                                 sortOrder={1}
                                 showActionColumn={true}
                                 resultColumn={[
-                                    ...commonFields,
-                                    {
-                                        field : 'time_frequency',
-                                        header: `time frequency`,
-                                        body  : (item) => number(item.time_frequency)
-                                    },
-                                    {
-                                        field : 'status',
-                                        header: `status`,
-                                        body  : (item) => item.status === 1 ? 'running' : 'paused'
-                                    }
+                                    ...this.commonFields,
+                                    ...this.constantStrategyFields
                                 ]}
                             />
                         </Tab>
@@ -248,31 +346,20 @@ class BotStrategyTabsView extends Component {
                             <DatatableView
                                 reload_datatable={() => this.update()}
                                 loading={false}
+                                allow_export={true}
+                                allow_import={true}
+                                onImportFile={this.importStrategies.bind(this)}
                                 datatable_reload_timestamp={this.state.lastUpdateTime}
                                 action_button={{
                                     label   : `new strategy`,
-                                    on_click: () => this.setState({show_model: 'strategy-price-change'})
+                                    on_click: () => this.setState({showModelType: 'strategy-price-change'})
                                 }}
                                 value={this.state['strategy-price-change-data']}
                                 sortOrder={1}
                                 showActionColumn={true}
                                 resultColumn={[
-                                    ...commonFields,
-                                    {
-                                        field : 'price_change_percentage',
-                                        header: `change percentage`,
-                                        body  : (item) => number(item.price_change_percentage)
-                                    },
-                                    {
-                                        field : 'time_frame',
-                                        header: `time frame`,
-                                        body  : (item) => number(item.time_frame)
-                                    },
-                                    {
-                                        field : 'status',
-                                        header: `status`,
-                                        body  : (item) => item.status === 1 ? 'running' : 'paused'
-                                    }
+                                    ...this.commonFields,
+                                    ...this.priceChangeStrategyFields
                                 ]}
                             />
                         </Tab>
