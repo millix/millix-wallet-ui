@@ -217,6 +217,7 @@ class DatatableView extends Component {
                     action_button={this.props.action_button}
                     on_global_search_change={(e) => this.on_global_search_change(e)}
                     datatable_reference={this.datatable_reference}
+                    export_button_label={this.props.export_button_label}
                     allow_export={this.props.allow_export}
                     allow_import={this.props.allow_import}
                     onImportFile={this.props.onImportFile}
@@ -240,7 +241,7 @@ class DatatableView extends Component {
                            sortOrder={this.props.sortOrder}
                            emptyMessage={Translation.getPhrase('ea4617fde')}
                            onRowClick={this.props.onRowClick}
-
+                           exportFilename={this.props.export_filename}
                            globalFilterFields={this.state.result_global_search_field}
                            filters={this.state.result_filter}
                            filterDisplay="menu"
@@ -267,7 +268,9 @@ DatatableView.propTypes = {
     datatable_reload_timestamp: PropTypes.any,
     reload_datatable          : PropTypes.func,
     action_button             : PropTypes.any,
-    allow_export              : PropTypes.bool
+    allow_export              : PropTypes.bool,
+    export_button_label       : PropTypes.string,
+    export_filename           : PropTypes.string,
 };
 
 

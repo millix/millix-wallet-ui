@@ -82,7 +82,7 @@ class DatatableHeaderView extends Component {
                                     size={'sm'}
                                     onClick={() => this.props.datatable_reference.exportCSV(({selectionOnly: false}))}
                             >
-                                csv
+                                {!!this.props.export_button_label ? this.props.export_button_label : 'csv'}
                             </Button>
                         </Col>
                     </>
@@ -153,7 +153,8 @@ DatatableHeaderView.propTypes = {
     reload_datatable          : PropTypes.func,
     on_global_search_change   : PropTypes.func,
     datatable_reference       : PropTypes.any,
-    allow_export              : PropTypes.bool
+    allow_export              : PropTypes.bool,
+    export_button_label       : PropTypes.string,
 };
 
 export default withRouter(DatatableHeaderView);

@@ -29,25 +29,33 @@ class BotStrategyTabsView extends Component {
 
         this.commonFields = [
             {
-                field : 'strategy_description',
-                header: `description`,
-                parser: (data) => data
-            },
-            {
                 field : 'order_type',
                 header: `type`,
+                body :(item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{item.order_type}</span>,
                 parser: (data) => data
-            },
-            {
-                field : 'order_ttl',
-                header: `time to live`,
-                parser: (data) => parseInt(data)
             },
             {
                 field : 'amount',
                 header: `amount`,
-                body  : (item) => millix(item.amount, false),
+                body  : (item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{millix(item.amount, false)}</span>,
                 parser: (data) => parseInt(data)
+            },
+            {
+                field : 'amount_traded',
+                header: `amount traded`,
+                body  : (item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{millix(item.amount_traded, false)}</span>,
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'total_budget',
+                header: `total budget`,
+                body  : (item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{millix(item.total_budget, false)}</span>,
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'strategy_description',
+                header: `description`,
+                parser: (data) => data
             },
             {
                 field : 'price_min',
@@ -62,17 +70,10 @@ class BotStrategyTabsView extends Component {
                 parser: (data) => parseFloat(data)
             },
             {
-                field : 'amount_traded',
-                header: `amount traded`,
-                body  : (item) => millix(item.amount_traded, false),
+                field : 'order_ttl',
+                header: `time to live`,
                 parser: (data) => parseInt(data)
             },
-            {
-                field : 'total_budget',
-                header: `total budget`,
-                body  : (item) => millix(item.total_budget, false),
-                parser: (data) => parseInt(data)
-            }
         ];
 
         this.constantStrategyFields = [
@@ -121,7 +122,6 @@ class BotStrategyTabsView extends Component {
     }
 
     update() {
-        this.setState({dataLoading: true});
         clearTimeout(this.updateTimeoutHandler);
         Api.listStrategies(this.state.selectedStrategyType)
            .then(data => {
@@ -323,7 +323,9 @@ class BotStrategyTabsView extends Component {
                         <Tab eventKey="strategy-constant" title={'constant strategy'}>
                             <DatatableView
                                 reload_datatable={() => this.update()}
-                                loading={false}
+                                loading={this.state.dataLoading}
+                                export_button_label={'export strategies'}
+                                export_filename={`export_strategy_constant`}
                                 allow_export={true}
                                 allow_import={true}
                                 onImportFile={this.importStrategies.bind(this)}
@@ -345,7 +347,9 @@ class BotStrategyTabsView extends Component {
                         <Tab eventKey="strategy-price-change" title={'price change strategy'}>
                             <DatatableView
                                 reload_datatable={() => this.update()}
-                                loading={false}
+                                loading={this.state.dataLoading}
+                                export_button_label={'export strategies'}
+                                export_filename={`export_strategy_price_change`}
                                 allow_export={true}
                                 allow_import={true}
                                 onImportFile={this.importStrategies.bind(this)}
