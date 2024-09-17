@@ -32,7 +32,7 @@ class Sidebar extends Component {
 
     componentDidMount() {
         this.setVersion();
-        setInterval(this.setVersion, 5 * 60 * 1000);
+        setInterval(this.setVersion, 24 * 60 * 60 * 1000);
 
         this.timerID = setInterval(
             () => this.tick(),
