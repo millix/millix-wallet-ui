@@ -525,6 +525,13 @@ class API {
         return this.fetchApiTangledBot(`/zdLrGUDCxXZLSeBz`, {p0: apiKey});
     }
 
+    getTradingStatistics(symbol, timeFrame) {
+        return this.fetchApiTangledBot(`/T72jPyDtqeUgua2z`, {
+            p0: symbol,
+            p1: timeFrame
+        });
+    }
+
     listStrategies(strategyType) {
         return this.fetchApiTangledBot(`/G53BNuerqTA7LSuF`, {p0: strategyType});
     }

@@ -10,6 +10,11 @@ import {millix, number} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import * as text from '../../helper/text';
 import utils from '../../helper/utils';
+import {ProgressBar} from 'primereact/progressbar';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+
+const colorGreen = '#55af55';
+const colorRed   = '#f44336';
 
 
 class BotStrategyTabsView extends Component {
@@ -21,6 +26,8 @@ class BotStrategyTabsView extends Component {
             selectedStrategyType        : 'strategy-constant',
             lastUpdateTime              : Date.now(),
             selectedStrategy            : undefined,
+            statistics                  : undefined,
+            lastPrice                   : undefined,
             'strategy-constant-data'    : [],
             'strategy-price-change-data': []
         };
@@ -31,25 +38,29 @@ class BotStrategyTabsView extends Component {
             {
                 field : 'order_type',
                 header: `type`,
-                body :(item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{item.order_type}</span>,
+                body  : (item) => <span
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{item.order_type}</span>,
                 parser: (data) => data
             },
             {
                 field : 'amount',
                 header: `amount`,
-                body  : (item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{millix(item.amount, false)}</span>,
+                body  : (item) => <span
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.amount, false)}</span>,
                 parser: (data) => parseInt(data)
             },
             {
                 field : 'amount_traded',
                 header: `amount traded`,
-                body  : (item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{millix(item.amount_traded, false)}</span>,
+                body  : (item) => <span
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.amount_traded, false)}</span>,
                 parser: (data) => parseInt(data)
             },
             {
                 field : 'total_budget',
                 header: `total budget`,
-                body  : (item) => <span style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? 'red' : 'green'}}>{millix(item.total_budget, false)}</span>,
+                body  : (item) => <span
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.total_budget, false)}</span>,
                 parser: (data) => parseInt(data)
             },
             {
@@ -73,7 +84,7 @@ class BotStrategyTabsView extends Component {
                 field : 'order_ttl',
                 header: `time to live`,
                 parser: (data) => parseInt(data)
-            },
+            }
         ];
 
         this.constantStrategyFields = [
@@ -164,7 +175,17 @@ class BotStrategyTabsView extends Component {
                    lastUpdateTime                             : Date.now(),
                    [`${this.state.selectedStrategyType}-data`]: strategyList
                });
-               this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
+
+               return Api.getTradingStatistics('MLX_USDC', 'D1')
+                         .then(response => {
+                             console.log(response.data);
+                             const lastPrice = !this.state.statistics ? undefined : this.state.statistics.close;
+                             this.setState({
+                                 statistics: response.data,
+                                 lastPrice
+                             });
+                             this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
+                         });
            })
            .catch(() => {
                this.setState({dataLoading: false});
@@ -232,8 +253,56 @@ class BotStrategyTabsView extends Component {
              });
     }
 
+    getPricePercentageChange(statistics) {
+        if (!statistics) {
+            return undefined;
+        }
+
+        return Math.round((statistics.close - statistics.open) / statistics.open * 100);
+    }
+
     render() {
+        const priceChange      = this.getPricePercentageChange(this.state.statistics);
+        const priceChangeColor = priceChange >= 0 ? colorGreen : colorRed;
         return <>
+            <div className={'panel panel-filled'}>
+                <div className={'panel-body'}>
+                    {!this.state.statistics && <ProgressBar mode={'indeterminate'} style={{height: '6px'}}/>}
+                    {this.state.statistics && <Row>
+                        <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col>
+                        <Col>
+                            <Row>last price:</Row>
+                            <Row
+                                style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(9)}</Row>
+                        </Col>
+                        <Col>
+                            <Row>24h change:</Row>
+                            <Row style={{color: priceChange > 0 ? colorGreen : colorRed}}>
+                                <Badge bg={''} style={{
+                                    maxWidth: 60,
+                                    color   : priceChangeColor,
+                                    border  : `1px solid ${priceChangeColor}`
+                                }}>
+                                    <FontAwesomeIcon size={'1x'} icon={priceChange >= 0 ? 'caret-up' : 'caret-down'}/>
+                                    {priceChange}%
+                                </Badge>
+                            </Row>
+                        </Col>
+                        <Col>
+                            <Row>24h high:</Row>
+                            <Row>{this.state.statistics.high.toFixed(9)}</Row>
+                        </Col>
+                        <Col>
+                            <Row>24h low:</Row>
+                            <Row>{this.state.statistics.low.toFixed(9)}</Row>
+                        </Col>
+                        <Col>
+                            <Row>24h volume:</Row>
+                            <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
+                        </Col>
+                    </Row>}
+                </div>
+            </div>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
                     <Row>

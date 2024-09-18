@@ -61,6 +61,7 @@ import {
     faMinusCircle,
     faCopy,
     faCaretDown,
+    faCaretUp,
     faArrowRightArrowLeft,
     faFile,
     faTriangleExclamation,
@@ -90,9 +91,8 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faLock, faLockOpen, faTimes, faEye, faList, faBars, faSignInAlt, faFileImport,
     faChevronDown, faChevronUp, faPencilAlt, faSync, faPlusCircle, faPlay,
     faPause, faQuestionCircle, faThList, faRedo, faEllipsisV,
-    faChainSlash, faChainBroken,
     faRotateLeft, faCodeMerge, faCheckCircle, faReply, faEnvelope, faLink, faFire, faBomb,
-    faArrowRight, faUpload, faMinusCircle, faCopy, faCaretDown, faArrowRightArrowLeft, faFile, faTriangleExclamation, faAddressBook);
+    faArrowRight, faUpload, faMinusCircle, faCopy, faCaretDown, faCaretUp, faArrowRightArrowLeft, faFile, faTriangleExclamation, faAddressBook);
 
 
 let apiInfo = {
