@@ -62,7 +62,7 @@ class DatatableHeaderView extends Component {
                             <FontAwesomeIcon
                                 size="1x"
                                 icon={'upload'}/>
-                            upload
+                            {!!this.props.import_button_label ? this.props.import_button_label : 'upload'}
                         </Button>
                         <input
                             ref={this.inputRef}
@@ -155,6 +155,7 @@ DatatableHeaderView.propTypes = {
     datatable_reference       : PropTypes.any,
     allow_export              : PropTypes.bool,
     export_button_label       : PropTypes.string,
+    import_button_label       : PropTypes.string,
 };
 
 export default withRouter(DatatableHeaderView);

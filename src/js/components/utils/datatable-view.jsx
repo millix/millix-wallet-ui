@@ -218,6 +218,7 @@ class DatatableView extends Component {
                     on_global_search_change={(e) => this.on_global_search_change(e)}
                     datatable_reference={this.datatable_reference}
                     export_button_label={this.props.export_button_label}
+                    import_button_label={this.props.import_button_label}
                     allow_export={this.props.allow_export}
                     allow_import={this.props.allow_import}
                     onImportFile={this.props.onImportFile}
@@ -270,6 +271,7 @@ DatatableView.propTypes = {
     action_button             : PropTypes.any,
     allow_export              : PropTypes.bool,
     export_button_label       : PropTypes.string,
+    import_button_label       : PropTypes.string,
     export_filename           : PropTypes.string,
 };
 

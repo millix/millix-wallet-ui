@@ -5,6 +5,7 @@ import {Dropdown} from 'primereact/dropdown';
 import * as validate from '../../helper/validate';
 import Api from '../../api';
 import {millix, number} from '../../helper/format';
+import HelpIconView from '../utils/help-icon-view';
 
 
 export default class BotNewPriceChangeStrategyModel extends Component {
@@ -41,7 +42,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             try {
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
-                        time_frame             : data.strategy_time_frame,
+                        time_frame             : data.strategy_time_frame * 60,
                         price_change_percentage: data.strategy_change_percentage
                     }));
                 return true;
@@ -86,27 +87,27 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`order time-to-live (s)`}</label>
+                <label>{`order time-to-live (seconds)`} <HelpIconView help_item_name={'bot_order_ttl'}/></label>
                 <Form.Control type="text"
                               defaultValue={number(this.props.strategyData?.order_ttl || 60)}
-                              placeholder={`order time-to-live in seconds`}
+                              placeholder={`order time-to-live (seconds)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_order_ttl = c}
                               onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`order amount`}</label>
+                <label>{`order amount (millix)`} <HelpIconView help_item_name={'bot_order_amount'}/></label>
                 <Form.Control type="text"
                               defaultValue={millix(this.props.strategyData?.amount, false)}
-                              placeholder={`order amount`}
+                              placeholder={`order amount (millix)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_amount = c}
                               onChange={validate.handleAmountInputChange.bind(this)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`minimum price`}</label>
+                <label>{`minimum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_min'}/></label>
                 <Form.Control
                     type="text"
                     defaultValue={number(this.props.strategyData?.price_min)}
@@ -118,7 +119,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`maximum price`}</label>
+                <label>{`maximum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_max'}/></label>
                 <Form.Control
                     type="text"
                     defaultValue={number(this.props.strategyData?.price_max)}
@@ -130,30 +131,30 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`total budget`}</label>
+                <label>{`total budget (millix)`} <HelpIconView help_item_name={'bot_order_total_budget'}/></label>
                 <Form.Control type="text"
                               defaultValue={millix(this.props.strategyData?.total_budget, false)}
-                              placeholder={`total budget`}
+                              placeholder={`total budget (millix)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_total_budget = c}
                               onChange={validate.handleAmountInputChange.bind(this)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`change percentage`}</label>
+                <label>{`price change %`} <HelpIconView help_item_name={'bot_order_price_change'}/></label>
                 <Form.Control type="text"
                               defaultValue={number(this.props.strategyData?.price_change_percentage)}
-                              placeholder={`change percentage`}
+                              placeholder={`price change %`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_change_percentage = c}
                               onChange={e => validate.handleInputChangeInteger(e, true)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`time frame (s)`}</label>
+                <label>{`price change % time frame (minutes)`} <HelpIconView help_item_name={'bot_order_price_change_time_frame'}/></label>
                 <Form.Control type="text"
                               defaultValue={number(this.props.strategyData?.time_frame)}
-                              placeholder={`time frame in seconds`}
+                              placeholder={`price change % time frame (minutes)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_time_frame = c}
                               onChange={e => validate.handleInputChangeInteger(e, false)}/>

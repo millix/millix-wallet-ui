@@ -429,6 +429,70 @@ class HelpIconView extends Component {
                         when you create a wallet on MetaMask it provides you with secure phrases that you can use to backup your MetaMask wallet
                     </li>
                 </ul>
+            },
+            'bot_order_ttl': {
+                'title': 'order time-to-live',
+                'body' : <ul>
+                    <li>
+                        Order time-to-live applies to bid and ask strategy.  The time-to-live is the number of seconds the bid or ask exists in the order book before being deleted.
+                    </li>
+                </ul>
+            },
+            'bot_order_amount': {
+                'title': 'order amount',
+                'body' : <ul>
+                    <li>
+                        Order amount is the number of millix that you want to execute each time the trading bot performs this strategy.
+                    </li>
+                </ul>
+            },
+            'bot_order_price_min': {
+                'title': 'minimum price',
+                'body' : <ul>
+                    <li>
+                        Minimum price is the lowest price of millix in usdc acceptable for your trade strategy to exectute.
+                    </li>
+                </ul>
+            },
+            'bot_order_price_max': {
+                'title': 'maximum price',
+                'body' : <ul>
+                    <li>
+                        Maximum price is the highest price of millix in usdc acceptable for your trade strategy to exectute.
+                    </li>
+                </ul>
+            },
+            'bot_order_total_budget': {
+                'title': 'total budget',
+                'body' : <ul>
+                    <li>
+                        Total budget is the limit of how many millix will be transacted for this strategy before the bot stops executing.
+                    </li>
+                </ul>
+            },
+            'bot_order_frequency': {
+                'title': 'frequency',
+                'body' : <ul>
+                    <li>
+                        Frequency is the interval of seconds that this strategy is attempted.  If the value is 60 seconds the strategy will be attempted once per minute.
+                    </li>
+                </ul>
+            },
+            'bot_order_price_change': {
+                'title': 'price change %',
+                'body' : <ul>
+                    <li>
+                        The percentage change of the millix price (example 5% or -5%)
+                    </li>
+                </ul>
+            },
+            'bot_order_price_change_time_frame': {
+                'title': 'price change % time frame',
+                'body' : <ul>
+                    <li>
+                        The time frame used to determine the percentage change of the price of millix (example 15 minutes). The time frame also defines how often the strategy will be executed. If the strategy is set to a 15 minute price change % time frame, this strategy will only execute once per 15 minutes.
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;

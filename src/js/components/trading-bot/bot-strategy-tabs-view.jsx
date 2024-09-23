@@ -60,7 +60,7 @@ class BotStrategyTabsView extends Component {
                 field : 'total_budget',
                 header: `total budget`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.total_budget, false)}</span>,
+                    style={{color: item.total_budget <= item.amount_traded + item.amount ? 'gray' : item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.total_budget, false)}</span>,
                 parser: (data) => parseInt(data)
             },
             {
@@ -139,10 +139,17 @@ class BotStrategyTabsView extends Component {
                const strategyList = data.strategy_list;
                strategyList.forEach((strategy) => {
                    if (strategy.extra_config) {
-                       const extraConfig                = JSON.parse(strategy.extra_config);
-                       strategy.time_frequency          = extraConfig.time_frequency;
-                       strategy.time_frame              = extraConfig.time_frame;
+                       const extraConfig       = JSON.parse(strategy.extra_config);
+                       strategy.time_frequency = extraConfig.time_frequency;
+                       strategy.time_frame     = extraConfig.time_frame;
+                       if (!!strategy.time_frame && Number.isInteger(strategy.time_frame)) {
+                           strategy.time_frame = Math.floor(strategy.time_frame / 60);
+                       }
                        strategy.price_change_percentage = extraConfig.price_change_percentage;
+                   }
+
+                   if (strategy.order_type === 'ask' || strategy.order_type === 'sell') {
+                       strategy.amount_traded = -strategy.amount_traded;
                    }
 
                    strategy.action = <>
@@ -320,7 +327,7 @@ class BotStrategyTabsView extends Component {
                 </div>
                 <div className={'panel-body'}>
                     <p>
-                        {`configure and execute your bot strategies`}
+                        {`This trading bot is an experimental feature that allows you to trade on tangled.com/exchange. Please use caution and use small limits to become comfortable with the trade bot. Tangled is not responsible for any unexpected behaviour or losses as a result of the trading bot.`}
                     </p>
                     <ModalView show={this.state.modalShowDeleteStrategy}
                                size={'lg'}
@@ -394,6 +401,7 @@ class BotStrategyTabsView extends Component {
                                 reload_datatable={() => this.update()}
                                 loading={this.state.dataLoading}
                                 export_button_label={'export strategies'}
+                                import_button_label={'import strategies'}
                                 export_filename={`export_strategy_constant`}
                                 allow_export={true}
                                 allow_import={true}
@@ -418,6 +426,7 @@ class BotStrategyTabsView extends Component {
                                 reload_datatable={() => this.update()}
                                 loading={this.state.dataLoading}
                                 export_button_label={'export strategies'}
+                                import_button_label={'import strategies'}
                                 export_filename={`export_strategy_price_change`}
                                 allow_export={true}
                                 allow_import={true}
