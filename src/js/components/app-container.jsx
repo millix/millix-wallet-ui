@@ -29,7 +29,6 @@ import ConfigConnection from './config/config-connection-view';
 import ConfigConsensus from './config/config-consensus-view';
 import ConfigStorage from './config/config-storage-view';
 import ConfigAddressVersion from './config/config-address-version-view';
-import ErrorModalRequestApi from './utils/error-handler-request-api';
 import AdvertisementConsumerSettlementLedgerView from './advertisement/advertisement-consumer-settlement-ledger-view';
 import EventsLogView from './event-log-view';
 import NftCreateView from './nft/nft-create-view';
@@ -51,7 +50,6 @@ class AppContainer extends Component {
     render() {
         return <Provider store={this.props.store}>
             <Router>
-                <ErrorModalRequestApi/>
                 <Switch>
                     <Route path="/unlock/" component={UnlockWalletView}/>
 

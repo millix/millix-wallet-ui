@@ -1,5 +1,4 @@
 import {escape_url_param} from '../helper/security';
-import {showErrorModalRequestApi} from '../components/utils/error-handler-request-api';
 import _ from 'lodash';
 
 
@@ -100,8 +99,6 @@ class API {
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .catch(error => {
-                showErrorModalRequestApi(error);
-
                 return Promise.reject(error);
             })
             .catch(_ => Promise.reject({
