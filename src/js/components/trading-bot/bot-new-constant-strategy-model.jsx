@@ -85,7 +85,7 @@ export default class BotNewConstantStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`order time-to-live (seconds)`} <HelpIconView help_item_name={'bot_order_ttl'}/></label>
                 <Form.Control type="text"
-                              defaultValue={number(this.props.strategyData?.order_ttl || 60)}
+                              defaultValue={Number(this.props.strategyData?.order_ttl || 60)}
                               placeholder={`order time-to-live (seconds)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_order_ttl = c}
@@ -106,7 +106,7 @@ export default class BotNewConstantStrategyModel extends Component {
                 <label>{`minimum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_min'}/></label>
                 <Form.Control
                     type="text"
-                    defaultValue={number(this.props.strategyData?.price_min)}
+                    defaultValue={Number(this.props.strategyData?.price_min)}
                     placeholder={`minimum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
                     ref={c => this.strategy_price_min = c}
@@ -118,7 +118,7 @@ export default class BotNewConstantStrategyModel extends Component {
                 <label>{`maximum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_max'}/></label>
                 <Form.Control
                     type="text"
-                    defaultValue={number(this.props.strategyData?.price_max)}
+                    defaultValue={Number(this.props.strategyData?.price_max)}
                     placeholder={`maximum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
                     ref={c => this.strategy_price_max = c}
@@ -139,7 +139,7 @@ export default class BotNewConstantStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`frequency (seconds)`} <HelpIconView help_item_name={'bot_order_frequency'}/></label>
                 <Form.Control type="text"
-                              defaultValue={number(this.props.strategyData?.time_frequency)}
+                              defaultValue={Number(this.props.strategyData?.time_frequency)}
                               placeholder={`frequency (seconds)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_time_frequency = c}
