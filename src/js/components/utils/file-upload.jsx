@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Button} from 'react-bootstrap';
 import * as validate from '../../helper/validate';
+import {validate_file_type_config} from '../../helper/validate';
+import NftTextViewer from '../nft/nft-text-viewer';
+import NftBinaryViewer from '../nft/nft-binary-viewer';
 
 
 class FileUpload extends Component {
@@ -9,7 +12,7 @@ class FileUpload extends Component {
         super(props);
 
         this.state          = {
-            image_data: null
+            file_data: null
         };
         this.input_file_ref = null;
         this.readFile       = this.readFile.bind(this);
@@ -18,14 +21,14 @@ class FileUpload extends Component {
     handleFileChange(e) {
         this.readFile(e.target.files[0]).then(data => {
             let error_list = [];
-            validate.file('image', data, error_list, this.props.file_type)
+            validate.file('data', data, error_list, this.props.file_type)
                     .then(_ => {
                         if (error_list.length !== 0) {
                             this.props.on_file_upload_error(error_list);
                         }
                         else {
                             this.setState({
-                                image_data: data
+                                file_data: data
                             });
                             this.props.on_file_upload(data);
                         }
@@ -40,7 +43,7 @@ class FileUpload extends Component {
     clearFileInput() {
         this.input_file_ref.value = null;
         this.setState({
-            image_data: null
+            file_data: null
         });
         this.props.on_file_cancel_upload();
     }
@@ -69,6 +72,26 @@ class FileUpload extends Component {
         });
     }
 
+    renderFilePreview() {
+        if (this.state.file_data.file.type === 'application/pdf') {
+            return <div className={'file-placeholder-container'}>
+                <object data={this.state.file_data.dataURL} type="application/pdf" width="100%" height="480px"/>
+                <label>{this.state.file_data.file.name}</label>
+            </div>;
+        }
+        else if (this.state.file_data.file.type.startsWith('video/')) {
+            return <video src={this.state.file_data.dataURL} alt={''} controls={true}/>;
+        }
+        else if (this.state.file_data.file.type.startsWith('image/')) {
+            return <img src={this.state.file_data.dataURL} alt={''}/>;
+        }
+        else if (validate_file_type_config.text.allowed_mime_type_list.includes(this.state.file_data.file.type)) {
+            return <NftTextViewer src={this.state.file_data.dataURL}/>;
+        }
+
+        return <NftBinaryViewer src={this.state.file_data.dataURL}/>;
+    }
+
     render() {
         return (
             <div className="file-uploader text-center">
@@ -93,12 +116,12 @@ class FileUpload extends Component {
                         accept={this.props.accept}
                     />
                 </div>
-                {this.state.image_data ?
-                 <div className={'preview'}>
-                     <img src={this.state.image_data.dataURL} alt={''}/>
+                {this.state.file_data ?
+                 <div className={'preview'} style={{maxWidth: '100%'}}>
+                     {this.renderFilePreview()}
                      <FontAwesomeIcon size={'2x'} icon={'minus-circle'} className={'clear-file-input-icon'} onClick={() => this.clearFileInput()}/>
                  </div>
-                                       : ''}
+                                      : ''}
             </div>
         );
     }

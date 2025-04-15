@@ -458,6 +458,13 @@ h4, .h4, h5, .h5, h6, .h6 {
   margin-bottom: 0.5rem;
 }
 
+.file-placeholder-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 .file-uploader {
   svg {
     margin: 1rem;

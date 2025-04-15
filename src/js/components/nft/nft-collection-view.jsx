@@ -12,6 +12,7 @@ import HelpIconView from '../utils/help-icon-view';
 import moment from 'moment';
 import ReloadTimeTickerView from '../utils/reload-time-ticker-view';
 import NftActionSummaryView from './nft-action-summary';
+import {renderFilePreview} from '../utils/nft-preview-view';
 
 
 class NftCollectionView extends Component {
@@ -46,9 +47,9 @@ class NftCollectionView extends Component {
 
         return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, TRANSACTION_DATA_TYPE_NFT).then(data => {
             async.mapLimit(data, 6, (transaction, callback) => {
-                utils.getImageFromApi(transaction)
-                     .then(image_data => {
-                         callback(null, image_data);
+                utils.getFileDataFromApi(transaction)
+                     .then(file_data => {
+                         callback(null, file_data);
                          changeLoaderState(false);
                      });
             }, (err, nftList) => {
@@ -63,30 +64,27 @@ class NftCollectionView extends Component {
         });
     }
 
-    renderNftImage(nft_list) {
+    renderNft(nft_list) {
         let nft_list_formatted = [];
-        for (const image_props of nft_list) {
+        for (const file_props of nft_list) {
             const {
-                      src,
-                      alt,
                       transaction,
                       name,
                       description
-                  } = image_props;
+                  } = file_props;
 
-            let image = <img src={src} alt={alt}/>;
             nft_list_formatted.push(
                 <Col xs={12} md={3} className={'mt-3'} key={transaction.transaction_id}>
                     <Card className={'nft-card'}>
                         <div className={'nft-collection-img'}>
-                            {image}
+                            {renderFilePreview(file_props.src, file_props.mime_type, file_props.name)}
                         </div>
                         <Card.Body>
                             <div className={'nft-name page_subtitle'}>{name}</div>
                             <div className={'nft-description'}>{description}</div>
                             <div className={'nft-action-section'}>
                                 <NftActionSummaryView
-                                    nft_data={image_props}
+                                    nft_data={file_props}
                                     modal_show_burn_result_on_close={() => this.reloadCollection()}
                                 />
 
@@ -94,7 +92,7 @@ class NftCollectionView extends Component {
                                         size={'sm'}
                                         className={'ms-auto'}
                                         onClick={() => {
-                                            this.props.history.push(utils.getNftViewLink(image_props));
+                                            this.props.history.push(utils.getNftViewLink(file_props));
                                         }}
                                 >
                                     <FontAwesomeIcon icon={'eye'}/>details
@@ -109,7 +107,7 @@ class NftCollectionView extends Component {
     }
 
     render() {
-        const nft_row_list = this.renderNftImage(this.state.nft_list);
+        const nft_row_list = this.renderNft(this.state.nft_list);
         return (
             <>
                 <div className={'panel panel-filled'}>

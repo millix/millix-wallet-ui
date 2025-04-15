@@ -33,6 +33,7 @@
     "react-scripts": "4.0.3",
     "react-stepz": "^0.1.0",
     "react-switchery": "^1.2.3",
+    "react-syntax-highlighter": "^15.6.1",
     "react-transition-group": "4.3.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",

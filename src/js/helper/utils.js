@@ -1,7 +1,7 @@
 import API from '../api/index.js';
 import {TRANSACTION_DATA_TYPE_ASSET, TRANSACTION_DATA_TYPE_ASSET_META, TRANSACTION_DATA_TYPE_NFT, TRANSACTION_DATA_TYPE_NFT_META} from '../../config';
 
-const getImageFromApi = (transaction) => {
+const getFileDataFromApi = (transaction) => {
     return new Promise((resolve) => {
         const file_list    = transaction.transaction_output_attribute[0].value.file_list;
         const file_data    = transaction.transaction_output_attribute[0].file_data;
@@ -33,27 +33,28 @@ const getImageFromApi = (transaction) => {
                         file_data[file_hash] = transaction_output_data_json;
                     }).catch(_ => {
                         return transaction_output_data_response.clone().blob().then(blob => {
-                            file_data[file_hash] = URL.createObjectURL(blob);
+                            file_data[file_hash] = blob;
                         });
                     });
                 }
             });
         }).then(result => {
             Promise.all(result).then(_ => {
-                return resolve(nftImageData(transaction));
+                return resolve(nftFileData(transaction));
             });
         });
     });
 };
 
-function nftImageData(transaction) {
+function nftFileData(transaction) {
     const attribute                  = transaction.transaction_output_attribute[0];
     const file_list                  = attribute.value.file_list;
     const file_tangled_nft           = file_list.find(file => [
         TRANSACTION_DATA_TYPE_NFT,
         TRANSACTION_DATA_TYPE_ASSET
     ].includes(file.type));
-    const file_data_tangled_nft      = attribute.file_data[file_tangled_nft?.hash];
+    const file_data_tangled_blob     = attribute.file_data[file_tangled_nft?.hash];
+    const file_data_tangled_nft      = URL.createObjectURL(file_data_tangled_blob);
     const file_tangled_nft_meta      = file_list.find(file => [
         TRANSACTION_DATA_TYPE_NFT_META,
         TRANSACTION_DATA_TYPE_ASSET_META
@@ -66,6 +67,7 @@ function nftImageData(transaction) {
 
     return {
         src                        : file_data_tangled_nft,
+        blob                       : file_data_tangled_blob,
         width                      : 4,
         height                     : 3,
         transaction                : transaction,
@@ -79,6 +81,7 @@ function nftImageData(transaction) {
         description                : file_data_tangled_nft_meta?.description,
         attribute_type_id          : attribute.attribute_type_id,
         file_key                   : file_key,
+        mime_type                  : file_tangled_nft.mime_type,
         dns                        : attribute.value.dns
     };
 }
@@ -122,6 +125,7 @@ function get_address_version(address_key_identifier) {
 function toCapitalize(s) {
     return s.charAt(0).toUpperCase() + s.slice(1);
 }
+
 function importCSV(file) {
     return new Promise((resolve) => {
         const reader  = new FileReader();
@@ -153,7 +157,7 @@ function importCSV(file) {
 }
 
 export default {
-    getImageFromApi,
+    getFileDataFromApi,
     getNftViewLink,
     toCapitalize,
     importCSV,

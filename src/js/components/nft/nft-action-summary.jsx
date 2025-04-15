@@ -156,7 +156,7 @@ class NftActionSummaryView extends Component {
 
                 <div className={'mt-3'}>
                     <a href={this.state.src} target={'_blank'} className={'btn btn-outline-default w-100'}>
-                        <FontAwesomeIcon icon={'file'}/>raw image
+                        <FontAwesomeIcon icon={'file'}/>raw
                     </a>
                 </div>
             </>;

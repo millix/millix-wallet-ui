@@ -10,6 +10,7 @@ import {TRANSACTION_DATA_TYPE_ASSET} from '../../../config';
 import ReloadTimeTickerView from '../utils/reload-time-ticker-view';
 import moment from 'moment';
 import {changeLoaderState} from '../loader';
+import {renderFilePreview} from '../utils/nft-preview-view';
 
 
 class AssetListView extends Component {
@@ -41,9 +42,9 @@ class AssetListView extends Component {
 
         return API.listTransactionWithDataReceived(this.props.wallet.address_key_identifier, TRANSACTION_DATA_TYPE_ASSET).then(data => {
             async.mapLimit(data, 6, (transaction, callback) => {
-                utils.getImageFromApi(transaction)
-                     .then(image_data => {
-                         callback(null, image_data);
+                utils.getFileDataFromApi(transaction)
+                     .then(file_data => {
+                         callback(null, file_data);
                          changeLoaderState(false);
                      });
             }, (err, assetList) => {
@@ -63,6 +64,7 @@ class AssetListView extends Component {
             const {
                       src,
                       alt,
+                      mime_type,
                       transaction,
                       name,
                       description
@@ -71,7 +73,7 @@ class AssetListView extends Component {
                 <Col xs={12} md={3} className={'mt-3'} key={transaction.transaction_id}>
                     <Card className={'nft-card'}>
                         <div className={'nft-collection-img'}>
-                            <img src={src} alt={alt}/>
+                            {renderFilePreview(src, mime_type, name)}
                         </div>
                         <Card.Body>
                             <div className={'nft-name page_subtitle'}>{name}</div>

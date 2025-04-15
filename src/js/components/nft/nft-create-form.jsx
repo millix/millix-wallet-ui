@@ -16,6 +16,7 @@ import {DEFAULT_NFT_CREATE_AMOUNT, TRANSACTION_DATA_TYPE_NFT, DEFAULT_NFT_CREATE
 import FileUpload from '../utils/file-upload';
 import ReactChipInput from 'react-chip-input';
 import utils from '../../helper/utils';
+import {renderFilePreview} from '../utils/nft-preview-view';
 
 
 class NftCreateForm extends Component {
@@ -34,10 +35,11 @@ class NftCreateForm extends Component {
             address_base               : '',
             address_version            : '',
             address_key_identifier     : '',
-            image                      : undefined,
+            data                       : undefined,
             destination_address_list   : [`${this.props.wallet.address_public_key}${utils.get_address_version(this.props.wallet.address_key_identifier)}${this.props.wallet.address_key_identifier}`],
             txid                       : propsState.txid,
-            nft_src                    : propsState.src,
+            nft_src                    : propsState.blob && URL.createObjectURL(propsState.blob),
+            nft_mime_type              : propsState.mime_type,
             nft_hash                   : propsState.hash,
             name                       : propsState.name ?? '',
             description                : propsState.description ?? '',
@@ -72,7 +74,7 @@ class NftCreateForm extends Component {
         }
         if (this.state.nft_transaction_type === 'revoke') {
             this.setState({
-                image: {
+                data: {
                     file: new File([this.state.nft_src], this.state.name)
                 }
             });
@@ -98,7 +100,7 @@ class NftCreateForm extends Component {
             address_list: address_list,
             amount      : validate.amount('amount', this.amount, error_list),
             fee         : validate.amount('fee', this.fee, error_list),
-            image       : !!this.state.txid || validate.required('image', this.state.image, error_list),
+            data        : !!this.state.txid || validate.required('data', this.state.data, error_list),
             dns         : validate.domain_name('verified sender', this.dns.value, error_list)
         };
 
@@ -182,7 +184,7 @@ class NftCreateForm extends Component {
         return {
             transaction_data_meta       : transaction_data_meta,
             transaction_output_attribute: transaction_output_attribute,
-            transaction_data            : !this.state.txid ? this.state.image.file : {
+            transaction_data            : !this.state.txid ? this.state.data.file : {
                 file_hash        : this.state.nft_hash,
                 attribute_type_id: 'Adl87cz8kC190Nqc'
             },
@@ -274,16 +276,16 @@ class NftCreateForm extends Component {
         return this.props.hidden_field_list?.includes(field) ? 'd-none' : '';
     }
 
-    onChangeFileUpload(file) {
+    onChangeFileUpload(data) {
         this.setState({
-            image     : file,
+            data,
             error_list: []
         });
     }
 
     onFileCancelUpload() {
         this.setState({
-            image: undefined
+            data: undefined
         });
     }
 
@@ -305,16 +307,25 @@ class NftCreateForm extends Component {
                             <Form.Group>
                                 {this.state.nft_src ? (
                                     <div className={'nft-transfer-img-wrapper'}>
-                                        <img src={this.state.nft_src} alt={'nft'}/>
+                                        {renderFilePreview(this.state.data?.file?.dataURL || this.state.nft_src, this.state.data?.file?.type || this.state.nft_mime_type, this.state.data?.file?.name || this.name, {
+                                            width : '100%',
+                                            height: '512px'
+                                        })}
                                     </div>) : (
                                      <FileUpload
                                          ref={this.fileUploaderRef}
-                                         title={'upload image'}
+                                         title={'upload file'}
                                          on_file_upload={this.onChangeFileUpload}
                                          on_file_cancel_upload={this.onFileCancelUpload}
                                          on_file_upload_error={this.onChangeFileUploadError}
-                                         accept={'image/*'}
-                                         file_type={'image'}
+                                         accept={['*/*']}
+                                         file_type={[
+                                             'video',
+                                             'image',
+                                             'pdf',
+                                             'text',
+                                             'binary'
+                                         ]}
                                      />
                                  )}
                             </Form.Group>

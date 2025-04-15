@@ -19,6 +19,7 @@ import {changeLoaderState} from '../loader';
 import * as validate from '../../helper/validate';
 import HelpIconView from '../utils/help-icon-view';
 import WarningList from '../utils/warning-list-view';
+import {renderFilePreview} from '../utils/nft-preview-view';
 
 
 class NftPreviewView extends Component {
@@ -27,7 +28,7 @@ class NftPreviewView extends Component {
         this.state = {
             status                  : 'asset',
             parameter_list          : {},
-            image_data              : {},
+            file_data               : {},
             action                  : 'preview',
             nft_sync_timestamp      : moment.now(),
             modal_show_copy_result  : false,
@@ -54,11 +55,8 @@ class NftPreviewView extends Component {
                 metadata_hash            : params.p4
             }
         }, () => {
-            if (params.type) {
-                this.setAssetData();
-            }
-            else {
-                this.setNftData();
+            if (!params.type) {
+                return this.setNftData();
             }
         });
     }
@@ -118,17 +116,17 @@ class NftPreviewView extends Component {
                        else {
                            transaction.file_key = this.state.parameter_list.key;
 
-                           utils.getImageFromApi(transaction)
-                                .then(image_data => {
+                           utils.getFileDataFromApi(transaction)
+                                .then(file_data => {
                                     this.setState({
                                         nft_sync_timestamp: nft_sync_timestamp,
-                                        image_data,
+                                        file_data,
                                         status            : status_new,
                                         warning_list      : warning_list
                                     });
 
-                                    if (image_data.dns) {
-                                        this.verifyDNS(image_data.dns, this.state.image_data.transaction?.address_key_identifier_to);
+                                    if (file_data.dns) {
+                                        this.verifyDNS(file_data.dns, this.state.file_data.transaction?.address_key_identifier_to);
                                         changeLoaderState(false);
                                     }
                                     else {
@@ -149,58 +147,6 @@ class NftPreviewView extends Component {
             setTimeout(() => this.setNftData(), 10000);
         });
     }
-
-    setAssetData() {
-        // this.getImageDataWithDetails(TRANSACTION_DATA_TYPE_ASSET).then(stateData => {
-        //     this.setState(stateData);
-        // });
-    }
-
-    // async getImageDataWithDetails(data_type) {
-    // return API.getNftImageWithKey(this.state.image_data_parameter_list).then(result => {
-    //     return result.ok ? result.blob() : undefined;
-    // }).then(blob => {
-    //     return API.listTransactionWithDataReceived(this.state.image_data_parameter_list.address_key_identifier_to, data_type).then(data => {
-    //         const transaction = data.filter((entry) => entry.transaction_id === this.state.image_data_parameter_list.transaction_id)[0];
-    //         console.log(data);
-    //         if (!transaction) {
-    //             this.setState({
-    //                 error_list: [
-    //                     {
-    //                         message: 'nft not found'
-    //                     }
-    //                 ]
-    //             });
-    //         }
-    //         else {
-    //             return {
-    //                 image_data              : {
-    //                     amount: transaction.amount,
-    //                     ...transaction.transaction_output_attribute[0].value.file_data,
-    //                     transaction
-    //                 },
-    //                 image_src               : URL.createObjectURL(blob),
-    //                 transaction_history_list: this.getTransactionHistoryList(data)
-    //             };
-    //         }
-    //     });
-    // });
-    // }
-
-    // getTransactionHistoryList(data) {
-    //     return data.map((transaction) => {
-    //         return {
-    //             date  : format.date(transaction.transaction_date),
-    //             txid  : transaction.transaction_id,
-    //             action: <>
-    //                 <DatatableActionButtonView
-    //                     history_path={'/transaction/' + encodeURIComponent(transaction.transaction_id)}
-    //                     history_state={[transaction]}
-    //                     icon={'eye'}/>
-    //             </>
-    //         };
-    //     });
-    // }
 
     verifyDNS(dns, address_key_identifier) {
         dns = validate.domain_name(Translation.getPhrase('1e0b22770'), dns, []);
@@ -228,7 +174,7 @@ class NftPreviewView extends Component {
     }
 
     isOwner() {
-        return this.state.image_data.transaction?.address_key_identifier_to === this.props.wallet.address_key_identifier;
+        return this.state.file_data.transaction?.address_key_identifier_to === this.props.wallet.address_key_identifier;
     }
 
     render() {
@@ -254,13 +200,13 @@ class NftPreviewView extends Component {
             if (this.state.error_list.length === 0) {
                 nft_body = <>
                     <div className={'nft-preview-img'}>
-                        <a href={this.state.image_data.src} target={'_blank'} className={'mx-auto d-flex'}>
-                            <img src={this.state.image_data.src} alt={this.state.image_data.name}/>
-                        </a>
+                        <div className={'mx-auto d-flex'}>
+                            {renderFilePreview(this.state.file_data.src, this.state.file_data.mime_type, this.state.file_data.name, {width: "100%", height: "512px"})}
+                        </div>
                     </div>
                     <div className={'nft-preview-description'}>
-                        <div className={'nft-name page_subtitle mb-0'}>{this.state.image_data.name}</div>
-                        <div className={'nft-description'}>{this.state.image_data.description}</div>
+                        <div className={'nft-name page_subtitle mb-0'}>{this.state.file_data.name}</div>
+                        <div className={'nft-description'}>{this.state.file_data.description}</div>
                         {sender_verified}
                     </div>
 
@@ -327,8 +273,8 @@ class NftPreviewView extends Component {
                 nft details
                 <div className={'ms-auto message_subject_action_container'}>
                     {this.state.error_list.length === 0 && this.state.status === 'synced' && <NftActionSummaryView
-                        nft_data={this.state.image_data}
-                        src={this.state.image_data.src}
+                        nft_data={this.state.file_data}
+                        src={this.state.file_data.src}
                         view_page={true}
                     />}
                 </div>

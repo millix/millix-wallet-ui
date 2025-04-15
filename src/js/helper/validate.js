@@ -327,93 +327,250 @@ export function domain_name(field_name, value, error_list) {
     return value;
 }
 
-export function file(field_name, file, error_list, file_type = '', allowed_extension_list = [], allowed_mime_type_list = [], allowed_max_file_size = 0) {
-    const result_file_type_config = {
-        image: {
-            allowed_mime_type_list: [
-                'image/png',
-                'image/jpeg',
-                'image/jpg',
-                'image/gif'
-            ],
-            allowed_extension_list: [
-                'png',
-                'jpeg',
-                'jpg',
-                'gif'
-            ],
-            allowed_max_file_size : 50 * 1024 * 1024 // 50mb
-        }
-    };
+export const validate_file_type_config = {
+    image: {
+        allowed_mime_type_list: [
+            'image/png',
+            'image/jpeg',
+            'image/jpg',
+            'image/gif'
+        ],
+        allowed_extension_list: [
+            'png',
+            'jpeg',
+            'jpg',
+            'gif'
+        ],
+        allowed_max_file_size : 50 * 1024 * 1024 // 50mb
+    },
+    pdf  : {
+        allowed_mime_type_list: [
+            'application/pdf'
+        ],
+        allowed_extension_list: [
+            'pdf'
+        ],
+        allowed_max_file_size : 50 * 1024 * 1024 // 50mb
+    },
+    binary  : {
+        allowed_mime_type_list: [
+            '*'
+        ],
+        allowed_extension_list: [
+            '*'
+        ],
+        allowed_max_file_size : 50 * 1024 * 1024 // 50mb
+    },
+    video: {
+        allowed_mime_type_list: [
+            'video/mp4',
+            'video/quicktime',
+            'video/x-flv',
+            'video/mpeg',
+            'video/x-ms-wmv',
+            'video/x-msvideo',
+            'video/avi',
+            'video/webm',
+            'video/ogg'
+        ],
+        allowed_extension_list: [
+            'mp4',
+            'mov',
+            'flv',
+            'avi',
+            'mwv',
+            'webm',
+            'ogv'
+        ],
+        allowed_max_file_size : 50 * 1024 * 1024 // 50mb
+    },
+    text : {
+        allowed_mime_type_list: [
+            'text/plain',
+            'text/html',
+            'text/css',
+            'text/csv',
+            'text/javascript',
+            'text/markdown',
+            'text/xml',
+            'text/x-python',
+            'text/x-c',
+            'text/x-c++',
+            'text/x-java-source',
+            'text/x-shellscript',
+            'text/x-asm',
+            'text/x-perl',
+            'text/x-ruby',
+            'text/x-go',
+            'text/x-lua',
+            'text/x-sql',
+            'text/x-vcard',
+            'text/x-yaml',
+            'text/x-json',
+            'text/x-log',
+            'text/x-tex',
+            'text/richtext',
+            'text/tab-separated-values',
+            'text/vnd.wap.wml',
+            'text/vnd.dvb.subtitle',
+            'text/troff',
+            'text/rtf',
+            'text/calendar'
+        ],
+        allowed_extension_list: [
+            'txt',     // text/plain
+            'html',    // text/html
+            'css',     // text/css
+            'csv',     // text/csv
+            'js',      // text/javascript
+            'md',      // text/markdown
+            'xml',     // text/xml
+            'py',      // text/x-python
+            'c',       // text/x-c
+            'cpp',     // text/x-c++
+            'java',    // text/x-java-source
+            'sh',      // text/x-shellscript
+            's',       // text/x-asm
+            'pl',      // text/x-perl
+            'rb',      // text/x-ruby
+            'go',      // text/x-go
+            'lua',     // text/x-lua
+            'sql',     // text/x-sql
+            'vcf',     // text/x-vcard
+            'yaml',    // text/x-yaml
+            'json',    // text/x-json
+            'log',     // text/x-log
+            'tex',     // text/x-tex
+            'rtf',     // text/richtext / text/rtf
+            'tsv',     // text/tab-separated-values
+            'wml',     // text/vnd.wap.wml
+            'sub',     // text/vnd.dvb.subtitle
+            'tr',      // text/troff
+            'rtf',     // text/rtf
+            'ics'      // text/calendar
+        ],
+        allowed_max_file_size : 50 * 1024 * 1024 // 50mb
+    }
+};
 
-    let file_type_config = {
-        allowed_mime_type_list: [],
-        allowed_extension_list: [],
-        allowed_max_file_size : 0
-    };
 
-    if (file_type && Object.keys(result_file_type_config).includes(file_type)) {
-        file_type_config = result_file_type_config[file_type];
+function allowAny(list) {
+    return list.length === 1 && list[0] === '*';
+}
+
+export function file(field_name, file, error_list, file_type_list = [], allowed_extension_list = [], allowed_mime_type_list = [], allowed_max_file_size = 0) {
+    if (typeof file_type_list === 'string') {
+        file_type_list = [file_type_list];
     }
 
-    if (allowed_extension_list.length === 0) {
-        allowed_extension_list = file_type_config.allowed_extension_list;
-    }
+    for (const file_type of file_type_list) {
 
-    if (allowed_mime_type_list.length === 0) {
-        allowed_mime_type_list = file_type_config.allowed_mime_type_list;
-    }
-
-    if (allowed_max_file_size <= 0) {
-        allowed_max_file_size = file_type_config.allowed_max_file_size;
-    }
-
-    const file_extension = file.file.name.split('.').pop().toLowerCase();
-    const file_mime_type = file.file.type;
-
-    return new Promise((resolve, reject) => {
-        if (allowed_extension_list.length > 0 && !allowed_extension_list.includes(file_extension)) {
-            reject({
-                name   : get_error_name('invalid_file_extension', field_name),
-                message: `invalid file extension. allowed extensions are - ${allowed_extension_list.join(', ')}`
-            });
-            return null;
+        if (file_type === 'pdf' && file.file.type !== 'application/pdf') {
+            continue;
+        }
+        if (file_type === 'video' && !file.file.type.startsWith('video/')) {
+            continue;
+        }
+        if (file_type === 'image' && !file.file.type.startsWith('image/')) {
+            continue;
+        }
+        if (file_type === 'text' && !file.file.type.startsWith('text/')) {
+            continue;
         }
 
-        if (allowed_mime_type_list.length > 0 && !allowed_mime_type_list.includes(file_mime_type)) {
-            reject({
-                name   : get_error_name('invalid_file_mime_type', field_name),
-                message: `invalid file mime type. allowed mime types are - ${allowed_mime_type_list.join(', ')}`
-            });
-            return null;
+        let file_type_config = {
+            allowed_mime_type_list: [],
+            allowed_extension_list: [],
+            allowed_max_file_size : 0
+        };
+
+        if (file_type && Object.keys(validate_file_type_config).includes(file_type)) {
+            file_type_config = validate_file_type_config[file_type];
         }
 
-        if (file.file.size > allowed_max_file_size) {
-            reject({
-                name   : get_error_name('file_max_size', field_name),
-                message: `file size is too large. max allowed file size is ${(allowed_max_file_size / (1024 * 1024))}mb`
-            });
-            return null;
+        if (allowed_extension_list.length === 0) {
+            allowed_extension_list = file_type_config.allowed_extension_list;
         }
 
-        if (file_type === 'image') {
-            const reader = new FileReader();
+        if (allowed_mime_type_list.length === 0) {
+            allowed_mime_type_list = file_type_config.allowed_mime_type_list;
+        }
 
-            reader.onload = e => {
-                const img   = new Image();
-                img.onload  = () => {
-                    resolve(file);
+        if (allowed_max_file_size <= 0) {
+            allowed_max_file_size = file_type_config.allowed_max_file_size;
+        }
+
+        const file_extension = file.file.name.split('.').pop().toLowerCase();
+        const file_mime_type = file.file.type;
+
+        return new Promise((resolve, reject) => {
+            if (!allowAny(allowed_extension_list) && allowed_extension_list.length > 0 && !allowed_extension_list.includes(file_extension)) {
+                reject({
+                    name   : get_error_name('invalid_file_extension', field_name),
+                    message: `invalid file extension. allowed extensions are - ${allowed_extension_list.join(', ')}`
+                });
+                return null;
+            }
+
+            if (!allowAny(allowed_mime_type_list) && allowed_mime_type_list.length > 0 && !allowed_mime_type_list.includes(file_mime_type)) {
+                reject({
+                    name   : get_error_name('invalid_file_mime_type', field_name),
+                    message: `invalid file mime type. allowed mime types are - ${allowed_mime_type_list.join(', ')}`
+                });
+                return null;
+            }
+
+            if (file.file.size > allowed_max_file_size) {
+                reject({
+                    name   : get_error_name('file_max_size', field_name),
+                    message: `file size is too large. max allowed file size is ${(allowed_max_file_size / (1024 * 1024))}mb`
+                });
+                return null;
+            }
+
+            if (file_type === 'image') {
+                const reader = new FileReader();
+
+                reader.onload = e => {
+                    const img   = new Image();
+                    img.onload  = () => {
+                        resolve(file);
+                    };
+                    img.onerror = () => {
+                        reject({
+                            name   : get_error_name('file_content_does_not_match_file_type', field_name),
+                            message: `file is not a valid image.`
+                        });
+                        return false;
+                    };
+                    img.src     = e.target.result;
                 };
-                img.onerror = () => {
-                    reject({
-                        name   : get_error_name('file_content_does_not_match_file_type', field_name),
-                        message: `file is not a valid image.`
-                    });
-                    return false;
+                reader.readAsDataURL(file.file);
+            }
+            else if (file_type === 'video') {
+                const reader = new FileReader();
+
+                reader.onload = e => {
+                    const video   = document.createElement('video');
+                    video.preload = 'metadata';
+
+                    video.onloadedmetadata = function() {
+                        resolve(file);
+                    };
+                    video.onerror          = () => {
+                        reject({
+                            name   : get_error_name('file_content_does_not_match_file_type', field_name),
+                            message: `file is not a valid video.`
+                        });
+                        return false;
+                    };
+                    video.src              = e.target.result;
                 };
-                img.src     = e.target.result;
-            };
-            reader.readAsDataURL(file.file);
-        }
-    });
+                reader.readAsDataURL(file.file);
+            }
+            else {
+                resolve(file);
+            }
+        });
+    }
 }
