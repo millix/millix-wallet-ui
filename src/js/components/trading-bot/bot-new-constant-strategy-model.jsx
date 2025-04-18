@@ -30,9 +30,13 @@ export default class BotNewConstantStrategyModel extends Component {
         data.strategy_amount      = validate.amount(`order amount`, this.strategy_amount.value, error_list);
         if (this.strategy_price_min.value) {
             data.strategy_price_min = validate.floatPositive(`minimum price`, this.strategy_price_min.value, error_list, true);
+        } else {
+            data.strategy_price_min = null;
         }
         if (this.strategy_price_max.value) {
             data.strategy_price_max = validate.floatPositive(`maximum price`, this.strategy_price_max.value, error_list, true);
+        } else {
+            data.strategy_price_max = null;
         }
         data.strategy_total_budget   = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
         data.strategy_time_frequency = validate.integerPositive(`frequency`, this.strategy_time_frequency.value, error_list, false);
