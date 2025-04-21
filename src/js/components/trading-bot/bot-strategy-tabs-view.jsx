@@ -12,6 +12,7 @@ import * as text from '../../helper/text';
 import utils from '../../helper/utils';
 import {ProgressBar} from 'primereact/progressbar';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import moment from 'moment/moment';
 
 const colorGreen = '#55af55';
 const colorRed   = '#f44336';
@@ -97,7 +98,7 @@ class BotStrategyTabsView extends Component {
             {
                 field : 'status',
                 header: `status`,
-                body  : (item) => item.status === 1 ? 'running' : 'paused',
+                body  : (item) => item.status === 1 ? `running ${this.getRunningInTime(item)}` : 'paused',
                 parser: (data) => parseInt(data)
             }
         ];
@@ -118,10 +119,24 @@ class BotStrategyTabsView extends Component {
             {
                 field : 'status',
                 header: `status`,
-                body  : (item) => item.status === 1 ? 'running' : 'paused',
+                body  : (item) => item.status === 1 ? `running ${this.getRunningInTime(item)}` : 'paused',
                 parser: (data) => parseInt(data)
             }
         ];
+    }
+
+    getRunningInTime(strategy) {
+        const time = (strategy.time_frame || strategy.time_frequency) * 1000;
+        if (strategy.last_run_status === 1) {
+            let runningIn = Math.floor((time - (Date.now() - strategy.last_run_timestamp * 1000) % (time * 1000)) / 1000);
+            if (runningIn > 0) {
+                return moment(Date.now() + runningIn * 1000).fromNow();
+            }
+            runningIn = Math.floor((time - (Date.now() - this.state.lastUpdateTime) % (time * 1000)) / 1000);
+            return moment(Date.now() + runningIn * 1000).fromNow();
+        }
+
+        return moment(Date.now() + 1000).fromNow();
     }
 
     componentDidMount() {
