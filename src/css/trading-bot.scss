@@ -1,0 +1,23 @@
+@property --a {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false
+}
+
+.border-animation {
+  &:hover {
+    box-sizing: border-box;
+    border: solid 4px #0000;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    background:
+            repeating-conic-gradient(from var(--a, 0deg),
+                    var(--l, #0000 0% 25%, #00D9FF80 0%, #00AAFF80, #0088FF80, #0051FF80, #0000ff7f 50%)) border-box;
+    filter: var(--f, url(#glow-0));
+    animation: a 2s linear infinite
+  }
+}
+
+@keyframes a { to { --a: 1turn } }

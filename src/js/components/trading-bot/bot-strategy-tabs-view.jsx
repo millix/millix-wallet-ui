@@ -5,6 +5,7 @@ import DatatableView from '../utils/datatable-view';
 import ModalView from '../utils/modal-view';
 import BotNewConstantStrategyModel from './bot-new-constant-strategy-model';
 import BotNewPriceChangeStrategyModel from './bot-new-price-change-strategy-model';
+import BotNewSpreadStrategyModel from './bot-new-spread-strategy-model';
 import Api from '../../api';
 import {millix, number} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
@@ -30,7 +31,9 @@ class BotStrategyTabsView extends Component {
             statistics                  : undefined,
             lastPrice                   : undefined,
             'strategy-constant-data'    : [],
-            'strategy-price-change-data': []
+            'strategy-price-change-data': [],
+            'strategy-spread-data'      : [],
+            symbol                      : 'mlx_usdc'
         };
 
         this.updateTimeoutHandler = undefined;
@@ -40,7 +43,7 @@ class BotStrategyTabsView extends Component {
                 field : 'order_type',
                 header: `type`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{item.order_type}</span>,
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{item.order_type === 'both' ? 'buy/sell' : item.order_type}</span>,
                 parser: (data) => data
             },
             {
@@ -123,6 +126,33 @@ class BotStrategyTabsView extends Component {
                 parser: (data) => parseInt(data)
             }
         ];
+
+        this.spreadStrategyFields = [
+            {
+                field : 'time_frequency',
+                header: `time frequency`,
+                body  : (item) => number(item.time_frequency),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'spread_percentage_start',
+                header: `spread percentage start`,
+                body  : (item) => number(item.spread_percentage_start),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'spread_percentage_end',
+                header: `spread percentage end`,
+                body  : (item) => number(item.spread_percentage_end),
+                parser: (data) => parseInt(data)
+            },
+            {
+                field : 'status',
+                header: `status`,
+                body  : (item) => item.status === 1 ? `running ${this.getRunningInTime(item)}` : 'paused',
+                parser: (data) => parseInt(data)
+            }
+        ];
     }
 
     getRunningInTime(strategy) {
@@ -149,7 +179,7 @@ class BotStrategyTabsView extends Component {
 
     update() {
         clearTimeout(this.updateTimeoutHandler);
-        Api.listStrategies(this.state.selectedStrategyType)
+        Api.listStrategies(this.state.selectedStrategyType, this.props.exchange, this.state.symbol)
            .then(data => {
                const strategyList = data.strategy_list;
                strategyList.forEach((strategy) => {
@@ -161,6 +191,8 @@ class BotStrategyTabsView extends Component {
                            strategy.time_frame = Math.floor(strategy.time_frame / 60);
                        }
                        strategy.price_change_percentage = extraConfig.price_change_percentage;
+                       strategy.spread_percentage_start = extraConfig.spread_percentage_start;
+                       strategy.spread_percentage_end = extraConfig.spread_percentage_end
                    }
 
                    if (strategy.order_type === 'ask' || strategy.order_type === 'sell') {
@@ -170,7 +202,7 @@ class BotStrategyTabsView extends Component {
                    strategy.action = <>
                        <DatatableActionButtonView
                            icon={`fa-solid ${strategy.status === 1 ? 'fa-pause' : 'fa-play'}`}
-                           callback={() => Api.upsertStrategy(strategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, strategy.status === 1 ? 2 : 1).then(() => this.update())}
+                           callback={() => Api.upsertStrategy(strategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, this.props.exchange, this.state.symbol, strategy.status === 1 ? 2 : 1).then(() => this.update())}
                            callback_args={[]}
                        />
                        <DatatableActionButtonView
@@ -198,10 +230,15 @@ class BotStrategyTabsView extends Component {
                    [`${this.state.selectedStrategyType}-data`]: strategyList
                });
 
-               return Api.getTradingStatistics('MLX_USDC', 'D1')
+               return Api.getTradingStatistics(this.state.symbol.toUpperCase(), 'D1', this.props.exchange)
                          .then(response => {
-                             console.log(response.data);
                              const lastPrice = !this.state.statistics ? undefined : this.state.statistics.close;
+                             if (response.data) {
+                                 response.data.close = response.data.close ?? 0;
+                                 response.data.open  = response.data.open ?? 0;
+                                 response.data.high  = response.data.high ?? 0;
+                                 response.data.low   = response.data.low ?? 0;
+                             }
                              this.setState({
                                  statistics: response.data,
                                  lastPrice
@@ -271,7 +308,7 @@ class BotStrategyTabsView extends Component {
                      }
                  });
 
-                 Api.importStrategies(data).then(_ => this.update()).catch(_ => _).then(_ => e.target.value = null);
+                 Api.importStrategies(data, this.props.exchange, this.state.symbol).then(_ => this.update()).catch(_ => _).then(_ => e.target.value = null);
              });
     }
 
@@ -280,51 +317,74 @@ class BotStrategyTabsView extends Component {
             return undefined;
         }
 
+        if (statistics.open === 0) {
+            return 0;
+        }
+
         return Math.round((statistics.close - statistics.open) / statistics.open * 100);
     }
 
     render() {
+        if (!this.state.statistics) {
+            return <div className={'panel panel-filled'}>
+                <div className={'panel-body'}>
+                    <ProgressBar mode={'indeterminate'} style={{height: '6px'}}/>
+                </div>
+            </div>;
+        }
         const priceChange      = this.getPricePercentageChange(this.state.statistics);
         const priceChangeColor = priceChange >= 0 ? colorGreen : colorRed;
         return <>
-            <div className={'panel panel-filled'}>
-                <div className={'panel-body'}>
-                    {!this.state.statistics && <ProgressBar mode={'indeterminate'} style={{height: '6px'}}/>}
-                    {this.state.statistics && <Row>
-                        <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col>
-                        <Col>
-                            <Row>last price:</Row>
-                            <Row
-                                style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(9)}</Row>
-                        </Col>
-                        <Col>
-                            <Row>24h change:</Row>
-                            <Row style={{color: priceChange > 0 ? colorGreen : colorRed}}>
-                                <Badge bg={''} style={{
-                                    maxWidth: 60,
-                                    color   : priceChangeColor,
-                                    border  : `1px solid ${priceChangeColor}`
-                                }}>
-                                    <FontAwesomeIcon size={'1x'} icon={priceChange >= 0 ? 'caret-up' : 'caret-down'}/>
-                                    {priceChange}%
-                                </Badge>
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row>24h high:</Row>
-                            <Row>{this.state.statistics.high.toFixed(9)}</Row>
-                        </Col>
-                        <Col>
-                            <Row>24h low:</Row>
-                            <Row>{this.state.statistics.low.toFixed(9)}</Row>
-                        </Col>
-                        <Col>
-                            <Row>24h volume:</Row>
-                            <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
-                        </Col>
-                    </Row>}
+            {this.state.statistics && <>
+                <div className={'panel panel-filled'}>
+                    <div className={'panel-body'}>
+                        <Row>
+                            <Col style={{margin: 'auto'}}><Button variant={'outline-secondary'} onClick={this.props.onBack}><FontAwesomeIcon
+                                icon={'arrow-circle-left'}/> Back</Button></Col>
+                            <Col>
+                                <Row>{this.props.exchange}</Row>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
-            </div>
+                <div className={'panel panel-filled'}>
+                    <div className={'panel-body'}>
+                        <Row>
+                            <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col>
+                            <Col>
+                                <Row>last price:</Row>
+                                <Row
+                                    style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(9)}</Row>
+                            </Col>
+                            <Col>
+                                <Row>24h change:</Row>
+                                <Row style={{color: priceChange > 0 ? colorGreen : colorRed}}>
+                                    <Badge bg={''} style={{
+                                        maxWidth: 60,
+                                        color   : priceChangeColor,
+                                        border  : `1px solid ${priceChangeColor}`
+                                    }}>
+                                        <FontAwesomeIcon size={'1x'} icon={priceChange >= 0 ? 'caret-up' : 'caret-down'}/>
+                                        {priceChange}%
+                                    </Badge>
+                                </Row>
+                            </Col>
+                            <Col>
+                                <Row>24h high:</Row>
+                                <Row>{this.state.statistics.high.toFixed(9)}</Row>
+                            </Col>
+                            <Col>
+                                <Row>24h low:</Row>
+                                <Row>{this.state.statistics.low.toFixed(9)}</Row>
+                            </Col>
+                            <Col>
+                                <Row>24h volume:</Row>
+                                <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
+            </>}
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
                     <Row>
@@ -342,7 +402,7 @@ class BotStrategyTabsView extends Component {
                 </div>
                 <div className={'panel-body'}>
                     <p>
-                        {`This trading bot is an experimental feature that allows you to trade on tangled.com/exchange. Please use caution and use small limits to become comfortable with the trade bot. Tangled is not responsible for any unexpected behaviour or losses as a result of the trading bot.`}
+                        {`This trading bot is an experimental feature that allows you to trade on ${this.props.exchange}. Please use caution and use small limits to become comfortable with the trade bot. Tangled is not responsible for any unexpected behaviour or losses as a result of the trading bot.`}
                     </p>
                     <ModalView show={this.state.modalShowDeleteStrategy}
                                size={'lg'}
@@ -352,7 +412,7 @@ class BotStrategyTabsView extends Component {
                                    selectedStrategy       : undefined
                                })}
                                on_accept={() => {
-                                   Api.upsertStrategy(this.state.selectedStrategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0)
+                                   Api.upsertStrategy(this.state.selectedStrategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, this.props.exchange, this.state.symbol,0)
                                       .then(() => {
                                           this.setState({
                                               modalShowDeleteStrategy: false,
@@ -380,8 +440,11 @@ class BotStrategyTabsView extends Component {
                             if (this.state.showModelType === 'strategy-constant') {
                                 success = await this.constant_strategy_modal.save();
                             }
-                            else {
+                            else if (this.state.showModelType === 'strategy-price-change') {
                                 success = await this.price_change_strategy_modal.save();
+                            }
+                            else if (this.state.showModelType === 'strategy-spread') {
+                                success = await this.spread_strategy_modal.save();
                             }
                             if (success) {
                                 this.setState({
@@ -391,15 +454,24 @@ class BotStrategyTabsView extends Component {
                                 this.update();
                             }
                         }}
-                        heading={`${this.state.showModelType === 'strategy-constant' ? 'constant strategy' : 'price change strategy'}`}
+                        heading={`${this.state.showModelType === 'strategy-constant' ? 'constant strategy' : this.state.showModelType === 'strategy-price-change' ? 'price change strategy' : 'spread/market making strategy'}`}
                         body={
                             <>
                                 {this.state.showModelType === 'strategy-constant' &&
                                  <BotNewConstantStrategyModel strategyType="strategy-constant" strategyData={this.state.selectedStrategy}
+                                                              exchange={this.props.exchange}
+                                                              symbol={this.state.symbol}
                                                               ref={c => this.constant_strategy_modal = c}/>}
                                 {this.state.showModelType === 'strategy-price-change' &&
                                  <BotNewPriceChangeStrategyModel strategyType="strategy-price-change" strategyData={this.state.selectedStrategy}
+                                                                 exchange={this.props.exchange}
+                                                                 symbol={this.state.symbol}
                                                                  ref={c => this.price_change_strategy_modal = c}/>}
+                                {this.state.showModelType === 'strategy-spread' &&
+                                 <BotNewSpreadStrategyModel strategyType="strategy-spread" strategyData={this.state.selectedStrategy}
+                                                            exchange={this.props.exchange}
+                                                            symbol={this.state.symbol}
+                                                            ref={c => this.spread_strategy_modal = c}/>}
                             </>
                         }/>
                     <Tabs
@@ -417,7 +489,7 @@ class BotStrategyTabsView extends Component {
                                 loading={this.state.dataLoading}
                                 export_button_label={'export strategies'}
                                 import_button_label={'import strategies'}
-                                export_filename={`export_strategy_constant`}
+                                export_filename={`export_strategy_constant_${this.props.exchange}_${this.state.symbol}`}
                                 allow_export={true}
                                 allow_import={true}
                                 onImportFile={this.importStrategies.bind(this)}
@@ -442,7 +514,7 @@ class BotStrategyTabsView extends Component {
                                 loading={this.state.dataLoading}
                                 export_button_label={'export strategies'}
                                 import_button_label={'import strategies'}
-                                export_filename={`export_strategy_price_change`}
+                                export_filename={`export_strategy_price_change_${this.props.exchange}_${this.state.symbol}`}
                                 allow_export={true}
                                 allow_import={true}
                                 onImportFile={this.importStrategies.bind(this)}
@@ -457,6 +529,31 @@ class BotStrategyTabsView extends Component {
                                 resultColumn={[
                                     ...this.commonFields,
                                     ...this.priceChangeStrategyFields
+                                ]}
+                            />
+                        </Tab>
+
+                        <Tab eventKey="strategy-spread" title={'spread/market making strategy'}>
+                            <DatatableView
+                                reload_datatable={() => this.update()}
+                                loading={this.state.dataLoading}
+                                export_button_label={'export strategies'}
+                                import_button_label={'import strategies'}
+                                export_filename={`export_strategy_spread_${this.props.exchange}_${this.state.symbol}`}
+                                allow_export={true}
+                                allow_import={true}
+                                onImportFile={this.importStrategies.bind(this)}
+                                datatable_reload_timestamp={this.state.lastUpdateTime}
+                                action_button={{
+                                    label   : `new strategy`,
+                                    on_click: () => this.setState({showModelType: 'strategy-spread'})
+                                }}
+                                value={this.state['strategy-spread-data']}
+                                sortOrder={1}
+                                showActionColumn={true}
+                                resultColumn={[
+                                    ...this.commonFields,
+                                    ...this.spreadStrategyFields
                                 ]}
                             />
                         </Tab>

@@ -493,6 +493,22 @@ class HelpIconView extends Component {
                         The time frame used to determine the percentage change of the price of millix (example 15 minutes). The time frame also defines how often the strategy will be executed. If the strategy is set to a 15 minute price change % time frame, this strategy will only execute once per 15 minutes.
                     </li>
                 </ul>
+            },
+            'bot_spread_percentage_start': {
+                'title': 'from spread %',
+                'body' : <ul>
+                    <li>
+                        The minimum spread percentage at which this strategy begins placing orders.
+                    </li>
+                </ul>
+            },
+            'bot_spread_percentage_end': {
+                'title': 'to spread %',
+                'body' : <ul>
+                    <li>
+                        The maximum spread percentage up to which this strategy places orders.
+                    </li>
+                </ul>
             }
         };
         let help_item     = false;

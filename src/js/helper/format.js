@@ -82,16 +82,21 @@ export function transaction_status_label(status) {
     return label;
 }
 
-function get_fixed_value({
-                             value = 0,
-                             float_part_length = 8,
-                             format = true,
-                             get_float = false,
-                             format_zero = false,
-                             trailing_zero = true
-                         }) {
+export function get_fixed_value({
+                                    value = 0,
+                                    zero_undefined = false,
+                                    float_part_length = 8,
+                                    format = true,
+                                    get_float = false,
+                                    format_zero = false,
+                                    trailing_zero = true
+                                }) {
     if (!value && value !== 0) {
         value = 0;
+    }
+
+    if (value === 0 && zero_undefined) {
+        return;
     }
 
     if (value === 0 && format_zero === false) {

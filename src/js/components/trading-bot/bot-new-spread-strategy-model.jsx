@@ -4,11 +4,11 @@ import {Form} from 'react-bootstrap';
 import {Dropdown} from 'primereact/dropdown';
 import * as validate from '../../helper/validate';
 import Api from '../../api';
-import {get_fixed_value, millix, number} from '../../helper/format';
+import {millix, number, get_fixed_value} from '../../helper/format';
 import HelpIconView from '../utils/help-icon-view';
 
 
-export default class BotNewPriceChangeStrategyModel extends Component {
+export default class BotNewSpreadStrategyModel extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,19 +31,30 @@ export default class BotNewPriceChangeStrategyModel extends Component {
         if (this.strategy_price_min.value) {
             data.strategy_price_min = validate.floatPositive(`minimum price`, this.strategy_price_min.value, error_list, true);
         }
+        else {
+            data.strategy_price_min = null;
+        }
         if (this.strategy_price_max.value) {
             data.strategy_price_max = validate.floatPositive(`maximum price`, this.strategy_price_max.value, error_list, true);
         }
-        data.strategy_total_budget      = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
-        data.strategy_change_percentage = validate.integer(`change percentage`, this.strategy_change_percentage.value, error_list, false);
-        data.strategy_time_frame        = validate.integerPositive(`time frame`, this.strategy_time_frame.value, error_list, false);
+        else {
+            data.strategy_price_max = null;
+        }
+        data.strategy_total_budget            = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
+        data.strategy_time_frequency          = validate.integerPositive(`frequency`, this.strategy_time_frequency.value, error_list, false);
+        data.strategy_spread_percentage_start = validate.integerPositive(`from spread %`, this.strategy_spread_percentage_start.value, error_list, true);
+        data.strategy_spread_percentage_end   = validate.integerPositive(`to spread %`, this.strategy_spread_percentage_end.value, error_list, true);
 
         if (error_list.length === 0) {
             try {
+                if (data.strategy_order_type === 'bid/ask') {
+                    data.strategy_order_type = 'both';
+                }
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
-                        time_frame             : data.strategy_time_frame * 60,
-                        price_change_percentage: data.strategy_change_percentage
+                        time_frequency         : data.strategy_time_frequency,
+                        spread_percentage_start: data.strategy_spread_percentage_start,
+                        spread_percentage_end  : data.strategy_spread_percentage_end
                     }), this.props.exchange, this.props.symbol);
                 return true;
             }
@@ -76,11 +87,10 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`order type`}</label>
                 <Dropdown
-                    value={this.state.type} options={[
-                    'buy',
-                    'sell',
+                    value={this.state.type === 'both' ? 'bid/ask' : this.state.type} options={[
                     'bid',
-                    'ask'
+                    'ask',
+                    'bid/ask'
                 ]}
                     ref={(c) => this.strategy_order_type = c}
                     onChange={(e) => this.setState({type: e.value})} className={'form-control p-0'}/>
@@ -89,7 +99,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`order time-to-live (seconds)`} <HelpIconView help_item_name={'bot_order_ttl'}/></label>
                 <Form.Control type="text"
-                              defaultValue={number(this.props.strategyData?.order_ttl || 60)}
+                              defaultValue={Number(this.props.strategyData?.order_ttl || 60)}
                               placeholder={`order time-to-live (seconds)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_order_ttl = c}
@@ -149,22 +159,32 @@ export default class BotNewPriceChangeStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`price change %`} <HelpIconView help_item_name={'bot_order_price_change'}/></label>
+                <label>{`frequency (seconds)`} <HelpIconView help_item_name={'bot_order_frequency'}/></label>
                 <Form.Control type="text"
-                              defaultValue={number(this.props.strategyData?.price_change_percentage)}
-                              placeholder={`price change %`}
+                              defaultValue={number(this.props.strategyData?.time_frequency)}
+                              placeholder={`frequency (seconds)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
-                              ref={c => this.strategy_change_percentage = c}
-                              onChange={e => validate.handleInputChangeInteger(e, true)}/>
+                              ref={c => this.strategy_time_frequency = c}
+                              onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`price change % time frame (minutes)`} <HelpIconView help_item_name={'bot_order_price_change_time_frame'}/></label>
+                <label>{`from spread %`} <HelpIconView help_item_name={'bot_spread_percentage_start'}/></label>
                 <Form.Control type="text"
-                              defaultValue={number(this.props.strategyData?.time_frame)}
-                              placeholder={`price change % time frame (minutes)`}
+                              defaultValue={number(this.props.strategyData?.spread_percentage_start)}
+                              placeholder={`from spread %`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
-                              ref={c => this.strategy_time_frame = c}
+                              ref={c => this.strategy_spread_percentage_start = c}
+                              onChange={e => validate.handleInputChangeInteger(e, false)}/>
+            </Form.Group>
+
+            <Form.Group className="form-group">
+                <label>{`to spread %`} <HelpIconView help_item_name={'bot_spread_percentage_end'}/></label>
+                <Form.Control type="text"
+                              defaultValue={number(this.props.strategyData?.spread_percentage_end)}
+                              placeholder={`to spread %`}
+                              pattern="[0-9]+([,][0-9]{1,2})?"
+                              ref={c => this.strategy_spread_percentage_end = c}
                               onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
         </Form>;

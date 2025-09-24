@@ -4,7 +4,7 @@ import {Form} from 'react-bootstrap';
 import {Dropdown} from 'primereact/dropdown';
 import * as validate from '../../helper/validate';
 import Api from '../../api';
-import {millix, number} from '../../helper/format';
+import {get_fixed_value, millix, number} from '../../helper/format';
 import HelpIconView from '../utils/help-icon-view';
 
 
@@ -44,7 +44,7 @@ export default class BotNewConstantStrategyModel extends Component {
         if (error_list.length === 0) {
             try {
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
-                    data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({time_frequency: data.strategy_time_frequency}));
+                    data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({time_frequency: data.strategy_time_frequency}), this.props.exchange, this.props.symbol);
                 return true;
             }
             catch (e) {
@@ -110,7 +110,11 @@ export default class BotNewConstantStrategyModel extends Component {
                 <label>{`minimum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_min'}/></label>
                 <Form.Control
                     type="text"
-                    defaultValue={Number(this.props.strategyData?.price_min)}
+                    defaultValue={get_fixed_value({
+                        value            : this.props.strategyData?.price_min,
+                        zero_undefined   : true,
+                        float_part_length: 9
+                    })}
                     placeholder={`minimum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
                     ref={c => this.strategy_price_min = c}
@@ -122,7 +126,11 @@ export default class BotNewConstantStrategyModel extends Component {
                 <label>{`maximum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_max'}/></label>
                 <Form.Control
                     type="text"
-                    defaultValue={Number(this.props.strategyData?.price_max)}
+                    defaultValue={get_fixed_value({
+                        value            : this.props.strategyData?.price_max,
+                        zero_undefined   : true,
+                        float_part_length: 9
+                    })}
                     placeholder={`maximum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
                     ref={c => this.strategy_price_max = c}
@@ -143,7 +151,7 @@ export default class BotNewConstantStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`frequency (seconds)`} <HelpIconView help_item_name={'bot_order_frequency'}/></label>
                 <Form.Control type="text"
-                              defaultValue={Number(this.props.strategyData?.time_frequency)}
+                              defaultValue={number(this.props.strategyData?.time_frequency)}
                               placeholder={`frequency (seconds)`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_time_frequency = c}

@@ -514,26 +514,34 @@ class API {
         });
     }
 
-    getTangledBotExchangeApiKey() {
-        return this.fetchApiTangledBot(`/krSnkcU4DLqKDG3x`);
+    getTangledBotExchangeApiKey(exchange) {
+        return this.fetchApiTangledBot(`/krSnkcU4DLqKDG3x`, {p0: exchange});
     }
 
-    setTangledBotExchangeApiKey(apiKey) {
-        return this.fetchApiTangledBot(`/zdLrGUDCxXZLSeBz`, {p0: apiKey});
-    }
-
-    getTradingStatistics(symbol, timeFrame) {
-        return this.fetchApiTangledBot(`/T72jPyDtqeUgua2z`, {
-            p0: symbol,
-            p1: timeFrame
+    setTangledBotExchangeApiKey(apiKey, exchange) {
+        return this.fetchApiTangledBot(`/zdLrGUDCxXZLSeBz`, {
+            p0: apiKey,
+            p1: exchange
         });
     }
 
-    listStrategies(strategyType) {
-        return this.fetchApiTangledBot(`/G53BNuerqTA7LSuF`, {p0: strategyType});
+    getTradingStatistics(symbol, timeFrame, exchange) {
+        return this.fetchApiTangledBot(`/T72jPyDtqeUgua2z`, {
+            p0: symbol,
+            p1: timeFrame,
+            p2: exchange
+        });
     }
 
-    upsertStrategy(strategyId, strategyDescription, strategyType, orderType, orderTTL, amount, priceMin, priceMax, totalBudget, extraConfig, status) {
+    listStrategies(strategyType, exchange, symbol) {
+        return this.fetchApiTangledBot(`/G53BNuerqTA7LSuF`, {
+            p0: strategyType,
+            p1: exchange,
+            p2: symbol
+        });
+    }
+
+    upsertStrategy(strategyId, strategyDescription, strategyType, orderType, orderTTL, amount, priceMin, priceMax, totalBudget, extraConfig, exchange, symbol, status) {
         return this.fetchApiTangledBot(`/Dm4LbtkrxBbdXwKw`, {
             p0 : strategyId,
             p1 : strategyDescription,
@@ -545,12 +553,18 @@ class API {
             p7 : priceMax,
             p9 : totalBudget,
             p10: extraConfig,
-            p11: status
+            p11: status,
+            p12: exchange,
+            p13: symbol
         }, 'POST');
     }
 
-    importStrategies(strategies) {
-        return this.fetchApiTangledBot(`/nh8Ck5RTxgxYgStT`, {p0: strategies}, 'POST');
+    importStrategies(strategies, exchange, symbol) {
+        return this.fetchApiTangledBot(`/nh8Ck5RTxgxYgStT`, {
+            p0: strategies,
+            p1: exchange,
+            p2: symbol
+        }, 'POST');
     }
 
 }

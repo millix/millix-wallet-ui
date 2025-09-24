@@ -31,28 +31,18 @@ class BotApiConfigurationView extends Component {
 
     }
 
-    componentDidMount() {
-    }
-
-    save() {
-        Api.setTangledBotExchangeApiKey(this.state.apiKey)
-           .then(this.props.onChange.bind(this, this.state.apiKey));
-    }
-
-    changeModalShowResult(value = true) {
-        this.setState({
-            modalShowResult: value
-        });
+    saveChanges() {
+        this.props.onChange(this.state.apiKey);
     }
 
     render() {
         return <>
             <div className={'panel panel-filled'}>
-                <div className={'panel-heading bordered'}>{`configure tangled.com exchange api`}
+                <div className={'panel-heading bordered'}>{`configure ${this.props.exchange} exchange api`}
                 </div>
                 <div className={'panel-body'}>
                     <p>
-                        {`please, go to tangled.com and generate an api key, then use this form to configure your tangled.com api key to activate the bot.`}
+                        {`please, go to ${this.props.exchange} and generate an api key, then use this form to configure your ${this.props.exchange} api key to activate the bot.`}
                     </p>
 
                     <Form>
@@ -72,9 +62,16 @@ class BotApiConfigurationView extends Component {
                             className={'d-flex justify-content-center'}>
                             <Button
                                 variant="outline-primary"
-                                onClick={() => this.save()}
+                                onClick={this.saveChanges.bind(this)}
                                 disabled={this.state.sending}>
                                 {this.state.sending ? <>{Translation.getPhrase('a23d9a84b')}</> : <>{Translation.getPhrase('0e3e60d83')}</>}
+                            </Button>
+                            <Button
+                                variant="outline-secondary"
+                                onClick={this.props.onCancel}
+                                disabled={this.state.sending}
+                                style={{marginLeft: 16}}>
+                                {Translation.getPhrase('1c5390bfe')}
                             </Button>
                         </Form.Group>
                     </Form>
@@ -85,7 +82,4 @@ class BotApiConfigurationView extends Component {
 }
 
 
-export default connect(
-    state => ({
-        bot: state.bot
-    }))(withRouter(BotApiConfigurationView));
+export default withRouter(BotApiConfigurationView);
