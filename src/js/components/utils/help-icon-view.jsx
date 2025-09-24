@@ -494,7 +494,7 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
-            'bot_spread_percentage_start': {
+            'bot_spread_percentage_begin': {
                 'title': 'from spread %',
                 'body' : <ul>
                     <li>

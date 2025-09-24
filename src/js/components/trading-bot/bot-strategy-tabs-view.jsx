@@ -135,14 +135,14 @@ class BotStrategyTabsView extends Component {
                 parser: (data) => parseInt(data)
             },
             {
-                field : 'spread_percentage_start',
-                header: `spread percentage start`,
-                body  : (item) => number(item.spread_percentage_start),
+                field : 'spread_percentage_begin',
+                header: `from spread percentage`,
+                body  : (item) => number(item.spread_percentage_begin),
                 parser: (data) => parseInt(data)
             },
             {
                 field : 'spread_percentage_end',
-                header: `spread percentage end`,
+                header: `to spread percentage`,
                 body  : (item) => number(item.spread_percentage_end),
                 parser: (data) => parseInt(data)
             },
@@ -191,7 +191,7 @@ class BotStrategyTabsView extends Component {
                            strategy.time_frame = Math.floor(strategy.time_frame / 60);
                        }
                        strategy.price_change_percentage = extraConfig.price_change_percentage;
-                       strategy.spread_percentage_start = extraConfig.spread_percentage_start;
+                       strategy.spread_percentage_begin = extraConfig.spread_percentage_begin;
                        strategy.spread_percentage_end = extraConfig.spread_percentage_end
                    }
 

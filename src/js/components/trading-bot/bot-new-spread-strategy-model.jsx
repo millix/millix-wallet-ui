@@ -42,7 +42,7 @@ export default class BotNewSpreadStrategyModel extends Component {
         }
         data.strategy_total_budget            = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
         data.strategy_time_frequency          = validate.integerPositive(`frequency`, this.strategy_time_frequency.value, error_list, false);
-        data.strategy_spread_percentage_start = validate.integerPositive(`from spread %`, this.strategy_spread_percentage_start.value, error_list, true);
+        data.strategy_spread_percentage_begin = validate.integerPositive(`from spread %`, this.strategy_spread_percentage_begin.value, error_list, true);
         data.strategy_spread_percentage_end   = validate.integerPositive(`to spread %`, this.strategy_spread_percentage_end.value, error_list, true);
 
         if (error_list.length === 0) {
@@ -53,7 +53,7 @@ export default class BotNewSpreadStrategyModel extends Component {
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
                         time_frequency         : data.strategy_time_frequency,
-                        spread_percentage_start: data.strategy_spread_percentage_start,
+                        spread_percentage_begin: data.strategy_spread_percentage_begin,
                         spread_percentage_end  : data.strategy_spread_percentage_end
                     }), this.props.exchange, this.props.symbol);
                 return true;
@@ -169,12 +169,12 @@ export default class BotNewSpreadStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`from spread %`} <HelpIconView help_item_name={'bot_spread_percentage_start'}/></label>
+                <label>{`from spread %`} <HelpIconView help_item_name={'bot_spread_percentage_begin'}/></label>
                 <Form.Control type="text"
-                              defaultValue={number(this.props.strategyData?.spread_percentage_start)}
+                              defaultValue={number(this.props.strategyData?.spread_percentage_begin)}
                               placeholder={`from spread %`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
-                              ref={c => this.strategy_spread_percentage_start = c}
+                              ref={c => this.strategy_spread_percentage_begin = c}
                               onChange={e => validate.handleInputChangeInteger(e, false)}/>
             </Form.Group>
 
