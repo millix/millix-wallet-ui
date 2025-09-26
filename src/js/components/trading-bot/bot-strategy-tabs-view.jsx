@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
 import {Badge, Button, Col, Form, Row, Tab, Tabs} from 'react-bootstrap';
 import DatatableView from '../utils/datatable-view';
@@ -16,6 +16,7 @@ import {Dropdown} from 'primereact/dropdown';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import moment from 'moment/moment';
 import ExchangeConfig from '../../core/exchange-config';
+import PageTitle from '../page-title';
 
 const colorGreen = '#55af55';
 const colorRed   = '#f44336';
@@ -208,7 +209,15 @@ class BotStrategyTabsView extends Component {
         return moment(Date.now() + 1000).fromNow();
     }
 
+    getPageTitle() {
+        return `bot - ${this.props.exchange} | ${this.state.symbol}}`;
+    };
+
     componentDidMount() {
+        window.gtag('event', 'page_view', {
+            'page_title': this.getPageTitle(),
+            strategy    : this.state.selectedStrategyType.replace(/-/g, ' ')
+        });
         this.update();
     }
 
@@ -370,6 +379,10 @@ class BotStrategyTabsView extends Component {
                 pair      : ExchangeConfig[newSymbol],
                 statistics: undefined
             }, () => {
+                window.gtag('event', 'page_view', {
+                    'page_title': this.getPageTitle(),
+                    strategy    : this.state.selectedStrategyType.replace(/-/g, ' ')
+                });
                 this.update();
             });
         }
@@ -387,6 +400,7 @@ class BotStrategyTabsView extends Component {
         const priceChangeColor = priceChange >= 0 ? colorGreen : colorRed;
         return <>
             {this.state.statistics && <>
+                <PageTitle title={this.getPageTitle()}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-body'}>
                         <Row>
@@ -541,7 +555,13 @@ class BotStrategyTabsView extends Component {
                         id="bot-tab-strategies"
                         className="mb-3"
                         onSelect={(strategy) => {
-                            this.setState({selectedStrategyType: strategy}, () => this.update());
+                            this.setState({selectedStrategyType: strategy}, () => {
+                                window.gtag('event', 'page_view', {
+                                    page_title: this.getPageTitle(),
+                                    strategy  : this.state.selectedStrategyType.replace(/-/g, ' ')
+                                });
+                                this.update();
+                            });
                         }}
                     >
                         <Tab eventKey="strategy-constant" title={'constant strategy'}>

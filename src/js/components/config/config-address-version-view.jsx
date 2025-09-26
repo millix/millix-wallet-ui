@@ -11,6 +11,7 @@ import * as validate from '../../helper/validate';
 import {bool_label} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class ConfigAddressVersionView extends Component {
@@ -165,6 +166,7 @@ class ConfigAddressVersionView extends Component {
 
     render() {
         return <div>
+            <PageTitle title={'configure address version'}/>
             <ModalView
                 show={this.state.modal_show}
                 size={'lg'}

@@ -2,9 +2,13 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Row, Col} from 'react-bootstrap';
 import fiatleakImage from '../../../image/trading-bot/fiatleak.png';
 import tangledImage from '../../../image/trading-bot/tangled.png';
+import PageTitle from '../page-title';
 
 
 export default ({onExchangeSelect}) => {
+    useEffect(() => {
+        window.gtag('event', 'page_view', {'page_title': 'bot - select trading exchange'});
+    }, []);
 
     return <>
         <svg width="0" height="0" aria-hidden="true">

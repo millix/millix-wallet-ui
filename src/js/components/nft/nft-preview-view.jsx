@@ -20,6 +20,7 @@ import * as validate from '../../helper/validate';
 import HelpIconView from '../utils/help-icon-view';
 import WarningList from '../utils/warning-list-view';
 import {renderFilePreview} from '../utils/nft-preview-view';
+import PageTitle from '../page-title';
 
 
 class NftPreviewView extends Component {
@@ -269,6 +270,7 @@ class NftPreviewView extends Component {
         }
 
         return (<div className={'panel panel-filled'}>
+            <PageTitle title={'nft preview'}/>
             <div className={'panel-heading bordered d-flex'}>
                 nft details
                 <div className={'ms-auto message_subject_action_container'}>

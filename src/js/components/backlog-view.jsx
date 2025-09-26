@@ -8,6 +8,7 @@ import API from '../api';
 import * as text from '../helper/text';
 import ModalView from './utils/modal-view';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class BacklogView extends Component {
@@ -62,6 +63,7 @@ class BacklogView extends Component {
 
     render() {
         return (<Col md="12">
+            <PageTitle title={'backlog'}/>
             <div className={'panel panel-filled'}>
                 <ModalView show={this.state.modal_show}
                            size={'lg'}

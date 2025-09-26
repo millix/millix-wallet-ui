@@ -10,6 +10,7 @@ import * as format from '../../helper/format';
 import _ from 'lodash';
 import * as validate from '../../helper/validate';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class AdvertisementFormView extends Component {
@@ -201,6 +202,7 @@ class AdvertisementFormView extends Component {
     render() {
         return (
             <>
+                <PageTitle title={'advertisement form'}/>
                 <ModalView show={this.state.modalShow}
                            size={'lg'}
                            on_close={() => this.changeModalShow(false)}

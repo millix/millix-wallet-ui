@@ -8,6 +8,7 @@ import API from '../../api';
 import * as format from '../../helper/format';
 import HelpIconView from './../utils/help-icon-view';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class SystemInfoView extends Component {
@@ -49,6 +50,7 @@ class SystemInfoView extends Component {
         const props = this.props;
 
         return (<Col md="12">
+            <PageTitle title={'system info'}/>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
                     {Translation.getPhrase('8f9df8a04')}

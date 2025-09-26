@@ -8,6 +8,7 @@ import * as helper_message from '../../helper/message';
 import Translation from '../../common/translation';
 import {TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config';
 import utils from '../../helper/utils';
+import PageTitle from '../page-title';
 
 
 class MessageSentView extends Component {
@@ -52,6 +53,7 @@ class MessageSentView extends Component {
 
     render() {
         return (<>
+            <PageTitle title={'sent messages'}/>
             <div className={'panel panel-filled'}>
                 <div className={'panel-body'} style={{textAlign: 'center'}}>
                     <div>

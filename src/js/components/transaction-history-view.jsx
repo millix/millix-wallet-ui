@@ -8,6 +8,7 @@ import * as format from '../helper/format';
 import API from '../api';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class TransactionHistoryView extends Component {
@@ -69,6 +70,7 @@ class TransactionHistoryView extends Component {
     render() {
         return (
             <div>
+                <PageTitle title={'list transactions'}/>
                 <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>{Translation.getPhrase('bb2017424')}</div>

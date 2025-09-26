@@ -9,6 +9,7 @@ import {Col, Row} from 'react-bootstrap';
 import MessageComposeForm from '../message/message-compose-form';
 import {DISCORD_URL, REPORT_ISSUE_ADDRESS} from '../../../config.js';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class ReportIssueView extends Component {
@@ -50,6 +51,7 @@ hardware:
     render() {
         return (
             <div>
+                <PageTitle title={'report issue'}/>
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>

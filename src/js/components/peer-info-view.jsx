@@ -5,6 +5,7 @@ import API from '../api/index';
 import DatatableView from './utils/datatable-view';
 import * as format from '../helper/format';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class PeerInfoView extends Component {
@@ -116,6 +117,7 @@ class PeerInfoView extends Component {
 
         return (
             <div>
+                <PageTitle title={'peer info'}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>
                         {Translation.getPhrase('79b9dd190')}

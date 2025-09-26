@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom';
 import DatatableView from './utils/datatable-view';
 import API from '../api';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class EventsLogView extends Component {
@@ -53,6 +54,7 @@ class EventsLogView extends Component {
     render() {
         return (
             <div>
+                <PageTitle title={'event log'}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-heading bordered'}>{Translation.getPhrase('3eb332ead')}</div>
                     <div className={'panel-body'}>

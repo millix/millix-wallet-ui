@@ -12,6 +12,7 @@ import Translation from '../../common/translation';
 import Web3 from 'web3';
 import MetamaskInstall from '../utils/metamask-install-view';
 import {BRIDGE_ETH_CONTRACT_ADDRESS} from '../../../config';
+import PageTitle from '../page-title';
 
 
 class TransactionBurnView extends Component {
@@ -241,6 +242,7 @@ class TransactionBurnView extends Component {
 
         return (
             <>
+                <PageTitle title={'send from bridge'}/>
                 {balance_panel}
 
                 <div className={'panel panel-filled'}>

@@ -10,6 +10,7 @@ import API from '../../api';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import _ from 'lodash';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class ConfigConnectionView extends Component {
@@ -180,6 +181,7 @@ class ConfigConnectionView extends Component {
     getConnectionDatatable(connection_name, config_name) {
         return (
             <div className={'panel panel-filled'}>
+                <PageTitle title={'configure connection'}/>
                 <ModalView
                     show={this.state.connection_data['show_' + config_name]}
                     size={'lg'}

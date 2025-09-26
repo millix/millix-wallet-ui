@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Button, Form, Table} from 'react-bootstrap';
@@ -16,6 +16,7 @@ import * as validate from '../../helper/validate';
 import {bool_label} from '../../helper/format';
 import DatatableView from '../utils/datatable-view';
 import Api from '../../api';
+import PageTitle from '../page-title';
 
 
 class BotApiConfigurationView extends Component {
@@ -33,6 +34,10 @@ class BotApiConfigurationView extends Component {
 
     saveChanges() {
         this.props.onChange(this.state.apiKey);
+    }
+
+    componentDidMount() {
+        window.gtag('event', 'page_view', {'page_title': `bot - ${this.props.exchange} apikey`});
     }
 
     render() {

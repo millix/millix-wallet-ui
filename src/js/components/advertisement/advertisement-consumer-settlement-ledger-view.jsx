@@ -8,6 +8,7 @@ import * as format from '../../helper/format';
 import moment from 'moment';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class AdvertisementConsumerSettlementLedgerView extends Component {
@@ -87,6 +88,7 @@ class AdvertisementConsumerSettlementLedgerView extends Component {
 
     render() {
         return (<div>
+            <PageTitle title={'advertisement payment list'} />
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>{Translation.getPhrase('828deaeb1')}
                 </div>

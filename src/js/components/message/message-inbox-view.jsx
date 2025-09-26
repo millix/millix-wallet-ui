@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import Translation from '../../common/translation';
 import {TRANSACTION_DATA_TYPE_MESSENGER} from '../../../config';
 import utils from '../../helper/utils';
+import PageTitle from '../page-title';
 
 
 class MessageInboxView extends Component {
@@ -53,6 +54,7 @@ class MessageInboxView extends Component {
     render() {
         return (
             <>
+                <PageTitle title={'message inbox'}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-body'} style={{textAlign: 'center'}}>
                         <div>

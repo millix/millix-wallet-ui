@@ -10,6 +10,7 @@ import Translation from '../../common/translation';
 import NewWalletView from './new-wallet-view';
 import ImportWalletView from './import-wallet-view';
 import WarningList from '../utils/warning-list-view';
+import PageTitle from '../page-title';
 
 const styles = {
     centered: {
@@ -135,6 +136,7 @@ class UnlockWalletView extends Component {
 
         return (
             <Container>
+                <PageTitle title={'unlock wallet'}/>
                 <div className="unlock-container">
                     <div className="cols-xs-12">
                         <div className="panel-body view-header tab">

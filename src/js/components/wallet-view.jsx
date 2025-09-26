@@ -14,6 +14,7 @@ import Transaction from '../common/transaction';
 import Translation from '../common/translation';
 import BackupReminderView from './education/backup-reminder-view';
 import ModalAddressBookView from './utils/modal-address-book-view';
+import PageTitle from './page-title';
 
 
 class WalletView extends Component {
@@ -160,6 +161,7 @@ class WalletView extends Component {
     render() {
         return (
             <>
+                <PageTitle title={'wallet'}/>
                 <BackupReminderView/>
                 <BalanceView
                     stable={this.props.wallet.balance_stable}

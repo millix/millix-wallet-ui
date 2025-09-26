@@ -9,6 +9,7 @@ import {bool_label} from '../../helper/format';
 import {connect} from 'react-redux';
 import {walletUpdateConfig} from '../../redux/actions';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class ConfigStorageView extends Component {
@@ -75,6 +76,7 @@ class ConfigStorageView extends Component {
     render() {
         return (
             <Row>
+                <PageTitle title={'configure storage'}/>
                 <div className={'col-lg-12'}>
                     <ModalView
                         show={this.state.modal_show_save_result}

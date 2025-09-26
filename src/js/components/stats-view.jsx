@@ -6,6 +6,7 @@ import {updateNetworkState} from '../redux/actions';
 import HelpIconView from './utils/help-icon-view';
 import * as format from '../helper/format';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class StatsView extends Component {
@@ -28,6 +29,7 @@ class StatsView extends Component {
 
         const props = this.props;
         return (<Col md="12">
+            <PageTitle title={'summary'}/>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>{Translation.getPhrase('729a7460c')}</div>
                 <div className={'panel-body'}>

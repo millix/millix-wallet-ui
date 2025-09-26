@@ -7,6 +7,7 @@ import DatatableView from '../utils/datatable-view';
 import * as format from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class AdvertisementListView extends Component {
@@ -175,6 +176,7 @@ class AdvertisementListView extends Component {
 
     render() {
         return (<div>
+            <PageTitle title={'list advertisements'}/>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>{Translation.getPhrase('3a1ef95ab')}</div>
                 <div className={'panel-body'}>

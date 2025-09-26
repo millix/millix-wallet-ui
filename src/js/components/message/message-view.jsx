@@ -8,6 +8,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import HelpIconView from '../utils/help-icon-view';
 import * as helper_message from '../../helper/message';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class MessageView extends Component {
@@ -99,6 +100,7 @@ class MessageView extends Component {
 
         return (
             <div>
+                <PageTitle title={'message view'}/>
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>

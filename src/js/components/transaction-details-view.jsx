@@ -13,6 +13,7 @@ import {bool_label} from '../helper/format';
 import API from '../api';
 import ErrorList from './utils/error-list-view';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class TransactionDetailsView extends Component {
@@ -158,6 +159,7 @@ class TransactionDetailsView extends Component {
 
         return (
             <>
+                <PageTitle title={'transaction details'}/>
                 <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance}/>
                 <Col md="12">
                     <div className={'panel panel-filled'}>

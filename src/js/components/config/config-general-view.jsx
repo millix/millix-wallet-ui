@@ -13,6 +13,7 @@ import {Dropdown} from 'primereact/dropdown';
 import Translation from '../../common/translation';
 import {bool_label} from '../../helper/format';
 import ConfigTranslationView from './config-translation-view';
+import PageTitle from '../page-title';
 
 
 class ConfigGeneralView extends Component {
@@ -100,6 +101,7 @@ class ConfigGeneralView extends Component {
     render() {
         return (
             <Row>
+                <PageTitle title={'configure general'}/>
                 <div className={'col-lg-10'}>
                     <ModalView
                         show={this.state.modal_show_save_result}

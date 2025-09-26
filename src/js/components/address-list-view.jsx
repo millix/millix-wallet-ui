@@ -8,6 +8,7 @@ import DatatableView from './utils/datatable-view';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class AddressListView extends Component {
@@ -61,6 +62,7 @@ class AddressListView extends Component {
     render() {
         return (
             <div className={'panel panel-filled'}>
+                <PageTitle title={'list address'}/>
                 <div className={'panel-heading bordered'}>{Translation.getPhrase('4dab40251')}</div>
                 <div className={'panel-body'}>
                     <Row>

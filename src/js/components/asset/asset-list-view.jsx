@@ -11,6 +11,7 @@ import ReloadTimeTickerView from '../utils/reload-time-ticker-view';
 import moment from 'moment';
 import {changeLoaderState} from '../loader';
 import {renderFilePreview} from '../utils/nft-preview-view';
+import PageTitle from '../page-title';
 
 
 class AssetListView extends Component {
@@ -101,6 +102,7 @@ class AssetListView extends Component {
         const asset_list = this.renderAsset(this.state.asset_list);
         return (
             <>
+                <PageTitle title={'asset list'}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-body'} style={{textAlign: 'center'}}>
                         <div>

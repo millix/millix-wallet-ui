@@ -10,6 +10,7 @@ import bridgeWalletImportToken from '../../../image/bridge_eth_metamask/import_t
 import bridgeWalletImportTokenConfirmation from '../../../image/bridge_eth_metamask/import_token_confirmation.png';
 import bridgeWalletImportTokenResult from '../../../image/bridge_eth_metamask/import_token_result.png';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class GettingStartedView extends Component {
@@ -34,6 +35,7 @@ class GettingStartedView extends Component {
     render() {
         return (
             <div className={'panel panel-filled'}>
+                <PageTitle title={'exchange getting started'}/>
                 <div className={'panel-heading bordered'}>
                     {Translation.getPhrase('pCHSGHLZ8')}
                 </div>

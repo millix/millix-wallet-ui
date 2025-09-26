@@ -8,6 +8,7 @@ import ModalView from '../utils/modal-view';
 import ErrorList from '../utils/error-list-view';
 import * as format from '../../helper/format';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class ConfigConsensusView extends Component {
@@ -88,6 +89,7 @@ class ConfigConsensusView extends Component {
 
     render() {
         return <div>
+            <PageTitle title={'configure consensus'}/>
             <ModalView
                 show={this.state.modal_show_save_result}
                 size={'lg'}

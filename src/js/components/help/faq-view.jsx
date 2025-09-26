@@ -4,6 +4,7 @@ import {Col, Row} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {DISCORD_URL} from '../../../config.js';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class FaqView extends Component {
@@ -13,6 +14,7 @@ class FaqView extends Component {
 
     render() {
         return (<Col md="12">
+            <PageTitle title={'faq'}/>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
                     {Translation.getPhrase('66f2297a0')}

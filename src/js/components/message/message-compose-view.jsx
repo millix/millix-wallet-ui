@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom';
 import {Col, Row} from 'react-bootstrap';
 import MessageComposeForm from './message-compose-form';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class MessageComposeView extends Component {
@@ -11,6 +12,7 @@ class MessageComposeView extends Component {
     render() {
         return (
             <div>
+                <PageTitle title={'message compose'}/>
                 <Row>
                     <Col md={12}>
                         <div className={'panel panel-filled'}>

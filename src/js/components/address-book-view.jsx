@@ -11,6 +11,7 @@ import Translation from '../common/translation';
 import localforage from 'localforage';
 import API from '../api';
 import utils from '../helper/utils';
+import PageTitle from './page-title';
 
 
 class AddressBookView extends Component {
@@ -218,6 +219,7 @@ class AddressBookView extends Component {
 
     render() {
         return <div>
+            <PageTitle title={'address book'}/>
             <ModalView
                 show={this.state.modal_show}
                 size={'lg'}

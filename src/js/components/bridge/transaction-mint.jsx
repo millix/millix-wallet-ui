@@ -14,6 +14,7 @@ import Translation from '../../common/translation';
 import web3 from 'web3';
 import MetamaskInstall from '../utils/metamask-install-view';
 import Web3 from 'web3';
+import PageTitle from '../page-title';
 
 
 class TransactionMintView extends Component {
@@ -174,6 +175,7 @@ class TransactionMintView extends Component {
 
     render() {
         return <div className={'panel panel-filled'}>
+            <PageTitle title={'send to bridge'}/>
             <div className={'panel-heading bordered'}>{Translation.getPhrase('rgLWY0FGn')}</div>
             <div className={'panel-body'}>
                 {window.ethereum ?

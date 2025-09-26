@@ -10,6 +10,7 @@ import * as validate from '../../helper/validate';
 import * as format from '../../helper/format';
 import HelpIconView from '../utils/help-icon-view';
 import Translation from '../../common/translation';
+import PageTitle from '../page-title';
 
 
 class ConfigNetworkView extends Component {
@@ -99,6 +100,7 @@ class ConfigNetworkView extends Component {
 
     render() {
         return <div>
+            <PageTitle title={'configure network'}/>
             <ModalView
                 show={this.state.modal_show_save_result}
                 size={'lg'}

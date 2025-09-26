@@ -13,6 +13,7 @@ import moment from 'moment';
 import ReloadTimeTickerView from '../utils/reload-time-ticker-view';
 import NftActionSummaryView from './nft-action-summary';
 import {renderFilePreview} from '../utils/nft-preview-view';
+import PageTitle from '../page-title';
 
 
 class NftCollectionView extends Component {
@@ -110,6 +111,7 @@ class NftCollectionView extends Component {
         const nft_row_list = this.renderNft(this.state.nft_list);
         return (
             <>
+                <PageTitle title={'nft collection'}/>
                 <div className={'panel panel-filled'}>
                     <div className={'panel-body'} style={{textAlign: 'center'}}>
                         <div>

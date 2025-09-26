@@ -8,6 +8,7 @@ import DatatableActionButtonView from './utils/datatable-action-button-view';
 import * as format from '../helper/format';
 import ResetTransactionValidationView from './utils/reset-transaction-validation-view';
 import Translation from '../common/translation';
+import PageTitle from './page-title';
 
 
 class UnspentTransactionOutputView extends Component {
@@ -106,6 +107,7 @@ class UnspentTransactionOutputView extends Component {
 
         return (
             <div>
+                <PageTitle title={`list ${this.state.stable ? 'stable' : 'pending'} outputs`}/>
                 <ResetTransactionValidationView onRef={instance => this.resetTransactionValidationRef = instance} reloadDatatable={this.reloadDatatable}/>
                 <div className={'panel panel-filled'}>
                     <div
@@ -142,15 +144,15 @@ class UnspentTransactionOutputView extends Component {
                                         header: Translation.getPhrase('c86534ace')
                                     },
                                     {
-                                        field: 'address',
+                                        field : 'address',
                                         header: Translation.getPhrase('5795a5856')
                                     },
                                     {
-                                        field: 'transaction_id',
+                                        field : 'transaction_id',
                                         header: Translation.getPhrase('1a6323a17')
                                     },
                                     {
-                                        field: 'output_position',
+                                        field : 'output_position',
                                         header: Translation.getPhrase('8d11dfdb0')
                                     }
                                 ]}/>
