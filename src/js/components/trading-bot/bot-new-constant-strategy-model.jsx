@@ -5,7 +5,9 @@ import {Dropdown} from 'primereact/dropdown';
 import * as validate from '../../helper/validate';
 import Api from '../../api';
 import {get_fixed_value, millix, number} from '../../helper/format';
+import ExchangeConfig from './ExchangeConfig';
 import HelpIconView from '../utils/help-icon-view';
+import {handleInputChangeFloat, handleInputChangeInteger} from '../../helper/validate';
 
 
 export default class BotNewConstantStrategyModel extends Component {
@@ -15,6 +17,7 @@ export default class BotNewConstantStrategyModel extends Component {
             errorList: [],
             type     : this.props.strategyData?.order_type || 'buy'
         };
+        this.pair  = ExchangeConfig[props.symbol];
     }
 
     async save() {
@@ -27,15 +30,21 @@ export default class BotNewConstantStrategyModel extends Component {
         data.strategy_description = validate.required(`strategy description`, this.strategy_description.value, error_list);
         data.strategy_order_type  = validate.required(`order type`, this.strategy_order_type.props.value, error_list);
         data.strategy_order_ttl   = validate.integerPositive(`order time to live`, this.strategy_order_ttl.value, error_list, false);
-        data.strategy_amount      = validate.amount(`order amount`, this.strategy_amount.value, error_list);
+        data.strategy_amount      = validate.floatPositiveInRange(`order amount`, this.strategy_amount.value, error_list, false, this.pair.order_size_min, this.pair.order_size_max, this.pair.order_size_float_precision);
+        if (this.pair.order_size_float_precision === 0) {
+            data.strategy_amount = parseInt(data.strategy_amount);
+        }
+
         if (this.strategy_price_min.value) {
             data.strategy_price_min = validate.floatPositive(`minimum price`, this.strategy_price_min.value, error_list, true);
-        } else {
+        }
+        else {
             data.strategy_price_min = null;
         }
         if (this.strategy_price_max.value) {
             data.strategy_price_max = validate.floatPositive(`maximum price`, this.strategy_price_max.value, error_list, true);
-        } else {
+        }
+        else {
             data.strategy_price_max = null;
         }
         data.strategy_total_budget   = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
@@ -87,7 +96,7 @@ export default class BotNewConstantStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`order time-to-live (seconds)`} <HelpIconView help_item_name={'bot_order_ttl'}/></label>
+                <label>{`order time-to-live (seconds)`} <HelpIconView args={this.pair} help_item_name={'bot_order_ttl'}/></label>
                 <Form.Control type="text"
                               defaultValue={Number(this.props.strategyData?.order_ttl || 60)}
                               placeholder={`order time-to-live (seconds)`}
@@ -97,17 +106,18 @@ export default class BotNewConstantStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`order amount (millix)`} <HelpIconView help_item_name={'bot_order_amount'}/></label>
+                <label>{`order amount (${this.pair.base})`} <HelpIconView args={this.pair} help_item_name={'bot_order_amount'}/></label>
                 <Form.Control type="text"
                               defaultValue={millix(this.props.strategyData?.amount, false)}
-                              placeholder={`order amount (millix)`}
+                              placeholder={`order amount (${this.pair.base})`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_amount = c}
-                              onChange={validate.handleAmountInputChange.bind(this)}/>
+                              onFocus={(e) => (e.target.dataset.lastValue = e.target.value)}
+                              onChange={(e) => validate.handleInputChangeFloat(e, false, 'number', this.pair.order_size_float_precision, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`minimum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_min'}/></label>
+                <label>{`minimum price (usdc)`} <HelpIconView args={this.pair} help_item_name={'bot_order_price_min'}/></label>
                 <Form.Control
                     type="text"
                     defaultValue={get_fixed_value({
@@ -118,12 +128,12 @@ export default class BotNewConstantStrategyModel extends Component {
                     placeholder={`minimum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
                     ref={c => this.strategy_price_min = c}
-                    onChange={e => validate.handleInputChangeFloat(e, false)}
-                />
+                    onFocus={(e) => (e.target.dataset.lastValue = e.target.value)}
+                    onChange={(e) => validate.handleInputChangeFloat(e, false, 'number', this.pair.order_price_float_precision, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`maximum price (usdc)`} <HelpIconView help_item_name={'bot_order_price_max'}/></label>
+                <label>{`maximum price (usdc)`} <HelpIconView args={this.pair} help_item_name={'bot_order_price_max'}/></label>
                 <Form.Control
                     type="text"
                     defaultValue={get_fixed_value({
@@ -134,22 +144,23 @@ export default class BotNewConstantStrategyModel extends Component {
                     placeholder={`maximum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
                     ref={c => this.strategy_price_max = c}
-                    onChange={e => validate.handleInputChangeFloat(e, false)}
-                />
+                    onFocus={(e) => (e.target.dataset.lastValue = e.target.value)}
+                    onChange={(e) => validate.handleInputChangeFloat(e, false, 'number', this.pair.order_price_float_precision, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`total budget (millix)`} <HelpIconView help_item_name={'bot_order_total_budget'}/></label>
+                <label>{`total budget (${this.pair.base})`} <HelpIconView args={this.pair} help_item_name={'bot_order_total_budget'}/></label>
                 <Form.Control type="text"
                               defaultValue={millix(this.props.strategyData?.total_budget, false)}
-                              placeholder={`total budget (millix)`}
+                              placeholder={`total budget (${this.pair.base})`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_total_budget = c}
-                              onChange={validate.handleAmountInputChange.bind(this)}/>
+                              onFocus={(e) => (e.target.dataset.lastValue = e.target.value)}
+                              onChange={(e) => validate.handleInputChangeFloat(e, false, 'number', this.pair.order_size_float_precision, false)}/>
             </Form.Group>
 
             <Form.Group className="form-group">
-                <label>{`frequency (seconds)`} <HelpIconView help_item_name={'bot_order_frequency'}/></label>
+                <label>{`frequency (seconds)`} <HelpIconView args={this.pair} help_item_name={'bot_order_frequency'}/></label>
                 <Form.Control type="text"
                               defaultValue={number(this.props.strategyData?.time_frequency)}
                               placeholder={`frequency (seconds)`}

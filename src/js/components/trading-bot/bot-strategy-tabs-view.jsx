@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Badge, Button, Col, Row, Tab, Tabs} from 'react-bootstrap';
+import {Badge, Button, Col, Form, Row, Tab, Tabs} from 'react-bootstrap';
 import DatatableView from '../utils/datatable-view';
 import ModalView from '../utils/modal-view';
 import BotNewConstantStrategyModel from './bot-new-constant-strategy-model';
 import BotNewPriceChangeStrategyModel from './bot-new-price-change-strategy-model';
 import BotNewSpreadStrategyModel from './bot-new-spread-strategy-model';
 import Api from '../../api';
-import {millix, number} from '../../helper/format';
+import {get_fixed_value, millix, number} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import * as text from '../../helper/text';
 import utils from '../../helper/utils';
 import {ProgressBar} from 'primereact/progressbar';
+import {Dropdown} from 'primereact/dropdown';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import moment from 'moment/moment';
+import ExchangeConfig from './ExchangeConfig';
 
 const colorGreen = '#55af55';
 const colorRed   = '#f44336';
@@ -33,10 +35,38 @@ class BotStrategyTabsView extends Component {
             'strategy-constant-data'    : [],
             'strategy-price-change-data': [],
             'strategy-spread-data'      : [],
-            symbol                      : 'mlx_usdc'
+            symbol                      : 'mlx_usdc',
+            pair                        : ExchangeConfig['mlx_usdc']
         };
 
         this.updateTimeoutHandler = undefined;
+
+        this.exchangeTradingPairs = [
+            {
+                id   : 'mlx_usdc',
+                value: 'mlx / usdc'
+            },
+            {
+                id   : 'btc_usdc',
+                value: 'btc / usdc'
+            },
+            {
+                id   : 'eth_usdc',
+                value: 'eth / usdc'
+            },
+            {
+                id   : 'pol_usdc',
+                value: 'pol / usdc'
+            },
+            {
+                id   : 'sol_usdc',
+                value: 'sol / usdc'
+            },
+            {
+                id   : 'xrp_usdc',
+                value: 'xrp / usdc'
+            }
+        ];
 
         this.commonFields = [
             {
@@ -50,22 +80,31 @@ class BotStrategyTabsView extends Component {
                 field : 'amount',
                 header: `amount`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.amount, false)}</span>,
-                parser: (data) => parseInt(data)
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    value            : item.amount,
+                    float_part_length: this.state.pair.order_size_float_precision
+                })}</span>,
+                parser: (data) => parseFloat(data)
             },
             {
                 field : 'amount_traded',
                 header: `amount traded`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.amount_traded, false)}</span>,
-                parser: (data) => parseInt(data)
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    value            : item.amount_traded,
+                    float_part_length: this.state.pair.order_size_float_precision
+                })}</span>,
+                parser: (data) => parseFloat(data)
             },
             {
                 field : 'total_budget',
                 header: `total budget`,
                 body  : (item) => <span
-                    style={{color: item.total_budget <= item.amount_traded + item.amount ? 'gray' : item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{millix(item.total_budget, false)}</span>,
-                parser: (data) => parseInt(data)
+                    style={{color: item.total_budget <= item.amount_traded + item.amount ? 'gray' : item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    value            : item.total_budget,
+                    float_part_length: this.state.pair.order_size_float_precision
+                })}</span>,
+                parser: (data) => parseFloat(data)
             },
             {
                 field : 'strategy_description',
@@ -75,13 +114,13 @@ class BotStrategyTabsView extends Component {
             {
                 field : 'price_min',
                 header: `minimum price`,
-                body  : (item) => item?.price_min?.toFixed(9),
+                body  : (item) => item?.price_min?.toFixed(this.state.pair.order_price_float_precision),
                 parser: (data) => parseFloat(data)
             },
             {
                 field : 'price_max',
                 header: `maximum price`,
-                body  : (item) => item?.price_max?.toFixed(9),
+                body  : (item) => item?.price_max?.toFixed(this.state.pair.order_price_float_precision),
                 parser: (data) => parseFloat(data)
             },
             {
@@ -192,7 +231,7 @@ class BotStrategyTabsView extends Component {
                        }
                        strategy.price_change_percentage = extraConfig.price_change_percentage;
                        strategy.spread_percentage_begin = extraConfig.spread_percentage_begin;
-                       strategy.spread_percentage_end = extraConfig.spread_percentage_end
+                       strategy.spread_percentage_end   = extraConfig.spread_percentage_end;
                    }
 
                    if (strategy.order_type === 'ask' || strategy.order_type === 'sell') {
@@ -324,6 +363,18 @@ class BotStrategyTabsView extends Component {
         return Math.round((statistics.close - statistics.open) / statistics.open * 100);
     }
 
+    changeSymbol(newSymbol) {
+        if (this.state.symbol !== newSymbol) {
+            this.setState({
+                symbol    : newSymbol,
+                pair      : ExchangeConfig[newSymbol],
+                statistics: undefined
+            }, () => {
+                this.update();
+            });
+        }
+    }
+
     render() {
         if (!this.state.statistics) {
             return <div className={'panel panel-filled'}>
@@ -350,11 +401,21 @@ class BotStrategyTabsView extends Component {
                 <div className={'panel panel-filled'}>
                     <div className={'panel-body'}>
                         <Row>
-                            <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col>
+                            {this.props.exchange === 'tangled.com' ? <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col> :
+                             <Col style={{
+                                 margin  : 'auto',
+                                 maxWidth: 220
+                             }}>
+                                 <Form.Group className="form-group">
+                                     <Dropdown
+                                         value={this.state.symbol} options={this.exchangeTradingPairs} optionLabel={'value'} optionValue={'id'}
+                                         onChange={(e) => this.changeSymbol(e.value)} className={'form-control p-0'}/>
+                                 </Form.Group>
+                             </Col>}
                             <Col>
                                 <Row>last price:</Row>
                                 <Row
-                                    style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(9)}</Row>
+                                    style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(this.state.pair.order_price_float_precision)}</Row>
                             </Col>
                             <Col>
                                 <Row>24h change:</Row>
@@ -371,11 +432,11 @@ class BotStrategyTabsView extends Component {
                             </Col>
                             <Col>
                                 <Row>24h high:</Row>
-                                <Row>{this.state.statistics.high.toFixed(9)}</Row>
+                                <Row>{this.state.statistics.high.toFixed(this.state.pair.order_price_float_precision)}</Row>
                             </Col>
                             <Col>
                                 <Row>24h low:</Row>
-                                <Row>{this.state.statistics.low.toFixed(9)}</Row>
+                                <Row>{this.state.statistics.low.toFixed(this.state.pair.order_price_float_precision)}</Row>
                             </Col>
                             <Col>
                                 <Row>24h volume:</Row>
@@ -412,7 +473,7 @@ class BotStrategyTabsView extends Component {
                                    selectedStrategy       : undefined
                                })}
                                on_accept={() => {
-                                   Api.upsertStrategy(this.state.selectedStrategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, this.props.exchange, this.state.symbol,0)
+                                   Api.upsertStrategy(this.state.selectedStrategy.strategy_id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, this.props.exchange, this.state.symbol, 0)
                                       .then(() => {
                                           this.setState({
                                               modalShowDeleteStrategy: false,

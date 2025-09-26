@@ -39,7 +39,7 @@ export function fiat(amount) {
 }
 
 export function number(number) {
-    if (number) {
+    if (Number.isFinite(number)) {
         number = number.toLocaleString('en-US');
     }
 

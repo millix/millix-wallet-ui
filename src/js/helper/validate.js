@@ -84,6 +84,25 @@ export function integer(field_name, value, error_list, allow_zero = false) {
     return value_escaped;
 }
 
+export function floatPositiveInRange(field_name, value, error_list, allow_zero = false, minimum_value = -Number.MAX_VALUE, maximum_value = Number.MAX_VALUE, value_float_precision = 0) {
+    const value_escaped = floatPositive(field_name, value, error_list, allow_zero);
+    if (!Number.isFinite(value_escaped) || value_escaped < minimum_value || value_escaped > maximum_value) {
+        error_list.push({
+            name   : get_error_name('value_not_in_range', field_name),
+            message: `${field_name} must be in range [${format.get_fixed_value({
+                value            : minimum_value,
+                float_part_length: value_float_precision,
+                trailing_zero    : false
+            })}, ${format.get_fixed_value({
+                value            : maximum_value,
+                float_part_length: value_float_precision,
+                trailing_zero    : false
+            })}]`
+        });
+    }
+    return value_escaped;
+}
+
 export function floatPositive(field_name, value, error_list, allow_zero = false) {
     let value_escaped = value.toString().trim();
     value_escaped     = parseFloat(value_escaped);
@@ -262,32 +281,119 @@ export function handleInputChangeInteger(e, allow_negative = true, formatter = '
     e.target.setSelectionRange(cursorStart + offset, cursorEnd + offset);
 }
 
-export function handleInputChangeFloat(e, allow_negative = true, formatter = 'number') {
-    if (e.target.value.length === 0) {
+export function handleInputChangeFloat(e, allow_negative = true, formatter = 'number', maxDecimals = null, padDecimals = false) {
+    let raw = e.target.value;
+
+    if (raw.length === 0) {
+        e.target.dataset.lastValue = '';
         return;
     }
 
-    let cursorStart      = e.target.selectionStart,
-        cursorEnd        = e.target.selectionEnd;
-    let amountFloatParts = e.target.value.replace(/,/g, '').split('.');
-    let amount           = amountFloatParts[0];
-    if (!allow_negative) {
-        amount = amount.replace(/-/g, '');
+    const cursorStart = e.target.selectionStart;
+    const cursorEnd   = e.target.selectionEnd;
+
+    const lastValue = e.target.dataset.lastValue || '';
+
+    // Detect key pressed
+    const key = e.nativeEvent.inputType; // 'deleteContentBackward' for backspace, 'deleteContentForward' for delete
+
+    // --- Detect separator deletion (comma or dot) ---
+    let deletedCharOffset = 0;
+    if (lastValue && raw.length < lastValue.length) {
+        const diffIndex   = cursorStart; // index where deletion occurred
+        const deletedChar = lastValue[diffIndex];
+
+        if (deletedChar === ',') {
+            // User deleted a comma → remove the digit shift
+            const match = raw.match(/(\d)(?=(\d{3})+([.|,](\d+)?.*)?$)/);
+            if (match) {
+                raw               = raw.slice(0, match.index) + raw.slice(match.index + 1);
+                deletedCharOffset = 1;
+            }
+        }
+
+        if (deletedChar === '.') {
+            // User deleted a dot → re-insert dot one digit earlier
+            const intPartLen = lastValue.split('.')[0].length;
+            if (key === 'deleteContentBackward') {
+                raw = (intPartLen > 0 ? raw.slice(0, intPartLen - 1) : '') + '.' + raw.slice(intPartLen);
+            }
+            else if (key === 'deleteContentForward') {
+                raw = raw.slice(0, intPartLen) + '.' + raw.slice(intPartLen + 1);
+            }
+        }
     }
 
-    amount    = parseInt(amount);
-    let value = 0;
-    if (!isNaN(amount)) {
-        if (formatter === 'number') {
-            value = format.number(amount);
+    // --- SPLIT INTO PARTS ---
+    let [intPart, decPart = ''] = raw.split('.');
+
+    // --- CLEAN INTEGER PART ---
+    intPart = intPart.replace(/[^\d-]/g, '');
+
+    if (allow_negative) {
+        const isNegative = intPart.startsWith('-');
+        intPart          = intPart.replace(/-/g, '');
+        if (isNegative) {
+            intPart = '-' + intPart;
         }
-        else {
-            value = amount;
+    }
+    else {
+        intPart = intPart.replace(/\D/g, '');
+    }
+
+    // --- CLEAN DECIMAL PART ---
+    decPart       = decPart.replace(/\D/g, '');
+    let padOffset = 0;
+    if (maxDecimals !== null) {
+        let oDecPart = decPart;
+        decPart      = decPart.slice(0, maxDecimals);
+        if (padDecimals) {
+            decPart = decPart.padEnd(maxDecimals, '0');
+        }
+
+        if (oDecPart.length > decPart.length) {
+            padOffset = 1;
         }
     }
 
-    e.target.value = `${value}.${amountFloatParts[1]?.replace(/\D/g, '') || ''}`;
-    e.target.setSelectionRange(cursorStart, cursorEnd);
+    // --- FORMAT INTEGER PART ---
+    let formattedInt = intPart;
+    if (intPart !== '' && intPart !== '-' && !isNaN(Number(intPart))) {
+        formattedInt = formatter === 'number'
+                       ? format.number(Number(intPart))
+                       : intPart;
+        if (intPart.startsWith('-') && !formattedInt.startsWith('-')) {
+            formattedInt = '-' + formattedInt;
+        }
+    }
+
+    // --- REBUILD FINAL VALUE ---
+    let newValue = formattedInt;
+    if (maxDecimals !== null && padDecimals) {
+        newValue = `${formattedInt}.${decPart}`;
+    }
+    else if (decPart.length > 0 || raw.endsWith('.')) {
+        newValue = `${formattedInt}.${decPart}`;
+    }
+
+    if (newValue === '.') {
+        newValue = '';
+    }
+
+    // --- CURSOR LOGIC ---
+    const diff         = newValue.length - raw.length - deletedCharOffset + padOffset;
+    let newCursorStart = cursorStart + diff;
+    let newCursorEnd   = cursorEnd + diff;
+
+    newCursorStart = Math.max(0, Math.min(newCursorStart, newValue.length));
+    newCursorEnd   = Math.max(0, Math.min(newCursorEnd, newValue.length));
+
+    // --- UPDATE INPUT ---
+    e.target.value = newValue;
+    e.target.setSelectionRange(newCursorStart, newCursorEnd);
+
+    // --- STORE LAST VALUE PER INPUT ---
+    e.target.dataset.lastValue = newValue;
 }
 
 export function handleInputChangeAlphanumericString(e, length = false) {
@@ -328,7 +434,7 @@ export function domain_name(field_name, value, error_list) {
 }
 
 export const validate_file_type_config = {
-    image: {
+    image : {
         allowed_mime_type_list: [
             'image/png',
             'image/jpeg',
@@ -343,7 +449,7 @@ export const validate_file_type_config = {
         ],
         allowed_max_file_size : 50 * 1024 * 1024 // 50mb
     },
-    pdf  : {
+    pdf   : {
         allowed_mime_type_list: [
             'application/pdf'
         ],
@@ -352,7 +458,7 @@ export const validate_file_type_config = {
         ],
         allowed_max_file_size : 50 * 1024 * 1024 // 50mb
     },
-    binary  : {
+    binary: {
         allowed_mime_type_list: [
             '*'
         ],
@@ -361,7 +467,7 @@ export const validate_file_type_config = {
         ],
         allowed_max_file_size : 50 * 1024 * 1024 // 50mb
     },
-    video: {
+    video : {
         allowed_mime_type_list: [
             'video/mp4',
             'video/quicktime',
@@ -384,7 +490,7 @@ export const validate_file_type_config = {
         ],
         allowed_max_file_size : 50 * 1024 * 1024 // 50mb
     },
-    text : {
+    text  : {
         allowed_mime_type_list: [
             'text/plain',
             'text/html',

@@ -17,7 +17,7 @@ class HelpIconView extends Component {
         };
     }
 
-    getHelpItem(help_item_name) {
+    getHelpItem(help_item_name, args) {
         const props       = this.props;
         const result_help = {
             'pending_balance'             : {
@@ -442,7 +442,7 @@ class HelpIconView extends Component {
                 'title': 'order amount',
                 'body' : <ul>
                     <li>
-                        Order amount is the number of millix that you want to execute each time the trading bot performs this strategy.
+                        Order amount is the number of {args.base} that you want to execute each time the trading bot performs this strategy.
                     </li>
                 </ul>
             },
@@ -450,7 +450,7 @@ class HelpIconView extends Component {
                 'title': 'minimum price',
                 'body' : <ul>
                     <li>
-                        Minimum price is the lowest price of millix in usdc acceptable for your trade strategy to exectute.
+                        Minimum price is the lowest price of {args.base} in usdc acceptable for your trade strategy to exectute.
                     </li>
                 </ul>
             },
@@ -458,7 +458,7 @@ class HelpIconView extends Component {
                 'title': 'maximum price',
                 'body' : <ul>
                     <li>
-                        Maximum price is the highest price of millix in usdc acceptable for your trade strategy to exectute.
+                        Maximum price is the highest price of {args.base} in usdc acceptable for your trade strategy to exectute.
                     </li>
                 </ul>
             },
@@ -466,7 +466,7 @@ class HelpIconView extends Component {
                 'title': 'total budget',
                 'body' : <ul>
                     <li>
-                        Total budget is the limit of how many millix will be transacted for this strategy before the bot stops executing.
+                        Total budget is the limit of how many {args.base} will be transacted for this strategy before the bot stops executing.
                     </li>
                 </ul>
             },
@@ -482,7 +482,7 @@ class HelpIconView extends Component {
                 'title': 'price change %',
                 'body' : <ul>
                     <li>
-                        The percentage change of the millix price (example 5% or -5%)
+                        The percentage change of the {args.base} price (example 5% or -5%)
                     </li>
                 </ul>
             },
@@ -490,7 +490,7 @@ class HelpIconView extends Component {
                 'title': 'price change % time frame',
                 'body' : <ul>
                     <li>
-                        The time frame used to determine the percentage change of the price of millix (example 15 minutes). The time frame also defines how often the strategy will be executed. If the strategy is set to a 15 minute price change % time frame, this strategy will only execute once per 15 minutes.
+                        The time frame used to determine the percentage change of the price of {args.base} (example 15 minutes). The time frame also defines how often the strategy will be executed. If the strategy is set to a 15 minute price change % time frame, this strategy will only execute once per 15 minutes.
                     </li>
                 </ul>
             },
@@ -520,7 +520,7 @@ class HelpIconView extends Component {
     }
 
     render() {
-        const help_item = this.getHelpItem(this.props.help_item_name);
+        const help_item = this.getHelpItem(this.props.help_item_name, this.props.args);
         if (!help_item) {
             return '';
         }
