@@ -52,7 +52,7 @@ export default class BotNewConstantStrategyModel extends Component {
         if (error_list.length === 0) {
             try {
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
-                    data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({time_frequency: data.strategy_time_frequency}), this.props.exchange, this.props.symbol);
+                    data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({time_frequency: data.strategy_time_frequency}), this.props.exchange, this.props.symbol, 2);
                 return true;
             }
             catch (e) {

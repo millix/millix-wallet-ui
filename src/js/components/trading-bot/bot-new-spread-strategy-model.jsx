@@ -61,7 +61,7 @@ export default class BotNewSpreadStrategyModel extends Component {
                         time_frequency         : data.strategy_time_frequency,
                         spread_percentage_begin: data.strategy_spread_percentage_begin,
                         spread_percentage_end  : data.strategy_spread_percentage_end
-                    }), this.props.exchange, this.props.symbol);
+                    }), this.props.exchange, this.props.symbol, 2);
                 return true;
             }
             catch (e) {

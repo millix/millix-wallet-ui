@@ -50,7 +50,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
                         time_frame             : data.strategy_time_frame * 60,
                         price_change_percentage: data.strategy_change_percentage
-                    }), this.props.exchange, this.props.symbol);
+                    }), this.props.exchange, this.props.symbol, 2);
                 return true;
             }
             catch (e) {
