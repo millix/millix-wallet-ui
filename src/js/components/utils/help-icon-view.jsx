@@ -17,7 +17,7 @@ class HelpIconView extends Component {
         };
     }
 
-    getHelpItem(help_item_name, args) {
+    getHelpItem(help_item_name, args={}) {
         const props       = this.props;
         const result_help = {
             'pending_balance'             : {
