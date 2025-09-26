@@ -40,7 +40,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
         if (this.strategy_price_max.value) {
             data.strategy_price_max = validate.floatPositive(`maximum price`, this.strategy_price_max.value, error_list, true);
         }
-        data.strategy_total_budget      = validate.amount(`total budget`, this.strategy_total_budget.value, error_list);
+        data.strategy_total_budget      = validate.floatPositiveInRange(`total budget`, this.strategy_total_budget.value, error_list, false, this.pair.order_size_min, undefined, this.pair.order_size_float_precision);
         data.strategy_change_percentage = validate.integer(`change percentage`, this.strategy_change_percentage.value, error_list, false);
         data.strategy_time_frame        = validate.integerPositive(`time frame`, this.strategy_time_frame.value, error_list, false);
 
@@ -120,7 +120,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
                     defaultValue={get_fixed_value({
                         value            : this.props.strategyData?.price_min,
                         zero_undefined   : true,
-                        float_part_length: 9
+                        float_part_length: this.pair.order_price_float_precision
                     })}
                     placeholder={`minimum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"
@@ -136,7 +136,7 @@ export default class BotNewPriceChangeStrategyModel extends Component {
                     defaultValue={get_fixed_value({
                         value            : this.props.strategyData?.price_max,
                         zero_undefined   : true,
-                        float_part_length: 9
+                        float_part_length: this.pair.order_price_float_precision
                     })}
                     placeholder={`maximum price (optional)`}
                     pattern="[0-9]+([,][0-9]{1,2})?"

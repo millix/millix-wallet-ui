@@ -84,7 +84,7 @@ export function integer(field_name, value, error_list, allow_zero = false) {
     return value_escaped;
 }
 
-export function floatPositiveInRange(field_name, value, error_list, allow_zero = false, minimum_value = -Number.MAX_VALUE, maximum_value = Number.MAX_VALUE, value_float_precision = 0) {
+export function floatPositiveInRange(field_name, value, error_list, allow_zero = false, minimum_value = Number.MIN_SAFE_INTEGER, maximum_value = Number.MAX_SAFE_INTEGER, value_float_precision = 0) {
     const value_escaped = floatPositive(field_name, value, error_list, allow_zero);
     if (!Number.isFinite(value_escaped) || value_escaped < minimum_value || value_escaped > maximum_value) {
         error_list.push({
@@ -93,7 +93,7 @@ export function floatPositiveInRange(field_name, value, error_list, allow_zero =
                 value            : minimum_value,
                 float_part_length: value_float_precision,
                 trailing_zero    : false
-            })}, ${format.get_fixed_value({
+            })} to ${format.get_fixed_value({
                 value            : maximum_value,
                 float_part_length: value_float_precision,
                 trailing_zero    : false
