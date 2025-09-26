@@ -105,7 +105,7 @@ export function floatPositiveInRange(field_name, value, error_list, allow_zero =
 
 export function floatPositive(field_name, value, error_list, allow_zero = false) {
     let value_escaped = value.toString().trim();
-    value_escaped     = parseFloat(value_escaped);
+    value_escaped     = parseFloat(value_escaped.replace(/,/g, ''));
 
     if (!Number.isFinite(value_escaped)) {
         error_list.push({
