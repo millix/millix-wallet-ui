@@ -6,7 +6,7 @@ import * as validate from '../../helper/validate';
 import Api from '../../api';
 import {get_fixed_value, millix, number} from '../../helper/format';
 import HelpIconView from '../utils/help-icon-view';
-import ExchangeConfig from './ExchangeConfig';
+import ExchangeConfig from '../../core/exchange-config';
 
 
 export default class BotNewPriceChangeStrategyModel extends Component {

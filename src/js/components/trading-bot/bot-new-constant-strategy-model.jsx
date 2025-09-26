@@ -5,9 +5,8 @@ import {Dropdown} from 'primereact/dropdown';
 import * as validate from '../../helper/validate';
 import Api from '../../api';
 import {get_fixed_value, millix, number} from '../../helper/format';
-import ExchangeConfig from './ExchangeConfig';
+import ExchangeConfig from '../../core/exchange-config';
 import HelpIconView from '../utils/help-icon-view';
-import {handleInputChangeFloat, handleInputChangeInteger} from '../../helper/validate';
 
 
 export default class BotNewConstantStrategyModel extends Component {

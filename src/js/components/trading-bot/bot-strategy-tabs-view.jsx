@@ -7,7 +7,7 @@ import BotNewConstantStrategyModel from './bot-new-constant-strategy-model';
 import BotNewPriceChangeStrategyModel from './bot-new-price-change-strategy-model';
 import BotNewSpreadStrategyModel from './bot-new-spread-strategy-model';
 import Api from '../../api';
-import {get_fixed_value, millix, number} from '../../helper/format';
+import {get_fixed_value, number} from '../../helper/format';
 import DatatableActionButtonView from '../utils/datatable-action-button-view';
 import * as text from '../../helper/text';
 import utils from '../../helper/utils';
@@ -15,7 +15,7 @@ import {ProgressBar} from 'primereact/progressbar';
 import {Dropdown} from 'primereact/dropdown';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import moment from 'moment/moment';
-import ExchangeConfig from './ExchangeConfig';
+import ExchangeConfig from '../../core/exchange-config';
 
 const colorGreen = '#55af55';
 const colorRed   = '#f44336';

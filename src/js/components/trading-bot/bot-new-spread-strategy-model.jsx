@@ -6,7 +6,7 @@ import * as validate from '../../helper/validate';
 import Api from '../../api';
 import {millix, number, get_fixed_value} from '../../helper/format';
 import HelpIconView from '../utils/help-icon-view';
-import ExchangeConfig from './ExchangeConfig';
+import ExchangeConfig from '../../core/exchange-config';
 
 
 export default class BotNewSpreadStrategyModel extends Component {
