@@ -210,7 +210,7 @@ class BotStrategyTabsView extends Component {
     }
 
     getPageTitle() {
-        return `bot - ${this.props.exchange} | ${this.state.symbol}}`;
+        return `bot - ${this.props.exchange} | ${this.state.symbol}`;
     };
 
     componentDidMount() {
