@@ -11,13 +11,11 @@
     <script>
         window.dataLayer = window.dataLayer || [];
 
+        window.gtagInitialized = false;
         function gtag() {
-            dataLayer.push(arguments);
+            gtagInitialized && dataLayer.push(arguments);
         }
 
-        gtag('js', new Date());
-
-        gtag('config', 'G-57CQ9Y8LPV');
     </script>
 </head>
 <body>

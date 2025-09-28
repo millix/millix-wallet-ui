@@ -94,6 +94,11 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faRotateLeft, faCodeMerge, faCheckCircle, faReply, faEnvelope, faLink, faFire, faBomb,
     faArrowRight, faUpload, faMinusCircle, faCopy, faCaretDown, faCaretUp, faArrowRightArrowLeft, faFile, faTriangleExclamation, faAddressBook);
 
+const initGTag = (data) => {
+    window.gtagInitialized = true;
+    window.gtag('js', new Date());
+    window.gtag('config', 'G-57CQ9Y8LPV', {client_id: data.node_id});
+}
 
 let apiInfo = {
     node_id       : undefined,
@@ -106,6 +111,9 @@ localforage.getItem('api_info', (err, data) => {
     apiInfo = JSON.parse(data);
     apiInfo.node_id && API.setNodeID(apiInfo.node_id);
     apiInfo.node_signature && API.setNodeSignature(apiInfo.node_signature);
+    if (!!apiInfo.node_id) {
+        initGTag(apiInfo);
+    }
     API.getSession()
        .then(data => {
            if (data.api_status === 'success') {
@@ -138,6 +146,7 @@ window.addEventListener('message', (e) => {
         }
         if (update) {
             localforage.setItem('api_info', JSON.stringify(apiInfo));
+            initGTag(apiInfo);
         }
         e.stopImmediatePropagation();
     }
