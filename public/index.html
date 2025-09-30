@@ -6,9 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content="Web site created using create-react-app"/>
     <title>millix</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://tangled.com/browser/download/gtag.js"></script>
     <script>
+        // Google tag (gtag.js)
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = `https://tangled.com/browser/download/gtag.js?r=${Date.now()}`;
+        document.head.appendChild(script);
+
         window.dataLayer = window.dataLayer || [];
 
         window.gtagInitialized = false;
