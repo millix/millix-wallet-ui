@@ -500,6 +500,9 @@ class HelpIconView extends Component {
                     <li>
                         The minimum spread percentage at which this strategy begins placing orders.
                     </li>
+                    <li>
+                        The strategy will randomly add orders from a minimum spread to maximum spread.
+                    </li>
                 </ul>
             },
             'bot_spread_percentage_end': {
@@ -507,6 +510,9 @@ class HelpIconView extends Component {
                 'body' : <ul>
                     <li>
                         The maximum spread percentage up to which this strategy places orders.
+                    </li>
+                    <li>
+                        The strategy will randomly add orders from a minimum spread to maximum spread.
                     </li>
                 </ul>
             }
