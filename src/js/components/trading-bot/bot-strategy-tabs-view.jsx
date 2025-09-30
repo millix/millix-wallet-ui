@@ -319,6 +319,9 @@ class BotStrategyTabsView extends Component {
         if (this.state.selectedStrategyType === 'strategy-price-change') {
             this.priceChangeStrategyFields.forEach(field => fieldParsers[field.header] = field);
         }
+        if (this.state.selectedStrategyType === 'strategy-spread') {
+            this.spreadStrategyFields.forEach(field => fieldParsers[field.header] = field);
+        }
         utils.importCSV(file)
              .then(csv => {
                  for (const item of csv.data) {
@@ -350,6 +353,21 @@ class BotStrategyTabsView extends Component {
                              });
                              delete strategy['price_change_percentage'];
                              delete strategy['time_frame'];
+                             return true;
+                         }
+                         return false;
+                     }
+
+                     if (this.state.selectedStrategyType === 'strategy-spread') {
+                         if (!!strategy.spread_percentage_begin && !!strategy.spread_percentage_end && !!strategy.time_frequency) {
+                             strategy['extra_config'] = JSON.stringify({
+                                 spread_percentage_begin: strategy.spread_percentage_begin,
+                                 spread_percentage_end  : strategy.spread_percentage_end,
+                                 time_frequency         : strategy.time_frequency
+                             });
+                             delete strategy['spread_percentage_begin'];
+                             delete strategy['spread_percentage_end'];
+                             delete strategy['time_frequency'];
                              return true;
                          }
                          return false;
