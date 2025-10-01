@@ -34,6 +34,11 @@ export default class BotNewSpreadStrategyModel extends Component {
             data.strategy_amount = parseInt(data.strategy_amount);
         }
 
+        data.strategy_amount_variation = validate.floatPositiveInRange(`order amount variation`, this.strategy_amount_variation.value || '0', error_list, true, undefined, undefined, this.pair.order_size_float_precision);
+        if (this.pair.order_size_float_precision === 0) {
+            data.strategy_amount_variation = parseInt(data.strategy_amount_variation);
+        }
+
         if (this.strategy_price_min.value) {
             data.strategy_price_min = validate.floatPositive(`minimum price`, this.strategy_price_min.value, error_list, true);
         }
@@ -58,6 +63,7 @@ export default class BotNewSpreadStrategyModel extends Component {
                 }
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
+                        amount_variation       : data.strategy_amount_variation,
                         time_frequency         : data.strategy_time_frequency,
                         spread_percentage_begin: data.strategy_spread_percentage_begin,
                         spread_percentage_end  : data.strategy_spread_percentage_end
@@ -115,10 +121,27 @@ export default class BotNewSpreadStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`order amount (${this.pair.base})`} <HelpIconView args={this.pair} help_item_name={'bot_order_amount'}/></label>
                 <Form.Control type="text"
-                              defaultValue={millix(this.props.strategyData?.amount, false)}
+                              defaultValue={get_fixed_value({
+                                  value            : this.props.strategyData?.amount,
+                                  float_part_length: this.pair.order_size_float_precision
+                              })}
                               placeholder={`order amount (${this.pair.base})`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_amount = c}
+                              onFocus={(e) => (e.target.dataset.lastValue = e.target.value)}
+                              onChange={(e) => validate.handleInputChangeFloat(e, false, 'number', this.pair.order_size_float_precision, false)}/>
+            </Form.Group>
+
+            <Form.Group className="form-group">
+                <label>{`order amount variation (${this.pair.base})`} <HelpIconView args={this.pair} help_item_name={'bot_order_amount_variation'}/></label>
+                <Form.Control type="text"
+                              defaultValue={get_fixed_value({
+                                  value            : this.props.strategyData?.amount_variation,
+                                  float_part_length: this.pair.order_size_float_precision
+                              })}
+                              placeholder={`order amount variation (${this.pair.base})`}
+                              pattern="[0-9]+([,][0-9]{1,2})?"
+                              ref={c => this.strategy_amount_variation = c}
                               onFocus={(e) => (e.target.dataset.lastValue = e.target.value)}
                               onChange={(e) => validate.handleInputChangeFloat(e, false, 'number', this.pair.order_size_float_precision, false)}/>
             </Form.Group>
@@ -158,7 +181,10 @@ export default class BotNewSpreadStrategyModel extends Component {
             <Form.Group className="form-group">
                 <label>{`total budget (${this.pair.base})`} <HelpIconView args={this.pair} help_item_name={'bot_order_total_budget'}/></label>
                 <Form.Control type="text"
-                              defaultValue={millix(this.props.strategyData?.total_budget, false)}
+                              defaultValue={get_fixed_value({
+                                  value            : this.props.strategyData?.total_budget,
+                                  float_part_length: this.pair.order_size_float_precision
+                              })}
                               placeholder={`total budget (${this.pair.base})`}
                               pattern="[0-9]+([,][0-9]{1,2})?"
                               ref={c => this.strategy_total_budget = c}

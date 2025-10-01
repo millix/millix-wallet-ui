@@ -446,6 +446,14 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
+            'bot_order_amount_variation': {
+                'title': 'order amount variation',
+                'body' : <ul>
+                    <li>
+                        Allows the amount to vary randomly by a specified {args.base} value.
+                    </li>
+                </ul>
+            },
             'bot_order_price_min': {
                 'title': 'minimum price',
                 'body' : <ul>

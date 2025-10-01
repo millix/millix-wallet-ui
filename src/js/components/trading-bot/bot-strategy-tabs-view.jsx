@@ -88,6 +88,16 @@ class BotStrategyTabsView extends Component {
                 parser: (data) => parseFloat(data)
             },
             {
+                field : 'amount_variation',
+                header: `amount variation`,
+                body  : (item) => <span
+                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    value            : item.amount_variation,
+                    float_part_length: this.state.pair.order_size_float_precision
+                })}</span>,
+                parser: (data) => parseFloat(data)
+            },
+            {
                 field : 'amount_traded',
                 header: `amount traded`,
                 body  : (item) => <span
@@ -241,6 +251,7 @@ class BotStrategyTabsView extends Component {
                        strategy.price_change_percentage = extraConfig.price_change_percentage;
                        strategy.spread_percentage_begin = extraConfig.spread_percentage_begin;
                        strategy.spread_percentage_end   = extraConfig.spread_percentage_end;
+                       strategy.amount_variation        = extraConfig.amount_variation;
                    }
 
                    if (strategy.order_type === 'ask' || strategy.order_type === 'sell') {
@@ -337,22 +348,26 @@ class BotStrategyTabsView extends Component {
                      item['strategy_type'] = this.state.selectedStrategyType;
                  }
                  const data = csv.data.filter(strategy => {
+                     strategy['extra_config'] = {amount_variation: strategy.amount_variation || 0};
+
                      if (this.state.selectedStrategyType === 'strategy-constant') {
                          if (!!strategy.time_frequency) {
-                             strategy['extra_config'] = JSON.stringify({time_frequency: strategy.time_frequency});
+                             strategy['extra_config']['time_frequency'] = strategy.time_frequency;
                              delete strategy['time_frequency'];
+
+                             strategy['extra_config'] = JSON.parse(strategy['extra_config']);
                              return true;
                          }
                          return false;
                      }
                      if (this.state.selectedStrategyType === 'strategy-price-change') {
                          if (!!strategy.price_change_percentage && !!strategy.time_frame) {
-                             strategy['extra_config'] = JSON.stringify({
-                                 price_change_percentage: strategy.price_change_percentage,
-                                 time_frame             : strategy.time_frame
-                             });
+                             strategy['extra_config']['price_change_percentage'] = strategy.price_change_percentage;
+                             strategy['extra_config']['time_frame']              = strategy.time_frame;
                              delete strategy['price_change_percentage'];
                              delete strategy['time_frame'];
+
+                             strategy['extra_config'] = JSON.parse(strategy['extra_config']);
                              return true;
                          }
                          return false;
@@ -360,14 +375,14 @@ class BotStrategyTabsView extends Component {
 
                      if (this.state.selectedStrategyType === 'strategy-spread') {
                          if (!!strategy.spread_percentage_begin && !!strategy.spread_percentage_end && !!strategy.time_frequency) {
-                             strategy['extra_config'] = JSON.stringify({
-                                 spread_percentage_begin: strategy.spread_percentage_begin,
-                                 spread_percentage_end  : strategy.spread_percentage_end,
-                                 time_frequency         : strategy.time_frequency
-                             });
+                             strategy['extra_config']['spread_percentage_begin'] = strategy.spread_percentage_begin;
+                             strategy['extra_config']['spread_percentage_end']   = strategy.spread_percentage_end;
+                             strategy['extra_config']['time_frequency']          = strategy.time_frequency;
                              delete strategy['spread_percentage_begin'];
                              delete strategy['spread_percentage_end'];
                              delete strategy['time_frequency'];
+
+                             strategy['extra_config'] = JSON.parse(strategy['extra_config']);
                              return true;
                          }
                          return false;
@@ -416,68 +431,66 @@ class BotStrategyTabsView extends Component {
         }
         const priceChange      = this.getPricePercentageChange(this.state.statistics);
         const priceChangeColor = priceChange >= 0 ? colorGreen : colorRed;
-        return <>
-            {this.state.statistics && <>
-                <PageTitle title={this.getPageTitle()}/>
-                <div className={'panel panel-filled'}>
-                    <div className={'panel-body'}>
-                        <Row>
-                            <Col style={{margin: 'auto'}}><Button variant={'outline-secondary'} onClick={this.props.onBack}><FontAwesomeIcon
-                                icon={'arrow-circle-left'}/> Back</Button></Col>
-                            <Col>
-                                <Row>{this.props.exchange}</Row>
-                            </Col>
-                        </Row>
-                    </div>
+        return this.state.statistics && <>
+            <PageTitle title={this.getPageTitle()}/>
+            <div className={'panel panel-filled'}>
+                <div className={'panel-body'}>
+                    <Row>
+                        <Col style={{margin: 'auto'}}><Button variant={'outline-secondary'} onClick={this.props.onBack}><FontAwesomeIcon
+                            icon={'arrow-circle-left'}/> Back</Button></Col>
+                        <Col>
+                            <Row>{this.props.exchange}</Row>
+                        </Col>
+                    </Row>
                 </div>
-                <div className={'panel panel-filled'}>
-                    <div className={'panel-body'}>
-                        <Row>
-                            {this.props.exchange === 'tangled.com' ? <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col> :
-                             <Col style={{
-                                 margin  : 'auto',
-                                 maxWidth: 220
-                             }}>
-                                 <Form.Group className="form-group">
-                                     <Dropdown
-                                         value={this.state.symbol} options={this.exchangeTradingPairs} optionLabel={'value'} optionValue={'id'}
-                                         onChange={(e) => this.changeSymbol(e.value)} className={'form-control p-0'}/>
-                                 </Form.Group>
-                             </Col>}
-                            <Col>
-                                <Row>last price:</Row>
-                                <Row
-                                    style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(this.state.pair.order_price_float_precision)}</Row>
-                            </Col>
-                            <Col>
-                                <Row>24h change:</Row>
-                                <Row style={{color: priceChange > 0 ? colorGreen : colorRed}}>
-                                    <Badge bg={''} style={{
-                                        maxWidth: 60,
-                                        color   : priceChangeColor,
-                                        border  : `1px solid ${priceChangeColor}`
-                                    }}>
-                                        <FontAwesomeIcon size={'1x'} icon={priceChange >= 0 ? 'caret-up' : 'caret-down'}/>
-                                        {priceChange}%
-                                    </Badge>
-                                </Row>
-                            </Col>
-                            <Col>
-                                <Row>24h high:</Row>
-                                <Row>{this.state.statistics.high.toFixed(this.state.pair.order_price_float_precision)}</Row>
-                            </Col>
-                            <Col>
-                                <Row>24h low:</Row>
-                                <Row>{this.state.statistics.low.toFixed(this.state.pair.order_price_float_precision)}</Row>
-                            </Col>
-                            <Col>
-                                <Row>24h volume:</Row>
-                                <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
-                            </Col>
-                        </Row>
-                    </div>
+            </div>
+            <div className={'panel panel-filled'}>
+                <div className={'panel-body'}>
+                    <Row>
+                        {this.props.exchange === 'tangled.com' ? <Col style={{margin: 'auto'}}>{`mlx / usdc`}</Col> :
+                         <Col style={{
+                             margin  : 'auto',
+                             maxWidth: 220
+                         }}>
+                             <Form.Group className="form-group">
+                                 <Dropdown
+                                     value={this.state.symbol} options={this.exchangeTradingPairs} optionLabel={'value'} optionValue={'id'}
+                                     onChange={(e) => this.changeSymbol(e.value)} className={'form-control p-0'}/>
+                             </Form.Group>
+                         </Col>}
+                        <Col>
+                            <Row>last price:</Row>
+                            <Row
+                                style={{color: !this.state.lastPrice ? priceChangeColor : this.state.statistics.close >= this.state.lastPrice ? colorGreen : colorRed}}>{this.state.statistics.close.toFixed(this.state.pair.order_price_float_precision)}</Row>
+                        </Col>
+                        <Col>
+                            <Row>24h change:</Row>
+                            <Row style={{color: priceChange > 0 ? colorGreen : colorRed}}>
+                                <Badge bg={''} style={{
+                                    maxWidth: 60,
+                                    color   : priceChangeColor,
+                                    border  : `1px solid ${priceChangeColor}`
+                                }}>
+                                    <FontAwesomeIcon size={'1x'} icon={priceChange >= 0 ? 'caret-up' : 'caret-down'}/>
+                                    {priceChange}%
+                                </Badge>
+                            </Row>
+                        </Col>
+                        <Col>
+                            <Row>24h high:</Row>
+                            <Row>{this.state.statistics.high.toFixed(this.state.pair.order_price_float_precision)}</Row>
+                        </Col>
+                        <Col>
+                            <Row>24h low:</Row>
+                            <Row>{this.state.statistics.low.toFixed(this.state.pair.order_price_float_precision)}</Row>
+                        </Col>
+                        <Col>
+                            <Row>24h volume:</Row>
+                            <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
+                        </Col>
+                    </Row>
                 </div>
-            </>}
+            </div>
             <div className={'panel panel-filled'}>
                 <div className={'panel-heading bordered'}>
                     <Row>
