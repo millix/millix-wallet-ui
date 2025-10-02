@@ -533,6 +533,12 @@ class API {
         });
     }
 
+    getState(exchange) {
+        return this.fetchApiTangledBot(`/C4tHbjubWU4CBkFD`, {
+            p0: exchange
+        });
+    }
+
     listStrategies(strategyType, exchange, symbol) {
         return this.fetchApiTangledBot(`/G53BNuerqTA7LSuF`, {
             p0: strategyType,

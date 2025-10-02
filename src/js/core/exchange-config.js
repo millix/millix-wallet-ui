@@ -1,6 +1,7 @@
 export default {
     mlx_usdc: {
         base                       : 'millix',
+        base_ticker                : 'mlx',
         currency                   : 'usdc',
         order_price_min            : 0.000000001,
         order_price_max            : 100,
@@ -12,6 +13,7 @@ export default {
     },
     btc_usdc: {
         base                       : 'bitcoin',
+        base_ticker                : 'btc',
         currency                   : 'usdc',
         order_price_min            : 0.01,
         order_price_max            : 10000000,
@@ -23,6 +25,7 @@ export default {
     },
     eth_usdc: {
         base                       : 'ethereum',
+        base_ticker                : 'eth',
         currency                   : 'usdc',
         order_price_min            : 0.001,
         order_price_max            : 100000,
@@ -34,6 +37,7 @@ export default {
     },
     pol_usdc: {
         base                       : 'polygon',
+        base_ticker                : 'pol',
         currency                   : 'usdc',
         order_price_min            : 0.0000001,
         order_price_max            : 10000,
@@ -45,6 +49,7 @@ export default {
     },
     sol_usdc: {
         base                       : 'solana',
+        base_ticker                : 'sol',
         currency                   : 'usdc',
         order_price_min            : 0.0001,
         order_price_max            : 100000,
@@ -56,6 +61,7 @@ export default {
     },
     xrp_usdc: {
         base                       : 'xrp',
+        base_ticker                : 'xrp',
         currency                   : 'usdc',
         order_price_min            : 0.000001,
         order_price_max            : 100000,

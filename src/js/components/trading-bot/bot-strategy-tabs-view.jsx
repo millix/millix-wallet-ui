@@ -37,6 +37,11 @@ class BotStrategyTabsView extends Component {
             'strategy-price-change-data': [],
             'strategy-spread-data'      : [],
             symbol                      : 'mlx_usdc',
+            balances                    : {
+                portfolio: 0,
+                asset     : 0,
+                currency : 0
+            },
             pair                        : ExchangeConfig['mlx_usdc']
         };
 
@@ -302,6 +307,15 @@ class BotStrategyTabsView extends Component {
                                  statistics: response.data,
                                  lastPrice
                              });
+                         })
+                         .then(() => Api.getState(this.props.exchange))
+                         .then(state => {
+                             this.setState({
+                                 balances: {
+                                     currency: state.data.accounts.find(i => i.currency === this.state.pair.currency.toUpperCase())?.balance || 0,
+                                     asset: state.data.accounts.find(i => i.currency === this.state.pair.base_ticker.toUpperCase())?.balance || 0
+                                 }
+                             });
                              this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
                          });
            })
@@ -487,6 +501,33 @@ class BotStrategyTabsView extends Component {
                         <Col>
                             <Row>24h volume:</Row>
                             <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
+                        </Col>
+                    </Row>
+                    <Row>
+                        {this.props.exchange === 'tangled.com' ? <Col style={{margin: 'auto'}}></Col> :
+                         <Col style={{
+                             margin  : 'auto',
+                             maxWidth: 220
+                         }}></Col>}
+                        <Col>
+                            <Row>{this.state.pair.base_ticker}:</Row>
+                            <Row>{get_fixed_value({
+                                value            : this.state.balances.asset,
+                                float_part_length: this.state.pair.order_size_float_precision
+                            })}</Row>
+                        </Col>
+                        <Col>
+                            <Row>{this.state.pair.currency}:</Row>
+                            <Row>{get_fixed_value({
+                                value            : this.state.balances.currency,
+                                float_part_length: this.state.pair.order_price_float_precision
+                            })}</Row>
+                        </Col>
+                        <Col>
+                        </Col>
+                        <Col>
+                        </Col>
+                        <Col>
                         </Col>
                     </Row>
                 </div>
