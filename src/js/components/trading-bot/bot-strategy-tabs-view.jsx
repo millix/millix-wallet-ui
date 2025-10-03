@@ -375,8 +375,8 @@ class BotStrategyTabsView extends Component {
                              this.setState({
                                  balances: {
                                      portfolio: this.getPortfolioBalance(userState),
-                                     currency: userState.accounts.find(i => i.currency === this.state.pair.currency.toUpperCase())?.balance || 0,
-                                     asset   : userState.accounts.find(i => i.currency === this.state.pair.base_ticker.toUpperCase())?.balance || 0
+                                     currency : userState.accounts.find(i => i.currency === this.state.pair.currency.toUpperCase())?.balance || 0,
+                                     asset    : userState.accounts.find(i => i.currency === this.state.pair.base_ticker.toUpperCase())?.balance || 0
                                  }
                              });
                              this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
@@ -563,7 +563,10 @@ class BotStrategyTabsView extends Component {
                         </Col>
                         <Col>
                             <Row>24h volume:</Row>
-                            <Row>{this.state.statistics.volume.toLocaleString('en-US')}</Row>
+                            <Row>${get_fixed_value({
+                                value            : this.state.statistics.volume * this.state.statistics.close,
+                                float_part_length: 2
+                            })}</Row>
                         </Col>
                     </Row>
                     <Row>
