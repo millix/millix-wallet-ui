@@ -17,6 +17,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import moment from 'moment/moment';
 import ExchangeConfig from '../../core/exchange-config';
 import PageTitle from '../page-title';
+import _ from 'lodash';
+import EXCHANGE_CONFIG from '../../core/exchange-config';
 
 const colorGreen = '#55af55';
 const colorRed   = '#f44336';
@@ -39,13 +41,18 @@ class BotStrategyTabsView extends Component {
             symbol                      : 'mlx_usdc',
             balances                    : {
                 portfolio: 0,
-                asset     : 0,
+                asset    : 0,
                 currency : 0
             },
             pair                        : ExchangeConfig['mlx_usdc']
         };
 
         this.updateTimeoutHandler = undefined;
+
+        this.fetchSymbolTimeoutHandlers = {};
+        this.symbols                    = _.keys(EXCHANGE_CONFIG).map(symbol => symbol.toUpperCase());
+
+        this.fetchSymbolStats();
 
         this.exchangeTradingPairs = [
             {
@@ -210,6 +217,57 @@ class BotStrategyTabsView extends Component {
         ];
     }
 
+    fetchSymbolStats() {
+
+        const fetchSymbolStatistics = (exchange, symbol) => {
+            return Api.getTradingStatistics(symbol, 'D1', exchange)
+                      .then((response) => {
+                          if (response.data) {
+                              response.data.close = response.data.close ?? 0;
+                              response.data.open  = response.data.open ?? 0;
+                              response.data.high  = response.data.high ?? 0;
+                              response.data.low   = response.data.low ?? 0;
+                          }
+                          return response?.data;
+                      }).catch(_ => _);
+        };
+
+
+        const scheduleSymbolStatisticsFetch = (exchange, symbol, timeout = 0) => {
+            this.fetchSymbolTimeoutHandlers[symbol] = setTimeout(() => {
+                if (!this.fetchSymbolTimeoutHandlers[symbol]) {
+                    return;
+                }
+
+                fetchSymbolStatistics(exchange, symbol).then((data) => {
+                    if (!this.fetchSymbolTimeoutHandlers[symbol]) {
+                        return;
+                    }
+                    this.setState({[`${symbol}_price`]: data.close});
+                    scheduleSymbolStatisticsFetch(exchange, symbol, 30000);
+                });
+            }, timeout);
+        };
+
+        this.symbols.forEach(symbol => {
+            scheduleSymbolStatisticsFetch(this.props.exchange, symbol);
+        });
+    }
+
+    getPortfolioBalance(userSate) {
+        let portfolioBalance = 0;
+        for (const symbol of this.symbols) {
+            const [asset] = symbol.split('_');
+            const price   = this.state[`${symbol}_price`];
+            if (!price) {
+                return 0;
+            }
+            const balance = userSate.accounts.find(i => i.currency === asset)?.balance;
+            portfolioBalance += price * (balance || 0);
+        }
+        return portfolioBalance;
+    }
+
     getRunningInTime(strategy) {
         const time = (strategy.time_frame || strategy.time_frequency) * 1000;
         if (strategy.last_run_status === 1) {
@@ -238,6 +296,10 @@ class BotStrategyTabsView extends Component {
 
     componentWillUnmount() {
         clearTimeout(this.updateTimeoutHandler);
+
+        _.keys(this.fetchSymbolTimeoutHandlers).forEach(pair => {
+            clearTimeout(this.fetchSymbolTimeoutHandlers[pair]);
+        });
     }
 
     update() {
@@ -309,11 +371,12 @@ class BotStrategyTabsView extends Component {
                              });
                          })
                          .then(() => Api.getState(this.props.exchange))
-                         .then(state => {
+                         .then(({data: userState}) => {
                              this.setState({
                                  balances: {
-                                     currency: state.data.accounts.find(i => i.currency === this.state.pair.currency.toUpperCase())?.balance || 0,
-                                     asset: state.data.accounts.find(i => i.currency === this.state.pair.base_ticker.toUpperCase())?.balance || 0
+                                     portfolio: this.getPortfolioBalance(userState),
+                                     currency: userState.accounts.find(i => i.currency === this.state.pair.currency.toUpperCase())?.balance || 0,
+                                     asset   : userState.accounts.find(i => i.currency === this.state.pair.base_ticker.toUpperCase())?.balance || 0
                                  }
                              });
                              this.updateTimeoutHandler = setTimeout(() => this.update(), 10000);
@@ -508,7 +571,13 @@ class BotStrategyTabsView extends Component {
                          <Col style={{
                              margin  : 'auto',
                              maxWidth: 220
-                         }}></Col>}
+                         }}>
+                             <div>portfolio:</div>
+                             <div>${get_fixed_value({
+                                 value            : this.state.balances.portfolio,
+                                 float_part_length: 2
+                             })}</div>
+                         </Col>}
                         <Col>
                             <Row>{this.state.pair.base_ticker}:</Row>
                             <Row>{get_fixed_value({
@@ -520,7 +589,7 @@ class BotStrategyTabsView extends Component {
                             <Row>{this.state.pair.currency}:</Row>
                             <Row>{get_fixed_value({
                                 value            : this.state.balances.currency,
-                                float_part_length: this.state.pair.order_price_float_precision
+                                float_part_length: 2
                             })}</Row>
                         </Col>
                         <Col>
