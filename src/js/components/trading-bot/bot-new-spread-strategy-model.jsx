@@ -13,8 +13,9 @@ export default class BotNewSpreadStrategyModel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            errorList: [],
-            type     : this.props.strategyData?.order_type || 'buy'
+            errorList   : [],
+            type        : this.props.strategyData?.order_type === 'both' ? 'bid/ask' : this.props.strategyData?.order_type || 'bid',
+            price_source: this.props.strategyData?.price_source || 'orderbook'
         };
         this.pair  = ExchangeConfig[props.symbol];
     }
@@ -24,12 +25,13 @@ export default class BotNewSpreadStrategyModel extends Component {
             error_list: []
         });
 
-        const error_list          = [];
-        const data                = {};
-        data.strategy_description = validate.required(`strategy description`, this.strategy_description.value, error_list);
-        data.strategy_order_type  = validate.required(`order type`, this.strategy_order_type.props.value, error_list);
-        data.strategy_order_ttl   = validate.integerPositive(`order time to live`, this.strategy_order_ttl.value, error_list, false);
-        data.strategy_amount      = validate.floatPositiveInRange(`order amount`, this.strategy_amount.value, error_list, false, this.pair.order_size_min, this.pair.order_size_max, this.pair.order_size_float_precision);
+        const error_list           = [];
+        const data                 = {};
+        data.strategy_description  = validate.required(`strategy description`, this.strategy_description.value, error_list);
+        data.strategy_price_source = validate.required(`strategy price source`, this.strategy_price_source.props.value, error_list);
+        data.strategy_order_type   = validate.required(`order type`, this.strategy_order_type.props.value, error_list);
+        data.strategy_order_ttl    = validate.integerPositive(`order time to live`, this.strategy_order_ttl.value, error_list, false);
+        data.strategy_amount       = validate.floatPositiveInRange(`order amount`, this.strategy_amount.value, error_list, false, this.pair.order_size_min, this.pair.order_size_max, this.pair.order_size_float_precision);
         if (this.pair.order_size_float_precision === 0) {
             data.strategy_amount = parseInt(data.strategy_amount);
         }
@@ -66,7 +68,8 @@ export default class BotNewSpreadStrategyModel extends Component {
                         amount_variation       : data.strategy_amount_variation,
                         time_frequency         : data.strategy_time_frequency,
                         spread_percentage_begin: data.strategy_spread_percentage_begin,
-                        spread_percentage_end  : data.strategy_spread_percentage_end
+                        spread_percentage_end  : data.strategy_spread_percentage_end,
+                        price_source           : data.strategy_price_source
                     }), this.props.exchange, this.props.symbol, 2);
                 return true;
             }
@@ -97,9 +100,20 @@ export default class BotNewSpreadStrategyModel extends Component {
             </Form.Group>
 
             <Form.Group className="form-group">
+                <label>{`strategy price source`}</label>
+                <Dropdown
+                    value={this.state.price_source} options={[
+                    'orderbook',
+                    'fiatleak'
+                ]}
+                    ref={(c) => this.strategy_price_source = c}
+                    onChange={(e) => this.setState({price_source: e.value})} className={'form-control p-0'}/>
+            </Form.Group>
+
+            <Form.Group className="form-group">
                 <label>{`order type`}</label>
                 <Dropdown
-                    value={this.state.type === 'both' ? 'bid/ask' : this.state.type} options={[
+                    value={this.state.type} options={[
                     'bid',
                     'ask',
                     'bid/ask'

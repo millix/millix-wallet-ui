@@ -14,9 +14,35 @@ export default class BotNewConstantStrategyModel extends Component {
         super(props);
         this.state = {
             errorList: [],
-            type     : this.props.strategyData?.order_type || 'buy'
+            type     : this.getTypeFromProps(this.props.strategyData?.order_type)
         };
         this.pair  = ExchangeConfig[props.symbol];
+    }
+
+    getTypeFromProps(orderType) {
+        if (!orderType) {
+            return 'bid';
+        }
+
+        if (orderType === 'ba') {
+            return 'bid/sell';
+        }
+        if (orderType === 'ab') {
+            return 'ask/buy';
+        }
+
+        return orderType;
+    }
+
+    convertOrderTypeToCode(orderType) {
+        if (orderType === 'bid/sell') {
+            return 'ba';
+        }
+        if (orderType === 'ask/buy') {
+            return 'ab';
+        }
+
+        return orderType;
     }
 
     async save() {
@@ -56,6 +82,7 @@ export default class BotNewConstantStrategyModel extends Component {
 
         if (error_list.length === 0) {
             try {
+                data.strategy_order_type = this.convertOrderTypeToCode(data.strategy_order_type);
                 await Api.upsertStrategy(this.props.strategyData?.strategy_id, data.strategy_description, this.props.strategyType, data.strategy_order_type, data.strategy_order_ttl,
                     data.strategy_amount, data.strategy_price_min, data.strategy_price_max, data.strategy_total_budget, JSON.stringify({
                         time_frequency  : data.strategy_time_frequency,
@@ -96,7 +123,9 @@ export default class BotNewConstantStrategyModel extends Component {
                     'buy',
                     'sell',
                     'bid',
-                    'ask'
+                    'ask',
+                    'bid/sell',
+                    'ask/buy',
                 ]}
                     ref={(c) => this.strategy_order_type = c}
                     onChange={(e) => this.setState({type: e.value})} className={'form-control p-0'}/>

@@ -86,14 +86,14 @@ class BotStrategyTabsView extends Component {
                 field : 'order_type',
                 header: `type`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{item.order_type === 'both' ? 'buy/sell' : item.order_type}</span>,
+                    style={{color: this.getOrderTypeColor(item.order_type)}}>{this.getOrderType(item.order_type)}</span>,
                 parser: (data) => data
             },
             {
                 field : 'amount',
                 header: `amount`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    style={{color: this.getOrderTypeColor(item.order_type)}}>{get_fixed_value({
                     value            : item.amount,
                     float_part_length: this.state.pair.order_size_float_precision
                 })}</span>,
@@ -103,7 +103,7 @@ class BotStrategyTabsView extends Component {
                 field : 'amount_variation',
                 header: `amount variation`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    style={{color: this.getOrderTypeColor(item.order_type)}}>{get_fixed_value({
                     value            : item.amount_variation,
                     float_part_length: this.state.pair.order_size_float_precision
                 })}</span>,
@@ -113,7 +113,7 @@ class BotStrategyTabsView extends Component {
                 field : 'amount_traded',
                 header: `amount traded`,
                 body  : (item) => <span
-                    style={{color: item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    style={{color: this.getOrderTypeColor(item.order_type)}}>{get_fixed_value({
                     value            : item.amount_traded,
                     float_part_length: this.state.pair.order_size_float_precision
                 })}</span>,
@@ -123,7 +123,7 @@ class BotStrategyTabsView extends Component {
                 field : 'total_budget',
                 header: `total budget`,
                 body  : (item) => <span
-                    style={{color: item.total_budget <= item.amount_traded + item.amount ? 'gray' : item.order_type === 'ask' || item.order_type === 'sell' ? colorRed : colorGreen}}>{get_fixed_value({
+                    style={{color: item.total_budget <= item.amount_traded + item.amount ? 'gray' : this.getOrderTypeColor(item.order_type)}}>{get_fixed_value({
                     value            : item.total_budget,
                     float_part_length: this.state.pair.order_size_float_precision
                 })}</span>,
@@ -209,12 +209,37 @@ class BotStrategyTabsView extends Component {
                 parser: (data) => parseInt(data)
             },
             {
+                field : 'price_source',
+                header: `price source`,
+                parser: (data) => data
+            },
+            {
                 field : 'status',
                 header: `status`,
                 body  : (item) => item.status === 1 ? `running ${this.getRunningInTime(item)}` : 'paused',
                 parser: (data) => parseInt(data)
             }
         ];
+    }
+
+    getOrderType(type) {
+        if (type === 'both') {
+            return 'bid/ask';
+        }
+        if (type === 'ab') {
+            return 'ask/buy';
+        }
+        if (type === 'ba') {
+            return 'bid/sell';
+        }
+        return type;
+    }
+
+    getOrderTypeColor(type) {
+        if (type === 'ask' || type === 'sell' || type === 'ba') {
+            return colorRed;
+        }
+        return colorGreen;
     }
 
     fetchSymbolStats() {
@@ -319,6 +344,7 @@ class BotStrategyTabsView extends Component {
                        strategy.spread_percentage_begin = extraConfig.spread_percentage_begin;
                        strategy.spread_percentage_end   = extraConfig.spread_percentage_end;
                        strategy.amount_variation        = extraConfig.amount_variation;
+                       strategy.price_source            = extraConfig.price_source;
                    }
 
                    if (strategy.order_type === 'ask' || strategy.order_type === 'sell') {
@@ -432,7 +458,7 @@ class BotStrategyTabsView extends Component {
                              strategy['extra_config']['time_frequency'] = strategy.time_frequency;
                              delete strategy['time_frequency'];
 
-                             strategy['extra_config'] = JSON.parse(strategy['extra_config']);
+                             strategy['extra_config'] = JSON.stringify(strategy['extra_config']);
                              return true;
                          }
                          return false;
@@ -444,7 +470,7 @@ class BotStrategyTabsView extends Component {
                              delete strategy['price_change_percentage'];
                              delete strategy['time_frame'];
 
-                             strategy['extra_config'] = JSON.parse(strategy['extra_config']);
+                             strategy['extra_config'] = JSON.stringify(strategy['extra_config']);
                              return true;
                          }
                          return false;
@@ -455,11 +481,13 @@ class BotStrategyTabsView extends Component {
                              strategy['extra_config']['spread_percentage_begin'] = strategy.spread_percentage_begin;
                              strategy['extra_config']['spread_percentage_end']   = strategy.spread_percentage_end;
                              strategy['extra_config']['time_frequency']          = strategy.time_frequency;
+                             strategy['extra_config']['price_source']            = strategy.price_source;
                              delete strategy['spread_percentage_begin'];
                              delete strategy['spread_percentage_end'];
                              delete strategy['time_frequency'];
+                             delete strategy['price_source'];
 
-                             strategy['extra_config'] = JSON.parse(strategy['extra_config']);
+                             strategy['extra_config'] = JSON.stringify(strategy['extra_config']);
                              return true;
                          }
                          return false;
