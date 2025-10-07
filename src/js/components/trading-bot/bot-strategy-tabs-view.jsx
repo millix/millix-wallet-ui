@@ -150,6 +150,15 @@ class BotStrategyTabsView extends Component {
                 field : 'order_ttl',
                 header: `time to live`,
                 parser: (data) => parseInt(data)
+            },
+            {
+                field : 'run_probability',
+                header: `run probability`,
+                body  : (item) => get_fixed_value({
+                    value            : item.run_probability,
+                    float_part_length: 2
+                }),
+                parser: (data) => parseFloat(data)
             }
         ];
 
@@ -345,6 +354,7 @@ class BotStrategyTabsView extends Component {
                        strategy.spread_percentage_end   = extraConfig.spread_percentage_end;
                        strategy.amount_variation        = extraConfig.amount_variation;
                        strategy.price_source            = extraConfig.price_source;
+                       strategy.run_probability         = extraConfig.run_probability ?? 100;
                    }
 
                    if (strategy.order_type === 'ask' || strategy.order_type === 'sell') {
@@ -451,7 +461,12 @@ class BotStrategyTabsView extends Component {
                      item['strategy_type'] = this.state.selectedStrategyType;
                  }
                  const data = csv.data.filter(strategy => {
-                     strategy['extra_config'] = {amount_variation: strategy.amount_variation || 0};
+                     strategy['extra_config'] = {
+                         amount_variation: strategy.amount_variation || 0,
+                         run_probability : strategy.run_probability || 100
+                     };
+                     delete strategy['amount_variation'];
+                     delete strategy['run_probability'];
 
                      if (this.state.selectedStrategyType === 'strategy-constant') {
                          if (!!strategy.time_frequency) {

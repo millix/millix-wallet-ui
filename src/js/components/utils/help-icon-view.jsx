@@ -513,6 +513,14 @@ class HelpIconView extends Component {
                     </li>
                 </ul>
             },
+            'bot_run_probability' : {
+                'title': 'run probability',
+                'body' : <ul>
+                    <li>
+                        Defines a probability to execute this strategy.
+                    </li>
+                </ul>
+            },
             'bot_spread_percentage_end': {
                 'title': 'to spread %',
                 'body' : <ul>
