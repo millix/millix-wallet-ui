@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom';
 import {updateNotificationVolume} from '../../redux/actions';
 import VolumeControl from '../utils/volume-control-view';
 import Translation from '../../common/translation';
+import localforage from 'localforage';
 
 
 class ConfigAudioView extends Component {
@@ -12,10 +13,8 @@ class ConfigAudioView extends Component {
         this.state = {};
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        if (this.state.initialVolume === undefined) {
-            this.setState({initialVolume: nextProps.notification.volume});
-        }
+    componentDidMount() {
+        localforage.getItem('notification_volume').catch(_ => 100).then((volume) => this.setState({initialVolume: volume}));
     }
 
     render() {
@@ -32,9 +31,7 @@ class ConfigAudioView extends Component {
 
 
 export default connect(
-    state => ({
-        notification: state.notification
-    }),
+    () => ({}),
     {
         updateNotificationVolume
     })(withRouter(ConfigAudioView));

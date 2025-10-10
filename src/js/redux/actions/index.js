@@ -236,6 +236,18 @@ export function updateNotificationVolume(volume) {
     };
 }
 
+export function refreshNotificationVolume() {
+    return (dispatch) => {
+        return localforage.getItem('notification_volume',(volume) => {
+            return dispatch({
+                type   : UPDATE_NOTIFICATION_VOLUME,
+                payload: {volume}
+            });
+        });
+    };
+}
+
+
 export function updateMessageStat(payload) {
     return {
         type: UPDATE_MESSAGE_STAT,

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './js/components/app-container';
 import store from './js/redux/store';
-import {unlockWallet, updateClock, addStorageConfig, addWalletConfig, updateNodeAttribute, updateWalletAddressVersion, updateNotificationVolume} from './js/redux/actions';
+import {unlockWallet, updateClock, addStorageConfig, addWalletConfig, updateNodeAttribute, updateWalletAddressVersion, updateNotificationVolume, refreshNotificationVolume} from './js/redux/actions';
 import reportWebVitals from './reportWebVitals';
 import {config as faConfig, library} from '@fortawesome/fontawesome-svg-core';
 import {
@@ -160,6 +160,9 @@ window.addEventListener('message', (e) => {
                }
            });
         e.stopImmediatePropagation();
+    }
+    else if (data.type === 'refresh_notification_volume') {
+        store.dispatch(refreshNotificationVolume());
     }
 });
 
