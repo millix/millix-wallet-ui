@@ -238,7 +238,7 @@ export function updateNotificationVolume(volume) {
 
 export function refreshNotificationVolume() {
     return (dispatch) => {
-        return localforage.getItem('notification_volume',(volume) => {
+        return localforage.getItem('notification_volume',(err, volume) => {
             return dispatch({
                 type   : UPDATE_NOTIFICATION_VOLUME,
                 payload: {volume}
