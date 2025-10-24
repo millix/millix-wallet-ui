@@ -39,6 +39,7 @@ const initialState = {
         transaction_fee                  : 0,
         transaction_wallet_unstable_count: 0,
         transaction_count                : 0,
+        transaction_validation_count     : 0,
         notification_message             : undefined,
         version_available                : undefined
     },

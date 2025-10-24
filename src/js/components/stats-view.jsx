@@ -120,6 +120,14 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
+                                        transaction validation count
+                                    </td>
+                                    <td>
+                                        {format.number(props.wallet.transaction_validation_count)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
                                         <a className={''}
                                            onClick={() => props.history.push('/event-log')}>
                                             {Translation.getPhrase('f183a9ddd')}

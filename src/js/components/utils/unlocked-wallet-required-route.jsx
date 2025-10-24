@@ -31,6 +31,7 @@ const UnlockedWalletRequiredRoute = ({
                            balance_stable                   : data.balance.stable,
                            balance_pending                  : data.balance.unstable,
                            transaction_wallet_unstable_count: data.transaction.transaction_wallet_unstable_count || 0,
+                           transaction_validation_count     : data.transaction.transaction_validation_count || 0,
                            transaction_count                : data.transaction.transaction_count || 0
                        });
                        rest.setBackLogSize(data.log.backlog_count);
