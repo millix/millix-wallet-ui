@@ -289,15 +289,20 @@ class BotStrategyTabsView extends Component {
     }
 
     getPortfolioBalance(userSate) {
-        let portfolioBalance = 0;
+        let portfolioBalance = userSate.accounts.find(i => i.currency === 'USDC')?.balance || 0;
         for (const symbol of this.symbols) {
             const [asset] = symbol.split('_');
+
+            // add usdc in bid orders
+            portfolioBalance += userSate.activeOrders.filter(o => o.symbol === symbol && o.action === 'BID').reduce((a, o) => a + (o.size - o.filled) * o.price, 0);
+
             const price   = this.state[`${symbol}_price`];
             if (!price) {
                 return 0;
             }
-            const balance = userSate.accounts.find(i => i.currency === asset)?.balance;
-            portfolioBalance += price * (balance || 0);
+            const unAllocatedBalanceAsset = userSate.accounts.find(i => i.currency === asset)?.balance || 0;
+            const allocatedBalanceAsset = userSate.activeOrders.filter(o => o.symbol === symbol && o.action === 'ASK').reduce((a, o) => a + o.size - o.filled, 0);
+            portfolioBalance += price * (unAllocatedBalanceAsset + allocatedBalanceAsset || 0);
         }
         return portfolioBalance;
     }
