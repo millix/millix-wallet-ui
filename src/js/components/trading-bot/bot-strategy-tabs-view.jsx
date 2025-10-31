@@ -277,7 +277,7 @@ class BotStrategyTabsView extends Component {
                     if (!this.fetchSymbolTimeoutHandlers[symbol]) {
                         return;
                     }
-                    this.setState({[`${symbol}_price`]: data.close});
+                    this.setState({[`${symbol}_price`]: data?.close});
                     scheduleSymbolStatisticsFetch(exchange, symbol, 30000);
                 });
             }, timeout);
