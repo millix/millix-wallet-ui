@@ -50,7 +50,7 @@ class BotStrategyTabsView extends Component {
         this.updateTimeoutHandler = undefined;
 
         this.fetchSymbolTimeoutHandlers = {};
-        this.symbols                    = _.keys(EXCHANGE_CONFIG).map(symbol => symbol.toUpperCase());
+        this.symbols                    = this.props.exchange === 'tangled.com' ? ['MLX_USDC'] : _.keys(EXCHANGE_CONFIG).map(symbol => symbol.toUpperCase());
 
         this.fetchSymbolStats();
 
@@ -296,12 +296,12 @@ class BotStrategyTabsView extends Component {
             // add usdc in bid orders
             portfolioBalance += userSate.activeOrders.filter(o => o.symbol === symbol && o.action === 'BID').reduce((a, o) => a + (o.size - o.filled) * o.price, 0);
 
-            const price   = this.state[`${symbol}_price`];
+            const price = this.state[`${symbol}_price`];
             if (!price) {
                 return 0;
             }
             const unAllocatedBalanceAsset = userSate.accounts.find(i => i.currency === asset)?.balance || 0;
-            const allocatedBalanceAsset = userSate.activeOrders.filter(o => o.symbol === symbol && o.action === 'ASK').reduce((a, o) => a + o.size - o.filled, 0);
+            const allocatedBalanceAsset   = userSate.activeOrders.filter(o => o.symbol === symbol && o.action === 'ASK').reduce((a, o) => a + o.size - o.filled, 0);
             portfolioBalance += price * (unAllocatedBalanceAsset + allocatedBalanceAsset || 0);
         }
         return portfolioBalance;
@@ -618,17 +618,16 @@ class BotStrategyTabsView extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        {this.props.exchange === 'tangled.com' ? <Col style={{margin: 'auto'}}></Col> :
-                         <Col style={{
-                             margin  : 'auto',
-                             maxWidth: 220
-                         }}>
-                             <div>portfolio:</div>
-                             <div>${get_fixed_value({
-                                 value            : this.state.balances.portfolio,
-                                 float_part_length: 2
-                             })}</div>
-                         </Col>}
+                        <Col style={{
+                            margin: 'auto',
+                            ...(this.props.exchange !== 'tangled.com' && {maxWidth: 220})
+                        }}>
+                            <div>portfolio:</div>
+                            <div>${get_fixed_value({
+                                value            : this.state.balances.portfolio,
+                                float_part_length: 2
+                            })}</div>
+                        </Col>
                         <Col>
                             <Row>{this.state.pair.base_ticker}:</Row>
                             <Row>{get_fixed_value({
