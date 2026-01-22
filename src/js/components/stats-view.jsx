@@ -120,6 +120,18 @@ class StatsView extends Component {
                                 </tr>
                                 <tr>
                                     <td className={'w-20'}>
+                                        wallet unspent count
+                                    </td>
+                                    <td>
+                                        {format.number(props.wallet.transaction_wallet_unspent_count)}  {props.wallet.transaction_wallet_unspent_count > 100000 &&
+                                                                                                                  <><a className={''}
+                                                                                                                       onClick={() => props.history.push('/actions')}>
+                                                                                                                      ⚠️ aggregate outputs
+                                                                                                                  </a>  to enable wallet balance calculation</>}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className={'w-20'}>
                                         transaction validation count
                                     </td>
                                     <td>
