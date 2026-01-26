@@ -27,7 +27,8 @@ class StatsView extends Component {
             is_public = Translation.getPhrase('648c44366');
         }
 
-        const props = this.props;
+        const props                    = this.props;
+        const isAutoAggregationEnabled = !!JSON.parse(this.props.config.WALLET_AGGREGATION_AUTO_ENABLED);
         return (<Col md="12">
             <PageTitle title={'summary'}/>
             <div className={'panel panel-filled'}>
@@ -123,11 +124,18 @@ class StatsView extends Component {
                                         wallet unspent count
                                     </td>
                                     <td>
-                                        {format.number(props.wallet.transaction_wallet_unspent_count)}  {props.wallet.transaction_wallet_unspent_count > 100000 &&
-                                                                                                                  <><a className={''}
-                                                                                                                       onClick={() => props.history.push('/actions')}>
-                                                                                                                      ⚠️ aggregate outputs
-                                                                                                                  </a>  to enable wallet balance calculation</>}
+                                        {format.number(props.wallet.transaction_wallet_unspent_count)} {props.wallet.transaction_wallet_unspent_count > 100000 &&
+                                                                                                        (!isAutoAggregationEnabled ?
+                                                                                                         <><
+                                                                                                             a className={''}
+                                                                                                               onClick={() => props.history.push('/actions')}>
+                                                                                                             ⚠️ aggregate outputs
+                                                                                                         </a>
+                                                                                                             to enable wallet balance calculation
+                                                                                                         </> :
+                                                                                                         <>
+                                                                                                             ℹ️ wallet balance calculation starts when less than 100,000.
+                                                                                                         </>)}
                                     </td>
                                 </tr>
                                 <tr>
