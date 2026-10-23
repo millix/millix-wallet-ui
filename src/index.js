@@ -94,12 +94,31 @@ library.add(faArrowCircleLeft, faWallet, faKey, faHome, faFingerprint,
     faRotateLeft, faCodeMerge, faCheckCircle, faReply, faEnvelope, faLink, faFire, faBomb,
     faArrowRight, faUpload, faMinusCircle, faCopy, faCaretDown, faCaretUp, faArrowRightArrowLeft, faFile, faTriangleExclamation, faAddressBook);
 
-const initGTag = (data) => {
-    window.gtagInitialized = true;
-    window.gtag('js', new Date());
-    window.gtag('config', 'G-57CQ9Y8LPV', {client_id: data.node_id});
-    setInterval(() => window.gtag('config', 'G-57CQ9Y8LPV', {client_id: data.node_id}), 15 * 60 * 1000); // every 15 minutes
-}
+// every hit must carry the node id (browser id), otherwise gtag.js makes up a
+// random client id and the browser is counted as a new user
+const GA_MEASUREMENT_ID = 'G-57CQ9Y8LPV';
+let gtagNodeID;
+const configGTag = () => window.gtag('config', GA_MEASUREMENT_ID, {
+    client_id: gtagNodeID,
+    user_id  : gtagNodeID
+});
+const initGTag = (nodeID) => {
+    if (!nodeID || nodeID === gtagNodeID) {
+        return false;
+    }
+    const firstInit = !gtagNodeID;
+    gtagNodeID      = nodeID;
+    if (firstInit) {
+        window.gtagInitialized = true;
+        window.gtag('js', new Date());
+    }
+    configGTag();
+    if (firstInit) {
+        window.gtagQueue.splice(0).forEach(args => window.dataLayer.push(args));
+        setInterval(configGTag, 15 * 60 * 1000); // every 15 minutes
+    }
+    return firstInit;
+};
 
 let apiInfo = {
     node_id       : undefined,
@@ -112,9 +131,7 @@ localforage.getItem('api_info', (err, data) => {
     apiInfo = JSON.parse(data);
     apiInfo.node_id && API.setNodeID(apiInfo.node_id);
     apiInfo.node_signature && API.setNodeSignature(apiInfo.node_signature);
-    if (!!apiInfo.node_id) {
-        initGTag(apiInfo);
-    }
+    // analytics waits for the live node id from update_api: the cached one can be stale
     API.getSession()
        .then(data => {
            if (data.api_status === 'success') {
@@ -147,7 +164,9 @@ window.addEventListener('message', (e) => {
         }
         if (update) {
             localforage.setItem('api_info', JSON.stringify(apiInfo));
-            initGTag(apiInfo);
+        }
+        if (e.source === window.parent) {
+            initGTag(data.node_id);
         }
         e.stopImmediatePropagation();
     }
